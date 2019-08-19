@@ -14,16 +14,16 @@ light_profile(x, ...)
 \method{light_profile}{flashlight}(x, v = NULL, data = NULL,
   by = x$by, type = c("partial dependence", "predicted", "response",
   "residual"), stats = c("mean", "quartiles"), breaks = NULL,
-  n_bins = 11, use_linkinv = TRUE, value_name = "value",
-  q1_name = "q1", q3_name = "q3", label_name = "label",
-  type_name = "type", counts_name = "counts", counts = TRUE,
-  counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
-  pd_evaluate_at = NULL, pd_grid = NULL, pd_indices = NULL,
-  pd_n_max = 1000, pd_seed = NULL, ...)
+  n_bins = 11, cut_type = c("equal", "quantile"), use_linkinv = TRUE,
+  value_name = "value", q1_name = "q1", q3_name = "q3",
+  label_name = "label", type_name = "type", counts_name = "counts",
+  counts = TRUE, counts_weighted = FALSE, v_labels = TRUE,
+  pred = NULL, pd_evaluate_at = NULL, pd_grid = NULL,
+  pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL, ...)
 
 \method{light_profile}{multiflashlight}(x, v = NULL, data = NULL,
-  breaks = NULL, n_bins = 11, pd_evaluate_at = NULL,
-  pd_grid = NULL, ...)
+  breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"),
+  pd_evaluate_at = NULL, pd_grid = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
@@ -43,6 +43,8 @@ light_profile(x, ...)
 \item{breaks}{Cut breaks for a numeric \code{v}.}
 
 \item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}. Only used in neither \code{grid} nor \code{evaluate_at} is specified.}
+
+\item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
 
@@ -96,7 +98,7 @@ An object of classes \code{light_profile}, \code{light} (and a list) with the fo
 Calculates different types of profiles across covariable values. By default, partial dependence profiles are calculated but also profiles of response, predicted values and residuals are possible. The results are aggregated either by (weighted) means or by (weighted) quartiles. Furthermore, counts are added to the resulting object.
 }
 \details{
-For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned into quantile groups. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles, this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence or prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types. If the flashlights in a multiflashlight use different data sets, automatic break labels will differ across flashlights. Except for partial dependence profiles (that work with numeric x labels anyway), this will cause problems for further analyses or plots. Set \code{v_labels} to FALSE for numeric labels or use fixed breaks to avoid this problem.
+For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned into quantile groups. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles, this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence or prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
 }
 \section{Methods (by class)}{
 \itemize{

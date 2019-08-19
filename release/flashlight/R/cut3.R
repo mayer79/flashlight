@@ -18,9 +18,9 @@
 #' x <- 998:1001
 #' cut3(x, breaks = 2)
 #' cut3(x, breaks = 2, big.mark = "'", sep = ":")
-cut3 <- function (x, breaks, labels = NULL, include.lowest = FALSE,
-                  right = TRUE, dig.lab = 3L, ordered_result = FALSE,
-                  sep = ", ", ...) {
+cut3 <- function(x, breaks, labels = NULL, include.lowest = FALSE,
+                 right = TRUE, dig.lab = 3L, ordered_result = FALSE,
+                 sep = ", ", ...) {
   if (!is.numeric(x))
     stop("'x' must be numeric")
   if (length(breaks) == 1L) {

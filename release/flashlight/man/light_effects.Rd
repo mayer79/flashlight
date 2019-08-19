@@ -13,14 +13,14 @@ light_effects(x, ...)
 
 \method{light_effects}{flashlight}(x, v, data = NULL, by = x$by,
   stats = c("mean", "quartiles"), breaks = NULL, n_bins = 11,
-  use_linkinv = TRUE, value_name = "value", q1_name = "q1",
-  q3_name = "q3", label_name = "label", type_name = "type",
-  counts_name = "counts", counts_weighted = FALSE, v_labels = TRUE,
-  pred = NULL, pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL,
-  ...)
+  cut_type = c("equal", "quantile"), use_linkinv = TRUE,
+  value_name = "value", q1_name = "q1", q3_name = "q3",
+  label_name = "label", type_name = "type", counts_name = "counts",
+  counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
+  pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL, ...)
 
 \method{light_effects}{multiflashlight}(x, v, data = NULL,
-  breaks = NULL, n_bins = 11, ...)
+  breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"), ...)
 }
 \arguments{
 \item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
@@ -38,6 +38,8 @@ light_effects(x, ...)
 \item{breaks}{Cut breaks for a numeric \code{v}.}
 
 \item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}.}
+
+\item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
 
@@ -84,9 +86,6 @@ An object of classes \code{light_effects}, \code{light} (and a list) with the fo
 }
 \description{
 Calculates response- prediction- and partial dependence profiles of a (multi-)flashlight with respect to a covariable \code{v}.
-}
-\details{
-If the flashlights in a multiflashlight use different data sets, automatic break labels will differ across flashlights. This will cause problems for further analyses or plots. Set \code{v_labels} to FALSE for numeric labels or use fixed breaks to avoid this problem.
 }
 \section{Methods (by class)}{
 \itemize{

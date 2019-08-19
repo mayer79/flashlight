@@ -4,17 +4,17 @@
 \alias{auto_cut}
 \title{Discretizes a Vector}
 \usage{
-auto_cut(x, breaks = NULL, n_bins = 27, return_distinct = FALSE,
-  x_name = "value", level_name = "level", ...)
+auto_cut(x, breaks = NULL, n_bins = 27, cut_type = c("equal",
+  "quantile"), x_name = "value", level_name = "level", ...)
 }
 \arguments{
 \item{x}{A vector.}
 
 \item{breaks}{An optional vector of breaks. Only relevant for numeric \code{x}.}
 
-\item{n_bins}{If \code{x} is numeric and no breaks are provided, this is the maximum number of bins allowed or to be created.}
+\item{n_bins}{If \code{x} is numeric and no breaks are provided, this is the maximum number of bins allowed or to be created (approximately).}
 
-\item{return_distinct}{If TRUE, the resulting \code{data.frame} is deduplicated.}
+\item{cut_type}{For the default "equal", bins of equal width are created by \code{pretty}. Choose "quantile" to create quantile bins.}
 
 \item{x_name}{Column name with the values of \code{x} in the output.}
 
@@ -23,15 +23,25 @@ auto_cut(x, breaks = NULL, n_bins = 27, return_distinct = FALSE,
 \item{...}{Further arguments passed to \code{cut3}.}
 }
 \value{
-A \code{data.frame} with colums \code{x_name} and \code{level_name} and an attribute "breaks" with cut breaks or NULL if none were used.
+A list with the following four elements:
+\itemize{
+  \item \code{data} A \code{data.frame} with colums \code{x_name} and \code{level_name} each with the same length as \code{x}. The column \code{x_name} has values in output \code{bin_means} while the column \code{level_name} has values in \code{bin_labels}.
+  \item \code{breaks} A vector of increasing and unique breaks used to cut a numeric \code{x} with too many distinct levels. NULL otherwise.
+  \item \code{bin_means} The midpoints of subsequent breaks, or if there are no \code{breaks} in the output, factor levels or distinct values of \code{x}.
+  \item \code{bin_labels} Break labels of the form "(low, high]" if there are \code{breaks} in the output, otherwise the same as \code{bin_means}. Same order as \code{bin_means}.
+}
 }
 \description{
-This function takes a vector \code{x} and returns a \code{data.frame} with two columns. In case \code{x} is not numeric, both columns are identical to the input \code{x}. The same holds if \code{x} is numeric, no \code{breaks} are provided and the number of disjoint values is not larger than \code{n_bins}. Otherwise, \code{x} is discretized by \code{breaks} or by \code{n_bins} quantile cuts. In these cases, the first column of the resulting \code{data.frame} contains the break average (high+low)/2 and the second column the level names of the form "(low, high)". The construction of the level names can be controlled by passing ... arguments to \code{formatC}.
+This function takes a vector \code{x} and returns a list with informations on disretized version of \code{x}.
+}
+\details{
+The construction of the level names can be controlled by passing ... arguments to \code{formatC}.
 }
 \examples{
-out <- auto_cut(1:10, n_bins = 3)
-auto_cut(LETTERS[1:4], n_bins = 2)
+auto_cut(1:10, n_bins = 3)
+auto_cut(1:10, n_bins = 3, cut_type = "quantile")
+auto_cut(LETTERS[4:1], n_bins = 2)
+auto_cut(factor(LETTERS[1:4], LETTERS[4:1]), n_bins = 2)
 auto_cut(990:1100, n_bins = 3, big.mark = "'", format = "fg")
-auto_cut(990:1100, n_bins = 3, big.mark = "'", format = "fg", return_distinct = TRUE)
 auto_cut(c(0.0001, 0.0002, 0.0003, 0.005), n_bins = 3, format = "fg")
 }

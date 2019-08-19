@@ -10,6 +10,7 @@
 #' @param stats Statistic to calculate for the response profile: "mean" or "quartiles".
 #' @param breaks Cut breaks for a numeric \code{v}.
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}.
+#' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param value_name Column name in resulting data objects containing the profile value. Defaults to "value".
 #' @param q1_name Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".
@@ -90,16 +91,20 @@ light_effects.default <- function(x, ...) {
 #' @export
 light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                                      stats = c("mean", "quartiles"),
-                                     breaks = NULL, n_bins = 11, use_linkinv = TRUE,
-                                     value_name = "value",
+                                     breaks = NULL, n_bins = 11,
+                                     cut_type = c("equal", "quantile"),
+                                     use_linkinv = TRUE, value_name = "value",
                                      q1_name = "q1", q3_name = "q3", label_name = "label",
                                      type_name = "type", counts_name = "counts",
                                      counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
                                      pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL, ...) {
   stats <- match.arg(stats)
+  cut_type <- match.arg(cut_type)
+
   if (is.null(data)) {
     data <- x$data
   }
+
   # Checks
   stopifnot((n <- nrow(data)) >= 1L,
             !anyDuplicated(c(by, v, "level", counts_name, value_name, label_name,
@@ -114,23 +119,23 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   }
 
   # Set levels of v
-  cuts <- auto_cut(data[[v]], breaks = breaks, n_bins = n_bins, x_name = v, ...)
-  cuts_unique <- cuts[!duplicated(cuts[["level"]]), , drop = FALSE]
+  cuts <- auto_cut(data[[v]], breaks = breaks, n_bins = n_bins,
+                   cut_type = cut_type, x_name = v, ...)
 
   # Partial dependence
   pd <- light_profile(x, v = v, value_name = value_name,
                       label_name = label_name, type_name = type_name,
-                      counts = FALSE, pd_evaluate_at = cuts_unique[[v]],
+                      counts = FALSE, pd_evaluate_at = cuts$bin_means,
                       pd_indices = pd_indices,
                       pd_n_max = pd_n_max, pd_seed = pd_seed)$data
 
   # Overwrite v variable in data and update flashlight
-  data[[v]] <- cuts[[v]]
+  data[[v]] <- cuts$data[[v]]
   x <- flashlight(x, data = data)
 
   # Response profile
   response <- light_profile(x = x, v = v, type = "response", stats = stats,
-                            breaks = attr(cuts, "breaks"),
+                            breaks = cuts$breaks,
                             v_labels = FALSE, value_name = value_name,
                             q1_name = q1_name, q3_name = q3_name,
                             label_name = label_name, type_name = type_name,
@@ -139,7 +144,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 
   # Prediction profile based on precalculated predictions "pred"
   predicted <- light_profile(x = x, v = v, type = "predicted",
-                             breaks = attr(cuts, "breaks"),
+                             breaks = cuts$breaks,
                              v_labels = FALSE, value_name = value_name,
                              label_name = label_name, type_name = type_name,
                              counts = FALSE, pred = pred)$data
@@ -149,7 +154,8 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   if (v_labels) {
     # In all three inputs, replace v by cuts$level
     for (nm in names(data_sets)) {
-      data_sets[[nm]][[v]] <- cuts_unique[match(data_sets[[nm]][[v]], cuts_unique[[v]]), "level"]
+      data_sets[[nm]][[v]] <- factor(cuts$bin_labels[match(data_sets[[nm]][[v]],
+                                     cuts$bin_means)], cuts$bin_labels)
     }
   }
 
@@ -164,8 +170,10 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 
 #' @describeIn light_effects Effect profiles for a multiflashlight object.
 #' @export
-light_effects.multiflashlight <- function(x, v, data = NULL,
-                                          breaks = NULL, n_bins = 11, ...) {
+light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL, n_bins = 11,
+                                          cut_type = c("equal", "quantile"), ...) {
+  cut_type <- match.arg(cut_type)
+
   if (is.null(breaks)) {
     if (is.null(data)) {
       stopifnot(all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
@@ -175,10 +183,11 @@ light_effects.multiflashlight <- function(x, v, data = NULL,
       stopifnot(nrow(data) >= 1L, v %in% colnames(data))
       v_vec <- data[[v]]
     }
-    breaks <- attr(auto_cut(v_vec, breaks = breaks, n_bins = n_bins), "breaks")
+    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins,
+                       cut_type = cut_type)$breaks
   }
-  all_effects <- lapply(x, light_effects, v = v, data = data,
-                         breaks = breaks, n_bins = n_bins, ...)
+  all_effects <- lapply(x, light_effects, v = v, data = data, breaks = breaks,
+                        n_bins = n_bins, cut_type = cut_type, ...)
 
   light_combine(all_effects, new_class = "light_effects_multi")
 }

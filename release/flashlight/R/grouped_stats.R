@@ -46,7 +46,7 @@ grouped_stats <- function(data, x, w = NULL, by = NULL, stats = c("mean", "quart
     stop("Counts cannot be weighted if no weights are passed.")
   }
   stopifnot(c(x, w, by) %in% colnames(data),
-            !anyDuplicated(c(x, w, by, counts_name, q1_name, q3_name)),
+            !anyDuplicated(c(x, by, counts_name, q1_name, q3_name)),
             nrow(data) >= 1L)
 
   # Function that does the ungrouped calculation

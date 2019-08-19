@@ -12,6 +12,7 @@
 #' @param stats Statistic to calculate: "mean" or "quartiles".
 #' @param breaks Cut breaks for a numeric \code{v}.
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used in neither \code{grid} nor \code{evaluate_at} is specified.
+#' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
 #' @param q1_name Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".
@@ -109,7 +110,8 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                                      type = c("partial dependence", "predicted",
                                               "response", "residual"),
                                      stats = c("mean", "quartiles"),
-                                     breaks = NULL, n_bins = 11, use_linkinv = TRUE,
+                                     breaks = NULL, n_bins = 11,
+                                     cut_type = c("equal", "quantile"), use_linkinv = TRUE,
                                      value_name = "value", q1_name = "q1", q3_name = "q3",
                                      label_name = "label", type_name = "type",
                                      counts_name = "counts", counts = TRUE,
@@ -119,6 +121,8 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                                      pd_seed = NULL, ...) {
   type <- match.arg(type)
   stats <- match.arg(stats)
+  cut_type <- match.arg(cut_type)
+
   if (is.null(data)) {
     data <- x$data
   }
@@ -153,8 +157,9 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
       residual = residuals(x))
 
     # Replace v values by binned ones
-    cuts <- auto_cut(data[[v]], breaks = breaks, n_bins = n_bins, ...)
-    data[[v]] <- cuts[[if (v_labels) "level" else "value"]]
+    cuts <- auto_cut(data[[v]], breaks = breaks,
+                     n_bins = n_bins, cut_type = cut_type, ...)
+    data[[v]] <- cuts$data[[if (v_labels) "level" else "value"]]
   }
 
   # Aggregate predicted values
@@ -182,7 +187,10 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
 #' @export
 light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
                                           breaks = NULL, n_bins = 11,
+                                          cut_type = c("equal", "quantile"),
                                           pd_evaluate_at = NULL, pd_grid = NULL, ...) {
+  cut_type <- match.arg(cut_type)
+
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
     stopifnot(!is.null(v))
     if (is.null(data)) {
@@ -193,7 +201,7 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
       stopifnot(nrow(data) >= 1L, v %in% colnames(data))
       v_vec <- data[[v]]
     }
-    breaks <- attr(auto_cut(v_vec, breaks = breaks, n_bins = n_bins), "breaks")
+    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins)$breaks
   }
   all_profiles <- lapply(x, light_profile, v = v, data = data,
                          breaks = breaks, n_bins = n_bins,

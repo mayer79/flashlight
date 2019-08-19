@@ -39,6 +39,7 @@ mod_part <- flashlight(model = fit_part, label = "part", data = iris,
   y = "Sepal.Length", w = "Petal.Length")
 mods <- multiflashlight(list(mod_full, mod_part))
 
+plot(light_effects(mod_full, v = "Species"))
 x <- light_effects(mod_full, v = "Petal.Width")
 plot(x)
 plot(x, use = "response")
@@ -72,8 +73,8 @@ x$predicted <- bind_rows(x$predicted, x_add$data)
 plot_counts(p, x, alpha = 0.2)
 
 x <- light_effects(mods, v = "Petal.Width")
-plot(x)
-plot_counts(plot(x), x, alpha = 0.2)
+plot(x, zero_counts = TRUE)
+plot_counts(plot(x, zero_counts = TRUE), x, alpha = 0.2, zero_counts = TRUE)
 plot(light_effects(mods, v = "Petal.Width", stats = "quartiles"))
 
 # Different data: Use eigher fixed breaks or v_labels = FALSE
@@ -86,6 +87,7 @@ mods <- multiflashlight(list(mod_full, mod_part))
 plot(light_effects(mods, v = "Petal.Length", breaks = 0:8))
 eff <- light_effects(mods, v = "Petal.Length")
 plot_counts(plot(eff), eff, show_labels = FALSE)
+plot_counts(plot(eff, zero_counts = TRUE), eff, zero_counts = TRUE)
 
 # Log-linear OLS vs. Gamma
 ir <- iris
