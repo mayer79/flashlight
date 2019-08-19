@@ -1,0 +1,67 @@
+#' Add Counts to Effects Plot
+#'
+#' Add counts as bar plot on top of light_effects plot.
+#'
+#' Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
+#'
+#' @import ggplot2
+#' @importFrom ggpubr ggarrange
+#' @importFrom tidyr complete_
+#' @param p The result of \code{plot.light_effects}.
+#' @param x An object of class \code{light_effects}.
+#' @param zero_counts Logical flag if 0 count levels should be shown.
+#' @param text_size Size of count labels.
+#' @param facet_scales Scales argument passed to \code{facet_wrap}.
+#' @param show_labels Should counts be added as text?
+#' @param big.mark Parameter passed to \code{format}. Default is "'".
+#' @param scientific Parameter passed to \code{format}. Default is FALSE.
+#' @param ... Further arguments passed to \code{geom_bar}.
+#' @return An object of class \code{ggplot2}.
+#' @export
+#' @examples
+#' fit_full <- lm(Sepal.Length ~ ., data = iris)
+#' fit_part <- glm(Sepal.Length ~ Petal.Length, data = iris)
+#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
+#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
+#' mods <- multiflashlight(list(mod_full, mod_part))
+#'
+#' x <- light_effects(mod_full, v = "Petal.Width")
+#' plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
+#' plot_counts(plot(x), x, width = 0.3, alpha = 0.2, show_labels = FALSE)
+#' plot_counts(plot(x, use = "response"), x, fill = "lightblue")
+#' plot_counts(plot(x, use = "pd", show.legend = FALSE),
+#'   x, fill = "lightblue")
+#' @seealso \code{\link{plot.light_effects}}.
+#' @export
+plot_counts <- function(p, x, zero_counts = FALSE, text_size = 3, facet_scales = "free_x",
+                        show_labels = TRUE, big.mark = "'", scientific = FALSE, ...) {
+  # Checks
+  stopifnot(is.ggplot(p), is.light_effects(x),
+            !("lab_" %in% colnames(x$response)))
+
+  nby <- length(x$by)
+  multi <- is.light_effects_multi(x)
+
+  if (zero_counts && nby) {
+    x$response <- complete_(x$response, cols = c(x$by, x$v),
+                            fill = setNames(list(0), x$counts_name))
+  }
+  if (show_labels) {
+    x$response[["lab_"]] <- format(x$response[[x$counts_name]],
+                                   big.mark = big.mark, scientific = scientific)
+  }
+  ct <- ggplot(x$response, aes_string(x = x$v, y = x$counts_name)) +
+    geom_bar(stat = "identity", ...) +
+    theme_void() +
+    theme(strip.text.x = element_blank(), panel.grid = element_blank())
+  if (show_labels) {
+    ct <- ct + geom_text(aes_string(y = 0, label = "lab_"),
+                         angle = 90, hjust = -0.1, size = text_size)
+  }
+  if (multi || nby) {
+    ct <- ct + facet_wrap(reformulate(if (multi) x$label_name else x$by[1]),
+                          scales = facet_scales)
+  }
+  # Arrange
+  ggarrange(ct, p, heights = c(0.2, 1), ncol = 1, nrow = 2, align = "v")
+}

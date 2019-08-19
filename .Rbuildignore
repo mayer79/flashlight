@@ -1,0 +1,7 @@
+.Rproj$
+^\.Rproj\.user$
+^cran-comments\.md$
+^doc$
+^Meta$
+^.*\.Rproj$
+^flashlight\.Rproj$
