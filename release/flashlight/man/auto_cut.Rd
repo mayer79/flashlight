@@ -39,6 +39,7 @@ The construction of the level names can be controlled by passing ... arguments t
 }
 \examples{
 auto_cut(1:10, n_bins = 3)
+auto_cut(1:10, breaks = 3:4, n_bins = 3)
 auto_cut(1:10, n_bins = 3, cut_type = "quantile")
 auto_cut(LETTERS[4:1], n_bins = 2)
 auto_cut(factor(LETTERS[1:4], LETTERS[4:1]), n_bins = 2)

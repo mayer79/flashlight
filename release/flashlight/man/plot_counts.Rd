@@ -4,7 +4,7 @@
 \alias{plot_counts}
 \title{Add Counts to Effects Plot}
 \usage{
-plot_counts(p, x, zero_counts = FALSE, text_size = 3,
+plot_counts(p, x, zero_counts = TRUE, text_size = 3,
   facet_scales = "free_x", show_labels = TRUE, big.mark = "'",
   scientific = FALSE, ...)
 }

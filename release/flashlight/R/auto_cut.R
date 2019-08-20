@@ -22,6 +22,7 @@
 #' @export
 #' @examples
 #' auto_cut(1:10, n_bins = 3)
+#' auto_cut(1:10, breaks = 3:4, n_bins = 3)
 #' auto_cut(1:10, n_bins = 3, cut_type = "quantile")
 #' auto_cut(LETTERS[4:1], n_bins = 2)
 #' auto_cut(factor(LETTERS[1:4], LETTERS[4:1]), n_bins = 2)
@@ -34,7 +35,7 @@ auto_cut <- function(x, breaks = NULL, n_bins = 27,
   cut_type <- match.arg(cut_type)
   bin_labels <- bin_means <- if (is.factor(x)) levels(x) else sort(unique(x))
   if (!is.numeric(x) || (is.null(breaks) && length(bin_means) <= n_bins)) {
-      out <- data.frame(x, x)
+      data <- data.frame(x, x)
   } else {
     if (is.null(breaks)) {
       if (cut_type == "equal") {
@@ -48,10 +49,11 @@ auto_cut <- function(x, breaks = NULL, n_bins = 27,
     bin_means <- midpoints(breaks)
     cuts <- cut3(x, breaks = breaks, include.lowest = TRUE, ...)
     bin_labels <- levels(cuts)
+    stopifnot(length(bin_labels) == length(bin_means))
     int_cuts <- as.integer(cuts)
-    out <- data.frame((breaks[int_cuts] + breaks[int_cuts + 1L]) / 2, cuts)
+    data <- data.frame((breaks[int_cuts] + breaks[int_cuts + 1L]) / 2, cuts)
   }
-  list(data = setNames(out, c(x_name, level_name)),
+  list(data = setNames(data, c(x_name, level_name)),
        breaks = breaks, bin_means = bin_means, bin_labels = bin_labels)
 }
 

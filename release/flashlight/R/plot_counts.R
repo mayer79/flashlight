@@ -33,7 +33,7 @@
 #'   x, fill = "lightblue")
 #' @seealso \code{\link{plot.light_effects}}.
 #' @export
-plot_counts <- function(p, x, zero_counts = FALSE, text_size = 3, facet_scales = "free_x",
+plot_counts <- function(p, x, zero_counts = TRUE, text_size = 3, facet_scales = "free_x",
                         show_labels = TRUE, big.mark = "'", scientific = FALSE, ...) {
   # Checks
   stopifnot(is.ggplot(p), is.light_effects(x),

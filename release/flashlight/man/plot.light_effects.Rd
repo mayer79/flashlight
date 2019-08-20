@@ -5,7 +5,7 @@
 \title{Visualize Different Types of Profiles Together}
 \usage{
 \method{plot}{light_effects}(x, use = c("response", "predicted", "pd"),
-  zero_counts = FALSE, size_factor = 1, facet_scales = "free_x",
+  zero_counts = TRUE, size_factor = 1, facet_scales = "free_x",
   rotate_x = TRUE, ...)
 }
 \arguments{
@@ -58,8 +58,8 @@ plot_counts(plot(x, use = "response"), x, alpha = 0.2)
 x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
 plot(x) +
   scale_color_viridis_d(begin = 0.2, end = 0.8)
-p <- plot(x, zero_counts = TRUE)
-plot_counts(p, x, zero_counts = TRUE, alpha = 0.2)
+p <- plot(x, zero_counts = FALSE)
+plot_counts(p, x, zero_counts = FALSE, alpha = 0.2)
 
 x <- light_effects(mod_full, v = "Petal.Width", by = "Species", stats = "quartiles")
 plot(x)
@@ -87,7 +87,7 @@ mods <- multiflashlight(list(mod_full, mod_part))
 plot(light_effects(mods, v = "Petal.Length", breaks = 0:8))
 eff <- light_effects(mods, v = "Petal.Length")
 plot_counts(plot(eff), eff, show_labels = FALSE)
-plot_counts(plot(eff, zero_counts = TRUE), eff, zero_counts = TRUE)
+plot_counts(plot(eff, zero_counts = FALSE), eff, zero_counts = FALSE)
 
 # Log-linear OLS vs. Gamma
 ir <- iris
