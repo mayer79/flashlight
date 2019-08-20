@@ -154,8 +154,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   if (v_labels) {
     # In all three inputs, replace v by cuts$level
     for (nm in names(data_sets)) {
-      data_sets[[nm]][[v]] <- factor(cuts$bin_labels[match(data_sets[[nm]][[v]],
-                                     cuts$bin_means)], cuts$bin_labels)
+      data_sets[[nm]][[v]] <- cuts$bin_labels[match(data_sets[[nm]][[v]], cuts$bin_means)]
     }
   }
 

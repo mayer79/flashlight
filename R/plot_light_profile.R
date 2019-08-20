@@ -40,6 +40,7 @@
 #' plot(light_profile(mod_full, v = "Petal.Width", by = "Species"), swap_dim = TRUE)
 #'
 #' # Multiflashlight
+#' plot(light_profile(mods, v = "Species"))
 #' plot(light_profile(mods, v = "Petal.Width"))
 #' plot(light_profile(mods, v = "Petal.Width"), swap_dim = TRUE)
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species"))
