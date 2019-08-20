@@ -56,21 +56,6 @@
 #'      value_name = "pd", q1_name = "p25", q3_name = "p75", label_name = "model",
 #'      type_name = "visualization", counts_name = "n"))
 #'
-#' # Different data
-#' mod_full <- flashlight(model = fit_full, label = "full",
-#'   data = iris[1:75, ], y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part",
-#'   data = iris[76:150, ], y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part))
-#'
-#' plot(light_profile(mods, v = "Petal.Length"))
-#' plot(light_profile(mods, v = "Petal.Length", breaks = seq(1.5, 6.5, by = 1)))
-#' plot(light_profile(mods, v = "Petal.Length", pd_evaluate_at = 2:6))
-#' plot(light_profile(mods, pd_grid = data.frame(Petal.Length = 2:6)))
-#' plot(light_profile(mods, v = "Petal.Length", type = "predicted"))
-#' plot(light_profile(mods, v = "Petal.Length", type = "predicted", breaks = 1:8))
-#' plot(light_profile(mods, v = "Petal.Length", type = "predicted", v_labels = FALSE))
-#'
 #' # Log-linear OLS vs. Gamma
 #' ir <- iris
 #' ir$log_sl <- log(ir$Sepal.Length)

@@ -122,14 +122,4 @@ light_effects(mod_full, v = "Petal.Width", by = "Species")
 light_effects(mods, v = "Petal.Width")
 light_effects(mods, v = "Petal.Width", by = "Species")
 light_effects(mods, v = "Petal.Width", by = "Species", stats = "quartiles")
-
-# Different data: Use eigher fixed breaks or v_labels = FALSE
-mod_full <- flashlight(model = fit_full, label = "full",
-  data = iris[1:75, ], y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part",
-  data = iris[76:150, ], y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-# light_effects(mods, v = "Petal.Length") # bad
-light_effects(mods, v = "Petal.Length", breaks = 0:8) # good
-light_effects(mods, v = "Petal.Length", v_labels = FALSE) # good
 }

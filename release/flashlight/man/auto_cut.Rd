@@ -14,7 +14,7 @@ auto_cut(x, breaks = NULL, n_bins = 27, cut_type = c("equal",
 
 \item{n_bins}{If \code{x} is numeric and no breaks are provided, this is the maximum number of bins allowed or to be created (approximately).}
 
-\item{cut_type}{For the default "equal", bins of equal width are created by \code{pretty}. Choose "quantile" to create quantile bins.}
+\item{cut_type}{For the default type "equal", bins of equal width are created by \code{pretty}. Choose "quantile" to create quantile bins.}
 
 \item{x_name}{Column name with the values of \code{x} in the output.}
 
@@ -32,13 +32,14 @@ A list with the following four elements:
 }
 }
 \description{
-This function takes a vector \code{x} and returns a list with informations on disretized version of \code{x}.
+This function takes a vector \code{x} and returns a list with information on disretized version of \code{x}, see \code{return} for details on the resulting object.
 }
 \details{
-The construction of the level names can be controlled by passing ... arguments to \code{formatC}.
+The construction of level names can be controlled by passing ... arguments to \code{formatC}.
 }
 \examples{
 auto_cut(1:10, n_bins = 3)
+auto_cut(c(NA, 1:10), n_bins = 3)
 auto_cut(1:10, breaks = 3:4, n_bins = 3)
 auto_cut(1:10, n_bins = 3, cut_type = "quantile")
 auto_cut(LETTERS[4:1], n_bins = 2)

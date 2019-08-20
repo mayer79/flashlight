@@ -98,7 +98,7 @@ An object of classes \code{light_profile}, \code{light} (and a list) with the fo
 Calculates different types of profiles across covariable values. By default, partial dependence profiles are calculated but also profiles of response, predicted values and residuals are possible. The results are aggregated either by (weighted) means or by (weighted) quartiles. Furthermore, counts are added to the resulting object.
 }
 \details{
-For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned into quantile groups. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles, this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence or prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
+For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles, this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence or prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -146,17 +146,6 @@ light_profile(mods, v = "Petal.Width", by = "Species",
 light_profile(mods, v = "Petal.Width", by = "Species", stats = "quartiles",
   value_name = "pd", q1_name = "p25", q3_name = "p75", label_name = "model",
   type_name = "visualization", counts_name = "n")
-
-# Different data
-mod_full <- flashlight(model = fit_full, label = "full",
-  data = iris[1:75, ], y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part",
-  data = iris[76:150, ], y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-light_profile(mods, v = "Petal.Length")
-light_profile(mods, v = "Petal.Length", pd_evaluate_at = 2:6)
-light_profile(mods, v = "Petal.Length", type = "predicted", breaks = 1:8)
-light_profile(mods, v = "Petal.Length", type = "predicted", v_labels = FALSE)
 }
 \seealso{
 \code{\link{light_effects}}, \code{\link{plot.light_profile}}.

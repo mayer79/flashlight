@@ -244,7 +244,7 @@ valid <- prep[ind %in% 2:3, ]
 test <- prep[ind == 1, ]
 
 (form <- reformulate(x, "log_price"))
-fit_lm <- lm(form, data = prep_lm(train))
+fit_lm <- lm(update.formula(form, . ~ . + I(sqft_living^2)), data = prep_lm(train))
 
 # Random forest
 fit_rf <- ranger(form, data = train, seed = 8373)
@@ -413,12 +413,12 @@ Average predicted values versus the living area are as follows:
 ```{r}
 format_y <- function(x) format(x, big.mark = "'", scientific = FALSE)
 
-pvp <- light_profile(fls, v = "sqft_living", type = "predicted", format = "fg")
+pvp <- light_profile(fls, v = "sqft_living", type = "predicted", format = "fg", big.mark = "'")
 plot(pvp) +
   scale_y_continuous(labels = format_y)
 ```
 
-Note the formatting of y values as well as the `formatC` option `format = "fg"` passed to the constructor of the x labels in order to improve basic appearance. We will recycle these settings for the next plots.
+Note the formatting of y values as well as the `formatC` option `format = "fg"` and `big.mark` passed to the constructor of the x labels in order to improve basic appearance. We will recycle some of these settings for the next plots.
 
 Similar the average response profiles (identical for all flashlights, to we only show one of them):
 
@@ -447,7 +447,7 @@ plot(rvp) +
   scale_y_continuous(labels = format_y)
 ```
 
-While the tree-based models have smaller residuals and medians close to 0, the linear model shows residual curvature that could be captured by adding a squared term for `condition`.
+While the tree-based models have smaller residuals and medians close to 0, the linear model shows residual curvature that could be captured by representing `sqft_living` by more parameters.
 
 If unhappy about the "group by" strategy, set `swap_dim` to TRUE.
 
@@ -467,7 +467,7 @@ plot(rvp, swap_dim = TRUE) +
 
 For prediction profiles, the same elements as for ICE/PDs are required, while for response profiles we need "y", "linkinv" and "data". "data" can also be passed on the fly.
 
-###  Visualizing different types of profiles as "effects"" plot
+###  Visualizing different types of profiles as "effects" plot
 
 In assessing the model quality, it is often useful to visualize
 
@@ -536,8 +536,10 @@ plot(imp, top_m = 4)
 plot(imp, swap_dim = TRUE)
 
 # Effects: ICE
-plot(light_ice(fls, v = "sqft_living", seed = 4345), alpha = 0.8) + 
-  scale_color_viridis_d(begin = 0.1, end = 0.9)
+plot(light_ice(fls, v = "sqft_living", seed = 4345), 
+     alpha = 0.8, facet_scales = "free_y") + 
+  scale_color_viridis_d(begin = 0.1, end = 0.9) + 
+  scale_y_continuous(labels = format_y)
 
 # Effects: Partial dependence
 plot(light_profile(fls, v = "sqft_living"))
@@ -545,8 +547,12 @@ plot(light_profile(fls, v = "sqft_living"), swap_dim = TRUE)
 
 # Effects: Combined plot (only one flashlight) 
 # -> we need to manually pass "by" or update the single flashlight
-plot(light_effects(fl_lm, v = "sqft_living", by = "year", format = "fg", stats = "quartiles")) + 
-  scale_y_continuous(labels = format_y)
+z <- light_effects(fls, v = "sqft_living", format = "fg", 
+                   stats = "quartiles", n_bins = 5, by = NULL)
+p <- plot(z) + 
+  scale_y_continuous(labels = format_y) +
+  coord_cartesian(ylim = c(0, 3e6))
+plot_counts(p, z, alpha = 0.2)
 
 ```
 

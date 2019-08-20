@@ -11,6 +11,7 @@
 #' @param zero_counts Logical flag if 0 count levels should be shown on the x axis.
 #' @param size_factor Factor used to enlarge default \code{size} in \code{geom_point} and \code{geom_line}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
+#' @param facet_nrow Number of rows in \code{facet_wrap}. Must be 1 if \code{plot_counts} should be used.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
 #' @param ... Further arguments passed to geoms.
 #' @return An object of class \code{ggplot2}.
@@ -63,18 +64,6 @@
 #' plot_counts(plot(x, zero_counts = TRUE), x, alpha = 0.2, zero_counts = TRUE)
 #' plot(light_effects(mods, v = "Petal.Width", stats = "quartiles"))
 #'
-#' # Different data: Use eigher fixed breaks or v_labels = FALSE
-#' mod_full <- flashlight(model = fit_full, label = "full",
-#'   data = iris[1:75, ], y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part",
-#'   data = iris[76:150, ], y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part))
-#'
-#' plot(light_effects(mods, v = "Petal.Length", breaks = 0:8))
-#' eff <- light_effects(mods, v = "Petal.Length")
-#' plot_counts(plot(eff), eff, show_labels = FALSE)
-#' plot_counts(plot(eff, zero_counts = FALSE), eff, zero_counts = FALSE)
-#'
 #' # Log-linear OLS vs. Gamma
 #' ir <- iris
 #' ir$log_sl <- log(ir$Sepal.Length)
@@ -92,7 +81,8 @@
 #' @seealso \code{\link{light_effects}}, \code{\link{plot_counts}}.
 plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
                                zero_counts = TRUE, size_factor = 1,
-                               facet_scales = "free_x", rotate_x = TRUE, ...) {
+                               facet_scales = "free_x",
+                               facet_nrow = 1L, rotate_x = TRUE, ...) {
   # Checks
   stopifnot(length(use) >= 1L)
   nby <- length(x$by)
@@ -131,7 +121,8 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
       crossbar
   }
   if (multi || nby) {
-    p <- p + facet_wrap(reformulate(if (multi) x$label_name else x$by[1]), scales = facet_scales)
+    p <- p + facet_wrap(reformulate(if (multi) x$label_name else x$by[1]),
+                        scales = facet_scales, nrow = facet_nrow)
   }
   p <- p +
     theme_bw() +

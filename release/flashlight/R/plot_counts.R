@@ -60,7 +60,7 @@ plot_counts <- function(p, x, zero_counts = TRUE, text_size = 3, facet_scales = 
   }
   if (multi || nby) {
     ct <- ct + facet_wrap(reformulate(if (multi) x$label_name else x$by[1]),
-                          scales = facet_scales)
+                          scales = facet_scales, nrow = 1L)
   }
   # Arrange
   ggarrange(ct, p, heights = c(0.2, 1), ncol = 1, nrow = 2, align = "v")

@@ -1,14 +1,14 @@
 #' Discretizes a Vector
 #'
-#' This function takes a vector \code{x} and returns a list with informations on disretized version of \code{x}.
+#' This function takes a vector \code{x} and returns a list with information on disretized version of \code{x}, see \code{return} for details on the resulting object.
 #'
-#' The construction of the level names can be controlled by passing ... arguments to \code{formatC}.
+#' The construction of level names can be controlled by passing ... arguments to \code{formatC}.
 #'
 #' @importFrom stats quantile setNames
 #' @param x A vector.
 #' @param breaks An optional vector of breaks. Only relevant for numeric \code{x}.
 #' @param n_bins If \code{x} is numeric and no breaks are provided, this is the maximum number of bins allowed or to be created (approximately).
-#' @param cut_type For the default "equal", bins of equal width are created by \code{pretty}. Choose "quantile" to create quantile bins.
+#' @param cut_type For the default type "equal", bins of equal width are created by \code{pretty}. Choose "quantile" to create quantile bins.
 #' @param x_name Column name with the values of \code{x} in the output.
 #' @param level_name Column name with the bin labels of \code{x} in the output.
 #' @param ... Further arguments passed to \code{cut3}.
@@ -22,6 +22,7 @@
 #' @export
 #' @examples
 #' auto_cut(1:10, n_bins = 3)
+#' auto_cut(c(NA, 1:10), n_bins = 3)
 #' auto_cut(1:10, breaks = 3:4, n_bins = 3)
 #' auto_cut(1:10, n_bins = 3, cut_type = "quantile")
 #' auto_cut(LETTERS[4:1], n_bins = 2)
@@ -30,8 +31,7 @@
 #' auto_cut(c(0.0001, 0.0002, 0.0003, 0.005), n_bins = 3, format = "fg")
 auto_cut <- function(x, breaks = NULL, n_bins = 27,
                      cut_type = c("equal", "quantile"),
-                     x_name = "value",
-                     level_name = "level", ...) {
+                     x_name = "value", level_name = "level", ...) {
   cut_type <- match.arg(cut_type)
   bin_means <- if (is.factor(x)) levels(x) else sort(unique(x))
   if (!is.numeric(x) || (is.null(breaks) && length(bin_means) <= n_bins)) {
@@ -39,7 +39,10 @@ auto_cut <- function(x, breaks = NULL, n_bins = 27,
       if (anyNA(x)) {
         bin_means <- c(bin_means, NA)
       }
-      bin_labels <- bin_means <- factor(bin_means, bin_means)
+      if (is.factor(x)) {
+        bin_means <- factor(bin_means, bin_means)
+      }
+      bin_labels <- bin_means
   } else {
     if (is.null(breaks)) {
       if (cut_type == "equal") {

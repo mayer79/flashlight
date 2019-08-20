@@ -28,8 +28,8 @@ Imports:
     utils,
     dplyr,
     tidyr,
-    ggplot2,
     rlang,
+    ggplot2,
     ggpubr,
     MetricsWeighted (>= 0.2.0)
 Suggests: 
