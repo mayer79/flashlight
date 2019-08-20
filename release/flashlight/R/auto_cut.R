@@ -33,9 +33,13 @@ auto_cut <- function(x, breaks = NULL, n_bins = 27,
                      x_name = "value",
                      level_name = "level", ...) {
   cut_type <- match.arg(cut_type)
-  bin_labels <- bin_means <- if (is.factor(x)) levels(x) else sort(unique(x))
+  bin_means <- if (is.factor(x)) levels(x) else sort(unique(x))
   if (!is.numeric(x) || (is.null(breaks) && length(bin_means) <= n_bins)) {
       data <- data.frame(x, x)
+      if (anyNA(x)) {
+        bin_means <- c(bin_means, NA)
+      }
+      bin_labels <- bin_means <- factor(bin_means, bin_means)
   } else {
     if (is.null(breaks)) {
       if (cut_type == "equal") {
@@ -49,6 +53,11 @@ auto_cut <- function(x, breaks = NULL, n_bins = 27,
     bin_means <- midpoints(breaks)
     cuts <- cut3(x, breaks = breaks, include.lowest = TRUE, ...)
     bin_labels <- levels(cuts)
+    if (anyNA(cuts)) {
+      bin_labels <- c(bin_labels, NA)
+      bin_means <- c(bin_means, NA)
+    }
+    bin_labels <- factor(bin_labels, levels(cuts))
     stopifnot(length(bin_labels) == length(bin_means))
     int_cuts <- as.integer(cuts)
     data <- data.frame((breaks[int_cuts] + breaks[int_cuts + 1L]) / 2, cuts)
