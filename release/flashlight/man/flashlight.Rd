@@ -38,7 +38,7 @@ flashlight(x, ...)
 \item{label}{Name of the flashlight. Required.}
 }
 \value{
-An object of class \code{flashlight} (and "list") containing each input (except \code{x}) as element.
+An object of class \code{flashlight} (and \code{list}) containing each input (except \code{x}) as element.
 }
 \description{
 Creates or updates a \code{flashlight} object. If a flashlight is to be created, all arguments are optional except \code{label}. If a flashlight is to be updated, all arguments are optional up to \code{x} (the flashlight to be updated).

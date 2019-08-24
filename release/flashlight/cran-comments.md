@@ -9,4 +9,4 @@
 
 * This is a new release.
 
-* Following the kind hints of Martina Schmirl, comments in examples are removed alltogether as well as \dontrun{} commands.
+* Following the kind hints of Martina Schmirl, comments in examples are removed alltogether as well as \dontrun{} commands. Furthermore, the description was modified in order to remove the quoted term "multiflashlight".

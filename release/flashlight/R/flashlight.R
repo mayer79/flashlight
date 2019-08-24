@@ -15,7 +15,7 @@
 #' @param metrics A named list of metrics. Here, a metric is a function with exactly four arguments: actual, predicted, w (case weights) and \code{...} like those in package \code{MetricsWeighted}.
 #' @param label Name of the flashlight. Required.
 #' @param ... Arguments passed from or to other functions.
-#' @return An object of class \code{flashlight} (and "list") containing each input (except \code{x}) as element.
+#' @return An object of class \code{flashlight} (and \code{list}) containing each input (except \code{x}) as element.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
