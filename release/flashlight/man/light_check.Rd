@@ -40,6 +40,4 @@ fl <- flashlight(fit, data = iris, y = "Sepal.Length", label = "ols")
 fl_log <- flashlight(fit_log,  y = "Sepal.Length", label = "ols", linkinv = exp)
 light_check(fl)
 light_check(fl_log)
-# Will give inconsistency warnings.
-# fls <- multiflashlight(list(fl, fl_log))
 }

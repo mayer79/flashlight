@@ -15,7 +15,6 @@
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
-#' \dontrun{
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
@@ -30,7 +29,6 @@
 #' plot(light_importance(mods), swap_dim = TRUE)
 #' plot(light_importance(mods, by = NULL), fill = "darkgreen")
 #' plot(light_importance(mods, by = NULL), swap_dim = TRUE)
-#' }
 #' @seealso \code{\link{light_importance}}.
 plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
                                   facet_scales = "fixed", ...) {

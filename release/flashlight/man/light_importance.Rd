@@ -75,21 +75,14 @@ The minimum required elements in the (multi-) flashlight are "y", "predict_funct
 }}
 
 \examples{
-\dontrun{
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
-
-light_importance(mod_full, seed = 4)
-light_importance(mod_full, variable_name = "v", label_name = "model",
-  metric_name = "m", value_name = "drop")
-light_importance(mod_full, metric = list(r_squared = r_squared), lower_is_better = FALSE)
-light_importance(mod_full, v = c("Petal.Length", "Species"))
+light_importance(mod_full)
 light_importance(mods)
 
-# Log-linear OLS vs. Gamma
 ir <- iris
 ir$log_sl <- log(ir$Sepal.Length)
 fit_lm <- lm(log_sl ~ Petal.Length, data = ir)
@@ -97,12 +90,9 @@ fit_glm <- glm(Sepal.Length ~ Petal.Length, data = ir, family = Gamma(link = log
 fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
 fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
   predict_function = function(m, X) predict(m, X, type = "response"))
-fls <- multiflashlight(list(fl_lm, fl_glm), data = ir,
-  metrics = list(rmse = rmse, r_squared = r_squared))
-light_importance(fls, v = "Petal.Length", seed = 45)  #  without linkinv
-light_importance(fls, v = "Petal.Length", seed = 45,
-  use_linkinv = TRUE)  #  with linkinv
-}
+fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
+light_importance(fls, v = "Petal.Length", seed = 45)
+light_importance(fls, v = "Petal.Length", seed = 45, use_linkinv = TRUE)
 }
 \references{
 [1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv. <https://arxiv.org/abs/1801.01489>.

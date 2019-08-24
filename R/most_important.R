@@ -12,7 +12,7 @@
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
 #' (imp <- light_importance(fl, seed = 4))
-#' most_important(imp) # same as above
+#' most_important(imp)
 #' most_important(imp, 2)
 #' @seealso \code{\link{light_importance}}.
 most_important <- function(x, top_m = Inf) {

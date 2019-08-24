@@ -52,13 +52,11 @@
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part))
 #'
-#' # Discrete v
 #' light_profile(mod_full, v = "Species")
 #' light_profile(mod_full, v = "Species", counts = FALSE)
 #' light_profile(mod_full, v = "Species", type = "response")
 #' light_profile(mod_full, v = "Species", stats = "quartiles")
 #'
-#' # Continuous v
 #' light_profile(mod_full, v = "Petal.Width")
 #' light_profile(mod_full, v = "Petal.Width", type = "residual")
 #' light_profile(mod_full, v = "Petal.Width", type = "residual", v_label = FALSE)
@@ -68,17 +66,14 @@
 #' light_profile(mod_full, v = "Petal.Width", pd_evaluate_at = 2:4)
 #' light_profile(mod_full, pd_grid = data.frame(Petal.Width = 2:4))
 #'
-#' # Grouped
 #' light_profile(mod_full, v = "Petal.Width", by = "Species")
 #'
-#' # Multiflashlight
 #' light_profile(mods, v = "Petal.Width")
 #' light_profile(mods, v = "Petal.Width", by = "Species")
 #' light_profile(mods, v = "Petal.Width", by = "Species", type = "predicted")
 #' light_profile(mods, v = "Petal.Width", by = "Species",
 #'   type = "predicted", stats = "quartiles")
 #'
-#' # Customize column names
 #' light_profile(mods, v = "Petal.Width", by = "Species", stats = "quartiles",
 #'   value_name = "pd", q1_name = "p25", q3_name = "p75", label_name = "model",
 #'   type_name = "visualization", counts_name = "n")

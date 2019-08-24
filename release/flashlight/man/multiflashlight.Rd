@@ -41,20 +41,16 @@ Combines a list of flashlights to an object of class \code{multiflashlight} and/
 }}
 
 \examples{
-\dontrun{
 fit_lm <- lm(Sepal.Length ~ ., data = iris)
 fit_glm <- glm(Sepal.Length ~ ., family = Gamma(link = log), data = iris)
 mod_lm <- flashlight(model = fit_lm, label = "lm")
 mod_glm <- flashlight(model = fit_glm, label = "glm")
 (mods <- multiflashlight(list(mod_lm, mod_glm)))
 
-# Add elements to single flashlights through multiflashlight
 mods <- multiflashlight(list(mod_lm, mod_glm),
-  data = iris, by = "Species", y = "Sepal.Length",
-  metrics = list(rmse = rmse, r_squared = r_squared))
+  data = iris, by = "Species", y = "Sepal.Length")
 mod_lm <- mods$lm
 mod_lm
-}
 }
 \seealso{
 \code{\link{flashlight}}.

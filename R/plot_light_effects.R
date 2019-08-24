@@ -17,7 +17,6 @@
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
-#' \dontrun{
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fit_part <- glm(Sepal.Length ~ Petal.Length, data = iris)
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris,
@@ -30,54 +29,19 @@
 #' x <- light_effects(mod_full, v = "Petal.Width")
 #' plot(x)
 #' plot(x, use = "response")
-#' plot(x, use = "predicted")
-#' plot(x, use = "pd")
-#' plot_counts(plot(x), x, alpha = 0.2)
-#' plot_counts(plot(x, use = "response"), x, alpha = 0.2)
-#' plot_counts(plot(x, use = "pd"), x, alpha = 0.2)
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 #' plot(x)
-#' plot(x, size_factor = 3)
-#' plot_counts(plot(x), x, alpha = 0.2)
 #' plot_counts(plot(x, use = "response"), x, alpha = 0.2)
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
-#' plot(x) +
-#'   scale_color_viridis_d(begin = 0.2, end = 0.8)
+#' plot(x)
 #' p <- plot(x, zero_counts = FALSE)
 #' plot_counts(p, x, zero_counts = FALSE, alpha = 0.2)
 #'
-#' x <- light_effects(mod_full, v = "Petal.Width", by = "Species", stats = "quartiles")
-#' plot(x)
-#' plot_counts(plot(x), x, alpha = 0.2)
-#'
-#' # Smuggle additional line into the pic
-#' x_add <- light_profile(mod_full, v = "Petal.Width", type = "response", by = "Species")
-#' x_add$data$type <- "observed"
-#' x$predicted <- bind_rows(x$predicted, x_add$data)
-#' (p <- plot(x))
-#' plot_counts(p, x, alpha = 0.2)
-#'
-#' x <- light_effects(mods, v = "Petal.Width")
-#' plot(x, zero_counts = TRUE)
-#' plot_counts(plot(x, zero_counts = TRUE), x, alpha = 0.2, zero_counts = TRUE)
+#' plot(light_effects(mod_full, v = "Petal.Width", by = "Species",
+#'   stats = "quartiles"))
 #' plot(light_effects(mods, v = "Petal.Width", stats = "quartiles"))
-#'
-#' # Log-linear OLS vs. Gamma
-#' ir <- iris
-#' ir$log_sl <- log(ir$Sepal.Length)
-#' fit_lm <- lm(log_sl ~ Petal.Length + Petal.Width, data = ir)
-#' fit_glm <- glm(Sepal.Length ~ Petal.Length + Petal.Width,
-#'   data = ir, family = Gamma(link = log))
-#' fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
-#' fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
-#'   predict_function = function(m, X) predict(m, X, type = "response"))
-#' fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
-#'
-#' plot(light_effects(fls, v = "Petal.Length"))
-#' plot(light_effects(fls, v = "Petal.Length", use_linkinv = FALSE))
-#' }
 #' @seealso \code{\link{light_effects}}, \code{\link{plot_counts}}.
 plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
                                zero_counts = TRUE, size_factor = 1,

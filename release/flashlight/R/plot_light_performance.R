@@ -15,26 +15,16 @@
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
-#' \dontrun{
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part),
-#'   metrics = list(rmse = rmse, `R-squared` = r_squared))
+#' mods <- multiflashlight(list(mod_full, mod_part))
 #' plot(light_performance(mod_full), fill = "darkred")
-#' plot(light_performance(mod_full, metrics = list(rmse = rmse, `R-squared` = r_squared)))
 #' plot(light_performance(mod_full, by = "Species"), fill = "darkred")
 #' plot(light_performance(mods))
 #' plot(light_performance(mods, by = "Species"))
-#' plot(light_performance(mods, by = "Species"), swap_dim = TRUE) +
-#'   scale_fill_viridis_d()
-#'
-#' # Different metrics gives warning
-#' mod_part <- flashlight(mod_part, metrics = list(mse = mse))
-#' mod_full <- flashlight(mod_full, metrics = list(r_squared = r_squared))
-#' # plot(light_performance(multiflashlight(list(mod_part, mod_full))))
-#' }
+#' plot(light_performance(mods, by = "Species"), swap_dim = TRUE)
 #' @seealso \code{\link{light_performance}}.
 plot.light_performance <- function(x, swap_dim = FALSE,
                                    facet_scales = "free_y", rotate_x = FALSE, ...) {

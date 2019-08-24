@@ -22,6 +22,6 @@ fit <- lm(Sepal.Length ~ ., data = iris)
 (fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols"))
 residuals(fl)[1:5]
 residuals(fl, data = iris[1:5, ])
-residuals(fl, data = iris[1:5, ], linkinv = exp) # nonsense
+residuals(fl, data = iris[1:5, ], linkinv = exp)
 resid(fl)[1:5]
 }

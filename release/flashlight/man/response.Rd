@@ -35,6 +35,5 @@ fit <- lm(Sepal.Length ~ ., data = iris)
 (fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols"))
 response(fl)[1:5]
 response(fl, data = iris[1:5, ])
-response(fl, data = iris[1:5, ], linkinv = exp) # nonsense
-# response(multiflashlight(list(fl, fl))) # Gives error
+response(fl, data = iris[1:5, ], linkinv = exp)
 }

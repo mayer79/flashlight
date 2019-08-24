@@ -28,7 +28,6 @@ Minimal visualization of an object of class \code{light_importance} as \code{geo
 The plot is organized as a bar plot with variable names as x-aesthetic. Up to two additional dimensions (multiflashlight and one "by" variable or single flashlight with two "by" variables) can be visualized by facetting and dodge/fill. Set \code{swap_dim = FALSE} to revert the role of these two dimensions. One single additional dimension is visualized by a facet wrap, or - if \code{swap_dim = FALSE} - by dodge/fill.
 }
 \examples{
-\dontrun{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
@@ -43,7 +42,6 @@ plot(light_importance(mods))
 plot(light_importance(mods), swap_dim = TRUE)
 plot(light_importance(mods, by = NULL), fill = "darkgreen")
 plot(light_importance(mods, by = NULL), swap_dim = TRUE)
-}
 }
 \seealso{
 \code{\link{light_importance}}.

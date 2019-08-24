@@ -48,11 +48,9 @@
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part))
 #'
-#' # Discrete v
 #' light_effects(mod_full, v = "Species")
 #' light_effects(mod_full, v = "Species", stats = "quartiles")
 #'
-#' # Continuous v
 #' light_effects(mod_full, v = "Petal.Width")
 #' light_effects(mod_full, v = "Petal.Width", v_label = FALSE)
 #' light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
@@ -60,10 +58,8 @@
 #' light_effects(mod_full, v = "Petal.Width", n_bins = 3, format = "f")
 #' light_effects(mod_full, v = "Petal.Width", breaks = 0:3)
 #'
-#' # Grouped
 #' light_effects(mod_full, v = "Petal.Width", by = "Species")
 #'
-#' # Multiflashlight
 #' light_effects(mods, v = "Petal.Width")
 #' light_effects(mods, v = "Petal.Width", by = "Species")
 #' light_effects(mods, v = "Petal.Width", by = "Species", stats = "quartiles")

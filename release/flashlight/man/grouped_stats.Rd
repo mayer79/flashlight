@@ -38,20 +38,17 @@ A \code{data.frame} with columns \code{by}, \code{x} and optionally \code{counts
 Calculates weighted means or quartiles (and counts) of a variable grouped by optional columns.
 }
 \examples{
-# Ungrouped
 grouped_stats(iris, "Sepal.Width")
 grouped_stats(iris, "Sepal.Width", stats = "quartiles")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width", counts_weighted = TRUE)
 
-# Grouped
 grouped_stats(iris, "Sepal.Width", by = "Species")
 grouped_stats(iris, "Sepal.Width", stats = "quartiles", by = "Species")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width", by = "Species")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width",
   counts_weighted = TRUE, by = "Species")
 
-# Non-default options
 grouped_stats(iris, "Sepal.Width", counts = FALSE)
 grouped_stats(iris, "Sepal.Width", counts_name = "n",
   stats = "quartiles", q1_name = "p25", q3_name = "p75")

@@ -28,26 +28,16 @@ Minimal visualization of an object of class \code{light_performance} as \code{ge
 The plot is organized as a bar plot as follows: For flashlights without "by" variable specified, a single bar is drawn. Otherwise, the "by" variable (or the flashlight label if there is no "by" variable) is represented by the "x" aesthetic. The flashlight label (in case of one "by" variable) is represented by dodged bars. This strategy makes sure that performance of different flashlights can be compared easiest. Set "swap_dim = TRUE" to revert the role of dodging and x aesthetic. Different metrics are always represented by facets.
 }
 \examples{
-\dontrun{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part),
-  metrics = list(rmse = rmse, `R-squared` = r_squared))
+mods <- multiflashlight(list(mod_full, mod_part))
 plot(light_performance(mod_full), fill = "darkred")
-plot(light_performance(mod_full, metrics = list(rmse = rmse, `R-squared` = r_squared)))
 plot(light_performance(mod_full, by = "Species"), fill = "darkred")
 plot(light_performance(mods))
 plot(light_performance(mods, by = "Species"))
-plot(light_performance(mods, by = "Species"), swap_dim = TRUE) +
-  scale_fill_viridis_d()
-
-# Different metrics gives warning
-mod_part <- flashlight(mod_part, metrics = list(mse = mse))
-mod_full <- flashlight(mod_full, metrics = list(r_squared = r_squared))
-# plot(light_performance(multiflashlight(list(mod_part, mod_full))))
-}
+plot(light_performance(mods, by = "Species"), swap_dim = TRUE)
 }
 \seealso{
 \code{\link{light_performance}}.

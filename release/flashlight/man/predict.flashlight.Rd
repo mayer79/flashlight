@@ -22,5 +22,5 @@ fit <- lm(Sepal.Length ~ ., data = iris)
 (fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols"))
 predict(fl)[1:5]
 predict(fl, data = iris[1:5, ])
-predict(fl, data = iris[1:5, ], linkinv = exp) # nonsense
+predict(fl, data = iris[1:5, ], linkinv = exp)
 }

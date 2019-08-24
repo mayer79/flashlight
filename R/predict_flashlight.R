@@ -13,7 +13,7 @@
 #' (fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols"))
 #' predict(fl)[1:5]
 #' predict(fl, data = iris[1:5, ])
-#' predict(fl, data = iris[1:5, ], linkinv = exp) # nonsense
+#' predict(fl, data = iris[1:5, ], linkinv = exp)
 predict.flashlight <- function(object, ...) {
   object <- flashlight(object, ...)
   required <- c("predict_function", "linkinv", "model", "data")

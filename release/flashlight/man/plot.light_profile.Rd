@@ -29,31 +29,23 @@ Minimal visualization of an object of class \code{light_profile}. The object ret
 Either lines and points are plotted (if stats = "mean") or quartile boxes. If there is a "by" variable or a multiflashlight, this first dimension is taken care by color (or if \code{swap_dim = TRUE} by facets). If there are two "by" variables or a multiflashlight with one "by" variable, the first "by" variable is visualized as color, the second one or the multiflashlight via facet (change with \code{swap_dim}).
 }
 \examples{
-\dontrun{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part))
 
-# Discrete v
 plot(light_profile(mod_full, v = "Species"))
 plot(light_profile(mod_full, v = "Species", type = "response"))
 plot(light_profile(mod_full, v = "Species", stats = "quartiles"))
 
-# Continuous v
 plot(light_profile(mod_full, v = "Petal.Width"))
 plot(light_profile(mod_full, v = "Petal.Width", type = "residual"))
 plot(light_profile(mod_full, v = "Petal.Width", stats = "quartiles"))
-plot(light_profile(mod_full, v = "Petal.Width", n_bins = 3))
-plot(light_profile(mod_full, v = "Petal.Width", pd_evaluate_at = 2:4))
-plot(light_profile(mod_full, pd_grid = data.frame(Petal.Width = 2:4)))
 
-# Grouped partial dependence
 plot(light_profile(mod_full, v = "Petal.Width", by = "Species"))
 plot(light_profile(mod_full, v = "Petal.Width", by = "Species"), swap_dim = TRUE)
 
-# Multiflashlight
 plot(light_profile(mods, v = "Species"))
 plot(light_profile(mods, v = "Petal.Width"))
 plot(light_profile(mods, v = "Petal.Width"), swap_dim = TRUE)
@@ -64,26 +56,6 @@ plot(light_profile(mods, v = "Petal.Width", by = "Species",
   type = "predicted", n_bins = 5), swap_dim = TRUE)
 plot(light_profile(mods, v = "Petal.Width", by = "Species",
   type = "predicted", stats = "quartiles"), rotate_x = TRUE)
-
-# Customize column names
-plot(light_profile(mods, v = "Petal.Width", by = "Species", stats = "quartiles",
-     value_name = "pd", q1_name = "p25", q3_name = "p75", label_name = "model",
-     type_name = "visualization", counts_name = "n"))
-
-# Log-linear OLS vs. Gamma
-ir <- iris
-ir$log_sl <- log(ir$Sepal.Length)
-fit_lm <- lm(log_sl ~ Petal.Length + Petal.Width, data = ir)
-fit_glm <- glm(Sepal.Length ~ Petal.Length + Petal.Width,
-  data = ir, family = Gamma(link = log))
-fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
-fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
-  predict_function = function(m, X) predict(m, X, type = "response"))
-fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
-
-plot(light_profile(fls, v = "Petal.Length"))
-plot(light_profile(fls, v = "Petal.Length", use_linkinv = FALSE))
-}
 }
 \seealso{
 \code{\link{light_profile}}, \code{\link{plot.light_effects}}.

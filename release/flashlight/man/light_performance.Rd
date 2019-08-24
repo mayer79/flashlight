@@ -62,43 +62,16 @@ The minimal required elements in the (multi-) flashlight are "y", "predict_funct
 }}
 
 \examples{
-\dontrun{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part), by = "Species",
-  metrics = list(rmse = rmse, r_squared = r_squared))
+mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 light_performance(mod_full)
 light_performance(mod_full, metric_name = "perf",
   value_name = "rmse", label_name = "model")
-light_performance(mod_full, metrics = list(rmse = rmse, r_squared = r_squared))
 light_performance(mod_full, by = "Species")
 light_performance(mods, by = "Species")
-
-# Log-linear OLS vs. Gamma
-ir <- iris
-ir$log_sl <- log(ir$Sepal.Length)
-fit_lm <- lm(log_sl ~ Petal.Length, data = ir)
-fit_glm <- glm(Sepal.Length ~ Petal.Length, data = ir, family = Gamma(link = log))
-fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
-fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
-  predict_function = function(m, X) predict(m, X, type = "response"))
-fls <- multiflashlight(list(fl_lm, fl_glm), data = ir,
-  metrics = list(rmse = rmse, r_squared = r_squared))
-light_performance(fls)$data #  performance without linkinv
-light_performance(fls, use_linkinv = TRUE)$data #  with linkinv
-
-# Other metrics
-fls <- multiflashlight(fls, metrics = list(deviance = deviance_gamma))
-light_performance(fls, use_linkinv = TRUE)
-
-light_performance(fls, use_linkinv = TRUE,
-  metrics = list(deviance = deviance_tweedie), tweedie_p = 2)
-
-light_performance(fls, use_linkinv = TRUE,
-  metrics = list(deviance = deviance_tweedie), tweedie_p = 1.99)
-}
 }
 \seealso{
 \code{\link{plot.light_performance}}.
