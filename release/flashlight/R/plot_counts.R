@@ -41,7 +41,7 @@ plot_counts <- function(p, x, zero_counts = TRUE, text_size = 3, facet_scales = 
   nby <- length(x$by)
   multi <- is.light_effects_multi(x)
 
-  if (zero_counts && (nby + multi) >= 1L) {
+  if (zero_counts) {
     x$response <- complete_(x$response, cols = c(x$by, x$v, x$label_name),
                             fill = setNames(list(0), x$counts_name))
   }

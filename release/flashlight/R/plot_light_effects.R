@@ -60,7 +60,7 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
 
   # Remove 0 count entries in "data"
   n <- nrow(data)
-  if (nby + multi >= 1L && !zero_counts && n) {
+  if (!zero_counts && n) {
     data <- semi_join(data, x$response, by = c(x$label_name, x$by, x$v))
   }
 

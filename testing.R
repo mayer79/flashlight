@@ -261,3 +261,38 @@ plot(light_effects(mods, v = "Petal.Length", breaks = 0:8))
 eff <- light_effects(mods, v = "Petal.Length")
 plot_counts(plot(eff), eff, show_labels = FALSE)
 plot_counts(plot(eff, zero_counts = FALSE), eff, zero_counts = FALSE)
+
+#======================================
+# Empty factor levels
+#======================================
+
+iris$Species <- relevel(iris$Species, "virginica")
+# iris$Species <- as.character(iris$Species)
+fit <- lm(Sepal.Length ~ ., data = iris)
+ir <- iris[90:150, ]
+ir$sw <- ir$Sepal.Width > 3
+table(ir$Species)
+table(ir$Species, ir$sw)
+fl <- flashlight(model = fit, label = "lm", data = ir, y = "Sepal.Length")
+
+plot(light_ice(fl, v = "Species"))
+plot(light_profile(fl, v = "Species"))
+plot(light_profile(fl, v = "Species", type = "response"))
+
+# No by variable: zero_counts does not work
+eff <- light_effects(fl, v = "Species")
+
+(p <- plot(eff, zero_counts = FALSE))
+plot_counts(p, eff, alpha = 0.2, zero_counts = FALSE) # bad
+
+(p <- plot(eff))
+plot_counts(p, eff, alpha = 0.2) # bad
+
+# With by variable: zero_counts does not work
+eff <- light_effects(fl, v = "Species", by = "sw")
+
+(p <- plot(eff, zero_counts = FALSE))
+plot_counts(p, eff, alpha = 0.2, zero_counts = FALSE) # bad
+
+(p <- plot(eff))
+plot_counts(p, eff, alpha = 0.2) # bad

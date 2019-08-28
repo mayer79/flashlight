@@ -1,5 +1,7 @@
-# flashlight 0.1.0
+# flashlight 0.1.1
 
-* Initial release
+* Bug fixes
+
+- `zero_counts` in `plot_counts` and `plot.light_effects` had no effect for single flashlights with no "by" variable.
 
 

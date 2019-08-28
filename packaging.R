@@ -24,7 +24,7 @@ create_package(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
     Type = "Package",
-    Version = "0.1.0",
+    Version = "0.1.1",
     Date = Sys.Date(),
     Description = "Shed light on black box machine learning models by the help of model performance, permutation variable importance (Fisher et al. (2018) <arxiv.org/abs/1801.01489>), ICE profiles, partial dependence (Friedman J. H. (2001) <doi.org/10.1214/aos/1013203451>), and further effects plots. All tools are implemented to work with case weights and allow for stratified analysis. Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
