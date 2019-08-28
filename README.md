@@ -18,8 +18,6 @@ Currently, models with numeric or binary response are supported.
 
 ## Installation
 
-You can install the released version of MetricsWeighted from [CRAN](https://CRAN.R-project.org) with:
-
 From CRAN:
 ```
 install.packages("flashlight")
