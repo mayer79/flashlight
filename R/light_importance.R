@@ -12,14 +12,14 @@
 #' @param metric An optional named list of length one with a metric as element. Defaults to the first metric in the flashlight. The metric needs to be a function with at least four arguments: actual, predicted, case weights w and \code{...}.
 #' @param v Vector of variables to assess importance for. Defaults to all variables in \code{data}.
 #' @param n_max Maximum number of rows to consider. Use if \code{data} is large.
-#' @param seed An integer random seed used to shuffle rows if \code{n_max} is smaller than the number of rows in \code{data}.
+#' @param seed An integer random seed used to select and shuffle rows.
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param metric_name Name of the resulting column containing the name of the metric. Defaults to "metric".
 #' @param value_name Column name in resulting \code{data} containing the drop in performance. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
-#' @param variable_name Column name in resulting \code{data} containing the variable name. Defaults to "variable".
-#' @param ... Arguments passed from or to other methods.
+#' @param variable_name Column name in resulting \code{data} containing the variable names. Defaults to "variable".
+#' @param ... Further arguments passed to \code{light_performance}.
 #' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations. The columns "value_original" and "value_shuffled" provide the performance before and after shuffling.
