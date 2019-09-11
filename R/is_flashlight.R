@@ -49,6 +49,18 @@ is.light_importance_multi <- function(x) {
   inherits(x, "light_importance_multi")
 }
 
+#' @describeIn is.flashlight Check for light_breakdown object.
+#' @export
+is.light_breakdown <- function(x) {
+  inherits(x, "light_breakdown")
+}
+
+#' @describeIn is.flashlight Check for light_breakdown_multi object.
+#' @export
+is.light_breakdown_multi <- function(x) {
+  inherits(x, "light_breakdown_multi")
+}
+
 #' @describeIn is.flashlight Check for light_ice object.
 #' @export
 is.light_ice <- function(x) {
