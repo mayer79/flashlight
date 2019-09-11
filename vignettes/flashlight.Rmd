@@ -34,7 +34,7 @@ library(ranger)          # random forest
 
 In contrast to classic statistical modelling techniques like linear regression, modern machine learning approaches tend to provide black box results. In areas like visual computing or natural language processing, this is not an issue since there, focus usually lies on predicting things. Either the predictions are sufficiently useful in practice or the model won't be used. However, in areas where the purpose of a statistical model is also to explain or validate underlying theories (e.g. in medicine, economics, and biology), black box models are of little use. 
 
-Thus, there is need to shed light into these black boxes resp. to explain machine learning models as good as possible. Of special interest are **model agnostic** approaches that work for any kind of modelling technique, e.g. a linear regression, a neural net or a tree-based method. The only requirement is the availability of a prediction function, i.e. a function takes a data set and returns predictions.
+Thus, there is need to shed light into these black boxes resp. to explain machine learning models as good as possible. An excellent reference is the online book of Christoph Molnar [1]. Of special interest are **model agnostic** approaches that work for any kind of modelling technique, e.g. a linear regression, a neural net or a tree-based method. The only requirement is the availability of a prediction function, i.e. a function takes a data set and returns predictions. 
 
 To do so is the purpose of the R package `flashlight`, which is inspired by the beautiful `DALEX` package, see (https://CRAN.R-project.org/package=DALEX). 
 
@@ -66,15 +66,15 @@ How precise are models if applied to unseen data? This aspect is of key interest
 
 Which variables are particularly relevant for the model? This aspect is helpful in different ways. Firstly, it might help to simplify the full modelling process by eliminating difficult to assess input variables with low explanatory power. Secondly, its pure information. Thirdly, it might help to identify problems in data structure: if one variable is extremely relevant and all others not, then there might be some sort of information leakage from the response. Thus said, variable importance considerations are very relevant for quality assurance as well. 
 
-Different modelling techniques offer different ways of variable importance. In linear models, we consider e.g. F-test statistics or p values, in tree-based methods, its number of splits or avarage split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [1].
+Different modelling techniques offer different ways of variable importance. In linear models, we consider e.g. F-test statistics or p values, in tree-based methods, its number of splits or avarage split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [2].
 
 ### Effects of input variables
 
 In linear regression, the fitted model consists of an affine linear function in the inputs. Its coefficients immediately tell us how the response is expected to change if the value of one single input variable $X$ is systematically being adapted. How to describe such effects of a variable $X$ for more complex models that include non-linearities and high-order interactions?
 
-One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [2]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel.
+One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel.
 
-If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [3].
+If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4].
 
 Studying ICE and partial dependence profiles make sense as long as it make sense to investigate the effect of $X$ while holding all other predictors fixed. An alternative to studying such *partial effects*, it is sometimes interesting to look at "accumulated" effects of $X$ including the effects from all other predictors. Such effects are estimated by averaging the predictions within values of the predictor $X$ of interest. If such prediction profile differs considerably from the observed average response, this might be a sign of model underfit. Residual profiles immediatly show such misfits as well. In classic statistical modelling, this sort of plots are called "fitted versus covariable" plots or "residual versus covariable" plots.
 
@@ -82,9 +82,11 @@ Besides looking at *average* profiles, it is often also revealing to consider *q
 
 ### Variable contribution breakdown for single observations
 
-Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be decomposed into additive effects of input variables. For non-additive models, the order of the variables visited is relevant. The fairest way to create such decomposition would consider all possible orderings (permutations) and averaging the results. This is what SHAP values do, see e.g. Gosiewska and Biecek [4]. Since there is no model agnostic *efficient* way to calculate them, we use an approximation called *breakdown* described in [4]. 
+Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be decomposed into additive effects of input variables, e.g. LIME, LIVE, SHAP or breakdown (Gosiewska and Biecek [5]), see [1] and [5] for an overview. The `flashlight` package currently supports the breakdown method.
 
-The breakdown algorithm assigns the following attribution to the first variable $x_1$: In the query data, all values in $x_1$ are set to the value of $x_1$ of the considered observation. The change in the (weighted) average predicted value on the query data measures the contribution of $x_1$ on the prediction. This procedure is iterated over further $x_i$. In an initial step, the variables $x_i$ are sorted by the size of their contribution in the same way but without iteration.
+It works as follows: First, the visit order $(x_1, ..., x_m)$ of variables is specified. Then, in the query data, the column $x_1$ is set to the constant value of $x_1$ of the observation to be explained. The change in the (weighted) average predicted value on the query data measures the contribution of $x_1$ on the prediction. This procedure is iterated over all $x_i$ until eventually, all rows in the query data are identical to the observation to be explained. 
+
+A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all $m!$ possible visit orders and its results averaged per variable. This is basically what SHAP values do, see e.g. [5] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. Thus we use the short-cut described in [5] and implemented in the `ibreakdown` package (https://CRAN.R-project.org/package=iBreakDown): There, the variables $x_i$ are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. always starting from the original query data.
 
 The `flashlight` package offers these tools in a very simple way.
 
@@ -527,6 +529,20 @@ plot_counts(p, eff, fill = "blue", alpha = 0.2, width = 0.3)
 
 The `plot` method of `light_effects` allows to hide certain plot element if it looks too dense.
 
+###  Variable contribution breakdown for single observation
+
+Besides global effects, we can use `light_breakdown` to calculate variable impact on one single prediction. 
+```{r}
+bd <- light_breakdown(fl_lm, new_obs = valid[1, ], v = x, n_max = 1000, seed = 74) 
+plot(bd, size = 3)
+```
+We have set `n_max` to 1000 in order to save time. The only variable with positive impact on the prediction is "age". The other variables have a negative impact compared to the 1000 reference observations. We could limit the image to the four most relevant variables. In this case, the final line would show the impact of all other variables together.
+
+```{r}
+bd <- light_breakdown(fl_lm, new_obs = valid[1, ], v = x, n_max = 1000, seed = 74, top_m = 4) 
+plot(bd)
+```
+
 ## Grouped calculations
 
 A key feature of the `flashlight` package is to support grouped results. You can initialize the (multi-)flashlight with column names of one or many grouping variables or ask for grouped calculations in all major `flashlight` functions. Plots are adapted accordingly.
@@ -566,8 +582,11 @@ p <- plot(z) +
   coord_cartesian(ylim = c(0, 3e6))
 plot_counts(p, z, alpha = 0.2)
 
-```
+# Variable contribution breakdown for single observation 
+# -> "by" selects the relevant rows in data/valid.
+plot(light_breakdown(fl_lm, new_obs = valid[1, ], v = x, top_m = 3))
 
+```
 
 ## Working with case weights
 
@@ -604,7 +623,7 @@ plot(eff) %>%
   plot_counts(eff, alpha = 0.2, fill = "blue")
 
 # Variable contribution breakdown for single observation
-plot(light_breakdown(fl_weighted, new_obs = iris[2, ]))
+plot(light_breakdown(fls, new_obs = iris[2, ]), size = 2.5)
 ```
 
 ## Binary classification
@@ -645,11 +664,13 @@ plot(light_breakdown(fl, new_obs = ir[2, ], v = c("Sepal.Length", "Petal.Width")
 
 ## References
 
-[1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv (arxiv.org/abs/1801.01489).
+[1] C. Molnar. "Interpretable machine learning. A Guide for Making Black Box Models Explainable", 2019 (https://christophm.github.io/interpretable-ml-book/).
 
-[2] Goldstein, A. et al. Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1, 2015 (https://doi.org/10.1080/10618600.2014.907095).
+[2] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv (arxiv.org/abs/1801.01489).
 
-[3] Friedman J. H. Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232, 2001 (https://doi.org/10.1214/aos/1013203451).
+[3] Goldstein, A. et al. Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1, 2015 (https://doi.org/10.1080/10618600.2014.907095).
 
-[4] A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
+[4] Friedman J. H. Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232, 2001 (https://doi.org/10.1214/aos/1013203451).
+
+[5] A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv (arxiv.org/abs/1903.11420).
 

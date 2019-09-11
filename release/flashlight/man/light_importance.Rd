@@ -22,7 +22,7 @@ light_importance(x, ...)
 \arguments{
 \item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
 
-\item{...}{Arguments passed from or to other methods.}
+\item{...}{Further arguments passed to \code{light_performance}.}
 
 \item{data}{An optional \code{data.frame}.}
 
@@ -34,7 +34,7 @@ light_importance(x, ...)
 
 \item{n_max}{Maximum number of rows to consider. Use if \code{data} is large.}
 
-\item{seed}{An integer random seed used to shuffle rows if \code{n_max} is smaller than the number of rows in \code{data}.}
+\item{seed}{An integer random seed used to select and shuffle rows.}
 
 \item{lower_is_better}{Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1.}
 
@@ -46,7 +46,7 @@ light_importance(x, ...)
 
 \item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
 
-\item{variable_name}{Column name in resulting \code{data} containing the variable name. Defaults to "variable".}
+\item{variable_name}{Column name in resulting \code{data} containing the variable names. Defaults to "variable".}
 }
 \value{
 An object of class \code{light_importance}, \code{light} (and a list) with the following elements.

@@ -8,6 +8,8 @@
 \alias{is.light_performance_multi}
 \alias{is.light_importance}
 \alias{is.light_importance_multi}
+\alias{is.light_breakdown}
+\alias{is.light_breakdown_multi}
 \alias{is.light_ice}
 \alias{is.light_ice_multi}
 \alias{is.light_profile}
@@ -29,6 +31,10 @@ is.light_performance_multi(x)
 is.light_importance(x)
 
 is.light_importance_multi(x)
+
+is.light_breakdown(x)
+
+is.light_breakdown_multi(x)
 
 is.light_ice(x)
 
@@ -64,6 +70,10 @@ Checks if an object inherits specific class relevant for the flashlight package.
 \item \code{is.light_importance}: Check for light_importance object.
 
 \item \code{is.light_importance_multi}: Check for light_importance_multi object.
+
+\item \code{is.light_breakdown}: Check for light_breakdown object.
+
+\item \code{is.light_breakdown_multi}: Check for light_breakdown_multi object.
 
 \item \code{is.light_ice}: Check for light_ice object.
 

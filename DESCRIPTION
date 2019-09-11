@@ -1,8 +1,8 @@
 Type: Package
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.1.1
-Date: 2019-08-28
+Version: 0.2.0
+Date: 2019-09-11
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
@@ -13,9 +13,11 @@ Description: Shed light on black box machine learning models by
     the help of model performance, permutation variable importance (Fisher
     et al. (2018) <arxiv.org/abs/1801.01489>), ICE profiles, partial
     dependence (Friedman J. H. (2001) <doi.org/10.1214/aos/1013203451>),
-    and further effects plots. All tools are implemented to work with case
-    weights and allow for stratified analysis. Furthermore, multiple
-    flashlights can be combined and analyzed together.
+    further effects plots, and variable contribution breakdown for single
+    observations (Gosiewska and Biecek (2019) <arxiv.org/abs/1903.11420>).
+    All tools are implemented to work with case weights and allow for
+    stratified analysis. Furthermore, multiple flashlights can be combined
+    and analyzed together.
 License: GPL(>= 2)
 Depends: 
     R (>= 3.5.0)
