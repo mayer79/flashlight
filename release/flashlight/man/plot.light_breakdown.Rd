@@ -20,7 +20,7 @@ An object of class \code{ggplot2}.
 Minimal visualization of an object of class \code{light_breakdown} as waterfall plot. The object returned is of class \code{ggplot} and can be further customized.
 }
 \details{
-The waterfall plot is to be read from top to bottom. The first line describes the (weighted) average prediction in the query data used to start with. Then, each additional line shows how the prediction changes due to the impact of the corresponding variable. The last line finally shows the original predition on the selected observation. Multiple flashlights are shown in different facets. Positive and negative impacts are visualized with different colors.
+The waterfall plot is to be read from top to bottom. The first line describes the (weighted) average prediction in the query data used to start with. Then, each additional line shows how the prediction changes due to the impact of the corresponding variable. The last line finally shows the original prediction of the selected observation. Multiple flashlights are shown in different facets. Positive and negative impacts are visualized with different colors.
 }
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
@@ -30,7 +30,7 @@ mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal
 mods <- multiflashlight(list(mod_full, mod_part))
 
 plot(x <- light_breakdown(mod_full, new_obs = iris[1, ]))
-plot(light_breakdown(mods, new_obs = iris[1, ]))
+plot(light_breakdown(mods, new_obs = iris[1, ]), size = 2.5)
 }
 \seealso{
 \code{\link{light_importance}}.

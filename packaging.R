@@ -97,5 +97,5 @@ check_rhub(pkg)
 # setwd(pkg)
 
 devtools::release(pkg)
-
+dev_sitrep(pkg)
 

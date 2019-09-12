@@ -2,7 +2,11 @@
 
 * New functionality
 
-- Added variable contribution breakdown for single observation.
+- Added variable contribution breakdown for single observations.
+
+* Interface change
+
+- Removed `zero_counts` argument in `plot_counts`.
 
 * Bug fixes
 

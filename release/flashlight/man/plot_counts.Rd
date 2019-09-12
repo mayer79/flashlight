@@ -4,16 +4,13 @@
 \alias{plot_counts}
 \title{Add Counts to Effects Plot}
 \usage{
-plot_counts(p, x, zero_counts = TRUE, text_size = 3,
-  facet_scales = "free_x", show_labels = TRUE, big.mark = "'",
-  scientific = FALSE, ...)
+plot_counts(p, x, text_size = 3, facet_scales = "free_x",
+  show_labels = TRUE, big.mark = "'", scientific = FALSE, ...)
 }
 \arguments{
 \item{p}{The result of \code{plot.light_effects}.}
 
 \item{x}{An object of class \code{light_effects}.}
-
-\item{zero_counts}{Logical flag if 0 count levels should be shown.}
 
 \item{text_size}{Size of count labels.}
 
@@ -45,6 +42,7 @@ mods <- multiflashlight(list(mod_full, mod_part))
 
 x <- light_effects(mod_full, v = "Petal.Width")
 plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
+plot_counts(plot(x, zero_counts = FALSE), x, width = 0.3, alpha = 0.2)
 plot_counts(plot(x), x, width = 0.3, alpha = 0.2, show_labels = FALSE)
 plot_counts(plot(x, use = "response"), x, fill = "lightblue")
 plot_counts(plot(x, use = "pd", show.legend = FALSE), x, fill = "lightblue")
