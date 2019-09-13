@@ -4,12 +4,15 @@
 \alias{plot.light_breakdown}
 \title{Visualize Variable Contribution Breakdown for Single Observation}
 \usage{
-\method{plot}{light_breakdown}(x, facet_scales = "free", ...)
+\method{plot}{light_breakdown}(x, facet_scales = "free",
+  facet_ncol = 1, ...)
 }
 \arguments{
 \item{x}{An object of class \code{light_breakdown}.}
 
 \item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+
+\item{facet_ncol}{\code{ncol} argument passed to \code{facet_wrap}.}
 
 \item{...}{Further arguments passed to \code{geom_label}.}
 }
@@ -31,6 +34,7 @@ mods <- multiflashlight(list(mod_full, mod_part))
 
 plot(x <- light_breakdown(mod_full, new_obs = iris[1, ]))
 plot(light_breakdown(mods, new_obs = iris[1, ]), size = 2.5)
+plot(light_breakdown(mods, new_obs = iris[1, ]), facet_ncol = 2)
 }
 \seealso{
 \code{\link{light_importance}}.

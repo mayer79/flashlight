@@ -284,6 +284,7 @@ plot(light_profile(fl, v = "Species", type = "response"))
 
 # No by variable: zero_counts did not work
 eff <- light_effects(fl, v = "Species")
+# eff <- light_effects(fl, v = "Species", stats = "quartiles")
 
 (p <- plot(eff, zero_counts = FALSE))
 plot_counts(p, eff, alpha = 0.2) # fixed
@@ -293,6 +294,7 @@ plot_counts(p, eff, alpha = 0.2) # fixed
 
 # With by variable: zero_counts did not work
 eff <- light_effects(fl, v = "Species", by = "sw")
+# eff <- light_effects(fl, v = "Species", by = "sw", stats = "quartiles")
 
 (p <- plot(eff, zero_counts = FALSE))
 plot_counts(p, eff, alpha = 0.2) # fixed
@@ -324,3 +326,4 @@ plot_counts(p, eff, alpha = 0.2) # fixed
 
 (p <- plot(eff, use = "predicted", zero_counts = FALSE))
 plot_counts(p, eff, alpha = 0.2) # fixed
+

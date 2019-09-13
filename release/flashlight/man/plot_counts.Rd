@@ -40,7 +40,7 @@ mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part))
 
-x <- light_effects(mod_full, v = "Petal.Width")
+x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
 plot_counts(plot(x, zero_counts = FALSE), x, width = 0.3, alpha = 0.2)
 plot_counts(plot(x), x, width = 0.3, alpha = 0.2, show_labels = FALSE)

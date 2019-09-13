@@ -531,7 +531,7 @@ The `plot` method of `light_effects` allows to hide certain plot element if it l
 
 ###  Variable contribution breakdown for single observation
 
-Besides global effects, we can use `light_breakdown` to calculate variable impact on one single prediction. 
+Besides global effects, we can use `light_breakdown` to calculate variable impact on one single (log) prediction. 
 ```{r}
 bd <- light_breakdown(fl_lm, new_obs = valid[1, ], v = x, n_max = 1000, seed = 74) 
 plot(bd, size = 3)
@@ -582,7 +582,7 @@ p <- plot(z) +
   coord_cartesian(ylim = c(0, 3e6))
 plot_counts(p, z, alpha = 0.2)
 
-# Variable contribution breakdown for single observation 
+# Variable contribution breakdown for single observation (on log-scale)
 # -> "by" selects the relevant rows in data/valid
 plot(light_breakdown(fl_lm, new_obs = valid[1, ], v = x, top_m = 3))
 
@@ -622,7 +622,7 @@ eff <- light_effects(fls, v = "Petal.Width", stats = "quartiles")
 plot(eff) %>% 
   plot_counts(eff, alpha = 0.2, fill = "blue")
 
-# Variable contribution breakdown for single observation
+# Variable contribution breakdown for single observation (on log-scale)
 plot(light_breakdown(fls, new_obs = iris[2, ]), size = 2.5)
 ```
 

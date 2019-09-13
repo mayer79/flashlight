@@ -24,7 +24,7 @@
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part))
 #'
-#' x <- light_effects(mod_full, v = "Petal.Width")
+#' x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 #' plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
 #' plot_counts(plot(x, zero_counts = FALSE), x, width = 0.3, alpha = 0.2)
 #' plot_counts(plot(x), x, width = 0.3, alpha = 0.2, show_labels = FALSE)
@@ -38,7 +38,6 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
   stopifnot(is.ggplot(p), is.light_effects(x),
             !("lab_" %in% colnames(x$response)))
 
-  nby <- length(x$by)
   multi <- is.light_effects_multi(x)
 
   # Deal with zero counts
@@ -61,7 +60,7 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
     ct <- ct + geom_text(aes_string(y = 0, label = "lab_"),
                          angle = 90, hjust = -0.1, size = text_size)
   }
-  if (multi || nby) {
+  if (multi || length(x$by)) {
     ct <- ct + facet_wrap(reformulate(if (multi) x$label_name else x$by[1]),
                           scales = facet_scales, nrow = 1L)
   }
