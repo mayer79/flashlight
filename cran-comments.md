@@ -1,6 +1,4 @@
-# Resubmission
-
-Fixed link formatting in description file.
+# Submission
 
 ## R CMD check results
 

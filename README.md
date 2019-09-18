@@ -43,7 +43,7 @@ fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols",
 plot(light_performance(fl), fill = "darkred")
 plot(light_performance(fl, by = "Species"), fill = "darkred")
 
-# Variable importance by drop in rmse
+# Variable importance by increase in rmse
 imp <- light_importance(fl)
 plot(imp, fill = "darkred")
 plot(light_importance(fl, by = "Species")) +
