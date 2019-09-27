@@ -32,6 +32,9 @@ install_github("mayer79/flashlight")
 ## Example Code
 
 ``` r
+library(MetricsWeighted)
+library(flashlight)
+
 # Fit model
 fit <- lm(Sepal.Length ~ ., data = iris)
 
