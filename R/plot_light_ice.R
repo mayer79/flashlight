@@ -26,6 +26,7 @@
 #' indices <- (1:15) * 10
 #' plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
 #' plot(light_ice(mods, v = "Species", indices = indices))
+#' plot(light_ice(mods, v = "Species", indices = indices, center = TRUE))
 #' plot(light_ice(mods, v = "Petal.Width", n_bins = 5, indices = indices))
 #' plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 #'

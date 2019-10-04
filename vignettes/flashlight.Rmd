@@ -72,7 +72,7 @@ Different modelling techniques offer different ways of variable importance. In l
 
 In linear regression, the fitted model consists of an affine linear function in the inputs. Its coefficients immediately tell us how the response is expected to change if the value of one single input variable $X$ is systematically being adapted. How to describe such effects of a variable $X$ for more complex models that include non-linearities and high-order interactions?
 
-One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel.
+One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. ICE profiles centered at one point (or "c-ICE" curves) help to detect interactions.
 
 If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4].
 
@@ -392,6 +392,12 @@ The XGBoost profiles look wild - for real applications, setting monotonicity con
 
 Note: Setting `seed` to a fixed value will ensure that the flashlights will consider the same rows. An alternative would be to pass a small subset of the data to `light_ice` and calculate all profiles or by passing row indices through `indices` for fixed selection.
 
+Centered ICE-curves ("c-ICE") can help to increase visibility of interactions.
+```{r}
+cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = TRUE)
+plot(cp, alpha = 0.2)
+```
+
 ### Partial dependence profiles
 
 If many ICE profiles (in our case 1000) are averaged, we get an impression on the average effect of the considered variable. Such curves are called *partial dependence profiles* (PD) resp. *partial dependence plots*.
@@ -569,6 +575,12 @@ plot(light_ice(fls, v = "sqft_living", seed = 4345),
   scale_color_viridis_d(begin = 0.1, end = 0.9) + 
   scale_y_continuous(labels = format_y)
 
+# c-ICE
+plot(light_ice(fls, v = "sqft_living", seed = 4345, center = TRUE), 
+     alpha = 0.8, facet_scales = "free_y") + 
+  scale_color_viridis_d(begin = 0.1, end = 0.9) + 
+  scale_y_continuous(labels = format_y)
+
 # Effects: Partial dependence
 plot(light_profile(fls, v = "sqft_living"))
 plot(light_profile(fls, v = "sqft_living"), swap_dim = TRUE)
@@ -612,6 +624,10 @@ indices <- seq(10, 150, by = 10)
 plot(light_ice(fls, v = "Petal.Width", indices = indices), alpha = 0.2)
 plot(light_ice(fls, v = "Petal.Width", by = "Species", indices = indices))
 
+# c-ICE -> lines overlap, no interactions at all
+plot(light_ice(fls, v = "Petal.Width", indices = indices, center = TRUE), alpha = 0.2)
+plot(light_ice(fls, v = "Petal.Width", by = "Species", indices = indices, center = TRUE))
+
 # Partial dependence profiles for Petal.Width
 plot(light_profile(fls, v = "Petal.Width"))
 plot(light_profile(fls, v = "Petal.Width", by = "Species"))
@@ -649,6 +665,9 @@ plot(light_importance(fl, v = c("Sepal.Length", "Petal.Width")), fill = "darkred
 
 # ICE profiles for Petal.Width
 plot(light_ice(fl, v = "Petal.Width"), alpha = 0.4)
+
+# c-ICE profiles for Petal.Width
+plot(light_ice(fl, v = "Petal.Width", center = TRUE), alpha = 0.4)
 
 # Partial dependence profiles for Petal.Width
 plot(light_profile(fl, v = "Petal.Width"))
