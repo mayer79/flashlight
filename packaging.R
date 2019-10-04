@@ -2,8 +2,6 @@
 # BUILD THE PACKAGE
 #=====================================================================================
 
-# library(devtools) # Get latest MetricsWeighted branch
-# install_github("mayer79/MetricsWeighted", ref = "cran_0.1.1")
 library(MetricsWeighted)
 library(dplyr)
 library(tidyr)

@@ -72,7 +72,7 @@ Different modelling techniques offer different ways of variable importance. In l
 
 In linear regression, the fitted model consists of an affine linear function in the inputs. Its coefficients immediately tell us how the response is expected to change if the value of one single input variable $X$ is systematically being adapted. How to describe such effects of a variable $X$ for more complex models that include non-linearities and high-order interactions?
 
-One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. ICE profiles centered at one point (or "c-ICE" curves) help to detect interactions.
+One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. ICE profiles centered at one point (or "c-ICE" profiles) help to detect interactions even better.
 
 If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4].
 
@@ -393,7 +393,7 @@ The XGBoost profiles look wild - for real applications, setting monotonicity con
 
 Note: Setting `seed` to a fixed value will ensure that the flashlights will consider the same rows. An alternative would be to pass a small subset of the data to `light_ice` and calculate all profiles or by passing row indices through `indices` for fixed selection.
 
-Centered ICE-curves ("c-ICE") can help to increase visibility of interactions.
+Centered ICE profiles ("c-ICE") can help to increase visibility of interactions.
 ```{r}
 cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = TRUE)
 plot(cp, alpha = 0.2)

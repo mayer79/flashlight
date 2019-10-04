@@ -19,7 +19,7 @@
 #' @param n_max If \code{indices} is not given, maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
-#' @param center Should curves be centered within \code{by} subsets? Default is FALSE. Note that centering will be done in a central evaluation point, not at the first.
+#' @param center Should curves be centered within \code{by} subsets? Default is FALSE. Note that centering will be done at the first evaluation point. It will work also for a \code{grid} with multiple columns.
 #' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param id_name Column name in resulting \code{data} containing the row id of the profile. Defaults to "id_name".
@@ -118,10 +118,9 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
   data <- data[, c(id_name, by, v, x$w), drop = FALSE]
   data[[value_name]] <- predict(x)
 
-  # c-ICE curves by centering at middle evaluation point. Works for length(v) > 1 as well
-  # as case weights as well as with by variabes.
+  # c-ICE curves by centering at first evaluation point
   if (center) {
-    central_data <- merge(data, grid[ceiling(nrow(grid) / 2), , drop = FALSE], by = v)
+    central_data <- merge(data, grid[1, , drop = FALSE], by = v)
     group_means <- grouped_stats(central_data, x = value_name, w = x$w,
                                  by = x$by, counts = FALSE, na.rm = TRUE)
     names(group_means)[names(group_means) == value_name] <- "global_mean"

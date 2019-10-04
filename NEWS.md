@@ -2,7 +2,7 @@
 
 ## New functionality
 
-- Added the possibility to center ICE curves at a central evaluation point to improve visibility of interactions. 
+- Added the possibility to center ICE curves at first evaluation point to improve visibility of interactions. 
 
 # flashlight 0.2.0
 
