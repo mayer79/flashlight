@@ -6,7 +6,6 @@
 #'
 #' @importFrom stats setNames
 #' @importFrom tidyr crossing
-#' @importFrom dplyr semi_join
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be profiled.
 #' @param data An optional \code{data.frame}.
@@ -122,9 +121,9 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
   # c-ICE curves by centering at middle evaluation point. Works for length(v) > 1 as well
   # as case weights as well as with by variabes.
   if (center) {
-    central_data <- semi_join(data, grid[ceiling(nrow(grid) / 2), , drop = FALSE], by = v)
+    central_data <- merge(data, grid[ceiling(nrow(grid) / 2), , drop = FALSE], by = v)
     group_means <- grouped_stats(central_data, x = value_name, w = x$w,
-                                 by = x$by, counts = FALSE)
+                                 by = x$by, counts = FALSE, na.rm = TRUE)
     names(group_means)[names(group_means) == value_name] <- "global_mean"
     stopifnot(!("global_mean" %in% colnames(central_data)))
     central_data <- merge(central_data, group_means, by = x$by, all.x = TRUE)
