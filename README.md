@@ -55,6 +55,7 @@ most_important(imp, 2)
 
 # ICE profiles for Petal.Width
 plot(light_ice(fl, v = "Petal.Width"))
+plot(light_ice(fl, v = "Petal.Width", center = TRUE))
 plot(light_ice(fl, v = "Petal.Width", by = "Species"))
 
 # Partial dependence profiles for Petal.Width

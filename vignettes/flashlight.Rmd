@@ -125,6 +125,7 @@ plot(light_importance(fl, by = "Species"), fill = "darkblue", alpha = 0.7)
 
 # ICE profiles for Petal.Width
 plot(light_ice(fl, v = "Petal.Width"), alpha = 0.4)
+plot(light_ice(fl, v = "Petal.Width", center = TRUE), alpha = 0.4)
 plot(light_ice(fl, v = "Petal.Width", by = "Species"))
 
 # Partial dependence profiles for Petal.Width

@@ -1,3 +1,9 @@
+# flashlight 0.3.0
+
+## New functionality
+
+- Added the possibility to center ICE curves at a central evaluation point to improve visibility of interactions. 
+
 # flashlight 0.2.0
 
 ## New functionality
