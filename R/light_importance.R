@@ -1,4 +1,4 @@
-#' Permutation Importance.
+#' Permutation Importance
 #'
 #' Calculates performance per variable with respect to a performance measure before and after permuting its values. The difference is a measure of importance, see Fisher et al. 2018 [1].
 #'
