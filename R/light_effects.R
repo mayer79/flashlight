@@ -63,6 +63,7 @@
 #' light_effects(mods, v = "Petal.Width")
 #' light_effects(mods, v = "Petal.Width", by = "Species")
 #' light_effects(mods, v = "Petal.Width", by = "Species", stats = "quartiles")
+#' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 light_effects <- function(x, ...) {
   UseMethod("light_effects")
 }

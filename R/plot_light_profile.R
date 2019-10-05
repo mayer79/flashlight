@@ -1,4 +1,4 @@
-#' Visualize Profiles of Partial Dependence etc.
+#' Visualize Profiles, e.g. of Partial Dependence
 #'
 #' Minimal visualization of an object of class \code{light_profile}. The object returned is of class \code{ggplot} and can be further customized.
 #'

@@ -30,7 +30,7 @@
 #'   \item \code{variable_name} Same as input \code{variable_name}.
 #' }
 #' @export
-#' @references [1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv. <https://arxiv.org/abs/1801.01489>.
+#' @references [1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.
 #' @examples
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)

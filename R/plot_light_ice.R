@@ -1,4 +1,4 @@
-#' Visualize Ceteris Paribus Profiles
+#' Visualize ICE profiles
 #'
 #' Minimal visualization of an object of class \code{light_ice} as \code{geom_line}. The object returned is of class \code{ggplot} and can be further customized.
 #'

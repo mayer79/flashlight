@@ -35,7 +35,7 @@
 #'   \item \code{id_name} Same as input \code{id_name}.
 #' }
 #' @export
-#' @references [1] Goldstein, A. et al. Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1, 2015. <https://doi.org/10.1080/10618600.2014.907095>.
+#' @references [1] Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1 <doi.org/10.1080/10618600.2014.907095>.
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)

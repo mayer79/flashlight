@@ -1,6 +1,6 @@
 #' Partial Dependence and other Profiles
 #'
-#' Calculates different types of profiles across covariable values. By default, partial dependence profiles are calculated but also profiles of response, predicted values and residuals are possible. The results are aggregated either by (weighted) means or by (weighted) quartiles. Furthermore, counts are added to the resulting object.
+#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated but also profiles of response, predicted values (M plots or marginal plots, see [2]) and residuals are possible. The results are aggregated either by (weighted) means or by (weighted) quartiles.
 #'
 #' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles, this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence or prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
 #'
@@ -45,6 +45,10 @@
 #'   \item \code{counts_name} Same as input \code{counts_name}.
 #' }
 #' @export
+#' @references
+#' [1] Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+#' [2] Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models. ArXiv <arXiv:1612.08468>.
+#'
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
