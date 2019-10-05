@@ -1,6 +1,6 @@
 #' Partial Dependence and other Profiles
 #'
-#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated but also profiles of response, predicted values (M plots or marginal plots, see [2]) and residuals are possible. The results are aggregated either by (weighted) means or by (weighted) quartiles.
+#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated but also profiles of response, predicted values ("M plots" or "marginal plots", see [2]) and residuals are possible. The results are aggregated either by (weighted) means or by (weighted) quartiles.
 #'
 #' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles, this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence or prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
 #'
@@ -29,6 +29,7 @@
 #' @param pd_indices A vector of row numbers to consider in calculating partial dependence profiles. Only used for type = "partial dependence".
 #' @param pd_n_max Maximum number of ICE profiles to calculate (will be randomly picked from \code{data}). Only used if type = "partial dependence".
 #' @param pd_seed Integer random seed used to select ICE profiles. Only used for type = "partial dependence".
+#' @param pd_center Should ICE curves be centered within \code{by} subsets before caclulating partial dependence profiles? This option is interesting together with \code{stats = "quartiles"} in order to visualize interaction strength.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence profiles.
 #' @return An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.
 #' \itemize{
@@ -106,7 +107,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                                      counts_weighted = FALSE, v_labels = TRUE,
                                      pred = NULL, pd_evaluate_at = NULL, pd_grid = NULL,
                                      pd_indices = NULL, pd_n_max = 1000,
-                                     pd_seed = NULL, ...) {
+                                     pd_seed = NULL, pd_center = FALSE, ...) {
   type <- match.arg(type)
   stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
@@ -132,7 +133,8 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     # Get profiles
     cp_profiles <- light_ice(x, v = v, evaluate_at = pd_evaluate_at,
                              breaks = breaks, grid = pd_grid, n_bins = n_bins,
-                             n_max = pd_n_max, seed = pd_seed, value_name = value_name,
+                             n_max = pd_n_max, seed = pd_seed, center = pd_center,
+                             value_name = value_name,
                              label_name = label_name, id_name = "id_xxx")
     v <- cp_profiles$v
     data <- cp_profiles$data

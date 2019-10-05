@@ -19,7 +19,7 @@
 #' @param n_max If \code{indices} is not given, maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
-#' @param center Should curves be centered within \code{by} subsets? Default is FALSE. Note that centering will be done at the first evaluation point. It will work also for a \code{grid} with multiple columns.
+#' @param center Should curves be centered? Default is FALSE. Note that centering will be done at the first evaluation point and within "by" group. It will work also for a \code{grid} with multiple columns.
 #' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param id_name Column name in resulting \code{data} containing the row id of the profile. Defaults to "id_name".

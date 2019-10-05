@@ -23,7 +23,7 @@
 #'
 #' plot(light_profile(mod_full, v = "Species"))
 #' plot(light_profile(mod_full, v = "Species", type = "response"))
-#' plot(light_profile(mod_full, v = "Species", stats = "quartiles"))
+#' plot(light_profile(mod_full, v = "Species", type = "residual", stats = "quartiles"))
 #'
 #' plot(light_profile(mod_full, v = "Petal.Width"))
 #' plot(light_profile(mod_full, v = "Petal.Width", type = "residual"))

@@ -74,11 +74,11 @@ In linear regression, the fitted model consists of an affine linear function in 
 
 One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. ICE profiles centered at one point (or "c-ICE" profiles) help to detect interactions even better.
 
-If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4].
+If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4]. 
 
 Studying ICE and partial dependence profiles make sense as long as it make sense to investigate the effect of $X$ while holding all other predictors fixed. An alternative to studying such *partial effects*, it is sometimes interesting to look at combined effects of $X$ including the effects from all other predictors. Such effects are estimated by averaging the predictions within values of the predictor $X$ of interest. If such prediction profile differs considerably from the observed average response, this might be a sign of model underfit. This visualization is sometimes called "marginal plot" or "M plot", see [5]. Residual profiles immediatly show such misfits as well. In classic statistical modelling, this sort of plots are called "fitted versus covariable" plots or "residual versus covariable" plots.
 
-Besides looking at *average* profiles, it is often also revealing to consider *quartile* profiles or to visualized partial dependence, response and prediction profiles in the same plot.
+Besides looking at *average* profiles, it is often also revealing to consider *quartile* profiles or to visualize partial dependence, response and prediction profiles in the same plot.
 
 ### Variable contribution breakdown for single observations
 
@@ -486,6 +486,14 @@ plot(rvp, swap_dim = TRUE) +
   scale_y_continuous(labels = format_y)
 ```
 
+In the same way as diverging ICE profiles give a clou of presence of interactions, we can use the option `stats = "quartiles"` (with `pd_center = TRUE`) to show divergence of the centered ICE profiles as boxes (predictions at log-scale to suppress interaction-like effects of the retransformation function:
+
+```{r}
+rvp <- light_profile(fls, v = "sqft_living", use_linkinv = FALSE, 
+                     stats = "quartiles", pd_center = TRUE) 
+plot(rvp)
+```
+
 For prediction profiles, the same elements as for ICE/PDs are required, while for response profiles we need "y", "linkinv" and "data". "data" can also be passed on the fly.
 
 ###  Visualizing different types of profiles as "effects" plot
@@ -585,6 +593,7 @@ plot(light_ice(fls, v = "sqft_living", seed = 4345, center = TRUE),
 # Effects: Partial dependence
 plot(light_profile(fls, v = "sqft_living"))
 plot(light_profile(fls, v = "sqft_living"), swap_dim = TRUE)
+plot(light_profile(fls, v = "sqft_living", stats = "quartiles", pd_center = TRUE))
 
 # Effects: Combined plot (only one flashlight) 
 # -> we need to manually pass "by" or update the single flashlight
