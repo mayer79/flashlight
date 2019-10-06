@@ -32,9 +32,27 @@ ale_core <- function(from, to) {
   out
 }
 
-ale <- Map(ale_core, from = evaluate_at[1:(m - 1L)], to = evaluate_at[-1])
+ale <- Map(ale_core, from = evaluate_at[c(1L, 1:(m - 1L))], to = evaluate_at)
 ale <- do.call(rbind, ale)
 ale[["value"]] <- if (length(x$by)) ave(ale[["value"]], ale[[x$by]], FUN = cumsum) else
   cumsum(ale[["value"]])
+
+# Calibration without by (easier to follow, so we separate)
+preds <- predict(x)
+if (is.null(x$by)) {
+  pred_mean <- weighted_mean(preds, if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
+  ale_mean <- weighted_mean(ale[["value"]], w = ale[["counts"]], na.rm = TRUE)
+  ale[["value"]] <- ale[["value"]] - ale_mean + pred_mean
+  ale
+} else { # Calibration with by
+  dat_pred <- cbind(data, cal = preds)
+  dat_pred <- grouped_stats(dat_pred, x = "cal", w = x$w, by = x$by, counts = FALSE, na.rm = TRUE)
+  dat_ale <- grouped_stats(ale, x = "value", w = "counts", by = x$by, counts = FALSE, na.rm = TRUE)
+  dat_shift <- merge(dat_ale, dat_pred, all.x = TRUE, by = x$by)
+  dat_shift[["shift"]] <- dat_shift[["cal"]] - dat_shift[["value"]]
+  ale <- merge(ale, dat_shift[, c(x$by, "shift"), drop = FALSE], all.x = TRUE, by = x$by)
+  ale[["value"]] <- ale[["value"]] + ale[["shift"]]
+  ale[["shift"]] <- NULL
+}
 ale
 

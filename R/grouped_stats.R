@@ -40,7 +40,7 @@ grouped_stats <- function(data, x, w = NULL, by = NULL, stats = c("mean", "quart
   # Initial checks
   stats <- match.arg(stats)
   if (counts_weighted && is.null(w)) {
-    stop("Counts cannot be weighted if no weights are passed.")
+    counts_weighted <- FALSE
   }
   stopifnot(c(x, w, by) %in% colnames(data),
             !anyDuplicated(c(x, by, counts_name, q1_name, q3_name)),
