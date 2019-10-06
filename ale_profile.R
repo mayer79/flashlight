@@ -1,58 +1,105 @@
+#' ALE profile
+#'
+#' Internal function used by \code{light_profile} to calculate ALE profiles.
+#'
+#' @importFrom dplyr as_tibble
+#' @param x An object of class \code{flashlight}.
+#' @param v The variable to be profiled.
+#' @param breaks Cut breaks for a numeric \code{v}. Only used if no \code{evaluate_at} is specified.
+#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if no \code{evaluate_at} is specified.
+#' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
+#' @param value_name Column name containing the profile value. Defaults to "value".
+#' @param counts_name Name of the column containing counts if \code{counts} is TRUE.
+#' @param counts Should counts be added?
+#' @param counts_weighted If \code{counts} is TRUE: Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
+#' @param pred Optional vector with predictions.
+#' @param evaluate_at Vector with values of \code{v} used to evaluate the profile. Only relevant for type = "partial dependence".
+#' @param n_max Maximum number of ICE profiles to calculate (will be randomly picked from \code{data}). Only used if type = "partial dependence".
+#' @param seed Integer random seed passed to \code{light_ice}.
+#' @param calibrate Should values be calibrated based on average preditions? Default is TRUE.
+#' @return A tibble containing results.
+ale_calculation <- function(x, v, breaks = NULL, n_bins = 11,
+                            cut_type = c("equal", "quantile"),
+                            value_name = "value",
+                            counts_name = "counts", counts = TRUE,
+                            counts_weighted = FALSE, pred = NULL,
+                            evaluate_at = NULL, n_max = 1000,
+                            seed = NULL, calibrate = TRUE) {
+  cut_type <- match.arg(cut_type)
+  data <- x$data
+  stopifnot(!is.null(v), v %in% colnames(data))
 
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-x <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-data <- x$data
+  ale_core <- function(from_to) {
+    from <- from_to[1]
+    to <- from_to[2]
+    if (is.numeric(to)) {
+      .s <- data[[v]] >= from & data[[v]] <= to
+    } else {
+      .s <- data[[v]] %in% from_to
+    }
+    dat_i <- data[.s, , drop = FALSE]
+    if (nrow(dat_i) == 0L) {
+      return(NULL)
+    }
+    ice <- light_ice(x, v = v, data = dat_i, evaluate_at = from_to,
+                     n_max = n_max, seed = seed, value_name = value_name,
+                     id_name = "id_xxx")$data
+    # Safe reshaping
+    dat_to <- ice[ice[[v]] == to, ]
+    dat_from <- ice[ice[[v]] == from, ]
+    dat_to[[value_name]] <- dat_to[[value_name]] -
+      dat_from[[value_name]][match(dat_to[["id_xxx"]], dat_from[["id_xxx"]])]
 
-breaks <- NULL
-v <- "Petal.Length"
-evaluate_at <- if (!is.null(breaks)) midpoints(breaks) else
-  auto_cut(data[[v]], n_bins = 5)$bin_means
-m <- length(evaluate_at)
+    # Aggregation
+    out <- grouped_stats(dat_to, x = value_name, w = x$w, by = x$by,
+                         counts_name = counts_name, counts_weighted = counts_weighted)
 
+    # Output
+    out[[v]] <- to
+    out
+  }
 
-
-ale_core <- function(from, to) {
-   if (is.numeric(to)) {
-    .s <- data[[v]] >= from & data[[v]] <= to
+  if (is.null(evaluate_at)) {
+    evaluate_at <- if (!is.null(breaks)) midpoints(breaks) else
+      auto_cut(data[[v]], n_bins = n_bins, cut_type = cut_type)$bin_means
+  }
+  eval_pair <- data.frame(from = evaluate_at[c(1L, 1:(length(evaluate_at) - 1L))],
+                          to = evaluate_at)
+  ale <- do.call(rbind, apply(eval_pair, 1, ale_core))
+  if (length(x$by)) {
+    ale[[value_name]] <- ave(ale[[value_name]], ale[[x$by]], FUN = cumsum)
   } else {
-    .s <- data[[v]] %in% c(from, to)
+    ale[[value_name]] <- cumsum(ale[[value_name]])
   }
-  dat_i <- data[.s, , drop = FALSE]
-  if (nrow(dat_i) == 0L) {
-    return(NULL)
+  if (is.factor(data[[v]])) {
+    ale[[v]] <- factor(ale[[v]], levels = levels(data[[v]]))
   }
-  ice <- light_ice(x, v = v, data = dat_i, by = x$by,
-                     evaluate_at = c(from, to), n_max = 100)$data
-  dat_to <- ice[ice[[v]] == to, ]
-  dat_from <- ice[ice[[v]] == from, ]
-  dat_to[["value"]] <- dat_to[["value"]] -
-    dat_from[["value"]][match(dat_to[["id"]], dat_from[["id"]])]
-  out <- grouped_stats(dat_to, x = "value", w = x$w, by = x$by)
-  out[[v]] <- to
-  out
+
+  # Calibration
+  if (calibrate) {
+    preds <- if (is.null(pred)) predict(x) else pred
+    if (is.null(x$by)) {
+      pred_mean <- weighted_mean(preds, if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
+      ale_mean <- weighted_mean(ale[[value_name]], w = ale[[counts_name]], na.rm = TRUE)
+      ale[[value_name]] <- ale[[value_name]] - ale_mean + pred_mean
+    } else {
+      dat_pred <- cbind(data, cal = preds)
+      dat_pred <- grouped_stats(dat_pred, x = "cal", w = x$w,
+                                by = x$by, counts = FALSE, na.rm = TRUE)
+      dat_ale <- grouped_stats(ale, x = value_name, w = counts_name,
+                               by = x$by, counts = FALSE, na.rm = TRUE)
+      dat_shift <- merge(dat_ale, dat_pred, all.x = TRUE, by = x$by)
+      dat_shift[["shift"]] <- dat_shift[["cal"]] - dat_shift[[value_name]]
+      ale <- merge(ale, dat_shift[, c(x$by, "shift"), drop = FALSE],
+                   all.x = TRUE, by = x$by)
+      ale[[value_name]] <- ale[[value_name]] + ale[[value_name]]
+      ale[["shift"]] <- NULL
+    }
+  }
+  if (!counts) {
+    ale[[counts_name]] <- NULL
+  }
+  as_tibble(ale)
 }
 
-ale <- Map(ale_core, from = evaluate_at[c(1L, 1:(m - 1L))], to = evaluate_at)
-ale <- do.call(rbind, ale)
-ale[["value"]] <- if (length(x$by)) ave(ale[["value"]], ale[[x$by]], FUN = cumsum) else
-  cumsum(ale[["value"]])
-
-# Calibration without by (easier to follow, so we separate)
-preds <- predict(x)
-if (is.null(x$by)) {
-  pred_mean <- weighted_mean(preds, if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
-  ale_mean <- weighted_mean(ale[["value"]], w = ale[["counts"]], na.rm = TRUE)
-  ale[["value"]] <- ale[["value"]] - ale_mean + pred_mean
-  ale
-} else { # Calibration with by
-  dat_pred <- cbind(data, cal = preds)
-  dat_pred <- grouped_stats(dat_pred, x = "cal", w = x$w, by = x$by, counts = FALSE, na.rm = TRUE)
-  dat_ale <- grouped_stats(ale, x = "value", w = "counts", by = x$by, counts = FALSE, na.rm = TRUE)
-  dat_shift <- merge(dat_ale, dat_pred, all.x = TRUE, by = x$by)
-  dat_shift[["shift"]] <- dat_shift[["cal"]] - dat_shift[["value"]]
-  ale <- merge(ale, dat_shift[, c(x$by, "shift"), drop = FALSE], all.x = TRUE, by = x$by)
-  ale[["value"]] <- ale[["value"]] + ale[["shift"]]
-  ale[["shift"]] <- NULL
-}
-ale
 

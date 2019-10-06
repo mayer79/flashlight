@@ -22,6 +22,7 @@
 #' mods <- multiflashlight(list(mod_full, mod_part))
 #'
 #' plot(light_profile(mod_full, v = "Species"))
+#' plot(light_profile(mod_full, v = "Species", type = "ale"))
 #' plot(light_profile(mod_full, v = "Species", type = "response"))
 #' plot(light_profile(mod_full, v = "Species", type = "residual", stats = "quartiles"))
 #'
