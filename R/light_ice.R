@@ -6,6 +6,7 @@
 #'
 #' @importFrom stats setNames
 #' @importFrom tidyr crossing
+#' @importFrom dplyr inner_join
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be profiled.
 #' @param data An optional \code{data.frame}.
@@ -46,7 +47,7 @@
 #' light_ice(mod_full, v = "Species")
 #' light_ice(mod_full, v = "Species", indices = (1:15) * 10)
 #' light_ice(mod_full, v = "Species", evaluate_at = levels(iris$Species))
-#' light_ice(mod_full, grid = grid)
+#' light_ice(mod_full, grid = grid, data = iris[1,])$data
 #' light_ice(mods, v = "Species", indices = (1:15) * 10)
 #' light_ice(mods, v = "Species", indices = (1:15) * 10, center = TRUE)
 #' light_ice(mods, v = "Petal.Width", n_bins = 5)
@@ -120,7 +121,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
 
   # c-ICE curves by centering at first evaluation point
   if (center) {
-    central_data <- merge(data, grid[1, , drop = FALSE], by = v)
+    central_data <- inner_join(data, grid[1, , drop = FALSE], by = v)
     group_means <- grouped_stats(central_data, x = value_name, w = x$w,
                                  by = x$by, counts = FALSE,
                                  value_name = "global_mean", na.rm = TRUE)

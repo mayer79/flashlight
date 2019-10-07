@@ -2,7 +2,11 @@
 
 ## New functionality
 
-- Added the possibility to center ICE curves at first evaluation point to improve visibility of interactions. 
+- Added `type = "ale"` to `light_profile` to show accumulated local effects plots (ALE plots). They are now also calculated by `light_effects`. 
+
+- Added the possibility to center ICE curves at first evaluation point to improve visibility of interactions. Together with partial dependence with quartile aggregation, this can help to detect interactions.
+
+- `grouped_stats` has received an argument `value_name`.
 
 # flashlight 0.2.0
 

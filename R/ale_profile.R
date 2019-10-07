@@ -2,7 +2,7 @@
 #'
 #' Internal function used by \code{light_profile} to calculate ALE profiles.
 #'
-#' @importFrom dplyr as_tibble
+#' @importFrom dplyr as_tibble left_join
 #' @param x An object of class \code{flashlight}.
 #' @param v The variable to be profiled.
 #' @param breaks Cut breaks for a numeric \code{v}. Only used if no \code{evaluate_at} is specified.
@@ -18,13 +18,10 @@
 #' @param seed Integer random seed passed to \code{light_ice}.
 #' @param calibrate Should values be calibrated based on average preditions? Default is TRUE.
 #' @return A tibble containing results.
-ale_calculation <- function(x, v, breaks = NULL, n_bins = 11,
-                            cut_type = c("equal", "quantile"),
-                            value_name = "value",
-                            counts_name = "counts", counts = TRUE,
-                            counts_weighted = FALSE, pred = NULL,
-                            evaluate_at = NULL, n_max = 1000,
-                            seed = NULL, calibrate = TRUE) {
+ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"),
+                        value_name = "value", counts_name = "counts", counts = TRUE,
+                        counts_weighted = FALSE, pred = NULL, evaluate_at = NULL,
+                        n_max = 1000, seed = NULL, calibrate = TRUE) {
   cut_type <- match.arg(cut_type)
   data <- x$data
   stopifnot(!is.null(v), v %in% colnames(data))
@@ -83,17 +80,16 @@ ale_calculation <- function(x, v, breaks = NULL, n_bins = 11,
       ale_mean <- weighted_mean(ale[[value_name]], w = ale[[counts_name]], na.rm = TRUE)
       ale[[value_name]] <- ale[[value_name]] - ale_mean + pred_mean
     } else {
-      dat_pred <- cbind(data, cal = preds)
-      dat_pred <- grouped_stats(dat_pred, x = "cal", w = x$w,
+      stopifnot(!(c("cal_xx", "shift_xx") %in% colnames(data)))
+      dat_pred <- grouped_stats(cbind(data, cal = preds), x = "cal_xx", w = x$w,
                                 by = x$by, counts = FALSE, na.rm = TRUE)
       dat_ale <- grouped_stats(ale, x = value_name, w = counts_name,
                                by = x$by, counts = FALSE, na.rm = TRUE)
-      dat_shift <- merge(dat_ale, dat_pred, all.x = TRUE, by = x$by)
-      dat_shift[["shift"]] <- dat_shift[["cal"]] - dat_shift[[value_name]]
-      ale <- merge(ale, dat_shift[, c(x$by, "shift"), drop = FALSE],
-                   all.x = TRUE, by = x$by)
+      dat_shift <- left_join(dat_ale, dat_pred, by = x$by)
+      dat_shift[["shift_xx"]] <- dat_shift[["cal_xx"]] - dat_shift[[value_name]]
+      ale <- left_join(ale, dat_shift[, c(x$by, "shift_xx"), drop = FALSE], by = x$by)
       ale[[value_name]] <- ale[[value_name]] + ale[[value_name]]
-      ale[["shift"]] <- NULL
+      ale[["shift_xx"]] <- NULL
     }
   }
   if (!counts) {
@@ -102,4 +98,6 @@ ale_calculation <- function(x, v, breaks = NULL, n_bins = 11,
   as_tibble(ale)
 }
 
-
+#' x <- light_effects(mod_full, v = "Petal.Width")
+#' plot(x, use = "all")
+#'

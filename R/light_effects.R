@@ -116,6 +116,12 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                       pd_indices = pd_indices,
                       pd_n_max = pd_n_max, pd_seed = pd_seed)$data
 
+  # ALE
+  ale <- light_profile(x, v = v, type = "ale", value_name = value_name,
+                       label_name = label_name, type_name = type_name,
+                       counts = FALSE, pd_evaluate_at = cuts$bin_means,
+                       pd_n_max = pd_n_max, pd_seed = pd_seed, pred = pred)$data
+
   # Overwrite v variable in data and update flashlight
   data[[v]] <- cuts$data[[v]]
   x <- flashlight(x, data = data)
@@ -136,7 +142,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                              label_name = label_name, type_name = type_name,
                              counts = FALSE, pred = pred)$data
 
-  data_sets <- list(response = response, predicted = predicted, pd = pd)
+  data_sets <- list(response = response, predicted = predicted, pd = pd, ale = ale)
 
   if (v_labels) {
     # In all three inputs, replace v by cuts$level
