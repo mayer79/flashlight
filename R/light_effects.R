@@ -119,8 +119,10 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   # ALE
   ale <- light_profile(x, v = v, type = "ale", value_name = value_name,
                        label_name = label_name, type_name = type_name,
-                       counts = FALSE, pd_evaluate_at = cuts$bin_means,
-                       pd_n_max = pd_n_max, pd_seed = pd_seed, pred = pred)$data
+                       counts = FALSE,
+                       pd_evaluate_at = cuts$bin_means,
+                       pd_indices = pd_indices, pd_n_max = pd_n_max,
+                       pd_seed = pd_seed, pred = pred)$data
 
   # Overwrite v variable in data and update flashlight
   data[[v]] <- cuts$data[[v]]

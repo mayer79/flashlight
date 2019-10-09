@@ -149,7 +149,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                        value_name = value_name, counts_name = counts_name,
                        counts = counts, counts_weighted = counts_weighted,
                        pred = pred, evaluate_at = pd_evaluate_at,
-                       n_max = pd_n_max, seed = pd_seed)
+                       n_max = pd_n_max, indices = pd_indices, seed = pd_seed)
   } else {
     stopifnot(!is.null(v), v %in% colnames(data))
     # Add predictions/response to data

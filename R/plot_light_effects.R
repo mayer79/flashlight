@@ -1,4 +1,4 @@
-#' Visualize Different Types of Profiles Together
+#' Visualize Multiple Types of Profiles Together
 #'
 #' Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
 #'
@@ -7,7 +7,7 @@
 #' @importFrom dplyr semi_join bind_rows
 #' @method plot light_effects
 #' @param x An object of class \code{light_effects}.
-#' @param use A vector with elements in "response", "predicted", "pd" (partial dependence) and "ale" with elements to show. Defaults to all except "ale". Use "all" for all.
+#' @param use A vector of elements to show. Any subset of ("response", "predicted", "pd" and "ale") or "all". Defaults to all except "ale"
 #' @param zero_counts Logical flag if 0 count levels should be shown on the x axis.
 #' @param size_factor Factor used to enlarge default \code{size} in \code{geom_point} and \code{geom_line}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
@@ -29,6 +29,8 @@
 #' x <- light_effects(mod_full, v = "Petal.Width")
 #' plot(x)
 #' plot(x, use = "response")
+#' plot(x, use = c("pd", "ale"))
+#' plot_counts(plot(x, use = c("pd", "ale")), x)
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 #' plot(x)
