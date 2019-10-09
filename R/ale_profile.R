@@ -57,7 +57,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
                      n_max = n_max, value_name = value_name,
                      id_name = "id_xxx")$data
     if (num) {
-      ice[[value_name]] <- ice[[value_name]] / (to - from)
+      ice[[value_name]] <- if (to == from) 0 else ice[[value_name]] / (to - from)
     }
 
     # Safe reshaping
@@ -84,21 +84,21 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
   }
 
   # Call ICE once per interval
-  eval_pair <- data.frame(from = evaluate_at[1:(length(evaluate_at) - 1L)],
-                          to = evaluate_at[-1L])
+  eval_pair <- data.frame(from = evaluate_at[c(1L, 1:(length(evaluate_at) - 1L))],
+                          to = evaluate_at)
   ale <- do.call(rbind, apply(eval_pair, 1, ale_core))
 
   # Accumulate effects. Tricky if there are empty intervals inbetween
-  core_fun <- function(X) {
+  wcumsum <- function(X) {
     if (num) {
       out <- cumsum(X[[value_name]] * c(0, diff(X[[v]])))
     } else {
       out <- cumsum(X[[value_name]])
     }
-   setNames(as_tibble(out), value_name)
+   setNames(data.frame(out), value_name)
   }
-  ale[[value_name]] <- (if (is.null(x$by)) core_fun(ale) else
-      ungroup(do(group_by_at(ale, x$by), core_fun(.data))))[[value_name]]
+  ale[[value_name]] <- (if (is.null(x$by)) wcumsum(ale) else
+      ungroup(do(group_by_at(ale, x$by), wcumsum(.data))))[[value_name]]
   if (is.factor(data[[v]])) {
     ale[[v]] <- factor(ale[[v]], levels = levels(data[[v]]))
   }
