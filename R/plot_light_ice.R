@@ -40,6 +40,8 @@
 #'   predict_function = function(m, X) predict(m, X, type = "response"))
 #' fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
 #' plot(light_ice(fls, v = "Petal.Length", indices = indices))
+#' plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE))
+#' plot(light_ice(fls, v = "Petal.Length", indices = indices, by = "Species", center = TRUE))
 #' plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE))
 #' @seealso \code{\link{light_ice}}.
 plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
