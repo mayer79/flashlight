@@ -2,7 +2,7 @@
 #'
 #' Internal function used by \code{light_profile} to calculate ALE profiles.
 #'
-#' @importFrom dplyr as_tibble left_join group_by_at do ungroup
+#' @importFrom dplyr as_tibble left_join group_by_at do ungroup bind_rows
 #' @importFrom rlang .data
 #' @importFrom stats setNames
 #' @param x An object of class \code{flashlight}.
@@ -40,6 +40,16 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
   }
   num <- is.numeric(data[[v]])
 
+  # Evaluation points
+  if (is.null(evaluate_at)) {
+    if (!is.null(breaks)) {
+      evaluate_at <- midpoints(breaks)
+    } else {
+      cuts <- auto_cut(data[[v]], n_bins = n_bins, cut_type = cut_type)
+      evaluate_at <- if (!is.null(cuts$bin_means)) cuts$bin_means else midpoints(cuts$breaks)
+    }
+  }
+
   # Helper function used to calculate differences for any pair of x values
   ale_core <- function(from_to) {
     from <- from_to[1]
@@ -73,32 +83,18 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
     out
   }
 
-  # Evaluation points
-  if (is.null(evaluate_at)) {
-    if (!is.null(breaks)) {
-      evaluate_at <- midpoints(breaks)
-    } else {
-      cuts <- auto_cut(data[[v]], n_bins = n_bins, cut_type = cut_type)
-      evaluate_at <- if (!is.null(cuts$bin_means)) cuts$bin_means else midpoints(cuts$breaks)
-    }
-  }
-
   # Call ICE once per interval
   eval_pair <- data.frame(from = evaluate_at[c(1L, 1:(length(evaluate_at) - 1L))],
                           to = evaluate_at)
-  ale <- do.call(rbind, apply(eval_pair, 1, ale_core))
+  ale <- bind_rows(apply(eval_pair, 1, ale_core))
 
   # Accumulate effects. Tricky if there are empty intervals inbetween
   wcumsum <- function(X) {
-    if (num) {
-      out <- cumsum(X[[value_name]] * c(0, diff(X[[v]])))
-    } else {
-      out <- cumsum(X[[value_name]])
-    }
-   setNames(data.frame(out), value_name)
+    X[[value_name]] <- cumsum(X[[value_name]] * (if (num) c(0, diff(X[[v]])) else 1))
+    X
   }
-  ale[[value_name]] <- (if (is.null(x$by)) wcumsum(ale) else
-      ungroup(do(group_by_at(ale, x$by), wcumsum(.data))))[[value_name]]
+  ale <- if (is.null(x$by)) wcumsum(ale) else
+      ungroup(do(group_by_at(ale, x$by), wcumsum(.data)))
   if (is.factor(data[[v]])) {
     ale[[v]] <- factor(ale[[v]], levels = levels(data[[v]]))
   }
