@@ -1,6 +1,8 @@
-#' Response, Predicted and Partial Dependence Profiles
+#' Combination of Response, Predicted, Partial Dependence, and ALE Profiles
 #'
-#' Calculates response- prediction- and partial dependence profiles of a (multi-)flashlight with respect to a covariable \code{v}.
+#' Calculates response- prediction-, partial dependence, and ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}.
+#'
+#' Note that ALE profiles need to be calibrated. We use (weighted) average predictions to do so. This might lead to slight shift compared to the partial dependence profiles.
 #'
 #' @importFrom dplyr bind_rows
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
@@ -10,7 +12,7 @@
 #' @param stats Statistic to calculate for the response profile: "mean" or "quartiles".
 #' @param breaks Cut breaks for a numeric \code{v}.
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}.
-#' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
+#' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins (recommended if interested in ALE).
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param value_name Column name in resulting data objects containing the profile value. Defaults to "value".
 #' @param q1_name Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".
@@ -19,11 +21,12 @@
 #' @param type_name Name of the column in \code{data} containing \code{type}.
 #' @param counts_name Name of the column containing counts.
 #' @param counts_weighted Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
-#' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.
+#' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets. Does not work well with \code{plot_counts}.
 #' @param pred Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make.
-#' @param pd_indices A vector of row numbers to consider in calculating partial dependence profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence.
-#' @param pd_n_max Maximum number of ICE profiles to consider for partial depencence calculation (will be randomly picked from \code{data}).
-#' @param pd_seed An integer random seed used to sample ICE profiles for partial dependence.
+#' @param pd_indices A vector of row numbers to consider in calculating partial dependence and ALE profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence and ALE.
+#' @param pd_n_max Maximum number of ICE profiles to consider for partial depencence and ALE calculation (will be randomly picked from \code{data}).
+#' @param pd_seed An integer random seed used to sample ICE profiles for partial dependence and ALE.
+#' @param ale_two_sided ALE profile are based on empirical left-sided derivatives. The corresponding intervals do not correspond well with the interval labels shown by \code{light_effects}. We feel that left-sided derivatives suit better here, so this is currently the default.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable.
 #' @return An object of classes \code{light_effects}, \code{light} (and a list) with the following elements.
 #' \itemize{
@@ -84,7 +87,8 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                                      q1_name = "q1", q3_name = "q3", label_name = "label",
                                      type_name = "type", counts_name = "counts",
                                      counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
-                                     pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL, ...) {
+                                     pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL,
+                                     ale_two_sided = v_labels, ...) {
   stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
 
@@ -116,11 +120,14 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                       pd_indices = pd_indices,
                       pd_n_max = pd_n_max, pd_seed = pd_seed)$data
 
-  # ALE
+  # ALE -> use two-sided derivative if v seems continuous
+  if (ale_two_sided && is.null(cuts$breaks)) {
+    ale_two_sided <- FALSE
+  }
   ale <- light_profile(x, v = v, type = "ale", value_name = value_name,
                        label_name = label_name, type_name = type_name,
                        counts = FALSE,
-                       pd_evaluate_at = cuts$bin_means,
+                       pd_evaluate_at = if (ale_two_sided) cuts$breaks[-1] else cuts$bin_means,
                        pd_indices = pd_indices, pd_n_max = pd_n_max,
                        pd_seed = pd_seed, pred = pred)$data
 
@@ -147,9 +154,10 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   data_sets <- list(response = response, predicted = predicted, pd = pd, ale = ale)
 
   if (v_labels) {
-    # In all three inputs, replace v by cuts$level
+    # In all four inputs, replace v by cuts$bin_means (or if ALE, by cuts$breaks[-1])
     for (nm in names(data_sets)) {
-      data_sets[[nm]][[v]] <- cuts$bin_labels[match(data_sets[[nm]][[v]], cuts$bin_means)]
+      reference <- if (nm == "ale" && ale_two_sided) cuts$breaks[-1] else cuts$bin_means
+      data_sets[[nm]][[v]] <- cuts$bin_labels[match(data_sets[[nm]][[v]], reference)]
     }
   }
 
