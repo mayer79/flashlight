@@ -21,7 +21,8 @@
 #' @param seed Integer random seed passed to \code{light_ice}.
 #' @param calibrate Should values be calibrated based on average preditions? Default is TRUE.
 #' @return A tibble containing results.
-ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"),
+ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
+                        cut_type = c("equal", "quantile"),
                         value_name = "value", counts_name = "counts", counts = TRUE,
                         counts_weighted = FALSE, pred = NULL, evaluate_at = NULL,
                         indices = NULL, n_max = 1000, seed = NULL, calibrate = TRUE) {
@@ -78,17 +79,23 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
 
     # Aggregation and output
     out <- grouped_stats(dat_to, x = value_name, w = x$w, by = x$by,
-                         counts_name = counts_name, counts_weighted = counts_weighted)
+                         counts_name = counts_name,
+                         counts_weighted = counts_weighted, na.rm = TRUE)
     out[[v]] <- to
     out
   }
 
-  # Call ICE once per interval
+  # Call ale_core once per interval and combine results
   eval_pair <- data.frame(from = evaluate_at[c(1L, 1:(length(evaluate_at) - 1L))],
                           to = evaluate_at)
   ale <- bind_rows(apply(eval_pair, 1, ale_core))
 
-  # Accumulate effects. Tricky if there are empty intervals inbetween
+  # Remove missing values before accumulation
+  if (any(bad <- is.na(ale[["value_name"]]))) {
+    ale <- ale[!bad, , drop = FALSE]
+  }
+
+  # Accumulate effects. Integrate out gaps
   wcumsum <- function(X) {
     X[[value_name]] <- cumsum(X[[value_name]] * (if (num) c(0, diff(X[[v]])) else 1))
     X
@@ -123,4 +130,5 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
   if (!counts) {
     ale[[counts_name]] <- NULL
   }
+  ale
 }
