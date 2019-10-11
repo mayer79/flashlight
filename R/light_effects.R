@@ -26,7 +26,7 @@
 #' @param pd_indices A vector of row numbers to consider in calculating partial dependence and ALE profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence and ALE.
 #' @param pd_n_max Maximum number of ICE profiles to consider for partial depencence and ALE calculation (will be randomly picked from \code{data}).
 #' @param pd_seed An integer random seed used to sample ICE profiles for partial dependence and ALE.
-#' @param ale_two_sided ALE profiles are usually calculated based on left derivatives. In combination with the break labels shown by \code{light_effects}, we feel that two-sided derivatives suit better, so this is currently the default.
+#' @param ale_two_sided If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. This aligns the results better with the x labels. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable.
 #' @return An object of classes \code{light_effects}, \code{light} (and a list) with the following elements.
 #' \itemize{
@@ -120,16 +120,13 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                       pd_indices = pd_indices,
                       pd_n_max = pd_n_max, pd_seed = pd_seed)$data
 
-  # ALE -> use two-sided derivative if v seems continuous
-  if (ale_two_sided && is.null(cuts$breaks)) {
-    ale_two_sided <- FALSE
-  }
   ale <- light_profile(x, v = v, type = "ale", value_name = value_name,
                        label_name = label_name, type_name = type_name,
-                       counts = FALSE,
-                       pd_evaluate_at = if (ale_two_sided) cuts$breaks[-1] else cuts$bin_means,
+                       counts = FALSE, breaks = cuts$breaks,
+                       pd_evaluate_at = cuts$bin_means,
                        pd_indices = pd_indices, pd_n_max = pd_n_max,
-                       pd_seed = pd_seed, pred = pred)$data
+                       pd_seed = pd_seed, pred = pred,
+                       ale_two_sided = ale_two_sided)$data
 
   # Overwrite v variable in data and update flashlight
   data[[v]] <- cuts$data[[v]]
@@ -155,13 +152,9 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 
   # Unify x scale
   if (v_labels) {
-    # In all four inputs, replace v by cuts$bin_means (or if ALE, by cuts$breaks[-1])
     for (nm in names(data_sets)) {
-      reference <- if (nm == "ale" && ale_two_sided) cuts$breaks[-1] else cuts$bin_means
-      data_sets[[nm]][[v]] <- cuts$bin_labels[match(data_sets[[nm]][[v]], reference)]
+      data_sets[[nm]][[v]] <- cuts$bin_labels[match(data_sets[[nm]][[v]], cuts$bin_means)]
     }
-  } else if (ale_two_sided) {
-    data_sets[["ale"]][[v]] <- cuts$bin_means[match(data_sets[["ale"]][[v]], cuts$breaks[-1])]
   }
 
   # Collect results

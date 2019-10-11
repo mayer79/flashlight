@@ -19,13 +19,15 @@
 #' @param indices A vector of row numbers to consider.
 #' @param n_max Maximum number of ICE profiles to calculate within interval (not within data).
 #' @param seed Integer random seed passed to \code{light_ice}.
+#' @param two_sided Standard ALE profiles are calculated via left derivatives. Set to TRUE if two-sided derivatives should be calculated. Only works for continuous \code{v}. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
 #' @param calibrate Should values be calibrated based on average preditions? Default is TRUE.
 #' @return A tibble containing results.
 ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
                         cut_type = c("equal", "quantile"),
                         value_name = "value", counts_name = "counts", counts = TRUE,
                         counts_weighted = FALSE, pred = NULL, evaluate_at = NULL,
-                        indices = NULL, n_max = 1000, seed = NULL, calibrate = TRUE) {
+                        indices = NULL, n_max = 1000, seed = NULL,
+                        two_sided = FALSE, calibrate = TRUE) {
   # Initial stuff
   cut_type <- match.arg(cut_type)
   data <- x$data
@@ -39,15 +41,20 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
   if (!is.null(indices)) {
     data <- data[indices, , drop = FALSE]
   }
-  num <- is.numeric(data[[v]])
+  is_num <- is.numeric(data[[v]])
 
-  # Evaluation points
+  # Evaluation points (including shift for two-sided derivatives)
   if (is.null(evaluate_at)) {
+    cuts <- auto_cut(data[[v]], breaks = breaks, n_bins = n_bins, cut_type = cut_type)
+    breaks <- cuts$breaks
+    evaluate_at <- cuts$bin_means
+  }
+  if (two_sided) {
     if (!is.null(breaks)) {
-      evaluate_at <- midpoints(breaks)
+      evaluate_at_orig <- evaluate_at
+      evaluate_at <- breaks[-1]
     } else {
-      cuts <- auto_cut(data[[v]], n_bins = n_bins, cut_type = cut_type)
-      evaluate_at <- if (!is.null(cuts$bin_means)) cuts$bin_means else midpoints(cuts$breaks)
+      two_sided <- FALSE
     }
   }
 
@@ -67,7 +74,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
     ice <- light_ice(x, v = v, data = dat_i, evaluate_at = from_to,
                      n_max = n_max, value_name = value_name,
                      id_name = "id_xxx")$data
-    if (num) {
+    if (is_num) {
       ice[[value_name]] <- if (to == from) 0 else ice[[value_name]] / (to - from)
     }
 
@@ -97,7 +104,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
 
   # Accumulate effects. Integrate out gaps
   wcumsum <- function(X) {
-    X[[value_name]] <- cumsum(X[[value_name]] * (if (num) c(0, diff(X[[v]])) else 1))
+    X[[value_name]] <- cumsum(X[[value_name]] * (if (is_num) c(0, diff(X[[v]])) else 1))
     X
   }
   ale <- if (is.null(x$by)) wcumsum(ale) else
@@ -127,8 +134,9 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
       ale[["shift_xx"]] <- NULL
     }
   }
-  if (!counts) {
-    ale[[counts_name]] <- NULL
+  # Revert shift for two-sided derivatives
+  if (two_sided) {
+    ale[[v]] <- evaluate_at_orig[match(ale[[v]], breaks[-1])]
   }
-  ale
+  ale[, c(x$by, v, if (counts && counts_name %in% colnames(ale)) counts_name, value_name)]
 }
