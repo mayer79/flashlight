@@ -37,6 +37,7 @@
 #' plot(light_profile(mods, v = "Petal.Width"))
 #' plot(light_profile(mods, v = "Petal.Width"), swap_dim = TRUE)
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species"))
+#' plot(light_profile(mods, v = "Petal.Width", by = "Species", type = "ale"))
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species"), swap_dim = TRUE)
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species", type = "predicted"))
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species",

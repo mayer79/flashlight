@@ -21,12 +21,12 @@
 #' @param type_name Name of the column in \code{data} containing \code{type}.
 #' @param counts_name Name of the column containing counts.
 #' @param counts_weighted Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
-#' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets. Does not work well with \code{plot_counts}.
+#' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.
 #' @param pred Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make.
 #' @param pd_indices A vector of row numbers to consider in calculating partial dependence and ALE profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence and ALE.
 #' @param pd_n_max Maximum number of ICE profiles to consider for partial depencence and ALE calculation (will be randomly picked from \code{data}).
 #' @param pd_seed An integer random seed used to sample ICE profiles for partial dependence and ALE.
-#' @param ale_two_sided ALE profile are based on empirical left-sided derivatives. The corresponding intervals do not correspond well with the interval labels shown by \code{light_effects}. We feel that left-sided derivatives suit better here, so this is currently the default.
+#' @param ale_two_sided ALE profiles are usually calculated based on left derivatives. In combination with the break labels shown by \code{light_effects}, we feel that two-sided derivatives suit better, so this is currently the default.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable.
 #' @return An object of classes \code{light_effects}, \code{light} (and a list) with the following elements.
 #' \itemize{
@@ -88,7 +88,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                                      type_name = "type", counts_name = "counts",
                                      counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
                                      pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL,
-                                     ale_two_sided = v_labels, ...) {
+                                     ale_two_sided = TRUE, ...) {
   stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
 
@@ -153,12 +153,15 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 
   data_sets <- list(response = response, predicted = predicted, pd = pd, ale = ale)
 
+  # Unify x scale
   if (v_labels) {
     # In all four inputs, replace v by cuts$bin_means (or if ALE, by cuts$breaks[-1])
     for (nm in names(data_sets)) {
       reference <- if (nm == "ale" && ale_two_sided) cuts$breaks[-1] else cuts$bin_means
       data_sets[[nm]][[v]] <- cuts$bin_labels[match(data_sets[[nm]][[v]], reference)]
     }
+  } else if (ale_two_sided) {
+    data_sets[["ale"]][[v]] <- cuts$bin_means[match(data_sets[["ale"]][[v]], cuts$breaks[-1])]
   }
 
   # Collect results

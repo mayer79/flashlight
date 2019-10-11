@@ -8,6 +8,12 @@
 
 - `grouped_stats` has received an argument `value_name`.
 
+## Bug fixes
+
+- Option `cut_type` was not active for partial dependence profiles.
+
+- Option `cut_tpye` was not active for the multiflashlight method of `light_profile`.
+
 # flashlight 0.2.0
 
 ## New functionality

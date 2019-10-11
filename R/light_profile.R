@@ -1,6 +1,6 @@
 #' Partial Dependence and other Profiles
 #'
-#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]) and residuals. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average prediction.
+#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]) and residuals. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
 #'
 #' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
 #'
@@ -137,8 +137,10 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   if (type == "partial dependence") {
     # Get profiles
     cp_profiles <- light_ice(x, v = v, evaluate_at = pd_evaluate_at,
-                             breaks = breaks, grid = pd_grid, n_bins = n_bins,
-                             n_max = pd_n_max, seed = pd_seed, center = pd_center,
+                             breaks = breaks, grid = pd_grid,
+                             n_bins = n_bins, cut_type = cut_type,
+                             indices = pd_indices, n_max = pd_n_max,
+                             seed = pd_seed, center = pd_center,
                              value_name = value_name,
                              label_name = label_name, id_name = "id_xxx")
     v <- cp_profiles$v
@@ -205,10 +207,11 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
       stopifnot(nrow(data) >= 1L, v %in% colnames(data))
       v_vec <- data[[v]]
     }
-    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins)$breaks
+    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins,
+                       cut_type = cut_type)$breaks
   }
   all_profiles <- lapply(x, light_profile, v = v, data = data,
-                         breaks = breaks, n_bins = n_bins,
+                         breaks = breaks, n_bins = n_bins, cut_type = cut_type,
                          pd_evaluate_at = pd_evaluate_at, pd_grid = pd_grid, ...)
   light_combine(all_profiles, new_class = "light_profile_multi")
 }

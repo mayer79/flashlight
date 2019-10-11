@@ -38,7 +38,7 @@
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
 #' plot(x)
-#' p <- plot(x, zero_counts = FALSE)
+#' p <- plot(x, zero_counts = FALSE, use = "all")
 #' plot_counts(p, x, alpha = 0.2)
 #'
 #' plot(light_effects(mod_full, v = "Petal.Width", by = "Species",

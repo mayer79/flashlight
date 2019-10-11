@@ -106,6 +106,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
       pred_mean <- weighted_mean(preds, if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
       ale_mean <- weighted_mean(ale[[value_name]], w = ale[[counts_name]], na.rm = TRUE)
       ale[[value_name]] <- ale[[value_name]] - ale_mean + pred_mean
+      ale <- as_tibble(ale)
     } else {
       stopifnot(!(c("cal_xx", "shift_xx") %in% colnames(data)))
       dat_pred <- grouped_stats(cbind(data, cal_xx = preds), x = "cal_xx", w = x$w,
@@ -122,9 +123,4 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal", 
   if (!counts) {
     ale[[counts_name]] <- NULL
   }
-  as_tibble(ale)
 }
-
-#' x <- light_effects(mod_full, v = "Petal.Width")
-#' plot(x, use = "all")
-#'
