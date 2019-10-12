@@ -62,6 +62,43 @@ fls <- multiflashlight(list(fl_lm, fl_glm), data = ir,
 light_importance(fls, v = "Petal.Length", seed = 45)
 light_importance(fls, v = "Petal.Length", seed = 45, use_linkinv = TRUE)
 
+#======================================
+# ICE
+#======================================
+
+fit_full <- lm(Sepal.Length ~ ., data = iris)
+fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
+mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
+mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
+mods <- multiflashlight(list(mod_full, mod_part))
+grid <- expand.grid(Species = levels(iris$Species), Petal.Length = 2:4)
+
+plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
+indices <- (1:15) * 10
+plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
+plot(light_ice(mods, v = "Species", indices = indices))
+plot(light_ice(mods, v = "Species", indices = indices, center = TRUE))
+plot(light_ice(mods, v = "Petal.Width", n_bins = 5, indices = indices))
+plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
+plot(light_ice(mods, v = "Petal.Width", by = "Species",
+               n_bins = 5, indices = indices, center = TRUE))
+
+ir <- iris
+ir$log_sl <- log(ir$Sepal.Length)
+fit_lm <- lm(log_sl ~ Petal.Length + Petal.Width, data = ir)
+fit_glm <- glm(Sepal.Length ~ Petal.Length + Petal.Width,
+  data = ir, family = Gamma(link = log))
+fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
+fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
+  predict_function = function(m, X) predict(m, X, type = "response"))
+fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
+plot(light_ice(fls, v = "Petal.Length", indices = indices))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, by = "Species", center = TRUE))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
+               center = TRUE))
+
 
 #======================================
 # Profile

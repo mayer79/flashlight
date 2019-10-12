@@ -747,7 +747,7 @@ plot(light_breakdown(fl, new_obs = ir[2, ], v = c("Sepal.Length", "Petal.Width")
 
 [4] Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232 (https://doi.org/10.1214/aos/1013203451).
 
-[5] Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models. ArXiv (https://arXiv:1612.08468).
+[5] Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models. ArXiv (https://arxiv.org/abs/1612.08468).
 
 [6] Gosiewska A. and Biecek P. (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv (https://arxiv.org/abs/1903.11420).
 

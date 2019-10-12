@@ -1,6 +1,6 @@
-# Submission
+# Resubmission
 
-## R CMD check results
+There was an incorrect URL in the vignette. This is now fixed.
 
-0 errors | 0 warnings | 0 note
+Corrected https://arXiv:1612.08468 to https://arxiv.org/abs/1612.08468
 
