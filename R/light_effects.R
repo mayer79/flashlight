@@ -2,7 +2,7 @@
 #'
 #' Calculates response- prediction-, partial dependence, and ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}.
 #'
-#' Note that ALE profiles need to be calibrated. We use (weighted) average predictions to do so. This might lead to slight shift compared to the partial dependence profiles.
+#' Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles.
 #'
 #' @importFrom dplyr bind_rows
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.

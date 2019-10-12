@@ -5,7 +5,7 @@
 \alias{light_importance.default}
 \alias{light_importance.flashlight}
 \alias{light_importance.multiflashlight}
-\title{Permutation Importance.}
+\title{Permutation Importance}
 \usage{
 light_importance(x, ...)
 
@@ -95,7 +95,7 @@ light_importance(fls, v = "Petal.Length", seed = 45)
 light_importance(fls, v = "Petal.Length", seed = 45, use_linkinv = TRUE)
 }
 \references{
-[1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv. <https://arxiv.org/abs/1801.01489>.
+[1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.
 }
 \seealso{
 \code{\link{most_important}}, \code{\link{plot.light_importance}}.

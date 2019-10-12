@@ -55,19 +55,24 @@ most_important(imp, 2)
 
 # ICE profiles for Petal.Width
 plot(light_ice(fl, v = "Petal.Width"))
+plot(light_ice(fl, v = "Petal.Width", center = TRUE))
 plot(light_ice(fl, v = "Petal.Width", by = "Species"))
 
 # Partial dependence profiles for Petal.Width
 plot(light_profile(fl, v = "Petal.Width"))
 plot(light_profile(fl, v = "Petal.Width", by = "Species"))
 
+# Accumulated local effects (ALE) profiles for Petal.Width
+plot(light_profile(fl, v = "Petal.Width", type = "ale"))
+plot(light_profile(fl, v = "Petal.Width", by = "Species", type = "ale"))
+
 # Prediction, response and residual profiles
 plot(light_profile(fl, v = "Petal.Width", type = "response", stats = "quartiles"))
 plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
 plot(light_profile(fl, v = "Petal.Width", type = "residual", stats = "quartiles"))
 
-# Response profiles, prediction profiles and partial depencence in one
-plot(light_effects(fl, v = "Petal.Width"))
+# Response profiles, prediction profiles, partial depencence, and ALE profiles in one
+plot(light_effects(fl, v = "Petal.Width"), use = "all")
 
 # Variable contribution breakdown for single observation
 plot(light_breakdown(fl, new_obs = iris[2, ]))

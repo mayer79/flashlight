@@ -14,6 +14,7 @@
 #' @param counts Should group counts be added?
 #' @param counts_weighted Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
 #' @param counts_name Name of column in the resulting \code{data.frame} containing the counts.
+#' @param value_name Name of the resulting column with mean or median.
 #' @param q1_name Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".
 #' @param q3_name Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".
 #' @param ... Additional arguments passed to \code{MetricsWeighted::weighted_mean} or \code{weighted_quartiles}.
@@ -35,15 +36,16 @@
 #' grouped_stats(iris, "Sepal.Width", counts_name = "n",
 #'   stats = "quartiles", q1_name = "p25", q3_name = "p75")
 grouped_stats <- function(data, x, w = NULL, by = NULL, stats = c("mean", "quartiles"),
-                          counts = TRUE, counts_weighted = FALSE, counts_name = "counts",
+                          counts = TRUE, counts_weighted = FALSE,
+                          counts_name = "counts", value_name = x,
                           q1_name = "q1", q3_name = "q3", ...) {
   # Initial checks
   stats <- match.arg(stats)
   if (counts_weighted && is.null(w)) {
-    stop("Counts cannot be weighted if no weights are passed.")
+    counts_weighted <- FALSE
   }
   stopifnot(c(x, w, by) %in% colnames(data),
-            !anyDuplicated(c(x, by, counts_name, q1_name, q3_name)),
+            !anyDuplicated(c(value_name, by, counts_name, q1_name, q3_name)),
             nrow(data) >= 1L)
 
   # Function that does the ungrouped calculation
@@ -51,10 +53,10 @@ grouped_stats <- function(data, x, w = NULL, by = NULL, stats = c("mean", "quart
     xx <- X[[x]]
     ww <- if (!is.null(w)) X[[w]] # else NULL
     if (stats == "mean") {
-      val <- setNames(data.frame(weighted_mean(xx, ww, ...)), x)
+      val <- setNames(data.frame(weighted_mean(xx, ww, ...)), value_name)
     } else {
       val <- t(weighted_quantile(xx, ww, probs = (1:3) / 4, names = FALSE, ...))
-      val <- setNames(data.frame(val), c(q1_name, x, q3_name))
+      val <- setNames(data.frame(val), c(q1_name, value_name, q3_name))
     }
     if (!counts) {
       return(val)

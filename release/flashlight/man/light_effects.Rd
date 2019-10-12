@@ -5,7 +5,7 @@
 \alias{light_effects.default}
 \alias{light_effects.flashlight}
 \alias{light_effects.multiflashlight}
-\title{Response, Predicted and Partial Dependence Profiles}
+\title{Combination of Response, Predicted, Partial Dependence, and ALE Profiles}
 \usage{
 light_effects(x, ...)
 
@@ -17,7 +17,8 @@ light_effects(x, ...)
   value_name = "value", q1_name = "q1", q3_name = "q3",
   label_name = "label", type_name = "type", counts_name = "counts",
   counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
-  pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL, ...)
+  pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL,
+  ale_two_sided = TRUE, ...)
 
 \method{light_effects}{multiflashlight}(x, v, data = NULL,
   breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"), ...)
@@ -39,7 +40,7 @@ light_effects(x, ...)
 
 \item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}.}
 
-\item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.}
+\item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins (recommended if interested in ALE).}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
 
@@ -61,11 +62,13 @@ light_effects(x, ...)
 
 \item{pred}{Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make.}
 
-\item{pd_indices}{A vector of row numbers to consider in calculating partial dependence profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence.}
+\item{pd_indices}{A vector of row numbers to consider in calculating partial dependence and ALE profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence and ALE.}
 
-\item{pd_n_max}{Maximum number of ICE profiles to consider for partial depencence calculation (will be randomly picked from \code{data}).}
+\item{pd_n_max}{Maximum number of ICE profiles to consider for partial depencence and ALE calculation (will be randomly picked from \code{data}).}
 
-\item{pd_seed}{An integer random seed used to sample ICE profiles for partial dependence.}
+\item{pd_seed}{An integer random seed used to sample ICE profiles for partial dependence and ALE.}
+
+\item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. This aligns the results better with the x labels. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.}
 }
 \value{
 An object of classes \code{light_effects}, \code{light} (and a list) with the following elements.
@@ -85,7 +88,10 @@ An object of classes \code{light_effects}, \code{light} (and a list) with the fo
 }
 }
 \description{
-Calculates response- prediction- and partial dependence profiles of a (multi-)flashlight with respect to a covariable \code{v}.
+Calculates response- prediction-, partial dependence, and ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}.
+}
+\details{
+Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -118,4 +124,7 @@ light_effects(mod_full, v = "Petal.Width", by = "Species")
 light_effects(mods, v = "Petal.Width")
 light_effects(mods, v = "Petal.Width", by = "Species")
 light_effects(mods, v = "Petal.Width", by = "Species", stats = "quartiles")
+}
+\seealso{
+\code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 }
