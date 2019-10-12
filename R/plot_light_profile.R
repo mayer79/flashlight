@@ -22,6 +22,7 @@
 #' mods <- multiflashlight(list(mod_full, mod_part))
 #'
 #' plot(light_profile(mod_full, v = "Species"))
+#' plot(light_profile(mod_full, v = "Species", type = "ale"))
 #' plot(light_profile(mod_full, v = "Species", type = "response"))
 #' plot(light_profile(mod_full, v = "Species", type = "residual", stats = "quartiles"))
 #'
@@ -36,6 +37,7 @@
 #' plot(light_profile(mods, v = "Petal.Width"))
 #' plot(light_profile(mods, v = "Petal.Width"), swap_dim = TRUE)
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species"))
+#' plot(light_profile(mods, v = "Petal.Width", by = "Species", type = "ale"))
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species"), swap_dim = TRUE)
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species", type = "predicted"))
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species",

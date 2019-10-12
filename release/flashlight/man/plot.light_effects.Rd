@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_light_effects.R
 \name{plot.light_effects}
 \alias{plot.light_effects}
-\title{Visualize Different Types of Profiles Together}
+\title{Visualize Multiple Types of Profiles Together}
 \usage{
 \method{plot}{light_effects}(x, use = c("response", "predicted", "pd"),
   zero_counts = TRUE, size_factor = 1, facet_scales = "free_x",
@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{An object of class \code{light_effects}.}
 
-\item{use}{A vector with elements in "response", "predicted" and "pd" (partial dependence) with elements to show. Defaults to all.}
+\item{use}{A vector of elements to show. Any subset of ("response", "predicted", "pd" and "ale") or "all". Defaults to all except "ale"}
 
 \item{zero_counts}{Logical flag if 0 count levels should be shown on the x axis.}
 
@@ -29,7 +29,7 @@
 An object of class \code{ggplot2}.
 }
 \description{
-Visualizes response-, prediction-, and partial dependence profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
+Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
 }
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
@@ -44,6 +44,8 @@ plot(light_effects(mod_full, v = "Species"))
 x <- light_effects(mod_full, v = "Petal.Width")
 plot(x)
 plot(x, use = "response")
+plot(x, use = c("pd", "ale"))
+plot_counts(plot(x, use = c("pd", "ale")), x)
 
 x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 plot(x)
@@ -51,7 +53,7 @@ plot_counts(plot(x, use = "response"), x, alpha = 0.2)
 
 x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
 plot(x)
-p <- plot(x, zero_counts = FALSE)
+p <- plot(x, zero_counts = FALSE, use = "all")
 plot_counts(p, x, alpha = 0.2)
 
 plot(light_effects(mod_full, v = "Petal.Width", by = "Species",

@@ -102,6 +102,15 @@ plot(light_profile(mods, v = "Petal.Width", by = "Species", stats = "quartiles",
      value_name = "pd", q1_name = "p25", q3_name = "p75", label_name = "model",
      type_name = "visualization", counts_name = "n"))
 
+# ALE
+plot(light_profile(mods, v = "Species", type = "ale"))
+plot(light_profile(mods, v = "Petal.Width", type = "ale"))
+plot(light_profile(mods, v = "Petal.Width", type = "ale"), swap_dim = TRUE)
+plot(light_profile(mods, v = "Petal.Width", type = "ale", by = "Species"))
+plot(light_profile(mods, v = "Petal.Width", type = "ale", by = "Species"), swap_dim = TRUE)
+plot(light_profile(mods, v = "Petal.Width", type = "ale", by = "Species",
+                   type = "predicted", stats = "quartiles"), rotate_x = TRUE)
+
 ir <- iris
 ir$log_sl <- log(ir$Sepal.Length)
 fit_lm <- lm(log_sl ~ Petal.Length + Petal.Width, data = ir)
@@ -114,6 +123,8 @@ fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
 
 plot(light_profile(fls, v = "Petal.Length"))
 plot(light_profile(fls, v = "Petal.Length", use_linkinv = FALSE))
+plot(light_profile(fls, v = "Petal.Length", type = "ale",  use_linkinv = FALSE))
+
 
 
 #======================================
@@ -134,6 +145,7 @@ plot(x)
 plot(x, use = "response")
 plot(x, use = "predicted")
 plot(x, use = "pd")
+plot(x, use = c("ale"), zero_counts = T)
 plot_counts(plot(x), x, alpha = 0.2)
 plot_counts(plot(x, use = "response"), x, alpha = 0.2)
 plot_counts(plot(x, zero_counts = FALSE), x, alpha = 0.2)
@@ -148,13 +160,13 @@ plot_counts(plot(x, use = "response", zero_counts = F), x, alpha = 0.2) # same
 
 x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
 plot(x)
-p <- plot(x, zero_counts = FALSE)
+p <- plot(x, zero_counts = FALSE, use = "all")
 plot_counts(p, x, alpha = 0.2)
 
 x <- light_effects(mod_full, v = "Petal.Width", by = "Species", stats = "quartiles")
 plot(x)
 plot_counts(plot(x), x, alpha = 0.2)
-plot_counts(plot(x, zero_counts = FALSE), x, alpha = 0.2)
+plot_counts(plot(x, use = "all", zero_counts = FALSE), x, alpha = 0.2)
 
 x <- light_effects(mods, v = "Petal.Width")
 plot(x)
@@ -173,6 +185,8 @@ fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
 fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
 plot(light_effects(fls, v = "Petal.Length"))
 plot(light_effects(fls, v = "Petal.Length", use_linkinv = FALSE))
+plot(light_effects(fls, v = "Petal.Length"), use = "all")
+plot(light_effects(fls, v = "Petal.Length", use_linkinv = FALSE), use = "all")
 
 #======================================
 # NAs
@@ -206,13 +220,14 @@ plot(light_ice(mods, v = "Petal.Length"))
 plot(light_profile(mods, v = "Species"))
 plot(light_profile(mods, v = "Species", type = "response"))
 plot(light_profile(mods, v = "Petal.Length"))
+plot(light_profile(mods, v = "Petal.Length", type = "ale"))
 plot(light_profile(mods, v = "Petal.Length", type = "response"))
 
 plot(light_effects(mods, v = "Species"))
 x <- light_effects(mods, v = "Petal.Length", cut_type = "quantile")
-plot_counts(plot(x), x, alpha = 0.2)
-x <- light_effects(mods, v = "Petal.Length")
-plot_counts(plot(x), x, alpha = 0.2)
+plot_counts(plot(x, use = "all"), x, alpha = 0.2)
+x <- light_effects(mods, v = "Petal.Length") # -> BAD
+plot_counts(plot(x, use = "all"), x, alpha = 0.2)
 plot(light_effects(mods, v = "Petal.Length"), use = "pd")
 plot(light_effects(mods, v = "Petal.Length", v_labels = FALSE)) # not shown
 
@@ -231,8 +246,12 @@ mod_part <- flashlight(model = fit_part, label = "part",
 mods <- multiflashlight(list(mod_full, mod_part))
 
 plot(light_profile(mods, v = "Petal.Length"))
+plot(light_profile(mods, v = "Petal.Length", type = "ale"))
+plot(light_profile(mods, v = "Petal.Length", type = "ale", ale_two_sided = TRUE))
 plot(light_profile(mods, v = "Petal.Length", breaks = seq(1.5, 6.5, by = 1)))
+plot(light_profile(mods, v = "Petal.Length", type = "ale", breaks = seq(1.5, 6.5, by = 1)))
 plot(light_profile(mods, v = "Petal.Length", pd_evaluate_at = 2:6))
+plot(light_profile(mods, v = "Petal.Length", pd_evaluate_at = 2:6, type = "ale"))
 plot(light_profile(mods, pd_grid = data.frame(Petal.Length = 2:6)))
 plot(light_profile(mods, v = "Petal.Length", type = "predicted"))
 plot(light_profile(mods, v = "Petal.Length", type = "predicted", breaks = 1:8))
@@ -260,10 +279,10 @@ mod_full <- flashlight(model = fit_full, label = "full",
 mod_part <- flashlight(model = fit_part, label = "part",
   data = iris[76:150, ], y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part))
-plot(light_effects(mods, v = "Petal.Length", breaks = 0:8))
+plot(light_effects(mods, v = "Petal.Length", breaks = 0:8), use = "all")
 eff <- light_effects(mods, v = "Petal.Length")
 plot_counts(plot(eff), eff, show_labels = FALSE)
-plot_counts(plot(eff, zero_counts = FALSE), eff)
+plot_counts(plot(eff, zero_counts = FALSE, use = "all"), eff)
 
 #======================================
 # Empty factor levels
@@ -279,28 +298,30 @@ table(ir$Species, ir$sw)
 fl <- flashlight(model = fit, label = "lm", data = ir, y = "Sepal.Length")
 
 plot(light_ice(fl, v = "Species"))
+plot(light_ice(fl, v = "Species", center = TRUE))
 plot(light_profile(fl, v = "Species"))
 plot(light_profile(fl, v = "Species", type = "response"))
+plot(light_profile(fl, v = "Species", type = "ale"))
 
 # No by variable: zero_counts did not work
 eff <- light_effects(fl, v = "Species")
 # eff <- light_effects(fl, v = "Species", stats = "quartiles")
 
-(p <- plot(eff, zero_counts = FALSE))
+(p <- plot(eff, zero_counts = FALSE, use = "all"))
 plot_counts(p, eff, alpha = 0.2) # fixed
 
-(p <- plot(eff))
+(p <- plot(eff, use = "all"))
 plot_counts(p, eff, alpha = 0.2) # fixed
 
 # With by variable: zero_counts did not work
 eff <- light_effects(fl, v = "Species", by = "sw")
 # eff <- light_effects(fl, v = "Species", by = "sw", stats = "quartiles")
 
-(p <- plot(eff, zero_counts = FALSE))
-plot_counts(p, eff, alpha = 0.2) # fixed
+(p <- plot(eff, zero_counts = FALSE, use = "all"))
+plot_counts(p, eff, alpha = 0.2) # fixed -> check calibration of ALE
 
 # With different facet scale
-(p <- plot(eff, zero_counts = FALSE, facet_scales = "fixed"))
+(p <- plot(eff, zero_counts = FALSE, facet_scales = "fixed", use = "all"))
 plot_counts(p, eff, alpha = 0.2, facet_scales = "fixed")
 
 (p <- plot(eff))
@@ -308,6 +329,10 @@ plot_counts(p, eff, alpha = 0.2) # fixed
 
 # Use only pd
 (p <- plot(eff, use = "pd"))
+plot_counts(p, eff, alpha = 0.2) # fixed
+
+# Use only ALE
+(p <- plot(eff, use = "ale"))
 plot_counts(p, eff, alpha = 0.2) # fixed
 
 (p <- plot(eff, use = "pd", zero_counts = FALSE))

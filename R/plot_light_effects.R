@@ -1,13 +1,13 @@
-#' Visualize Different Types of Profiles Together
+#' Visualize Multiple Types of Profiles Together
 #'
-#' Visualizes response-, prediction-, and partial dependence profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
+#' Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
 #'
 #' @import ggplot2
 #' @importFrom stats reformulate
 #' @importFrom dplyr semi_join bind_rows
 #' @method plot light_effects
 #' @param x An object of class \code{light_effects}.
-#' @param use A vector with elements in "response", "predicted" and "pd" (partial dependence) with elements to show. Defaults to all.
+#' @param use A vector of elements to show. Any subset of ("response", "predicted", "pd" and "ale") or "all". Defaults to all except "ale"
 #' @param zero_counts Logical flag if 0 count levels should be shown on the x axis.
 #' @param size_factor Factor used to enlarge default \code{size} in \code{geom_point} and \code{geom_line}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
@@ -29,6 +29,8 @@
 #' x <- light_effects(mod_full, v = "Petal.Width")
 #' plot(x)
 #' plot(x, use = "response")
+#' plot(x, use = c("pd", "ale"))
+#' plot_counts(plot(x, use = c("pd", "ale")), x)
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 #' plot(x)
@@ -36,7 +38,7 @@
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
 #' plot(x)
-#' p <- plot(x, zero_counts = FALSE)
+#' p <- plot(x, zero_counts = FALSE, use = "all")
 #' plot_counts(p, x, alpha = 0.2)
 #'
 #' plot(light_effects(mod_full, v = "Petal.Width", by = "Species",
@@ -49,6 +51,9 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
                                facet_nrow = 1L, rotate_x = TRUE, ...) {
   # Checks
   stopifnot(length(use) >= 1L)
+  if ("all" %in% use) {
+    use <- c("response", "predicted", "pd", "ale")
+  }
   nby <- length(x$by)
   multi <- is.light_effects_multi(x)
   if (nby + multi > 1L) {

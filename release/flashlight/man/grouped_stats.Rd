@@ -6,7 +6,8 @@
 \usage{
 grouped_stats(data, x, w = NULL, by = NULL, stats = c("mean",
   "quartiles"), counts = TRUE, counts_weighted = FALSE,
-  counts_name = "counts", q1_name = "q1", q3_name = "q3", ...)
+  counts_name = "counts", value_name = x, q1_name = "q1",
+  q3_name = "q3", ...)
 }
 \arguments{
 \item{data}{A \code{data.frame}.}
@@ -24,6 +25,8 @@ grouped_stats(data, x, w = NULL, by = NULL, stats = c("mean",
 \item{counts_weighted}{Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
 
 \item{counts_name}{Name of column in the resulting \code{data.frame} containing the counts.}
+
+\item{value_name}{Name of the resulting column with mean or median.}
 
 \item{q1_name}{Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".}
 
