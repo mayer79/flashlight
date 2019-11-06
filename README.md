@@ -6,7 +6,7 @@ The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, ALE, and further effects plots, and variable contribution breakdown for single observations.
 
 3. It allows to assess multiple models in parallel.
 
@@ -47,7 +47,7 @@ plot(light_performance(fl), fill = "darkred")
 plot(light_performance(fl, by = "Species"), fill = "darkred")
 
 # Variable importance by increase in rmse
-imp <- light_importance(fl)
+imp <- light_importance(fl, m_repetitions = 4)
 plot(imp, fill = "darkred")
 plot(light_importance(fl, by = "Species")) +
    scale_fill_viridis_d(begin = 0.2, end = 0.8)

@@ -43,12 +43,21 @@ mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 
-light_importance(mod_full, seed = 4)
-light_importance(mod_full, variable_name = "v", label_name = "model",
-  metric_name = "m", value_name = "drop")
-light_importance(mod_full, metric = list(mae = MetricsWeighted::mae), lower_is_better = FALSE)
-light_importance(mod_full, v = c("Petal.Length", "Species"))
-light_importance(mods)
+m_rep <- 10
+plot(light_importance(mod_full, seed = 4, m_repetitions = m_rep))
+plot(light_importance(mod_full, variable_name = "v", label_name = "model",
+  metric_name = "m", value_name = "drop", m_repetitions = m_rep))
+plot(light_importance(mod_full, metric = list(mae = MetricsWeighted::mae),
+                      lower_is_better = FALSE, m_repetitions = m_rep))
+plot(light_importance(mod_full, v = c("Petal.Length", "Species"), m_repetitions = m_rep))
+plot(light_importance(mods, m_repetitions = m_rep))
+plot(light_importance(mods, m_repetitions = m_rep), swap_dim = TRUE)
+plot(light_importance(mod_full, m_repetitions = m_rep))
+plot(light_importance(mod_full, m_repetitions = m_rep), swap_dim = TRUE)
+plot(light_importance(mods, m_repetitions = m_rep, by = "Species"))
+plot(light_importance(mods, m_repetitions = m_rep, by = "Species"), swap_dim = TRUE)
+plot(light_importance(mod_full, m_repetitions = m_rep, by = "Species"))
+plot(light_importance(mod_full, m_repetitions = m_rep, by = "Species"), swap_dim = TRUE)
 
 ir <- iris
 ir$log_sl <- log(ir$Sepal.Length)
@@ -250,6 +259,7 @@ mods <- multiflashlight(list(mod_full, mod_part),
 
 plot(light_performance(mods))
 plot(light_importance(mods))
+plot(light_importance(mods, m_repetitions = 2))
 
 plot(light_ice(mods, v = "Species"))
 plot(light_ice(mods, v = "Petal.Length"))
