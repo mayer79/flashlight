@@ -1,6 +1,6 @@
 #' Permutation Importance
 #'
-#' Calculates performance per variable with respect to a performance measure before and after permuting its values. The difference is a measure of importance, see Fisher et al. 2018 [1]. Using more than one \code{m_repetitions} resp. permutations will allow more accurate assessment of variable importance as well as the calculation of standard errors.
+#' Calculates performance per variable with respect to a performance measure before and after permuting its values. The difference is a measure of importance, see Fisher et al. 2018 [1]. Using more than one \code{m_repetitions} resp. permutation will allow more accurate assessment of variable importance as well as the calculation of standard errors.
 #'
 #' The minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". The latter two can also directly be passed to \code{light_importance}. Note that by default, no retransformation function is applied.
 #'
@@ -13,7 +13,7 @@
 #' @param v Vector of variables to assess importance for. Defaults to all variables in \code{data}.
 #' @param n_max Maximum number of rows to consider. Use if \code{data} is large.
 #' @param seed An integer random seed used to select and shuffle rows.
-#' @param m_repetitions Number of permutations. Defaults to 1. Set to a value above 1 to get more stable estimates of variable importance along with standard errors.
+#' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance along with the calculation of standard errors.
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param metric_name Name of the resulting column containing the name of the metric. Defaults to "metric".
@@ -77,8 +77,8 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                                         variable_name = "variable", ...) {
   stopifnot(!is.null(metric), length(metric) == 1L,
             (n <- nrow(data)) >= 1L,
-            !anyDuplicated(c(by, metric_name, value_name, label_name, variable_name, error_name)),
-            !(c("value_original", "value_shuffled", variable_name) %in% by))
+            !anyDuplicated(c(by, metric_name, value_name, label_name, variable_name,
+                             error_name, "value_original", "value_shuffled")))
 
   # Update flashlight with everything except data and linkinv
   x <- flashlight(x, by = by, metrics = metric)
@@ -112,7 +112,9 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                       value_name = "value_shuffled",
                       label_name = label_name, ...)$data
   }
+
   key_vars <- c(label_name, metric_name, by)
+
   if (m_repetitions > 1) {
     imp <- replicate(m_repetitions, setNames(lapply(v, core_func), v), simplify = FALSE)
     imp <- unlist(imp, recursive = FALSE)
@@ -124,8 +126,7 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     imp <- summarize_at(imp, "value_shuffled",
                         setNames(list(se, mean), c(error_name, "value_shuffled")), na.rm = TRUE)
     imp <- ungroup(imp)
-  }
-  else {
+  } else {
     imp <- setNames(lapply(v, core_func), v)
     imp <- bind_rows(imp, .id = variable_name)
     imp[[error_name]] <- NA
