@@ -13,9 +13,9 @@ light_importance(x, ...)
 
 \method{light_importance}{flashlight}(x, data = x$data, by = x$by,
   metric = x$metrics[1], v = NULL, n_max = Inf, seed = NULL,
-  lower_is_better = TRUE, use_linkinv = FALSE,
-  metric_name = "metric", value_name = "value", label_name = "label",
-  variable_name = "variable", ...)
+  m_repetitions = 1, lower_is_better = TRUE, use_linkinv = FALSE,
+  metric_name = "metric", value_name = "value", error_name = "error",
+  label_name = "label", variable_name = "variable", ...)
 
 \method{light_importance}{multiflashlight}(x, ...)
 }
@@ -36,13 +36,17 @@ light_importance(x, ...)
 
 \item{seed}{An integer random seed used to select and shuffle rows.}
 
+\item{m_repetitions}{Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance along with the calculation of standard errors.}
+
 \item{lower_is_better}{Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE.}
 
 \item{metric_name}{Name of the resulting column containing the name of the metric. Defaults to "metric".}
 
-\item{value_name}{Column name in resulting \code{data} containing the drop in performance. Defaults to "value".}
+\item{value_name}{Column name in resulting \code{data} containing the (average) drop in performance. Defaults to "value".}
+
+\item{error_name}{Column name in resulting \code{data} containing the standard error of drop in performance. Defaults to "error". \code{NA} if \code{m_repetitions = 1}.}
 
 \item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
 
@@ -55,12 +59,13 @@ An object of class \code{light_importance}, \code{light} (and a list) with the f
   \item \code{by} Same as input \code{by}.
   \item \code{metric_name} Column name representing the name of the metric. For information only.
   \item \code{value_name} Same as input \code{value_name}.
+  \item \code{error_name} Same as input \code{error_name}.
   \item \code{label_name} Same as input \code{label_name}.
   \item \code{variable_name} Same as input \code{variable_name}.
 }
 }
 \description{
-Calculates performance per variable with respect to a performance measure before and after permuting its values. The difference is a measure of importance, see Fisher et al. 2018 [1].
+Calculates performance per variable with respect to a performance measure before and after permuting its values. The difference is a measure of importance, see Fisher et al. 2018 [1]. Using more than one \code{m_repetitions} resp. permutation will allow more accurate assessment of variable importance as well as the calculation of standard errors.
 }
 \details{
 The minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". The latter two can also directly be passed to \code{light_importance}. Note that by default, no retransformation function is applied.
@@ -81,7 +86,7 @@ mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 light_importance(mod_full)
-light_importance(mods)
+light_importance(mods, m_repetitions = 5)
 
 ir <- iris
 ir$log_sl <- log(ir$Sepal.Length)

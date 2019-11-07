@@ -5,7 +5,8 @@
 \title{Add Counts to Effects Plot}
 \usage{
 plot_counts(p, x, text_size = 3, facet_scales = "free_x",
-  show_labels = TRUE, big.mark = "'", scientific = FALSE, ...)
+  show_labels = TRUE, big.mark = "'", scientific = FALSE,
+  digits = 0, ...)
 }
 \arguments{
 \item{p}{The result of \code{plot.light_effects}.}
@@ -16,11 +17,13 @@ plot_counts(p, x, text_size = 3, facet_scales = "free_x",
 
 \item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
 
-\item{show_labels}{Should counts be added as text?}
+\item{show_labels}{Should count labels be added as text?}
 
-\item{big.mark}{Parameter passed to \code{format}. Default is "'".}
+\item{big.mark}{Parameter passed to \code{format} the labels. Default is "'".}
 
-\item{scientific}{Parameter passed to \code{format}. Default is FALSE.}
+\item{scientific}{Parameter passed to \code{format} the labels. Default is FALSE.}
+
+\item{digits}{Used to round the labels. Default is 0.}
 
 \item{...}{Further arguments passed to \code{geom_bar}.}
 }
@@ -28,7 +31,7 @@ plot_counts(p, x, text_size = 3, facet_scales = "free_x",
 An object of class \code{ggplot2}.
 }
 \description{
-Add counts as bar plot on top of light_effects plot.
+Add counts as labelled bar plot on top of light_effects plot.
 }
 \details{
 Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.

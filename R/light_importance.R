@@ -5,7 +5,7 @@
 #' The minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". The latter two can also directly be passed to \code{light_importance}. Note that by default, no retransformation function is applied.
 #'
 #' @importFrom dplyr left_join bind_rows group_by_at ungroup summarize_at
-#' @importFrom stats ave setNames
+#' @importFrom stats ave setNames sd
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.

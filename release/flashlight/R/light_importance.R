@@ -1,11 +1,11 @@
 #' Permutation Importance
 #'
-#' Calculates performance per variable with respect to a performance measure before and after permuting its values. The difference is a measure of importance, see Fisher et al. 2018 [1].
+#' Calculates performance per variable with respect to a performance measure before and after permuting its values. The difference is a measure of importance, see Fisher et al. 2018 [1]. Using more than one \code{m_repetitions} resp. permutation will allow more accurate assessment of variable importance as well as the calculation of standard errors.
 #'
 #' The minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". The latter two can also directly be passed to \code{light_importance}. Note that by default, no retransformation function is applied.
 #'
-#' @importFrom dplyr left_join bind_rows
-#' @importFrom stats ave
+#' @importFrom dplyr left_join bind_rows group_by_at ungroup summarize_at
+#' @importFrom stats ave setNames sd
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.
@@ -13,10 +13,12 @@
 #' @param v Vector of variables to assess importance for. Defaults to all variables in \code{data}.
 #' @param n_max Maximum number of rows to consider. Use if \code{data} is large.
 #' @param seed An integer random seed used to select and shuffle rows.
+#' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance along with the calculation of standard errors.
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param metric_name Name of the resulting column containing the name of the metric. Defaults to "metric".
-#' @param value_name Column name in resulting \code{data} containing the drop in performance. Defaults to "value".
+#' @param value_name Column name in resulting \code{data} containing the (average) drop in performance. Defaults to "value".
+#' @param error_name Column name in resulting \code{data} containing the standard error of drop in performance. Defaults to "error". \code{NA} if \code{m_repetitions = 1}.
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param variable_name Column name in resulting \code{data} containing the variable names. Defaults to "variable".
 #' @param ... Further arguments passed to \code{light_performance}.
@@ -26,6 +28,7 @@
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{metric_name} Column name representing the name of the metric. For information only.
 #'   \item \code{value_name} Same as input \code{value_name}.
+#'   \item \code{error_name} Same as input \code{error_name}.
 #'   \item \code{label_name} Same as input \code{label_name}.
 #'   \item \code{variable_name} Same as input \code{variable_name}.
 #' }
@@ -38,7 +41,7 @@
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 #' light_importance(mod_full)
-#' light_importance(mods)
+#' light_importance(mods, m_repetitions = 5)
 #'
 #' ir <- iris
 #' ir$log_sl <- log(ir$Sepal.Length)
@@ -65,15 +68,17 @@ light_importance.default <- function(x, ...) {
 #' @export
 light_importance.flashlight <- function(x, data = x$data, by = x$by,
                                         metric = x$metrics[1],
-                                        v = NULL, n_max = Inf, seed = NULL,
+                                        v = NULL, n_max = Inf,
+                                        seed = NULL, m_repetitions = 1,
                                         lower_is_better = TRUE, use_linkinv = FALSE,
                                         metric_name = "metric",
-                                        value_name = "value", label_name = "label",
+                                        value_name = "value", error_name = "error",
+                                        label_name = "label",
                                         variable_name = "variable", ...) {
   stopifnot(!is.null(metric), length(metric) == 1L,
             (n <- nrow(data)) >= 1L,
-            !anyDuplicated(c(by, metric_name, value_name, label_name, variable_name)),
-            !(c("value_original", "value_shuffled", variable_name) %in% by))
+            !anyDuplicated(c(by, metric_name, value_name, label_name, variable_name,
+                             error_name, "value_original", "value_shuffled")))
 
   # Update flashlight with everything except data and linkinv
   x <- flashlight(x, by = by, metrics = metric)
@@ -93,8 +98,9 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                                    metric_name = metric_name,
                                    value_name = "value_original",
                                    label_name = label_name, ...)$data
+
   # Performance difference after shuffling
-  imp <- lapply(v, function(z) {
+  core_func <- function(z) {
     shuffled <- data
     if (length(by)) {
       shuffled[[z]] <- ave(shuffled[[z]], shuffled[, by, drop = FALSE], FUN = sample)
@@ -105,14 +111,33 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                       metric_name = metric_name,
                       value_name = "value_shuffled",
                       label_name = label_name, ...)$data
-  })
-  names(imp) <- v
-  imp <- bind_rows(imp, .id = variable_name)
-  imp <- left_join(imp, metric_full, by = c(label_name, metric_name, by))
+  }
+
+  key_vars <- c(label_name, metric_name, by)
+
+  if (m_repetitions > 1) {
+    imp <- replicate(m_repetitions, setNames(lapply(v, core_func), v), simplify = FALSE)
+    imp <- unlist(imp, recursive = FALSE)
+    imp <- bind_rows(imp, .id = variable_name)
+    imp <- group_by_at(imp,  c(key_vars, variable_name))
+    se <- function(z, ...) {
+      sd(z, ...) / sqrt(sum(!is.na(z)))
+    }
+    imp <- summarize_at(imp, "value_shuffled",
+                        setNames(list(se, mean), c(error_name, "value_shuffled")), na.rm = TRUE)
+    imp <- ungroup(imp)
+  } else {
+    imp <- setNames(lapply(v, core_func), v)
+    imp <- bind_rows(imp, .id = variable_name)
+    imp[[error_name]] <- NA
+  }
+  imp <- left_join(imp, metric_full, by = key_vars)
   imp[[value_name]] <- (imp[["value_shuffled"]] - imp[["value_original"]]) *
     if (lower_is_better) 1 else -1
-  out <- list(data = imp, by = by,
-              metric_name = metric_name, value_name = value_name,
+  var_order <- c(key_vars, variable_name, "value_shuffled",
+                 "value_original", value_name, error_name)
+  out <- list(data = imp[, var_order], by = by,
+              metric_name = metric_name, value_name = value_name, error_name = error_name,
               label_name = label_name, variable_name = variable_name)
   class(out) <- c("light_importance", "light", "list")
   out
