@@ -211,7 +211,7 @@ plot_counts(p, x, alpha = 0.2)
 
 x <- light_effects(mod_full, v = "Petal.Width", by = "Species", stats = "quartiles")
 plot(x)
-plot_counts(plot(x), x, alpha = 0.2)
+plot_counts(plot(x), x, alpha = 0.2, digits = -1)
 plot_counts(plot(x, use = "all", zero_counts = FALSE), x, alpha = 0.2)
 
 x <- light_effects(mods, v = "Petal.Width")
