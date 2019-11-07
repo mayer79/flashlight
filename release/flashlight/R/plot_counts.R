@@ -1,6 +1,6 @@
 #' Add Counts to Effects Plot
 #'
-#' Add counts as bar plot on top of light_effects plot.
+#' Add counts as labelled bar plot on top of light_effects plot.
 #'
 #' Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
 #'
@@ -11,9 +11,10 @@
 #' @param x An object of class \code{light_effects}.
 #' @param text_size Size of count labels.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
-#' @param show_labels Should counts be added as text?
-#' @param big.mark Parameter passed to \code{format}. Default is "'".
-#' @param scientific Parameter passed to \code{format}. Default is FALSE.
+#' @param show_labels Should count labels be added as text?
+#' @param big.mark Parameter passed to \code{format} the labels. Default is "'".
+#' @param scientific Parameter passed to \code{format} the labels. Default is FALSE.
+#' @param digits Used to round the labels. Default is 0.
 #' @param ... Further arguments passed to \code{geom_bar}.
 #' @return An object of class \code{ggplot2}.
 #' @export
@@ -32,8 +33,8 @@
 #' plot_counts(plot(x, use = "pd", show.legend = FALSE), x, fill = "lightblue")
 #' @seealso \code{\link{plot.light_effects}}.
 #' @export
-plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
-                        show_labels = TRUE, big.mark = "'", scientific = FALSE, ...) {
+plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x", show_labels = TRUE,
+                        big.mark = "'", scientific = FALSE, digits = 0, ...) {
   # Checks
   stopifnot(is.ggplot(p), is.light_effects(x),
             !("lab_" %in% colnames(x$response)))
@@ -49,7 +50,7 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
 
   # Prepare for plotting
   if (show_labels) {
-    x$response[["lab_"]] <- format(x$response[[x$counts_name]],
+    x$response[["lab_"]] <- format(round(x$response[[x$counts_name]], digits),
                                    big.mark = big.mark, scientific = scientific)
   }
   ct <- ggplot(x$response, aes_string(x = x$v, y = x$counts_name)) +

@@ -1,3 +1,11 @@
+# flashlight 0.3.1
+
+## New functionality
+
+- Added the option `m_repetitions = 1` to `light_importance`. Set to higher value to get more stable estimates of variable importance as well as standard errors.
+
+- Added the option `digits` to `plot_counts` with default 0. Helps to format large counts or fractional counts.
+
 # flashlight 0.3.0
 
 ## New functionality

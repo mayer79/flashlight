@@ -66,7 +66,7 @@ How precise are models if applied to unseen data? This aspect is of key interest
 
 Which variables are particularly relevant for the model? This aspect is helpful in different ways. Firstly, it might help to simplify the full modelling process by eliminating difficult to assess input variables with low explanatory power. Secondly, its pure information. Thirdly, it might help to identify problems in data structure: if one variable is extremely relevant and all others not, then there might be some sort of information leakage from the response. Thus said, variable importance considerations are very relevant for quality assurance as well. 
 
-Different modelling techniques offer different ways of variable importance. In linear models, we consider e.g. F-test statistics or p values, in tree-based methods, its number of splits or avarage split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [2].
+Different modelling techniques offer different ways of variable importance. In linear models, we consider e.g. F-test statistics or p values, in tree-based methods, its number of splits or avarage split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [2]. Multiple permutations lead to more stable estimates of variable importance and allow the calculation of standard errors.
 
 ### Effects of input variables
 
@@ -130,7 +130,7 @@ plot(light_performance(fl), fill = "darkred")
 plot(light_performance(fl, by = "Species"), fill = "darkred")
 
 # Variable importance by increase in rmse
-imp <- light_importance(fl)
+imp <- light_importance(fl, m_repetitions = 4)
 plot(imp, fill = "darkred")
 plot(light_importance(fl, by = "Species")) +
    scale_fill_viridis_d(begin = 0.2, end = 0.8)
@@ -397,6 +397,8 @@ plot(imp_r2, fill = "darkred") +
 Minimal required elements in the (multi-)flashlight are the same as in `light_performance`.
 
 Note: If the calculations take too long (e.g. large query data), set `n_max` to some reasonable value. `light_importance` will then randomly pick `n_max` rows and use only these for assessment of importance.
+
+Note: If the calculations are very fast, consider setting `m_repetitions` to a value > 1 in order to repeat the permutations multiple times. The resulting variable importance corresponds to the average drop in performance and standard errors are added.
 
 ### Individual conditional expectation
 
