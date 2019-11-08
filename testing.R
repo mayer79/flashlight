@@ -71,6 +71,26 @@ fls <- multiflashlight(list(fl_lm, fl_glm), data = ir,
 light_importance(fls, v = "Petal.Length", seed = 45)
 light_importance(fls, v = "Petal.Length", seed = 45, use_linkinv = TRUE)
 
+
+#======================================
+# Interaction
+#======================================
+
+fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
+fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
+fl_additive <- flashlight(model = fit_additive, label = "additive")
+fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
+fls_addnonadd <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
+plot(light_interaction(fls_addnonadd))
+plot(light_interaction(fls_addnonadd), swap_dim = TRUE)
+plot(light_interaction(fls_addnonadd, by = "Species"))
+plot(light_interaction(fls_addnonadd, by = "Species"), swap_dim = TRUE)
+
+plot(light_interaction(fls_addnonadd$additive))
+plot(light_interaction(fls_addnonadd$additive), swap_dim = TRUE)
+plot(light_interaction(fls_addnonadd$additive, by = "Species"))
+plot(light_interaction(fls_addnonadd$additive, by = "Species"), swap_dim = TRUE)
+
 #======================================
 # ICE
 #======================================
@@ -107,7 +127,6 @@ plot(light_ice(fls, v = "Petal.Length", indices = indices, by = "Species", cente
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
                center = TRUE))
-
 
 #======================================
 # Profile

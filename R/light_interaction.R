@@ -37,7 +37,7 @@
 #' fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 #' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
 #' plot(light_interaction(fls))
-#' plot(light_interaction(fls, by = "Species"))
+#' plot(light_interaction(fls, by = "Species"), swap_dim = TRUE)
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_interaction}}.
 light_interaction <- function(x, ...) {
   UseMethod("light_interaction")
@@ -98,7 +98,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   }
   data <- setNames(lapply(v, core_func), v)
   data <- bind_rows(data, .id = variable_name)
-  data[[value_name]] <- zapsmall(data[[value_name]])
+  data[[value_name]] <- ifelse(data[[value_name]] < 0.000001, 0, data[[value_name]])
   data[[label_name]] <- x$label
   data[[error_name]] <- NA
   if (!is.tbl(data)) {
