@@ -1,3 +1,9 @@
+# flashlight 0.4.0
+
+## New functionality
+
+- Added `light_interaction`, a variable specific measure of interaction strength based on variance across c-ICE curves.
+
 # flashlight 0.3.1
 
 ## New functionality
