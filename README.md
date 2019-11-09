@@ -6,7 +6,7 @@ The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, ALE, and further effects plots, interaction strength, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, ALE, and further effects plots, overall interaction strength, and variable contribution breakdown for single observations.
 
 3. It allows to assess multiple models in parallel.
 

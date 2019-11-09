@@ -107,6 +107,7 @@ indices <- (1:15) * 10
 plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
 plot(light_ice(mods, v = "Species", indices = indices))
 plot(light_ice(mods, v = "Species", indices = indices, center = TRUE))
+plot(light_ice(mods, v = "Species", indices = indices, center = TRUE, center_at = "last"))
 plot(light_ice(mods, v = "Petal.Width", n_bins = 5, indices = indices))
 plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 plot(light_ice(mods, v = "Petal.Width", by = "Species",
@@ -123,10 +124,17 @@ fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
 fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
 plot(light_ice(fls, v = "Petal.Length", indices = indices))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, center_at = "middle"))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, by = "Species", center = TRUE))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, by = "Species", center = TRUE, center_at = "middle"))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
                center = TRUE))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
+               center = TRUE, center_at = "last"))
+
+plot(light_interaction(fls)) # very small interactions for GLM due to exp
+
 
 #======================================
 # Profile
@@ -173,8 +181,6 @@ plot(light_profile(mods, v = "Petal.Width", type = "ale"))
 plot(light_profile(mods, v = "Petal.Width", type = "ale"), swap_dim = TRUE)
 plot(light_profile(mods, v = "Petal.Width", type = "ale", by = "Species"))
 plot(light_profile(mods, v = "Petal.Width", type = "ale", by = "Species"), swap_dim = TRUE)
-plot(light_profile(mods, v = "Petal.Width", type = "ale", by = "Species",
-                   type = "predicted", stats = "quartiles"), rotate_x = TRUE)
 
 ir <- iris
 ir$log_sl <- log(ir$Sepal.Length)

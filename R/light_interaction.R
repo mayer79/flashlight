@@ -1,6 +1,6 @@
 #' Interaction Strength
 #'
-#' Calculates overall interaction strength per variable by calculating variance of c-ICE curves. Note that this approach does not show between what variables we have strong interactions but rather which variable is associated with most interactions.
+#' Calculates overall interaction strength per covariable by calculating the average within-evaluation-point standard deviation across centered ICE curves, see the vignette for details. Additive covariable effects get a value of 0, while covariables with interaction effects get positive values as their c-ICE curves differ. While relatively efficient to calculate, this method does not show between what specific variable pairs we have strongest interactions. Note that continuous variables are binned using quantile cuts to get more stable results. For the same reason, centering of ICE curves is done using middle centering.
 #'
 #' The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly. Which rows in \code{data} are profiled? This is specified by \code{indices}. If not given and \code{n_max} is smaller than the number of rows in \code{data}, then row indices will be sampled randomly from \code{data}. If the same rows should be used for all flashlights in a multiflashlight, there are two options: Either pass a \code{seed} (with potentially undesired consequences for subsequent code) or a vector of indices used to select rows. In both cases, \code{data} should be the same for all flashlights considered.
 #'
@@ -13,6 +13,7 @@
 #' @param n_bins Maximum number of unique values to evaluate for numeric \code{v}.
 #' @param indices A vector of row numbers to consider.
 #' @param n_max If \code{indices} is not given, maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.
+#' @param center_at Which evaluation point to center at. One of "first", "middle", or "last".
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param value_name Column name in resulting \code{data} containing the interaction strenght. Defaults to "value".
@@ -20,7 +21,7 @@
 #' @param error_name Currently not used.
 #' @param variable_name Column name in resulting \code{data} containing the variable names. Defaults to "variable".
 #' @param ... Further arguments passed to or from other methods.
-#' @return An object of class \code{light_interaction}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
 #'   \item \code{by} Same as input \code{by}.
@@ -53,11 +54,13 @@ light_interaction.default <- function(x, ...) {
 #' @export
 light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          v = NULL, n_max = 50,
+                                         center_at = c("middle", "first", "last"),
                                          seed = NULL, use_linkinv = FALSE,
                                          n_bins = 9,
                                          indices = NULL, value_name = "value",
                                          error_name = "error", label_name = "label",
                                          variable_name = "variable", ...) {
+  center_at <- match.arg(center_at)
   stopifnot((n <- nrow(data)) >= 1L,
             !anyDuplicated(c(by, v, value_name, label_name, error_name, variable_name, "id_xxx")))
 
@@ -86,7 +89,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   core_func <- function(z) {
     dat <- light_ice(x, v = z,
                      n_bins = n_bins, cut_type = "quantile", n_max = Inf,
-                     center = TRUE, value_name = value_name,
+                     center = TRUE, center_at = center_at, value_name = value_name,
                      label_name = label_name, id_name = "id_xxx")$dat
 
     # For each grid value of v, calculate variance of curves
@@ -98,7 +101,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   }
   data <- setNames(lapply(v, core_func), v)
   data <- bind_rows(data, .id = variable_name)
-  data[[value_name]] <- ifelse(data[[value_name]] < 0.000001, 0, data[[value_name]])
+  data[[value_name]] <- ifelse(data[[value_name]] < 0.000001, 0, sqrt(data[[value_name]]))
   data[[label_name]] <- x$label
   data[[error_name]] <- NA
   if (!is.tbl(data)) {
