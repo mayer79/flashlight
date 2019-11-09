@@ -21,6 +21,7 @@
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param center Should curves be centered? Default is FALSE. Note that centering will be done at the first evaluation point and within "by" group. It will work also for a \code{grid} with multiple columns.
+#' @param center_at If \code{center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last".
 #' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param id_name Column name in resulting \code{data} containing the row id of the profile. Defaults to "id_name".
@@ -71,10 +72,12 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
                                  evaluate_at = NULL, breaks = NULL, grid = NULL,
                                  n_bins = 27, cut_type = c("equal", "quantile"),
                                  indices = NULL, n_max = 20,
-                                 seed = NULL, use_linkinv = TRUE, center = FALSE,
+                                 seed = NULL, use_linkinv = TRUE,
+                                 center = FALSE, center_at = c("first", "middle", "last"),
                                  value_name = "value",
                                  label_name = "label", id_name = "id", ...) {
   cut_type <- match.arg(cut_type)
+  center_at <- match.arg(center_at)
 
   stopifnot((n <- nrow(data)) >= 1L,
             !is.null(grid) || !is.null(v),
@@ -121,7 +124,11 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
 
   # c-ICE curves by centering at first evaluation point
   if (center) {
-    central_data <- inner_join(data, grid[1, , drop = FALSE], by = v)
+    center_position <- switch(center_at,
+                              first = 1,
+                              middle = floor((nrow(grid) + 1) / 2),
+                              last = nrow(grid))
+    central_data <- inner_join(data, grid[center_position, , drop = FALSE], by = v)
     group_means <- grouped_stats(central_data, x = value_name, w = x$w,
                                  by = x$by, counts = FALSE,
                                  value_name = "global_mean", na.rm = TRUE)

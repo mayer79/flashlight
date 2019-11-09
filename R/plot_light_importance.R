@@ -1,6 +1,6 @@
-#' Visualize Model Importance
+#' Visualize Variable Importance
 #'
-#' Minimal visualization of an object of class \code{light_importance} as \code{geom_bar}. If multiple permutations were run, standard errors are added as \code{geom_errorbar}. The object returned is of class \code{ggplot} and can be further customized.
+#' Minimal visualization of an object of class \code{light_importance} as \code{geom_bar}. If multiple repetitions of the algorithm were done, standard errors are added as \code{geom_errorbar}. The object returned is of class \code{ggplot} and can be further customized.
 #'
 #' The plot is organized as a bar plot with variable names as x-aesthetic. Up to two additional dimensions (multiflashlight and one "by" variable or single flashlight with two "by" variables) can be visualized by facetting and dodge/fill. Set \code{swap_dim = FALSE} to revert the role of these two dimensions. One single additional dimension is visualized by a facet wrap, or - if \code{swap_dim = FALSE} - by dodge/fill.
 #'
@@ -23,8 +23,6 @@
 #' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 #'
 #' plot(light_importance(mod_full, m_repetitions = 4), fill = "darkred")
-#' plot(light_importance(mod_full, variable_name = "v", label_name = "model",
-#'   metric_name = "m", value_name = "drop"))
 #' plot(light_importance(mod_full), top_m = 2)
 #' plot(light_importance(mods))
 #' plot(light_importance(mods), swap_dim = TRUE)

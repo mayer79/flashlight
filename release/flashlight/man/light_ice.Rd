@@ -15,7 +15,8 @@ light_ice(x, ...)
   evaluate_at = NULL, breaks = NULL, grid = NULL, n_bins = 27,
   cut_type = c("equal", "quantile"), indices = NULL, n_max = 20,
   seed = NULL, use_linkinv = TRUE, center = FALSE,
-  value_name = "value", label_name = "label", id_name = "id", ...)
+  center_at = c("first", "middle", "last"), value_name = "value",
+  label_name = "label", id_name = "id", ...)
 
 \method{light_ice}{multiflashlight}(x, ...)
 }
@@ -49,6 +50,8 @@ light_ice(x, ...)
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
 
 \item{center}{Should curves be centered? Default is FALSE. Note that centering will be done at the first evaluation point and within "by" group. It will work also for a \code{grid} with multiple columns.}
+
+\item{center_at}{If \code{center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last".}
 
 \item{value_name}{Column name in resulting \code{data} containing the profile value. Defaults to "value".}
 

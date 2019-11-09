@@ -20,7 +20,8 @@ light_profile(x, ...)
   counts_name = "counts", counts = TRUE, counts_weighted = FALSE,
   v_labels = TRUE, pred = NULL, pd_evaluate_at = NULL,
   pd_grid = NULL, pd_indices = NULL, pd_n_max = 1000,
-  pd_seed = NULL, pd_center = FALSE, ale_two_sided = FALSE, ...)
+  pd_seed = NULL, pd_center = FALSE, pd_center_at = c("first",
+  "middle", "last"), ale_two_sided = FALSE, ...)
 
 \method{light_profile}{multiflashlight}(x, v = NULL, data = NULL,
   breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"),
@@ -80,6 +81,8 @@ light_profile(x, ...)
 \item{pd_seed}{Integer random seed used to select ICE profiles. Only used for type = "partial dependence" and "ale".}
 
 \item{pd_center}{Should ICE curves be centered within \code{by} subsets before caclulating partial dependence profiles? This option is interesting together with \code{stats = "quartiles"} in order to visualize interaction strength.}
+
+\item{pd_center_at}{If \code{pd_center = TRUE}: Which evaluation point to center ICE curves at before calculating partial dependence profiles? One of "first", "middle", or "last".}
 
 \item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.}
 }

@@ -63,7 +63,7 @@ plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
     stopifnot(!("temp_" %in% colnames(data)))
     data[["temp_"]] <- interaction(data[[x$id_name]], data[[x$by[1]]])
     p <- ggplot(data, aes_string(y = x$value_name, x = x$v, group = "temp_")) +
-      geom_line(aes_string(color = data[[x$by[1]]]), ...)
+      geom_line(aes_string(color = x$by[1]), ...)
   }
   if (nby > 1L || multi) {
     p <- p + facet_wrap(reformulate(if (multi) x$label_name else x$by[2]), scales = facet_scales)

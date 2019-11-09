@@ -90,6 +90,14 @@ An alternative to partial dependence and ALE profiles is to look at combined eff
 
 Besides looking at *average* profiles, it is often also revealing to consider *quartile* profiles or to visualize partial dependence, response and prediction profiles in the same plot.
 
+### Interaction strength
+
+Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the "overall interaction strength") and/or between specific covariables. One way to calculate interaction strength between two covariables is based on the difference between univariate and bivariate partial dependence profiles. Overall interaction strength can be derived by marginalization. A less computationally intensive alternative is based on centered ICE curves: The higher the average within-evaluation-point variance between curves, the stronger the overall interaction strength associated with variable $v$. If $v_j$ denotes the $j$-th evaluation point of $v$ and $x_{i,j}$ the value of the c-ICE curve of the $i$-th profile at $v_j$, then the (unweighted) overall interaction strength of variable $v$ is estimated as
+$$
+  S(v) = \sqrt{\text{Avg}_j Var_i(x_{i,j})}.
+$$
+To our knowledge, this measure of interaction strength has not yet been proposed, although other approaches based on derivative ICE curves are available in the literature [3].
+
 ### Variable contribution breakdown for single observations
 
 Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be decomposed into additive effects of input variables, e.g. LIME, LIVE, SHAP or breakdown (Gosiewska and Biecek [6]), see [1] and [6] for an overview. The `flashlight` package currently supports the breakdown method.
@@ -199,6 +207,8 @@ The process of using the `flashlight` package is as follows:
    
    - `light_effects`: Combines partial dependence, response and prediction profiles. ALE profiles can be added as well.
    
+   - `light_interaction`: Calculates overall interaction strength based on centered ICE curve scatter.
+   
    - `light_breakdown`: Calculates variable contribution breakdown for a single observation.
 
 3. Plot the result: Each of these functions offer a `plot` method with minimal visualization of the results through `ggplot2`. The resulting plot can be customized by adding `theme` and other `ggplot` elements. If customization is insufficient, you can extract the data slot in the object returned by above key functions and build an own plot. 
@@ -237,7 +247,7 @@ prep <- transform(house_prices,
                   grade = as.integer(as.character(grade)),
                   year = factor(lubridate::year(date)),
                   age = lubridate::year(date) - yr_built,
-                  zipcode = as.numeric(as.character(zipcode)),
+                  zipcode = as.factor(as.character(zipcode)),
                   waterfront = factor(waterfront, levels = c(FALSE, TRUE), labels = c("no", "yes")))
 
 x <- c("grade", "year", "age", "sqft_living", "sqft_lot", "zipcode", 
@@ -252,8 +262,7 @@ The random forest can directly work with this data structure. However, for the l
 prep_lm <- function(data) {
   data %>% 
     mutate(sqrt_living = log(sqft_living),
-           sqrt_lot = log(sqft_lot),
-           zipcode = factor(zipcode %/% 10))
+           sqrt_lot = log(sqft_lot))
 }
 
 # Data wrapper for xgboost
@@ -270,7 +279,7 @@ Then, we split the data and train our models.
 ```{r}
 # Train / valid / test split (70% / 20% / 10%)
 set.seed(56745)
-ind <- caret::createFolds(prep[["log_price"]], k = 10, list = FALSE)
+ind <- caret::createFolds(factor(prep[["zipcode"]]), k = 10, list = FALSE)
 
 train <- prep[ind >= 4, ]
 valid <- prep[ind %in% 2:3, ]
@@ -280,14 +289,14 @@ test <- prep[ind == 1, ]
 fit_lm <- lm(update.formula(form, . ~ . + I(sqft_living^2)), data = prep_lm(train))
 
 # Random forest
-fit_rf <- ranger(form, data = train, seed = 8373)
+fit_rf <- ranger(form, data = train, respect.unordered.factors = TRUE, seed = 8373)
 cat("R-squared OOB:", fit_rf$r.squared)
 
 # Gradient boosting
 dtrain <- xgb.DMatrix(prep_xgb(train, x), label = train[["log_price"]])
 dvalid <- xgb.DMatrix(prep_xgb(valid, x), label = valid[["log_price"]])
 
-params <- list(learning_rate = 0.5,
+params <- list(learning_rate = 0.1,
                max_depth = 6,
                alpha = 1,
                lambda = 1,
@@ -296,8 +305,8 @@ params <- list(learning_rate = 0.5,
 fit_xgb <- xgb.train(params, 
                      data = dtrain,
                      watchlist = list(train = dtrain, valid = dvalid),
-                     nrounds = 200, 
-                     print_every_n = 100,
+                     nrounds = 250, 
+                     print_every_n = 50,
                      objective = "reg:linear",
                      seed = 2698)
 ```
@@ -341,8 +350,6 @@ perf
 plot(perf)
 ```
 
-Surprise, surprise: XGBoost is the winner! Now, black bars look a bit sad. Furthermore we would like to remove the x label.
-
 ```{r}
 plot(perf, fill = "darkred") +
   xlab(element_blank())
@@ -370,7 +377,6 @@ Now let's study variable importance of the explainers. By default, it is shown w
 ```{r}
 (imp <- light_importance(fls, n_max = 1000))
 plot(imp)
-
 ```
 
 Oops, what happened? Too many variables were tested for permutation drop in rmse, namely *all* in the data set, except the response. While this can be useful in certain situations, we will just pass the vector `x` of covariables. Furthermore we replace the metric to mean-squared error.
@@ -409,13 +415,11 @@ cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35)
 plot(cp, alpha = 0.2)
 ```
 
-The XGBoost profiles look wild - for real applications, setting monotonicity constraints would be an idea.
-
 Note: Setting `seed` to a fixed value will ensure that the flashlights will consider the same rows. An alternative would be to pass a small subset of the data to `light_ice` and calculate all profiles or by passing row indices through `indices` for fixed selection.
 
 Centered ICE profiles ("c-ICE") can help to increase visibility of interactions.
 ```{r}
-cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = TRUE)
+cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = TRUE, center_at = "middle")
 plot(cp, alpha = 0.2)
 ```
 
@@ -452,8 +456,6 @@ ale <- light_profile(fls, v = "sqft_living", type = "ale")
 ale
 plot(ale)
 ```
-Interestingly, the effects of the random forest and XGBoost are much steeper (and closer to the linear model) now for large houses compared to the effects from partial depencence.
-
 Note: While equally sized x-breaks are easy to read, quantile binning usually leads to more stable results.
 
 ```{r}
@@ -581,6 +583,16 @@ plot_counts(p, eff, fill = "blue", alpha = 0.2, width = 0.3)
 
 The `plot` method of `light_effects` allows to hide certain plot element if it looks too dense.
 
+### Interaction strength
+
+Using `light_interaction`, we can investigate which variable has strongest overall interaction effects based on the scatter across c-ICE profiles.
+
+```{r}
+st <- light_interaction(fls, v = x) 
+plot(st)
+```
+Since we have not used interaction terms in the linear model, all values are zero there. Interestingly, the strongest interaction effect is associated with the `waterfront` dummy, even if its variable importance was low.
+
 ###  Variable contribution breakdown for single observation
 
 Besides global effects, we can use `light_breakdown` to calculate variable impact on one single (log) prediction. 
@@ -622,7 +634,7 @@ plot(light_ice(fls, v = "sqft_living", seed = 4345),
   scale_y_continuous(labels = format_y)
 
 # c-ICE
-plot(light_ice(fls, v = "sqft_living", seed = 4345, center = TRUE), 
+plot(light_ice(fls, v = "sqft_living", seed = 4345, center = TRUE, center_at = "middle"), 
      alpha = 0.8, facet_scales = "free_y") + 
   scale_color_viridis_d(begin = 0.1, end = 0.9) + 
   scale_y_continuous(labels = format_y)
@@ -633,8 +645,8 @@ plot(light_profile(fls, v = "sqft_living"), swap_dim = TRUE)
 plot(light_profile(fls, v = "sqft_living", stats = "quartiles", pd_center = TRUE))
 
 # Effects: ALE
-plot(light_profile(fls, v = "sqft_living", type = "ale"))
-plot(light_profile(fls, v = "sqft_living", type = "ale"), swap_dim = TRUE)
+plot(light_profile(fls, v = "sqft_living", type = "ale", cut_type = "quantile"))
+plot(light_profile(fls, v = "sqft_living", type = "ale", cut_type = "quantile"), swap_dim = TRUE)
 
 # Effects: Combined plot (only one flashlight) 
 # -> we need to manually pass "by" or update the single flashlight

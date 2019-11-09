@@ -30,13 +30,16 @@
 #' plot(x)
 #' plot(x, use = "response")
 #' plot(x, use = c("pd", "ale"))
+#' plot_counts(plot(x, use = c("pd", "ale")), x)
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 #' plot(x)
+#' plot_counts(plot(x, use = "response"), x, alpha = 0.2)
 #'
 #' x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
 #' plot(x)
-#' plot(x, zero_counts = FALSE, use = "all")
+#' p <- plot(x, zero_counts = FALSE, use = "all")
+#' plot_counts(p, x, alpha = 0.2)
 #'
 #' plot(light_effects(mod_full, v = "Petal.Width", by = "Species",
 #'   stats = "quartiles"))

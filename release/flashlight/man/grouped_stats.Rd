@@ -2,10 +2,10 @@
 % Please edit documentation in R/grouped_stats.R
 \name{grouped_stats}
 \alias{grouped_stats}
-\title{Grouped Weighted Means or Quartiles}
+\title{Grouped Weighted Means, Quartiles, or Variances}
 \usage{
 grouped_stats(data, x, w = NULL, by = NULL, stats = c("mean",
-  "quartiles"), counts = TRUE, counts_weighted = FALSE,
+  "quartiles", "variance"), counts = TRUE, counts_weighted = FALSE,
   counts_name = "counts", value_name = x, q1_name = "q1",
   q3_name = "q3", ...)
 }
@@ -18,7 +18,7 @@ grouped_stats(data, x, w = NULL, by = NULL, stats = c("mean",
 
 \item{by}{An optional vector of column names in \code{data} used to group the results.}
 
-\item{stats}{Statistic to calculate: "mean" or "quartiles".}
+\item{stats}{Statistic to calculate: "mean", "quartiles", or "variance".}
 
 \item{counts}{Should group counts be added?}
 
@@ -26,28 +26,30 @@ grouped_stats(data, x, w = NULL, by = NULL, stats = c("mean",
 
 \item{counts_name}{Name of column in the resulting \code{data.frame} containing the counts.}
 
-\item{value_name}{Name of the resulting column with mean or median.}
+\item{value_name}{Name of the resulting column with mean, median, or variance.}
 
 \item{q1_name}{Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".}
 
 \item{q3_name}{Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".}
 
-\item{...}{Additional arguments passed to \code{MetricsWeighted::weighted_mean} or \code{weighted_quartiles}.}
+\item{...}{Additional arguments passed to \code{MetricsWeighted::weighted_mean}, \code{MetricsWeighted::weighted_quartiles}, or \code{MetricsWeighted::weighted_var}.}
 }
 \value{
 A \code{data.frame} with columns \code{by}, \code{x} and optionally \code{counts_name}.
 }
 \description{
-Calculates weighted means or quartiles (and counts) of a variable grouped by optional columns.
+Calculates weighted means, quartiles, or variances (and counts) of a variable grouped by optional columns.
 }
 \examples{
 grouped_stats(iris, "Sepal.Width")
 grouped_stats(iris, "Sepal.Width", stats = "quartiles")
+grouped_stats(iris, "Sepal.Width", stats = "variance")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width", counts_weighted = TRUE)
 
 grouped_stats(iris, "Sepal.Width", by = "Species")
 grouped_stats(iris, "Sepal.Width", stats = "quartiles", by = "Species")
+grouped_stats(iris, "Sepal.Width", stats = "variance", by = "Species")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width", by = "Species")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width",
   counts_weighted = TRUE, by = "Species")
