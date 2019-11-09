@@ -4,7 +4,7 @@
 #'
 #' @importFrom dplyr group_by_at do ungroup
 #' @importFrom stats setNames
-#' @importFrom MetricsWeighted weighted_mean weighted_quantile weighted_variance
+#' @importFrom MetricsWeighted weighted_mean weighted_quantile weighted_var
 #' @importFrom rlang .data
 #' @param data A \code{data.frame}.
 #' @param x Variable name in \code{data} to summarize.
