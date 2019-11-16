@@ -1,3 +1,11 @@
+# flashlight 0.4.1
+
+## New functionality
+
+### Minor
+
+- Added option "mean" centering to `light_ice`. This is now utilized for `light_interaction`.
+
 # flashlight 0.4.0
 
 ## New functionality
