@@ -6,6 +6,8 @@
 
 - Added option "mean" centering to `light_ice`. This is now utilized for `light_interaction`.
 
+- Added option `rotate_x` to `plot_light_breakdown` and `plot_light_importance`.
+
 # flashlight 0.4.0
 
 ## New functionality

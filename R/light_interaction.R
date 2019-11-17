@@ -36,7 +36,7 @@
 #' fl_additive <- flashlight(model = fit_additive, label = "additive")
 #' fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 #' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
-#' plot(light_interaction(fls))
+#' plot(light_interaction(fls), rotate_x = TRUE)
 #' plot(light_interaction(fls, by = "Species"), swap_dim = TRUE)
 #' @seealso \code{\link{light_ice}}.
 light_interaction <- function(x, ...) {
