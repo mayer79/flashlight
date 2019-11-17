@@ -4,9 +4,17 @@
 \alias{plot_counts}
 \title{Add Counts to Effects Plot}
 \usage{
-plot_counts(p, x, text_size = 3, facet_scales = "free_x",
-  show_labels = TRUE, big.mark = "'", scientific = FALSE,
-  digits = 0, ...)
+plot_counts(
+  p,
+  x,
+  text_size = 3,
+  facet_scales = "free_x",
+  show_labels = TRUE,
+  big.mark = "'",
+  scientific = FALSE,
+  digits = 0,
+  ...
+)
 }
 \arguments{
 \item{p}{The result of \code{plot.light_effects}.}

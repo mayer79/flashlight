@@ -4,8 +4,17 @@
 \alias{cut3}
 \title{Modified cut}
 \usage{
-cut3(x, breaks, labels = NULL, include.lowest = FALSE, right = TRUE,
-  dig.lab = 3L, ordered_result = FALSE, sep = ", ", ...)
+cut3(
+  x,
+  breaks,
+  labels = NULL,
+  include.lowest = FALSE,
+  right = TRUE,
+  dig.lab = 3L,
+  ordered_result = FALSE,
+  sep = ", ",
+  ...
+)
 }
 \arguments{
 \item{x}{Numeric vector.}

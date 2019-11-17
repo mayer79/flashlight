@@ -4,8 +4,15 @@
 \alias{auto_cut}
 \title{Discretizes a Vector}
 \usage{
-auto_cut(x, breaks = NULL, n_bins = 27, cut_type = c("equal",
-  "quantile"), x_name = "value", level_name = "level", ...)
+auto_cut(
+  x,
+  breaks = NULL,
+  n_bins = 27,
+  cut_type = c("equal", "quantile"),
+  x_name = "value",
+  level_name = "level",
+  ...
+)
 }
 \arguments{
 \item{x}{A vector.}

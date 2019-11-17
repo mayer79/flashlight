@@ -36,7 +36,7 @@
 #' fl_additive <- flashlight(model = fit_additive, label = "additive")
 #' fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 #' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
-#' plot(light_interaction(fls), rotate_x = TRUE)
+#' plot(light_interaction(fls))
 #' plot(light_interaction(fls, by = "Species"), swap_dim = TRUE)
 #' @seealso \code{\link{light_ice}}.
 light_interaction <- function(x, ...) {
@@ -52,14 +52,11 @@ light_interaction.default <- function(x, ...) {
 #' @describeIn light_interaction Univariate interaction strengths for a flashlight object.
 #' @export
 light_interaction.flashlight <- function(x, data = x$data, by = x$by,
-                                         v = NULL, n_max = 50,
-                                         center_at = "mean",
-                                         seed = NULL, use_linkinv = FALSE,
-                                         n_bins = 9,
+                                         v = NULL, n_max = 50, seed = NULL,
+                                         use_linkinv = FALSE, n_bins = 9,
                                          indices = NULL, value_name = "value",
                                          error_name = "error", label_name = "label",
                                          variable_name = "variable", ...) {
-  center_at <- match.arg(center_at)
   stopifnot((n <- nrow(data)) >= 1L,
             !anyDuplicated(c(by, v, value_name, label_name, error_name, variable_name, "id_xxx")))
 
@@ -88,7 +85,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   core_func <- function(z) {
     dat <- light_ice(x, v = z,
                      n_bins = n_bins, cut_type = "quantile", n_max = Inf,
-                     center = TRUE, center_at = center_at, value_name = value_name,
+                     center = TRUE, center_at = "mean", value_name = value_name,
                      label_name = label_name, id_name = "id_xxx")$dat
 
     # For each grid value of v, calculate variance of curves

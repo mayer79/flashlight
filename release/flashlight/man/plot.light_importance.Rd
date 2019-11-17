@@ -4,8 +4,15 @@
 \alias{plot.light_importance}
 \title{Visualize Variable Importance}
 \usage{
-\method{plot}{light_importance}(x, top_m = Inf, swap_dim = FALSE,
-  facet_scales = "fixed", error_bars = TRUE, ...)
+\method{plot}{light_importance}(
+  x,
+  top_m = Inf,
+  swap_dim = FALSE,
+  facet_scales = "fixed",
+  rotate_x = FALSE,
+  error_bars = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{light_importance}.}
@@ -15,6 +22,8 @@
 \item{swap_dim}{If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of dodge/fill variable and facet variable. If multiflashlight or one "by" variable, use facets instead of colors.}
 
 \item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
 
 \item{error_bars}{Should error bars be added? Defaults to TRUE. Only available if \code{light_importance} was run with multiple permutations, i.e. by setting \code{m_repetitions} > 1.}
 

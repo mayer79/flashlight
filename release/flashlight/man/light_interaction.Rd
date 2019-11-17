@@ -11,11 +11,22 @@ light_interaction(x, ...)
 
 \method{light_interaction}{default}(x, ...)
 
-\method{light_interaction}{flashlight}(x, data = x$data, by = x$by,
-  v = NULL, n_max = 50, center_at = c("middle", "first", "last"),
-  seed = NULL, use_linkinv = FALSE, n_bins = 9, indices = NULL,
-  value_name = "value", error_name = "error", label_name = "label",
-  variable_name = "variable", ...)
+\method{light_interaction}{flashlight}(
+  x,
+  data = x$data,
+  by = x$by,
+  v = NULL,
+  n_max = 50,
+  seed = NULL,
+  use_linkinv = FALSE,
+  n_bins = 9,
+  indices = NULL,
+  value_name = "value",
+  error_name = "error",
+  label_name = "label",
+  variable_name = "variable",
+  ...
+)
 
 \method{light_interaction}{multiflashlight}(x, ...)
 }
@@ -31,8 +42,6 @@ light_interaction(x, ...)
 \item{v}{Vector of variables to be assessed.}
 
 \item{n_max}{If \code{indices} is not given, maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.}
-
-\item{center_at}{Which evaluation point to center at. One of "first", "middle", or "last".}
 
 \item{seed}{An integer random seed.}
 
@@ -62,7 +71,7 @@ An object of class \code{light_importance}, \code{light} (and a list) with the f
 }
 }
 \description{
-Calculates overall interaction strength per covariable by calculating the average within-evaluation-point standard deviation across centered ICE curves, see the vignette for details. Additive covariable effects get a value of 0, while covariables with interaction effects get positive values as their c-ICE curves differ. While relatively efficient to calculate, this method does not show between what specific variable pairs we have strongest interactions. Note that continuous variables are binned using quantile cuts to get more stable results. For the same reason, centering of ICE curves is done using middle centering.
+Calculates overall interaction strength per covariable by calculating the average within-evaluation-point standard deviation across mean-centered ICE curves, see the vignette for details. Additive covariable effects get a value of 0, while covariables with interaction effects get positive values as their c-ICE curves differ. While relatively efficient to calculate, this method does not show between what specific variable pairs we have strongest interactions. Note that continuous variables are binned using quantile cuts to get more stable results.
 }
 \details{
 The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly. Which rows in \code{data} are profiled? This is specified by \code{indices}. If not given and \code{n_max} is smaller than the number of rows in \code{data}, then row indices will be sampled randomly from \code{data}. If the same rows should be used for all flashlights in a multiflashlight, there are two options: Either pass a \code{seed} (with potentially undesired consequences for subsequent code) or a vector of indices used to select rows. In both cases, \code{data} should be the same for all flashlights considered.

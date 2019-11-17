@@ -4,8 +4,7 @@
 \alias{plot.light_breakdown}
 \title{Visualize Variable Contribution Breakdown for Single Observation}
 \usage{
-\method{plot}{light_breakdown}(x, facet_scales = "free",
-  facet_ncol = 1, ...)
+\method{plot}{light_breakdown}(x, facet_scales = "free", facet_ncol = 1, rotate_x = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{light_breakdown}.}
@@ -13,6 +12,8 @@
 \item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
 
 \item{facet_ncol}{\code{ncol} argument passed to \code{facet_wrap}.}
+
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
 
 \item{...}{Further arguments passed to \code{geom_label}.}
 }

@@ -11,12 +11,26 @@ light_breakdown(x, ...)
 
 \method{light_breakdown}{default}(x, ...)
 
-\method{light_breakdown}{flashlight}(x, new_obs, data = x$data,
-  by = x$by, v = NULL, order_by_importance = TRUE, top_m = Inf,
-  n_max = Inf, seed = NULL, use_linkinv = FALSE,
-  after_name = "after", before_name = "before", label_name = "label",
-  variable_name = "variable", step_name = "step",
-  description_name = "description", digits = 3, ...)
+\method{light_breakdown}{flashlight}(
+  x,
+  new_obs,
+  data = x$data,
+  by = x$by,
+  v = NULL,
+  order_by_importance = TRUE,
+  top_m = Inf,
+  n_max = Inf,
+  seed = NULL,
+  use_linkinv = FALSE,
+  after_name = "after",
+  before_name = "before",
+  label_name = "label",
+  variable_name = "variable",
+  step_name = "step",
+  description_name = "description",
+  digits = 3,
+  ...
+)
 
 \method{light_breakdown}{multiflashlight}(x, ...)
 }

@@ -4,8 +4,7 @@
 \alias{plot.light_performance}
 \title{Visualize Model Performance}
 \usage{
-\method{plot}{light_performance}(x, swap_dim = FALSE,
-  facet_scales = "free_y", rotate_x = FALSE, ...)
+\method{plot}{light_performance}(x, swap_dim = FALSE, facet_scales = "free_y", rotate_x = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{light_performance}.}

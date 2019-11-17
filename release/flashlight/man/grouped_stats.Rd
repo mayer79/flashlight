@@ -4,10 +4,20 @@
 \alias{grouped_stats}
 \title{Grouped Weighted Means, Quartiles, or Variances}
 \usage{
-grouped_stats(data, x, w = NULL, by = NULL, stats = c("mean",
-  "quartiles", "variance"), counts = TRUE, counts_weighted = FALSE,
-  counts_name = "counts", value_name = x, q1_name = "q1",
-  q3_name = "q3", ...)
+grouped_stats(
+  data,
+  x,
+  w = NULL,
+  by = NULL,
+  stats = c("mean", "quartiles", "variance"),
+  counts = TRUE,
+  counts_weighted = FALSE,
+  counts_name = "counts",
+  value_name = x,
+  q1_name = "q1",
+  q3_name = "q3",
+  ...
+)
 }
 \arguments{
 \item{data}{A \code{data.frame}.}

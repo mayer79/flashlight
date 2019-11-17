@@ -11,9 +11,17 @@ light_performance(x, ...)
 
 \method{light_performance}{default}(x, ...)
 
-\method{light_performance}{flashlight}(x, data = x$data, by = x$by,
-  metrics = x$metrics, use_linkinv = FALSE, metric_name = "metric",
-  value_name = "value", label_name = "label", ...)
+\method{light_performance}{flashlight}(
+  x,
+  data = x$data,
+  by = x$by,
+  metrics = x$metrics,
+  use_linkinv = FALSE,
+  metric_name = "metric",
+  value_name = "value",
+  label_name = "label",
+  ...
+)
 
 \method{light_performance}{multiflashlight}(x, ...)
 }

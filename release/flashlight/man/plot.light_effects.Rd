@@ -4,9 +4,16 @@
 \alias{plot.light_effects}
 \title{Visualize Multiple Types of Profiles Together}
 \usage{
-\method{plot}{light_effects}(x, use = c("response", "predicted", "pd"),
-  zero_counts = TRUE, size_factor = 1, facet_scales = "free_x",
-  facet_nrow = 1L, rotate_x = TRUE, ...)
+\method{plot}{light_effects}(
+  x,
+  use = c("response", "predicted", "pd"),
+  zero_counts = TRUE,
+  size_factor = 1,
+  facet_scales = "free_x",
+  facet_nrow = 1L,
+  rotate_x = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{light_effects}.}
