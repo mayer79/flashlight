@@ -21,7 +21,7 @@
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param center Should curves be centered? Default is FALSE. Centering will be done within "by" group. It will work also for a \code{grid} with multiple columns.
-#' @param center_at If \code{center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last". Choose "mean" to mean-center the curves instread.
+#' @param center_at If \code{center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last". Choose "mean" to mean-center the curves instead.
 #' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param id_name Column name in resulting \code{data} containing the row id of the profile. Defaults to "id_name".
