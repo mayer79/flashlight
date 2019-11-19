@@ -11,11 +11,24 @@ light_importance(x, ...)
 
 \method{light_importance}{default}(x, ...)
 
-\method{light_importance}{flashlight}(x, data = x$data, by = x$by,
-  metric = x$metrics[1], v = NULL, n_max = Inf, seed = NULL,
-  m_repetitions = 1, lower_is_better = TRUE, use_linkinv = FALSE,
-  metric_name = "metric", value_name = "value", error_name = "error",
-  label_name = "label", variable_name = "variable", ...)
+\method{light_importance}{flashlight}(
+  x,
+  data = x$data,
+  by = x$by,
+  metric = x$metrics[1],
+  v = NULL,
+  n_max = Inf,
+  seed = NULL,
+  m_repetitions = 1,
+  lower_is_better = TRUE,
+  use_linkinv = FALSE,
+  metric_name = "metric",
+  value_name = "value",
+  error_name = "error",
+  label_name = "label",
+  variable_name = "variable",
+  ...
+)
 
 \method{light_importance}{multiflashlight}(x, ...)
 }

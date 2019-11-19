@@ -11,17 +11,41 @@ light_effects(x, ...)
 
 \method{light_effects}{default}(x, ...)
 
-\method{light_effects}{flashlight}(x, v, data = NULL, by = x$by,
-  stats = c("mean", "quartiles"), breaks = NULL, n_bins = 11,
-  cut_type = c("equal", "quantile"), use_linkinv = TRUE,
-  value_name = "value", q1_name = "q1", q3_name = "q3",
-  label_name = "label", type_name = "type", counts_name = "counts",
-  counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
-  pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL,
-  ale_two_sided = TRUE, ...)
+\method{light_effects}{flashlight}(
+  x,
+  v,
+  data = NULL,
+  by = x$by,
+  stats = c("mean", "quartiles"),
+  breaks = NULL,
+  n_bins = 11,
+  cut_type = c("equal", "quantile"),
+  use_linkinv = TRUE,
+  value_name = "value",
+  q1_name = "q1",
+  q3_name = "q3",
+  label_name = "label",
+  type_name = "type",
+  counts_name = "counts",
+  counts_weighted = FALSE,
+  v_labels = TRUE,
+  pred = NULL,
+  pd_indices = NULL,
+  pd_n_max = 1000,
+  pd_seed = NULL,
+  ale_two_sided = TRUE,
+  ...
+)
 
-\method{light_effects}{multiflashlight}(x, v, data = NULL,
-  breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"), ...)
+\method{light_effects}{multiflashlight}(
+  x,
+  v,
+  data = NULL,
+  breaks = NULL,
+  n_bins = 11,
+  cut_type = c("equal", "quantile"),
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}

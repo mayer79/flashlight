@@ -1,8 +1,8 @@
 Type: Package
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.4.0
-Date: 2019-11-09
+Version: 0.4.1
+Date: 2019-11-17
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
@@ -42,4 +42,4 @@ Suggests:
     xgboost,
     caret,
     moderndive
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0

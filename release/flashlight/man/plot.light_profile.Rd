@@ -4,9 +4,13 @@
 \alias{plot.light_profile}
 \title{Visualize Profiles, e.g. of Partial Dependence}
 \usage{
-\method{plot}{light_profile}(x, swap_dim = FALSE,
-  facet_scales = "free_x", rotate_x = x$type != "partial dependence",
-  ...)
+\method{plot}{light_profile}(
+  x,
+  swap_dim = FALSE,
+  facet_scales = "free_x",
+  rotate_x = x$type != "partial dependence",
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{light_profile}.}

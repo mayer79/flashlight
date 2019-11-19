@@ -4,11 +4,24 @@
 \alias{ale_profile}
 \title{ALE profile}
 \usage{
-ale_profile(x, v, breaks = NULL, n_bins = 11, cut_type = c("equal",
-  "quantile"), value_name = "value", counts_name = "counts",
-  counts = TRUE, counts_weighted = FALSE, pred = NULL,
-  evaluate_at = NULL, indices = NULL, n_max = 1000, seed = NULL,
-  two_sided = FALSE, calibrate = TRUE)
+ale_profile(
+  x,
+  v,
+  breaks = NULL,
+  n_bins = 11,
+  cut_type = c("equal", "quantile"),
+  value_name = "value",
+  counts_name = "counts",
+  counts = TRUE,
+  counts_weighted = FALSE,
+  pred = NULL,
+  evaluate_at = NULL,
+  indices = NULL,
+  n_max = 1000,
+  seed = NULL,
+  two_sided = FALSE,
+  calibrate = TRUE
+)
 }
 \arguments{
 \item{x}{An object of class \code{flashlight}.}

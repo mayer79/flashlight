@@ -8,9 +8,19 @@
 \usage{
 flashlight(x, ...)
 
-\method{flashlight}{default}(x, model = NULL, data = NULL, y = NULL,
-  predict_function = predict, linkinv = function(z) z, w = NULL,
-  by = NULL, metrics = list(rmse = rmse), label = NULL, ...)
+\method{flashlight}{default}(
+  x,
+  model = NULL,
+  data = NULL,
+  y = NULL,
+  predict_function = predict,
+  linkinv = function(z) z,
+  w = NULL,
+  by = NULL,
+  metrics = list(rmse = rmse),
+  label = NULL,
+  ...
+)
 
 \method{flashlight}{flashlight}(x, ...)
 }

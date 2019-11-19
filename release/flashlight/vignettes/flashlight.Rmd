@@ -72,7 +72,7 @@ Different modelling techniques offer different ways of variable importance. In l
 
 In linear regression, the fitted model consists of an affine linear function in the inputs. Its coefficients immediately tell us how the response is expected to change if the value of one single input variable $X$ is systematically being adapted. How to describe such effects of a variable $X$ for more complex models that include non-linearities and high-order interactions?
 
-One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. ICE profiles centered at one point (or "c-ICE" profiles) help to detect interactions even better.
+One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. Centered ICE profiles ("c-ICE") help to detect interactions even better.
 
 If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4]. 
 
@@ -92,11 +92,11 @@ Besides looking at *average* profiles, it is often also revealing to consider *q
 
 ### Interaction strength
 
-Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the "overall interaction strength") and/or between specific covariables. One way to calculate interaction strength between two covariables is based on the difference between univariate and bivariate partial dependence profiles. Overall interaction strength can be derived by marginalization. A less computationally intensive alternative is based on centered ICE curves: The higher the average within-evaluation-point variance between curves, the stronger the overall interaction strength associated with variable $v$. If $v_j$ denotes the $j$-th evaluation point of $v$ and $x_{i,j}$ the value of the c-ICE curve of the $i$-th profile at $v_j$, then the (unweighted) overall interaction strength of variable $v$ is estimated as
+Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the "overall interaction strength") and/or between specific covariables. One way to calculate interaction strength between two covariables is based on the difference between univariate and bivariate partial dependence profiles. Overall interaction strength can be derived by marginalization. A less computationally intensive alternative is based on mean-centered ICE curves: The higher the average within-evaluation-point variance between curves, the stronger the overall interaction strength associated with variable $v$. If $v_j$ denotes the $j$-th evaluation point of $v$ and $x_{i,j}$ the value of the mean-centered ICE curve of the $i$-th profile at $v_j$, then the (unweighted) overall interaction strength of variable $v$ is estimated as
 $$
   S(v) = \sqrt{\text{Avg}_j Var_i(x_{i,j})}.
 $$
-To our knowledge, this measure of interaction strength has not yet been proposed, although other approaches based on derivative ICE curves are available in the literature [3].
+To our knowledge, this measure of interaction strength has not yet been proposed, although other approaches based on derivative ICE curves are available in the literature [3]. An alterantive way to calculate $S(v)$ is based on repeated measures ANOVA with one fixed factor $v$ and a within curve repeated measure factor $i$. $S$ is then estimated by its residual standard deviation.
 
 ### Variable contribution breakdown for single observations
 
@@ -207,7 +207,7 @@ The process of using the `flashlight` package is as follows:
    
    - `light_effects`: Combines partial dependence, response and prediction profiles. ALE profiles can be added as well.
    
-   - `light_interaction`: Calculates overall interaction strength based on centered ICE curve scatter.
+   - `light_interaction`: Calculates overall interaction strength based on mean-centered ICE curve scatter.
    
    - `light_breakdown`: Calculates variable contribution breakdown for a single observation.
 
@@ -419,7 +419,7 @@ Note: Setting `seed` to a fixed value will ensure that the flashlights will cons
 
 Centered ICE profiles ("c-ICE") can help to increase visibility of interactions.
 ```{r}
-cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = TRUE, center_at = "middle")
+cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = TRUE)
 plot(cp, alpha = 0.2)
 ```
 

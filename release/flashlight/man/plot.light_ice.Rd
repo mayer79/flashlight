@@ -4,8 +4,7 @@
 \alias{plot.light_ice}
 \title{Visualize ICE profiles}
 \usage{
-\method{plot}{light_ice}(x, facet_scales = "fixed", rotate_x = FALSE,
-  ...)
+\method{plot}{light_ice}(x, facet_scales = "fixed", rotate_x = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{light_ice}.}

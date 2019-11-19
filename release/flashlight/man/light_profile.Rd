@@ -11,21 +11,49 @@ light_profile(x, ...)
 
 \method{light_profile}{default}(x, ...)
 
-\method{light_profile}{flashlight}(x, v = NULL, data = NULL,
-  by = x$by, type = c("partial dependence", "ale", "predicted",
-  "response", "residual"), stats = c("mean", "quartiles"),
-  breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"),
-  use_linkinv = TRUE, value_name = "value", q1_name = "q1",
-  q3_name = "q3", label_name = "label", type_name = "type",
-  counts_name = "counts", counts = TRUE, counts_weighted = FALSE,
-  v_labels = TRUE, pred = NULL, pd_evaluate_at = NULL,
-  pd_grid = NULL, pd_indices = NULL, pd_n_max = 1000,
-  pd_seed = NULL, pd_center = FALSE, pd_center_at = c("first",
-  "middle", "last"), ale_two_sided = FALSE, ...)
+\method{light_profile}{flashlight}(
+  x,
+  v = NULL,
+  data = NULL,
+  by = x$by,
+  type = c("partial dependence", "ale", "predicted", "response", "residual"),
+  stats = c("mean", "quartiles"),
+  breaks = NULL,
+  n_bins = 11,
+  cut_type = c("equal", "quantile"),
+  use_linkinv = TRUE,
+  value_name = "value",
+  q1_name = "q1",
+  q3_name = "q3",
+  label_name = "label",
+  type_name = "type",
+  counts_name = "counts",
+  counts = TRUE,
+  counts_weighted = FALSE,
+  v_labels = TRUE,
+  pred = NULL,
+  pd_evaluate_at = NULL,
+  pd_grid = NULL,
+  pd_indices = NULL,
+  pd_n_max = 1000,
+  pd_seed = NULL,
+  pd_center = FALSE,
+  pd_center_at = c("first", "middle", "last"),
+  ale_two_sided = FALSE,
+  ...
+)
 
-\method{light_profile}{multiflashlight}(x, v = NULL, data = NULL,
-  breaks = NULL, n_bins = 11, cut_type = c("equal", "quantile"),
-  pd_evaluate_at = NULL, pd_grid = NULL, ...)
+\method{light_profile}{multiflashlight}(
+  x,
+  v = NULL,
+  data = NULL,
+  breaks = NULL,
+  n_bins = 11,
+  cut_type = c("equal", "quantile"),
+  pd_evaluate_at = NULL,
+  pd_grid = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
