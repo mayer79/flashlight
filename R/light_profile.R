@@ -30,7 +30,7 @@
 #' @param pd_n_max Maximum number of ICE profiles to calculate (will be randomly picked from \code{data}). Only used for type = "partial dependence" and "ale".
 #' @param pd_seed Integer random seed used to select ICE profiles. Only used for type = "partial dependence" and "ale".
 #' @param pd_center Should ICE curves be centered within \code{by} subsets before caclulating partial dependence profiles? This option is interesting together with \code{stats = "quartiles"} in order to visualize interaction strength.
-#' @param pd_center_at If \code{pd_center = TRUE}: Which evaluation point to center ICE curves at before calculating partial dependence profiles? One of "first", "middle", or "last".
+#' @param pd_center_at If \code{pd_center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last". Choose "mean" to shift all curves to the same mean (per by-group) or "0" to shift all curves to have mean 0.
 #' @param ale_two_sided If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence and ALE profiles.
 #' @return An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.
@@ -111,7 +111,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                                      pred = NULL, pd_evaluate_at = NULL, pd_grid = NULL,
                                      pd_indices = NULL, pd_n_max = 1000,
                                      pd_seed = NULL, pd_center = FALSE,
-                                     pd_center_at = c("first", "middle", "last"),
+                                     pd_center_at = c("first", "middle", "last", "mean", "0"),
                                      ale_two_sided = FALSE, ...) {
   type <- match.arg(type)
   stats <- match.arg(stats)

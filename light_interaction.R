@@ -10,6 +10,7 @@
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param v Vector of variables to be assessed.
+#' @param type Type of the measure of interaction strength: Either "overall" or "pairwise".
 #' @param n_bins Maximum number of unique values to evaluate for numeric \code{v}.
 #' @param indices A vector of row numbers to consider.
 #' @param n_max If \code{indices} is not given, maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.
@@ -52,11 +53,14 @@ light_interaction.default <- function(x, ...) {
 #' @describeIn light_interaction Univariate interaction strengths for a flashlight object.
 #' @export
 light_interaction.flashlight <- function(x, data = x$data, by = x$by,
-                                         v = NULL, n_max = 50, seed = NULL,
+                                         v = NULL, type = c("overall", "pairwise"),
+                                         n_max = 50, seed = NULL,
                                          use_linkinv = FALSE, n_bins = 9,
                                          indices = NULL, value_name = "value",
                                          error_name = "error", label_name = "label",
                                          variable_name = "variable", ...) {
+  type <- match.arg(type)
+
   stopifnot((n <- nrow(data)) >= 1L,
             !anyDuplicated(c(by, v, value_name, label_name, error_name, variable_name, "id_xxx")))
 
@@ -81,23 +85,52 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   x <- flashlight(x, data = data, by = by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
-  # Aggregate c-ICE for every v
-  core_func <- function(z) {
-    dat <- light_ice(x, v = z,
-                     n_bins = n_bins, cut_type = "quantile", n_max = Inf,
-                     center = TRUE, center_at = "mean", value_name = value_name,
-                     label_name = label_name, id_name = "id_xxx")$dat
+  # Evaluation grid for all v
+  eval_at <- lapply(data[, v], function(z)
+    auto_cut(z, n_bins = n_bins, cut_type = "quantile")$bin_means)
 
-    # For each grid value of v, calculate variance of curves
-    dat_agg <- grouped_stats(dat, x = value_name, w = x$w, stats = "variance",
-                             by = c(by, z), counts = FALSE, na.rm = TRUE, method = "ML")
-
-    # Average within by groups
-    grouped_stats(dat_agg, x = value_name, by = by, counts = FALSE)
+  # ICE wrapper
+  call_ice <- function(grid, value_name) {
+    out <- light_ice(x, grid = grid, n_max = Inf, center = TRUE, center_at = "0",
+                     value_name = value_name, id_name = "id_")$data
+    out[, setdiff(colnames(out), label_name)]
   }
-  data <- setNames(lapply(v, core_func), v)
+
+  if (type == "overall") {
+    # Aggregate c-ICE for every v
+    core_func <- function(z) {
+      dat <- call_ice(data.frame(eval_at[z]), "value_")
+      dat[["numerator_"]] <- dat[["value_"]] - dat[["value_i"]] - dat[["value_j"]]
+      dat[["denominator_"]] <- dat[["value_ij"]]^2
+
+    }
+  } else {
+    core_func <- function(z) {
+      dat_ij <- call_ice(do.call(expand.grid, eval_at[z]), "value_ij")
+      dat_i <- call_ice(data.frame(eval_at[z[1]]), "value_i")
+      dat_j <- call_ice(data.frame(eval_at[z[2]]), "value_j")
+      dat <- left_join(left_join(dat_ij, dat_i, by = c("id_", z[1])), dat_j, by = c("id_", z[2]))
+      dat[["numerator_"]] <- dat[["value_ij"]] - dat[["value_i"]] - dat[["value_j"]]
+      dat[["denominator_"]] <- dat[["value_ij"]]^2
+      numerator <- grouped_stats(dat, x = "numerator_", w = x$w, by = by,
+                                 counts = FALSE, na.rm = TRUE)
+      denominator <- grouped_stats(dat, x = "denominator_", w = x$w, by = by,
+                                 counts = FALSE, na.rm = TRUE)
+      if (is.null(by)) {
+        return(setNames(data.frame(as.numeric(numerator/denominator)), value_name))
+      }
+      both <- left_join(numerator, denominator, by = by)
+      both[[value_name]] <- both[["numerator_"]] / both[["denominator_"]]
+      both[, c(by, value_name), drop = FALSE]
+    }
+    v_pairs <- combn(v, 2, simplify = FALSE)
+    data <- setNames(lapply(v_pairs, core_func), lapply(v_pairs, paste, collapse = ":"))
+  }
   data <- bind_rows(data, .id = variable_name)
-  data[[value_name]] <- ifelse(data[[value_name]] < 0.000001, 0, sqrt(data[[value_name]]))
+  .bad <- data[[value_name]] < 0.000001 | !is.finite(data[[value_name]])
+  if (any(.bad)) {
+    data[.bad, value_name] <- 0
+  }
   data[[label_name]] <- x$label
   data[[error_name]] <- NA
   if (!is.tbl(data)) {

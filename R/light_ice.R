@@ -7,6 +7,7 @@
 #' @importFrom stats setNames
 #' @importFrom tidyr crossing
 #' @importFrom dplyr inner_join
+#' @importFrom MetricsWeighted weighted_mean
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be profiled.
 #' @param data An optional \code{data.frame}.
@@ -21,7 +22,7 @@
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param center Should curves be centered? Default is FALSE. Centering will be done within "by" group. It will work also for a \code{grid} with multiple columns.
-#' @param center_at If \code{center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last". Choose "mean" to mean-center the curves instead.
+#' @param center_at If \code{center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last". Choose "mean" to shift all curves to the same mean (per by-group) or "0" to shift all curves to have mean 0.
 #' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param id_name Column name in resulting \code{data} containing the row id of the profile. Defaults to "id_name".
@@ -73,7 +74,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
                                  n_bins = 27, cut_type = c("equal", "quantile"),
                                  indices = NULL, n_max = 20,
                                  seed = NULL, use_linkinv = TRUE,
-                                 center = FALSE, center_at = c("first", "middle", "last", "mean"),
+                                 center = FALSE, center_at = c("first", "middle", "last", "mean", "0"),
                                  value_name = "value",
                                  label_name = "label", id_name = "id", ...) {
   cut_type <- match.arg(cut_type)
@@ -124,13 +125,21 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
 
   # c-ICE curves
   if (center) {
-    if (center_at == "mean") {
-      central_data <- grouped_stats(data, x = value_name, by = c(x$by, id_name),
-                                    counts = FALSE, na.rm = TRUE)
-      group_means <- grouped_stats(data, x = value_name, w = x$w,
-                                   by = x$by, counts = FALSE,
-                                   value_name = "global_mean", na.rm = TRUE)
-
+    if (center_at == "0") {
+      data[[value_name]] <- grouped_center(data, x = value_name, by = id_name, na.rm = TRUE)
+    }
+    else if (center_at == "mean") {
+      centered_values <- grouped_center(data, x = value_name, by = id_name, na.rm = TRUE)
+      if (is.null(by)) {
+        data[[value_name]] <- centered_values +
+          weighted_mean(data[[value_name]], w = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
+      } else {
+        group_means <- grouped_stats(data, x = value_name, w = x$w, by = by, counts = FALSE,
+                                     value_name = "global_mean", na.rm = TRUE)
+        stopifnot(!("global_mean" %in% colnames(data)))
+        data[[value_name]] <- centered_values +
+          left_join(data, group_means, by = by)[["global_mean"]]
+      }
     } else {
       center_position <- switch(center_at,
                                 first = 1,
@@ -138,14 +147,14 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
                                 last = nrow(grid))
       central_data <- inner_join(data, grid[center_position, , drop = FALSE], by = v)
       group_means <- grouped_stats(central_data, x = value_name, w = x$w,
-                                   by = x$by, counts = FALSE,
+                                   by = by, counts = FALSE,
                                    value_name = "global_mean", na.rm = TRUE)
+      stopifnot(!("global_mean" %in% colnames(central_data)))
+      central_data <- merge(central_data, group_means, by = x$by, all.x = TRUE)
+      local_shift <- central_data[["global_mean"]] - central_data[[value_name]]
+      data[[value_name]] <- data[[value_name]] +
+        local_shift[match(data[[id_name]], central_data[[id_name]])]
     }
-    stopifnot(!("global_mean" %in% colnames(central_data)))
-    central_data <- merge(central_data, group_means, by = x$by, all.x = TRUE)
-    local_shift <- central_data[["global_mean"]] - central_data[[value_name]]
-    data[[value_name]] <- data[[value_name]] +
-      local_shift[match(data[[id_name]], central_data[[id_name]])]
   }
   data[[label_name]] <- x$label
 

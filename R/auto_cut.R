@@ -49,7 +49,7 @@ auto_cut <- function(x, breaks = NULL, n_bins = 27,
         breaks <- pretty(x, n = n_bins)
       } else {
         breaks <- quantile(x, probs = seq(0, 1, length.out = n_bins + 1),
-                           na.rm = TRUE, names = FALSE)
+                           na.rm = TRUE, names = FALSE, type = 1)
       }
     }
     breaks <- sort(unique(breaks))

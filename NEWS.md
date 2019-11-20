@@ -1,4 +1,4 @@
-# flashlight 0.4.1
+# flashlight 0.5.0
 
 ## New functionality
 
@@ -7,6 +7,14 @@
 - Added option "mean" centering to `light_ice`. This is now utilized for `light_interaction`.
 
 - Added option `rotate_x` to `plot_light_breakdown` and `plot_light_importance`.
+
+- Added function `grouped_center` to allow grouped and weighted 0-mean centering of a numeric variable.
+
+## Changes
+
+### Minor
+
+-  `auto_cut`, the workhorse behind quantile binning a numeric input variable x, is now using ecdf based quantiles in order to ensure all evaluation points are in the domain of x.
 
 # flashlight 0.4.0
 
