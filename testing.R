@@ -106,12 +106,12 @@ plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
 indices <- (1:15) * 10
 plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
 plot(light_ice(mods, v = "Species", indices = indices))
-plot(light_ice(mods, v = "Species", indices = indices, center = TRUE))
-plot(light_ice(mods, v = "Species", indices = indices, center = TRUE, center_at = "last"))
+plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
+plot(light_ice(mods, v = "Species", indices = indices, center = "last"))
 plot(light_ice(mods, v = "Petal.Width", n_bins = 5, indices = indices))
 plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 plot(light_ice(mods, v = "Petal.Width", by = "Species",
-               n_bins = 5, indices = indices, center = TRUE))
+               n_bins = 5, indices = indices, center = "first"))
 
 ir <- iris
 ir$log_sl <- log(ir$Sepal.Length)
@@ -123,19 +123,19 @@ fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
   predict_function = function(m, X) predict(m, X, type = "response"))
 fls <- multiflashlight(list(fl_lm, fl_glm), data = ir, w = "Sepal.Width")
 plot(light_ice(fls, v = "Petal.Length", indices = indices))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, center_at = "middle"))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, center_at = "mean"))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, center_at = "0"))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, by = "Species"))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, center_at = "middle", by = "Species"))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, center_at = "mean", by = "Species"))
-plot(light_ice(fls, v = "Petal.Length", indices = indices, center = TRUE, center_at = "0", by = "Species"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "first"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "middle"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "mean"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "0"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, by = "Species"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "middle", by = "Species"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "mean", by = "Species"))
+plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "0", by = "Species"))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
-               center = TRUE))
+               center = "first"))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
-               center = TRUE, center_at = "last"))
+               center = "last"))
 
 plot(light_interaction(fls)) # very small interactions for GLM due to exp
 
@@ -374,7 +374,7 @@ table(ir$Species, ir$sw)
 fl <- flashlight(model = fit, label = "lm", data = ir, y = "Sepal.Length")
 
 plot(light_ice(fl, v = "Species"))
-plot(light_ice(fl, v = "Species", center = TRUE))
+plot(light_ice(fl, v = "Species", center = "first"))
 plot(light_profile(fl, v = "Species"))
 plot(light_profile(fl, v = "Species", type = "response"))
 plot(light_profile(fl, v = "Species", type = "ale"))

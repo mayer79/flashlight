@@ -1,12 +1,30 @@
-# flashlight 0.4.1
+# flashlight 0.5.0
 
 ## New functionality
 
+### Major
+
+- Added `type = "pairwise"` to `light_interaction.
+
 ### Minor
 
-- Added option "mean" centering to `light_ice`. This is now utilized for `light_interaction`.
+- Added more options how to center `light_ice`: Mean center each profile to the same value (within "by" groups) and 0-mean center each profile.
 
 - Added option `rotate_x` to `plot_light_breakdown` and `plot_light_importance`.
+
+- Added function `grouped_center` to allow grouped and weighted 0-mean centering of a numeric variable.
+
+## Interface change
+
+### Major
+
+- Combined arguments `center = TRUE/FALSE` and `center_at` to one argument `center` with default "no". This affects `light_ice`, and `light_profile`.
+
+## Other changes
+
+### Minor
+
+-  `auto_cut`, the workhorse behind quantile binning a numeric input variable x, is now using ecdf based quantiles in order to ensure all evaluation points are in the domain of x.
 
 # flashlight 0.4.0
 

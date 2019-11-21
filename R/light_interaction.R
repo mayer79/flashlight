@@ -1,6 +1,6 @@
 #' Interaction Strength
 #'
-#' Based on (zero) mean-centered ICE curves, different measures of interaction strength are calculated. For the default (\code{type = "overall"}), we get a single value per input variable z. The value measures the variance in ICE curves explained by all interaction of z (i.e. the variance of all effects of z unexplained by the main effect of z). For \code{type = "pairwise"}, for each combination of variable pairs z1, z2, a value is provided. The value measures the variance explained by the pairwise interaction terms and is assessed by calculating the squared difference between two-dimensional ICE curves spanned by z1 and z2 and the two corresponding one-dimensional ICE curves. By default, the values are normalized by the total variance. For \code{type = "pairwise"}, this will reproduce Friedman's H-squared statistic. Unnormalized values help to compare interaction strength across variables resp. variable pairs, while normalized values show interaction strength relative to the overall effects of z (resp. z1 and z2).
+#' Based on (zero) mean-centered ICE curves, different measures of interaction strength are calculated. For the default (\code{type = "overall"}), we get a single value per input variable z. The value measures the variance in c-ICE curves explained by all interaction of z (i.e. the variance of all effects of z unexplained by the main effect of z). For \code{type = "pairwise"}, for each combination of variable pairs z1, z2, a value is provided. The value measures the variance in c-ICE curves explained by the pairwise interaction terms and is assessed by calculating the squared difference between two-dimensional ICE curves spanned by z1 and z2 and the two corresponding one-dimensional ICE curves. By default, the values are normalized by the total variance. For \code{type = "pairwise"}, this will reproduce Friedman's H-squared statistic [1]. Unnormalized values help to compare interaction strength across variables resp. variable pairs, while normalized values show interaction strength relative to the overall effects of z (resp. z1 and z2).
 #'
 #' Note that continuous variables are binned using quantile cuts to get more stable results. The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly. Which rows in \code{data} are profiled? This is specified by \code{indices}. If not given and \code{n_max} is smaller than the number of rows in \code{data}, then row indices will be sampled randomly from \code{data}. If the same rows should be used for all flashlights in a multiflashlight, there are two options: Either pass a \code{seed} (with potentially undesired consequences for subsequent code) or a vector of indices used to select rows. In both cases, \code{data} should be the same for all flashlights considered.
 #'
@@ -33,6 +33,7 @@
 #'   \item \code{variable_name} Same as input \code{variable_name}.
 #' }
 #' @export
+#' @references [1] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54..
 #' @examples
 #' fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
 #' fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
@@ -96,7 +97,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
 
   # ICE wrapper used in the core function
   call_ice <- function(grid, value_name) {
-    out <- light_ice(x, grid = grid, n_max = Inf, center = TRUE, center_at = "0",
+    out <- light_ice(x, grid = grid, n_max = Inf, center = "0",
                      value_name = value_name, id_name = "id_")$data
     out[, setdiff(colnames(out), label_name)]
   }

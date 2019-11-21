@@ -16,6 +16,8 @@ light_interaction(x, ...)
   data = x$data,
   by = x$by,
   v = NULL,
+  type = c("overall", "pairwise"),
+  normalize = TRUE,
   n_max = 50,
   seed = NULL,
   use_linkinv = FALSE,
@@ -40,6 +42,10 @@ light_interaction(x, ...)
 \item{by}{An optional vector of column names used to additionally group the results.}
 
 \item{v}{Vector of variables to be assessed.}
+
+\item{type}{Type of the measure of interaction strength: Either "overall" or "pairwise".}
+
+\item{normalize}{Should the variance explained be normalized by total variance? Default is \code{TRUE}.}
 
 \item{n_max}{If \code{indices} is not given, maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.}
 
@@ -71,16 +77,16 @@ An object of class \code{light_importance}, \code{light} (and a list) with the f
 }
 }
 \description{
-Calculates overall interaction strength per covariable by calculating the average within-evaluation-point standard deviation across mean-centered ICE curves, see the vignette for details. Additive covariable effects get a value of 0, while covariables with interaction effects get positive values as their c-ICE curves differ. While relatively efficient to calculate, this method does not show between what specific variable pairs we have strongest interactions. Note that continuous variables are binned using quantile cuts to get more stable results.
+Based on (zero) mean-centered ICE curves, different measures of interaction strength are calculated. For the default (\code{type = "overall"}), we get a single value per input variable z. The value measures the variance in c-ICE curves explained by all interaction of z (i.e. the variance of all effects of z unexplained by the main effect of z). For \code{type = "pairwise"}, for each combination of variable pairs z1, z2, a value is provided. The value measures the variance in c-ICE curves explained by the pairwise interaction terms and is assessed by calculating the squared difference between two-dimensional ICE curves spanned by z1 and z2 and the two corresponding one-dimensional ICE curves. By default, the values are normalized by the total variance. For \code{type = "pairwise"}, this will reproduce Friedman's H-squared statistic [1]. Unnormalized values help to compare interaction strength across variables resp. variable pairs, while normalized values show interaction strength relative to the overall effects of z (resp. z1 and z2).
 }
 \details{
-The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly. Which rows in \code{data} are profiled? This is specified by \code{indices}. If not given and \code{n_max} is smaller than the number of rows in \code{data}, then row indices will be sampled randomly from \code{data}. If the same rows should be used for all flashlights in a multiflashlight, there are two options: Either pass a \code{seed} (with potentially undesired consequences for subsequent code) or a vector of indices used to select rows. In both cases, \code{data} should be the same for all flashlights considered.
+Note that continuous variables are binned using quantile cuts to get more stable results. The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly. Which rows in \code{data} are profiled? This is specified by \code{indices}. If not given and \code{n_max} is smaller than the number of rows in \code{data}, then row indices will be sampled randomly from \code{data}. If the same rows should be used for all flashlights in a multiflashlight, there are two options: Either pass a \code{seed} (with potentially undesired consequences for subsequent code) or a vector of indices used to select rows. In both cases, \code{data} should be the same for all flashlights considered.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{default}: Default method not implemented yet.
 
-\item \code{flashlight}: Univariate interaction strengths for a flashlight object.
+\item \code{flashlight}: Interaction strengths for a flashlight object.
 
 \item \code{multiflashlight}: for a multiflashlight object.
 }}
@@ -91,8 +97,13 @@ fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
 fl_additive <- flashlight(model = fit_additive, label = "additive")
 fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
-plot(light_interaction(fls))
+x <- fls$nonadditive
+plot(light_interaction(fls, normalize = FALSE))
+plot(light_interaction(fls, type = "pairwise"))
 plot(light_interaction(fls, by = "Species"), swap_dim = TRUE)
+}
+\references{
+[1] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54..
 }
 \seealso{
 \code{\link{light_ice}}.

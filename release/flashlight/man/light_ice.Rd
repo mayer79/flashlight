@@ -25,8 +25,7 @@ light_ice(x, ...)
   n_max = 20,
   seed = NULL,
   use_linkinv = TRUE,
-  center = FALSE,
-  center_at = c("first", "middle", "last", "mean"),
+  center = c("no", "first", "middle", "last", "mean", "0"),
   value_name = "value",
   label_name = "label",
   id_name = "id",
@@ -64,9 +63,7 @@ light_ice(x, ...)
 
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
 
-\item{center}{Should curves be centered? Default is FALSE. Centering will be done within "by" group. It will work also for a \code{grid} with multiple columns.}
-
-\item{center_at}{If \code{center = TRUE}: Which evaluation point to center at. One of "first", "middle", or "last". Choose "mean" to mean-center the curves instread.}
+\item{center}{How should curves be centered? Default is "no". Choose "first", "middle", or "last" to center at specific evaluation points. Choose "mean" to center all profiles at the same mean. Choose "0" to mean-center curves at 0. Centering will be done within "by" group. It will work also for a \code{grid} with multiple columns.}
 
 \item{value_name}{Column name in resulting \code{data} containing the profile value. Defaults to "value".}
 
@@ -80,7 +77,7 @@ An object of class \code{light_ice}, \code{light} (and a list) with the followin
   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
   \item \code{by} Same as input \code{by}.
   \item \code{v} The variable(s) evaluated.
-  \item \code{center} Flag if ICE curves are centered.
+  \item \code{center} How centering was done.
   \item \code{value_name} Same as input \code{value_name}.
   \item \code{label_name} Same as input \code{label_name}.
   \item \code{id_name} Same as input \code{id_name}.
@@ -113,7 +110,7 @@ light_ice(mod_full, v = "Species", indices = (1:15) * 10)
 light_ice(mod_full, v = "Species", evaluate_at = levels(iris$Species))
 light_ice(mod_full, grid = grid, data = iris[1,])$data
 light_ice(mods, v = "Species", indices = (1:15) * 10)
-light_ice(mods, v = "Species", indices = (1:15) * 10, center = TRUE)
+light_ice(mods, v = "Species", indices = (1:15) * 10, center = "first")
 light_ice(mods, v = "Petal.Width", n_bins = 5)
 light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5)
 light_ice(mods, v = "Petal.Width", by = "Species",
