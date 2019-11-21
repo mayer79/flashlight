@@ -593,6 +593,13 @@ plot(st)
 ```
 Since we have not used interaction terms in the linear model, all values are zero there. Interestingly, the strongest interaction effect is associated with the `waterfront` dummy, even if its variable importance was low.
 
+Pairwise interactions are expensive to compute as each variable pair has to be assessed by the help of two-dimensional ICE-profiles. We limit the search for interactions to the top four variables.
+```{r}
+st_pair <- light_interaction(fls, v = most_important(st, 4), type = "pairwise") 
+plot(st_pair)
+```
+
+
 ###  Variable contribution breakdown for single observation
 
 Besides global effects, we can use `light_breakdown` to calculate variable impact on one single (log) prediction. 
