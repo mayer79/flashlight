@@ -5,8 +5,8 @@ fl <- flashlight(model=fit_nonadditive, data = iris[c(1:10, 51:60, 101:111), ], 
 X <- iris[c(1:10, 51:60, 101:111), ]
 Y <- iris[c(1:10, 51:60, 101:111), "Sepal.Width"]
 predictor = Predictor$new(fit_nonadditive, data=X, y=Y)
-ia1 = Interaction$new(predictor)
+ia1 = Interaction$new(predictor, feature = "Species", grid.size = 7)
 ia1
 plot(ia1)
 
-light_interaction(fl)$data
+light_interaction(fl, normalize = TRUE, type = "pairwise")$data
