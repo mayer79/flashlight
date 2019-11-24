@@ -29,7 +29,7 @@
 #' @param pd_indices A vector of row numbers to consider in calculating partial dependence profiles. Only used for type = "partial dependence" and "ale".
 #' @param pd_n_max Maximum number of ICE profiles to calculate (will be randomly picked from \code{data}). Only used for type = "partial dependence" and "ale".
 #' @param pd_seed Integer random seed used to select ICE profiles. Only used for type = "partial dependence" and "ale".
-#' @param pd_center How should ICE curves be centered? Default is "no". Choose "first", "middle", or "last" to center at specific evaluation points. Choose "mean" to center all profiles at the same mean. Choose "0" to mean-center curves at 0. Centering will be done within "by" group. It will work also for a \code{grid} with multiple columns.
+#' @param pd_center How should ICE curves be centered? Default is "no". Choose "first", "middle", or "last" to 0-center at specific evaluation points. Choose "mean" to center all profiles at the within-group means. Choose "0" to mean-center curves at 0. Only relevant for partial dependence.
 #' @param ale_two_sided If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence and ALE profiles.
 #' @return An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.

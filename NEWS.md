@@ -4,7 +4,7 @@
 
 ### Major
 
-- Added `type = "pairwise"` to `light_interaction.
+- Added `type = "pairwise"` to `light_interaction in order to calculate Friedman's H-statistic.
 
 ### Minor
 
@@ -13,6 +13,8 @@
 - Added option `rotate_x` to `plot_light_breakdown` and `plot_light_importance`.
 
 - Added function `grouped_center` to allow grouped and weighted 0-mean centering of a numeric variable.
+
+- Added function `grouped_count` to allow grouped and weighted counts.
 
 ## Interface change
 
@@ -25,6 +27,8 @@
 ### Minor
 
 -  `auto_cut`, the workhorse behind quantile binning a numeric input variable x, is now using ecdf based quantiles in order to ensure all evaluation points are in the domain of x.
+
+- Centering at "first", "middle", and "last" in `light_ice` now anchors the curves at 0 to be in line with other implementations.
 
 # flashlight 0.4.0
 

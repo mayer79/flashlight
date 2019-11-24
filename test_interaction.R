@@ -1,12 +1,23 @@
 library(iml)
-fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Species + Petal.Width, data = iris)
-fl <- flashlight(model=fit_nonadditive, data = iris[c(1:10, 51:60, 101:111), ], y = "Sepal.Length", label ="lm")
+library(ggplot2)
+library(gbm)
 
-X <- iris[c(1:10, 51:60, 101:111), ]
-Y <- iris[c(1:10, 51:60, 101:111), "Sepal.Width"]
-predictor = Predictor$new(fit_nonadditive, data=X, y=Y)
-ia1 = Interaction$new(predictor, feature = "Species", grid.size = 7)
-ia1
-plot(ia1)
+fit <- gbm(price~., data = diamonds, n.trees = 500, n.cores = 8, interaction.depth = 3, shrinkage = 0.05)
 
-light_interaction(fl, normalize = TRUE, type = "pairwise")$data
+pf <-  function(model, newdata) {
+  predict(model, newdata, n.trees = model$n.trees)
+}
+
+interact.gbm(fit, data = diamonds[1:500,], i.var = c("clarity", "carat"))
+
+fl <- flashlight(model=fit, data = diamonds[1:500, ],
+                 y = "price", label ="gbm", predict_function = pf)
+
+X <- diamonds[1:500, setdiff(colnames(diamonds), "price")]
+Y <- diamonds[1:500, "price"]
+predictor = Predictor$new(fit, data=X, y=Y, predict.fun = pf)
+Interaction$new(predictor, feature = "carat", grid.size = 9)
+Interaction$new(predictor, feature = "cut", grid.size = 9)
+
+plot(light_interaction(fl, type = "pairwise")$data)
+
