@@ -19,5 +19,3 @@ residuals.flashlight <- function(object, ...) {
   object <- flashlight(object, ...)
   response(object) - predict(object)
 }
-
-

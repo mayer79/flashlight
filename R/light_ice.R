@@ -145,6 +145,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
                               FUN = function(z) z - z[pos])
   }
 
+  # Finalize output
   data[[label_name]] <- x$label
 
   # Collect results

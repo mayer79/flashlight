@@ -4,7 +4,7 @@
 
 ### Major
 
-- Added `type = "pairwise"` to `light_interaction in order to calculate Friedman's H-statistic.
+- Added `type = "pairwise"` to `light_interaction`.
 
 ### Minor
 
@@ -15,6 +15,8 @@
 - Added function `grouped_center` to allow grouped and weighted 0-mean centering of a numeric variable.
 
 - Added function `grouped_count` to allow grouped and weighted counts.
+
+- `response`, `residuals`, and `predict` now have a method for multiflashlights.
 
 ## Interface change
 

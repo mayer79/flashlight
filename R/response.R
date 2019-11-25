@@ -1,4 +1,4 @@
-#' Response of flashlight
+#' Response of multi/-flashlight
 #'
 #' Extracts response from object of class \code{flashlight}.
 #'
@@ -30,3 +30,10 @@ response.flashlight <- function(object, ...) {
   stopifnot(sapply(with(object, required), Negate(is.null)))
   with(object, linkinv(data[[y]]))
 }
+
+#' @describeIn response Extract responses from multiflashlight object.
+#' @export
+response.multiflashlight <- function(object, ...) {
+  lapply(object, response, ...)
+}
+

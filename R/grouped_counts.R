@@ -34,3 +34,4 @@ grouped_counts <- function(data, by = NULL, w = NULL, value_name = "n", ...) {
   }
   ungroup(do(group_by_at(data, by), core_fun(.data)))
 }
+
