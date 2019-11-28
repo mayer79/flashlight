@@ -26,7 +26,8 @@
 #' @param type Type of the measure of interaction strength: Either "overall" or "pairwise".
 #' @param normalize Should the variances explained be normalized? Default is \code{FALSE}.
 #' @param take_sqrt By default, unnormalized values are root-transformed while normalized values are not.
-#' @param n_max Maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.
+#' @param grid_size Grid size used to form the outer product. Will be randomly picked from data.
+#' @param n_max Maximum number of data rows to consider. Will be randomly picked from \code{data} if necessary.
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param value_name Column name in resulting \code{data} containing the interaction strenght. Defaults to "value".
@@ -72,7 +73,8 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          v = NULL, type = c("overall", "pairwise"),
                                          normalize = FALSE,
                                          take_sqrt = !normalize,
-                                         n_max = 50, seed = NULL,
+                                         grid_size = 20,
+                                         n_max = 200, seed = NULL,
                                          use_linkinv = FALSE,
                                          value_name = "value",
                                          error_name = "error", label_name = "label",
@@ -87,12 +89,21 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     v <- setdiff(colnames(data), c(x$y, by))
   }
 
-  # Pick ids and create sub dataset
+  # Reduce data size
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
   if (n_max < n) {
-    if (!is.null(seed)) {
-      set.seed(seed)
-    }
     data <- data[sample(n, n_max), , drop = FALSE]
+    n <- nrow(data)
+  }
+
+  # Select grid indices from the reduced data set
+  if (grid_size < n) {
+    grid_ind <- sample(n, grid_size)
+  } else {
+    grid_size <- n
+    grid_ind <- seq_len(grid_size)
   }
 
   # Update flashlight
@@ -111,19 +122,20 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   # ICE wrapper used in the core function
   call_ice <- function(grid, vn, drop_w = FALSE) {
     ice <- light_ice(x, grid = grid, n_max = Inf, value_name = vn,
-                     id_name = "id_", center = "0")$data
+                     id_name = "id_")$data
     ice[, setdiff(colnames(ice), c(label_name, if (drop_w) x$w))]
   }
   core_func <- function(z) {
     # Generate data and the values of the numerator
     if (type == "overall") {
-      dat <- call_ice(data[, z, drop = FALSE], "value_")
+      dat <- call_ice(data[grid_ind, z, drop = FALSE], "value_")
       dat[[value_name]] <- grouped_center(dat, x = "value_", w = x$w, by = c(by, z))^2
     } else {
-      dat_ij <- call_ice(data[, z], "value_")
-      dat_i <- call_ice(data[, z[1], drop = FALSE], "value_i", drop_w = TRUE)
-      dat_j <- call_ice(data[, z[2], drop = FALSE], "value_j", drop_w = TRUE)
+      dat_ij <- call_ice(data[grid_ind, z], "value_")
+      dat_i <- call_ice(data[grid_ind, z[1], drop = FALSE], "value_i", drop_w = TRUE)
+      dat_j <- call_ice(data[grid_ind, z[2], drop = FALSE], "value_j", drop_w = TRUE)
       dat <- bind_cols(dat_ij, dat_i, dat_j)
+      dat[, c("value_j", "value_i", "value_")] <- scale(dat[, c("value_j", "value_i", "value_")], scale = F)
       dat[[value_name]] <- (dat[["value_"]] - dat[["value_i"]] - dat[["value_j"]])^2
     }
 
