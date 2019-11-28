@@ -4,7 +4,7 @@
 
 ### Major
 
-- Added `type = "pairwise"` to `light_interaction`.
+- Added `pairwise` (interactions) to `light_interaction`, implementing variants of Friedman's H statistic.
 
 ### Minor
 

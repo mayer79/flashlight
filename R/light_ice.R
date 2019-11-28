@@ -128,7 +128,8 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
     centered_values <- grouped_center(data, x = value_name, by = id_name, na.rm = TRUE)
     if (is.null(by)) {
       data[[value_name]] <- centered_values +
-        weighted_mean(data[[value_name]], w = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
+        weighted_mean(data[[value_name]], w
+                      = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
     } else {
       group_means <- grouped_stats(data, x = value_name, w = x$w, by = by, counts = FALSE,
                                    value_name = "global_mean", na.rm = TRUE)

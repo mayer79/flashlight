@@ -81,15 +81,18 @@ fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
 fl_additive <- flashlight(model = fit_additive, label = "additive")
 fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 fls_addnonadd <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
-plot(light_interaction(fls_addnonadd))
-plot(light_interaction(fls_addnonadd), swap_dim = TRUE)
-plot(light_interaction(fls_addnonadd, by = "Species"))
-plot(light_interaction(fls_addnonadd, by = "Species"), swap_dim = TRUE)
 
-plot(light_interaction(fls_addnonadd$additive))
-plot(light_interaction(fls_addnonadd$additive), swap_dim = TRUE)
-plot(light_interaction(fls_addnonadd$additive, by = "Species"))
-plot(light_interaction(fls_addnonadd$additive, by = "Species"), swap_dim = TRUE)
+#
+pw = TRUE
+plot(light_interaction(fls_addnonadd, pairwise = pw))
+plot(light_interaction(fls_addnonadd, pairwise = pw), swap_dim = TRUE)
+plot(light_interaction(fls_addnonadd, pairwise = pw, by = "Species"))
+plot(light_interaction(fls_addnonadd, pairwise = pw, by = "Species"), swap_dim = TRUE)
+
+plot(light_interaction(fls_addnonadd$additive, pairwise = pw))
+plot(light_interaction(fls_addnonadd$additive, pairwise = pw), swap_dim = TRUE)
+plot(light_interaction(fls_addnonadd$additive, pairwise = pw, by = "Species"))
+plot(light_interaction(fls_addnonadd$additive, pairwise = pw, by = "Species"), swap_dim = TRUE)
 
 #======================================
 # ICE
