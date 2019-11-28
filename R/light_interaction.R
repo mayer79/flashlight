@@ -17,7 +17,7 @@
 #' Note that continuous variables are binned using quantile cuts to get more stable results. The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly.
 #'
 #' @importFrom stats setNames
-#' @importFrom dplyr is.tbl as_tibble left_join bind_rows
+#' @importFrom dplyr is.tbl as_tibble bind_rows bind_cols
 #' @importFrom utils combn
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
@@ -25,9 +25,7 @@
 #' @param v Vector of variables to be assessed.
 #' @param type Type of the measure of interaction strength: Either "overall" or "pairwise".
 #' @param normalize Should the variances explained be normalized? Default is \code{FALSE}.
-#' @param empirical_weights Should the variances be weighted according to the empirical distribution of the involved variables? Default is \code{TRUE}.
 #' @param take_sqrt By default, unnormalized values are root-transformed while normalized values are not.
-#' @param n_bins Maximum number of unique values to evaluate for numeric \code{v}.
 #' @param n_max Maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
@@ -72,10 +70,10 @@ light_interaction.default <- function(x, ...) {
 #' @export
 light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          v = NULL, type = c("overall", "pairwise"),
-                                         normalize = FALSE, empirical_weights = TRUE,
+                                         normalize = FALSE,
                                          take_sqrt = !normalize,
                                          n_max = 50, seed = NULL,
-                                         use_linkinv = FALSE, n_bins = 9,
+                                         use_linkinv = FALSE,
                                          value_name = "value",
                                          error_name = "error", label_name = "label",
                                          variable_name = "variable", ...) {
@@ -83,24 +81,10 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
 
   stopifnot((n <- nrow(data)) >= 1L,
             !anyDuplicated(c(by, v, value_name, label_name, error_name, variable_name,
-                             "w_", "id_", "value_", "value_i", "value_j", "denominator_")))
+                             "id_", "value_", "value_i", "value_j", "denominator_")))
 
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by))
-  }
-
-  # Generate grid values
-  cut_info <- lapply(data[, v, drop = FALSE], function(z)
-    auto_cut(z, n_bins = n_bins, cut_type = "quantile"))
-  names(cut_info) <- v
-  eval_at <- lapply(cut_info, `[[`, "bin_means")
-
-  # Turn data into grid values for empirical weights
-  data_bin_means <- bind_cols(lapply(cut_info, function(z)
-    z$bin_mean[match(z$data[["level"]], z$bin_labels)]))
-  data_bin_means[["w_"]] <- if (!is.null(x$w)) data[, x$w] else 1
-  if (!is.null(by)) {
-    data_bin_means[, by] <- data[, by]
   }
 
   # Pick ids and create sub dataset
@@ -115,63 +99,48 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   x <- flashlight(x, data = data, by = by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
-  # ICE wrapper used in the core function
-  call_ice <- function(grid, vn) {
-    ice <- light_ice(x, grid = grid, n_max = Inf, value_name = vn, id_name = "id_")$data
-    ice[[label_name]] <- NULL
-
-    if (empirical_weights) {
-      key <- c(by, colnames(grid))
-      count_table <- grouped_counts(data_bin_means, by = key, w = "w_", value_name = "w_")
-      ice <- inner_join(ice, count_table, by = key)
-      if (!is.null(x$w)) {
-        ice[["w_"]] <- ice[["w_"]] * ice[[x$w]]
-      }
-    } else {
-      ice[["w_"]] <- if(!is.null(x$w)) ice[[x$w]] else 1
+  # Function to safely replace bad values by 0
+  replace_bad <- function(x) {
+    .bad <- x < 0.000001 | !is.finite(x)
+    if (any(.bad)) {
+      x[.bad] <- 0
     }
-    ice[[vn]] <- grouped_center(ice, x = vn, w = "w_", by = "id_")
-    ice
+    x
+  }
+
+  # ICE wrapper used in the core function
+  call_ice <- function(grid, vn, drop_w = FALSE) {
+    ice <- light_ice(x, grid = grid, n_max = Inf, value_name = vn,
+                     id_name = "id_", center = "0")$data
+    ice[, setdiff(colnames(ice), c(label_name, if (drop_w) x$w))]
   }
   core_func <- function(z) {
     # Generate data and the values of the numerator
     if (type == "overall") {
-      dat <- call_ice(data.frame(eval_at[z]), "value_")
-      dat[[value_name]] <- grouped_center(dat, x = "value_", w = "w_", by = c(by, z))^2
+      dat <- call_ice(data[, z, drop = FALSE], "value_")
+      dat[[value_name]] <- grouped_center(dat, x = "value_", w = x$w, by = c(by, z))^2
     } else {
-      dat_ij <- call_ice(do.call(expand.grid, eval_at[z]), "value_")
-      dat_i <- call_ice(data.frame(eval_at[z[1]]), "value_i")
-      dat_j <- call_ice(data.frame(eval_at[z[2]]), "value_j")
-      dat <- left_join(left_join(dat_ij, dat_i, by = c("id_", z[1])), dat_j, by = c("id_", z[2]))
+      dat_ij <- call_ice(data[, z], "value_")
+      dat_i <- call_ice(data[, z[1], drop = FALSE], "value_i", drop_w = TRUE)
+      dat_j <- call_ice(data[, z[2], drop = FALSE], "value_j", drop_w = TRUE)
+      dat <- bind_cols(dat_ij, dat_i, dat_j)
       dat[[value_name]] <- (dat[["value_"]] - dat[["value_i"]] - dat[["value_j"]])^2
     }
 
-    # Group numerator by groups
-    numerator <- grouped_stats(dat, x = value_name, w = "w_", by = by,
+    # Aggregate numerator by groups
+    numerator <- grouped_stats(dat, x = value_name, w = x$w, by = by,
                                counts = FALSE, na.rm = TRUE)
-
-    # Deal with too small values
-    .bad <- numerator[[value_name]] < 0.000001 | !is.finite(numerator[[value_name]])
-    if (any(.bad)) {
-      numerator[.bad, value_name] <- 0
-    }
-
     if (!normalize) {
       return(numerator)
     }
 
-    # Normalization factor
     dat[["denominator_"]] <- dat[["value_"]]^2
-    denominator <- grouped_stats(dat, x = "denominator_", w = "w_", by = by,
+    denominator <- grouped_stats(dat, x = "denominator_", w = x$w, by = by,
                                  counts = FALSE, na.rm = TRUE)
 
-    # Calculate ratio and return as data frame
-    if (is.null(by)) {
-      return(setNames(data.frame(as.numeric(numerator / denominator)), value_name))
-    }
-    both <- left_join(numerator, denominator, by = by)
-    both[[value_name]] <- both[[value_name]] / both[["denominator_"]]
-    both[, setdiff(colnames(both), "denominator_")]
+    # Calculate ratio
+    numerator[[value_name]] <- replace_bad(numerator[[value_name]]) / denominator[["denominator_"]]
+    numerator
   }
   if (type == "overall") {
     data <- setNames(lapply(v, core_func), v)
@@ -180,19 +149,14 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     data <- setNames(lapply(v_pairs, core_func), lapply(v_pairs, paste, collapse = ":"))
   }
   data <- bind_rows(data, .id = variable_name)
+  data[[value_name]] <- replace_bad(data[[value_name]])
 
   # Take square-root
   if (take_sqrt) {
     data[[value_name]] <- sqrt(data[[value_name]])
   }
 
-  # Deal with too small values (again)
-  .bad <- data[[value_name]] < 0.000001 | !is.finite(data[[value_name]])
-  if (any(.bad)) {
-    data[.bad, value_name] <- 0
-  }
-
-  # Organize output
+  # Prepare output
   data[[label_name]] <- x$label
   data[[error_name]] <- NA
   if (!is.tbl(data)) {
