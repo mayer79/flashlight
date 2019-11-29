@@ -42,7 +42,7 @@ The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, variable interaction, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, interaction strength, and variable contribution breakdown for single observations.
 
 3. It allows to assess multiple models in parallel without any redundancy in the code.
 
@@ -92,7 +92,7 @@ Besides looking at *average* profiles, it is often also revealing to consider *q
 
 ### Interaction strength
 
-Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the "overall interaction strength") and/or between pairs of covariables. Model-agnostic approaches to measure interaction strength are often based on (zero-mean) centered ICE-curves. How much of their variance is unexplained by the main effect of $X$? This measures the strength of all interactions associated with $X$. To measure pairwise interactions, we can study how much variability of two-dimensional c-ICE curves can be explained by the main effects of the two variables (obtained from one-dimensional c-ICE curves). These unnormalized measures can be compared across variable (pairs) to see absolute interaction strength. Alternatively, the values are standardized with the total variance of the underlying c-ICE profiles. For unnormalized values it makes sense to root-transform the values in order to be on the same scale as the response. For the normalized case, it is easier to interprete the values are proportion of variance explained, so we suggest do not take roots there. If done anyway, for pairwise interactions, we can reproduce Friedman's $H$ statistic in [7]. 
+Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the overall interaction strength) and/or between pairs of covariables. A model-agnostic way to assess such measures is based on partial dependence curves, see Friedman and Popescu [7]. A computationally less demanding alternative to their H-statistic of measuring total interaction strength per covariable can be extracted from cenered ICE: How much of their variability is unexplained by the main effect? 
 
 ### Variable contribution breakdown for single observations
 
@@ -581,25 +581,17 @@ The `plot` method of `light_effects` allows to hide certain plot element if it l
 
 ### Interaction strength
 
-Using `light_interaction`, we can investigate which variable has strongest overall interaction effects based on the root of the variability of centered ICE profiles unexplained by the main effects.
+Based on Friedman's H statistic [7], we can investigate which variable has strongest relative overall interaction effects.
 
 ```{r}
-st <- light_interaction(fls, v = x) 
+st <- light_interaction(fls, v = x, n.max = 50) 
 plot(st)
 ```
-Since we have not used interaction terms in the linear model, all values are zero there. On the scale of the response, the strongest interaction effects are in combination with "waterfront".
+Since we have not used interaction terms in the linear model, all values are zero there.
 
-Pairwise interactions are expensive to compute as each variable pair has to be assessed by the help of two-dimensional ICE-profiles. We limit the search for interactions to the four variables with highest interaction strength.
+Pairwise interactions are expensive to compute as each variable pair has to be assessed. We limit the search for interactions to the four variables with highest interaction strength.
 ```{r}
-st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE) 
-plot(st_pair)
-```
-
-Friedman's H statistic [7] is found by normalizing the results and taking roots.
-
-```{r}
-st_pair <- light_interaction(fls, v = most_important(st, 4), 
-                             type = "pairwise", normalize = TRUE, take_sqrt = TRUE) 
+st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE, n.max = 50) 
 plot(st_pair)
 ```
 

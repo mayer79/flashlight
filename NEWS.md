@@ -4,7 +4,7 @@
 
 ### Major
 
-- Added `pairwise` (interactions) to `light_interaction`, implementing variants of Friedman's H statistic.
+- Added Friedman's H statistic (global and pairwise interaction strength) to `light_interaction` with variants.
 
 ### Minor
 

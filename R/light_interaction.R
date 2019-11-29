@@ -1,20 +1,8 @@
 #' Interaction Strength
 #'
-#' Based on (zero) mean-centered ICE curves, different measures of interaction strength are calculated.
-#' For the default (\code{pairwise = FALSE}), we get a single value per input variable z.
-#' It measures the variance in c-ICE curves explained by all interactions of z
-#' (i.e. the variance of all effects of z unexplained by the main effect of z).
-#' For \code{pairwise = TRUE}, for each combination of variable pairs z1, z2, a value is provided.
-#' It measures the variance in c-ICE curves explained by the pairwise interaction terms and is
-#' assessed by calculating the squared difference between two-dimensional ICE curves spanned by
-#' z1 and z2 and the two corresponding one-dimensional ICE curves. The values can be normalized by the total variance.
-#' Unnormalized values help to compare interaction strength across variables resp. variable pairs,
-#' while normalized values show interaction strength relative to the overall effects of z (resp. z1 and z2).
-#' In order to simplify interpretation, unnormalized values are root-transformed to be on the scale of the response variable.
-#' Normalized values can be interpreted as proportions of variance explained. In order to reproduce Friedman's H statistic [1],
-#' choose \code{pairwise = TRUE}, \code{normalize = TRUE} and \code{take_sqrt = TRUE}.
+#' This function provides Friedman's H statistic [1] for overall interaction strength per covariable as well as its version for pairwise interactions. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"} the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
 #'
-#' Note that continuous variables are binned using quantile cuts to get more stable results. The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly.
+#' Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair). Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip that step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H.
 #'
 #' @importFrom stats setNames
 #' @importFrom dplyr as_tibble bind_rows bind_cols arrange_at expand_grid group_by_at do ungroup
@@ -25,12 +13,12 @@
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param v Vector of variables to be assessed.
 #' @param pairwise Should overall interaction strength per variable be shown or pairwise interactions? Defaults to \code{FALSE}.
-#' @param type Are measures based on partial depencence ("pd") or "ice"? Option "ice" is available only if \code{pairwise = FALSE}.
-#' @param normalize Should the variances explained be normalized? Default is \code{TRUE}.
-#' @param take_sqrt In order to reproduce Friedman's H statistic, resulting values are root transformed.
-#' @param grid_size Grid size used to form the outer product. Will be randomly picked from data.
+#' @param type Are measures based on Friedman's H statistic ("H") or on "ice" curves? Option "ice" is available only if \code{pairwise = FALSE}.
+#' @param normalize Should the variances explained be normalized? Default is \code{TRUE} in order to reproduce Friedman's H statistic.
+#' @param take_sqrt In order to reproduce Friedman's H statistic, resulting values are root transformed. Set to \code{FALSE} if squared values should be returned.
+#' @param grid_size Grid size used to form the outer product. Will be randomly picked from data (after limiting to \code{n_max}).
 #' @param n_max Maximum number of data rows to consider. Will be randomly picked from \code{data} if necessary.
-#' @param seed An integer random seed.
+#' @param seed An integer random seed used for subsampling.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param value_name Column name in resulting \code{data} containing the interaction strenght. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
@@ -73,23 +61,24 @@ light_interaction.default <- function(x, ...) {
 #' @export
 light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          v = NULL, pairwise = FALSE,
-                                         type = c("pd", "ice"),
+                                         type = c("H", "ice"),
                                          normalize = TRUE, take_sqrt = TRUE,
                                          grid_size = 30, n_max = 100,
                                          seed = NULL, use_linkinv = FALSE,
                                          value_name = "value",
                                          error_name = "error", label_name = "label",
                                          variable_name = "variable", ...) {
+  # Checks
   type <- match.arg(type)
-
   if (type == "ice" & pairwise) {
-    stop("Pairwise interactions are implemented only with type = 'pd'.")
+    stop("Pairwise interactions are implemented only for type = 'pd'.")
   }
   stopifnot((n <- nrow(data)) >= 1L,
             !(by %in% v),
             !anyDuplicated(c(by, v, value_name, label_name, error_name, variable_name,
                              "id_", "id_curve", "value_", "value_i", "value_j", "denom_")))
 
+  # Set seed
   if (!is.null(seed)) {
     set.seed(seed)
   }
@@ -98,15 +87,16 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by))
   }
-
-  # Update flashlight
-  x <- flashlight(x, linkinv = if (use_linkinv) x$linkinv else function(z) z)
-
   if (pairwise) {
     v <- combn(v, 2, simplify = FALSE)
   }
 
-  # Simplified version of light_profile and light_ice
+  # Update flashlight with info on linkinv
+  # (we do not update data and by as they are dealt with separately)
+  x <- flashlight(x, linkinv = if (use_linkinv) x$linkinv else function(z) z)
+
+  # HELPER FUNCTIONS
+  # Slim version of light_profile and light_ice
   call_pd <- function(X, z, vn = "value_", gid, only_values = FALSE, agg = TRUE) {
     cols <- colnames(X)
     if (!is.null(x$w)) {
@@ -120,32 +110,31 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     X <- expand_grid(X, grid)
     X[[vn]] <- predict(x, data = X[, cols, drop = FALSE])
     if (!agg) {
-      X[[vn]] <- grouped_center(X, x = vn, w = x$w, by = "id_curve")
+      X[[vn]] <- grouped_center(X, x = vn, by = "id_curve", na.rm = TRUE)
       return(X)
     }
-    out <- grouped_stats(X, vn, w = x$w, by = "id_", counts = FALSE, na.rm = TRUE)
+    out <- grouped_stats(X, x = vn, w = x$w, by = "id_", counts = FALSE, na.rm = TRUE)
     out <- arrange_at(out, "id_")
     if (!is.null(x$w)) {
-      out[[x$w]] <- ww[match(out[["id_"]], ww[["id_"]]), x$w]
+      out[[x$w]] <- ww[[x$w]][match(out[["id_"]], ww[["id_"]])]
     }
     out[[vn]] <- grouped_center(out, x = vn, w = x$w)
     if (only_values) out[, vn, drop = FALSE] else out
   }
-  # Get predictions on grid in the same order as though call_pd
+  # Get predictions on grid in the same order as through call_pd
   call_f <- function(X, vn = "value_", gid) {
     out <- X[gid, ]
     out[[vn]] <- predict(x, data = out)
     out[[vn]] <- grouped_center(out, x = vn, w = x$w)
     out[["id_"]] <- gid
-    arrange_at(out, c("id_"))[c("id_", vn, x$w)]
+    arrange_at(out, "id_")[, c("id_", vn, x$w)]
   }
-
   # Functions that calculates the test statistic
   H_statistic <- function(z, dat, grid_id) {
     if (nrow(dat) <= 2) {
       return(0)
     }
-    if (type == "pd") {
+    if (type == "H") {
       z_j <- if (pairwise) z[2] else setdiff(colnames(dat), z)
       pd_f <- if (pairwise) call_pd(dat, z = z, gid = grid_id) else call_f(dat, gid = grid_id)
       pd_i <- call_pd(dat, z = z[1], vn = "value_i", gid = grid_id, only_values = TRUE)
@@ -157,26 +146,22 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
       dat <- call_pd(dat, z = z, gid = grid_id, agg = FALSE)
       dat[[value_name]] <- grouped_center(dat, x = "value_", w = x$w, by = "id_")^2
     }
-
     # Aggregate & normalize
-    num <- weighted_mean(dat[[value_name]], if (!is.null(x$w)) dat[[x$w]], na.rm = TRUE)
+    ww <- if (!is.null(x$w)) dat[[x$w]]
+    num <- weighted_mean(dat[[value_name]], ww, na.rm = TRUE)
     if (normalize) {
-      denom <- weighted_mean(dat[["value_"]]^2, if (!is.null(x$w)) dat[[x$w]], na.rm = TRUE)
-      num <- zap_small(num) / denom
+      num <- zap_small(num) / weighted_mean(dat[["value_"]]^2, ww, na.rm = TRUE)
     }
     zap_small(if (take_sqrt) sqrt(num) else num)
   }
-
   # Calculate statistic for each variable (pair) and combine results
   core_func <- function(X) {
-    # Reduce data set
+    # Reduce data sice and select grid values
     n <- nrow(X)
     if (n_max < n) {
       X <- X[sample(n, n_max), , drop = FALSE]
-      n <- nrow(X)
+      n <- n_max
     }
-
-    # Select grid indices from the reduced data set
     if (grid_size < n) {
       grid_id <- sample(n, grid_size)
     } else {
@@ -191,6 +176,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     bind_rows(out, .id = variable_name)
   }
 
+  # Call core function for each by group
   agg <- if (is.null(by)) as_tibble(core_func(data)) else
     ungroup(do(group_by_at(data, by), core_func(.data)))
 
