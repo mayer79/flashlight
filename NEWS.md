@@ -32,6 +32,12 @@
 
 - Centering at "first", "middle", and "last" in `light_ice` now anchors the curves at 0 to be in line with other implementations.
 
+## Bug fixes
+
+### Major
+
+- `light_ice` was based on `dplyr::crossing`, unintentionally throwing away duplicate rows. This is now replaced by `dplyr::expand_grid`.
+
 # flashlight 0.4.0
 
 ## New functionality

@@ -17,15 +17,17 @@
 #' Note that continuous variables are binned using quantile cuts to get more stable results. The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly.
 #'
 #' @importFrom stats setNames
-#' @importFrom dplyr is.tbl as_tibble bind_rows bind_cols arrange_at expand_grid
+#' @importFrom dplyr as_tibble bind_rows bind_cols arrange_at expand_grid group_by_at do ungroup
 #' @importFrom utils combn
+#' @importFrom rlang .data
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param v Vector of variables to be assessed.
 #' @param pairwise Should overall interaction strength per variable be shown or pairwise interactions? Defaults to \code{FALSE}.
-#' @param normalize Should the variances explained be normalized? Default is \code{FALSE}.
-#' @param take_sqrt By default, unnormalized values are root-transformed while normalized values are not.
+#' @param type Are measures based on partial depencence ("pd") or "ice"? Option "ice" is available only if \code{pairwise = FALSE}.
+#' @param normalize Should the variances explained be normalized? Default is \code{TRUE}.
+#' @param take_sqrt In order to reproduce Friedman's H statistic, resulting values are root transformed.
 #' @param grid_size Grid size used to form the outer product. Will be randomly picked from data.
 #' @param n_max Maximum number of data rows to consider. Will be randomly picked from \code{data} if necessary.
 #' @param seed An integer random seed.
@@ -54,7 +56,7 @@
 #' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
 #' x <- fls$nonadditive
 #' plot(light_interaction(fls))
-#' plot(light_interaction(fls, pairwise = TRUE, normalize = TRUE))
+#' plot(light_interaction(fls, pairwise = TRUE, normalize = FALSE))
 #' plot(light_interaction(fls, by = "Species"), swap_dim = TRUE)
 #' @seealso \code{\link{light_ice}}.
 light_interaction <- function(x, ...) {
@@ -71,60 +73,48 @@ light_interaction.default <- function(x, ...) {
 #' @export
 light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          v = NULL, pairwise = FALSE,
-                                         normalize = FALSE,
-                                         take_sqrt = !normalize,
-                                         grid_size = 30, n_max = 200,
+                                         type = c("pd", "ice"),
+                                         normalize = TRUE, take_sqrt = TRUE,
+                                         grid_size = 30, n_max = 100,
                                          seed = NULL, use_linkinv = FALSE,
                                          value_name = "value",
                                          error_name = "error", label_name = "label",
                                          variable_name = "variable", ...) {
+  type <- match.arg(type)
+
+  if (type == "ice" & pairwise) {
+    stop("Pairwise interactions are implemented only with type = 'pd'.")
+  }
   stopifnot((n <- nrow(data)) >= 1L,
+            !(by %in% v),
             !anyDuplicated(c(by, v, value_name, label_name, error_name, variable_name,
                              "id_", "id_curve", "value_", "value_i", "value_j", "denom_")))
 
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
+
+  # Determine v
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by))
   }
 
-  # Reduce data size
-  if (!is.null(seed)) {
-    set.seed(seed)
-  }
-  if (n_max < n) {
-    data <- data[sample(n, n_max), , drop = FALSE]
-    n <- nrow(data)
-  }
-
-  # Select grid indices from the reduced data set
-  if (grid_size < n) {
-    grid_id <- sample(n, grid_size)
-  } else {
-    grid_size <- n
-    grid_id <- seq_len(grid_size)
-  }
-
   # Update flashlight
-  x <- flashlight(x, by = by, data = data,
-                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
+  x <- flashlight(x, linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
-  # Function to safely replace bad values by 0
-  replace_bad <- function(x) {
-    .bad <- x < 0.000001 | !is.finite(x)
-    if (any(.bad)) {
-      x[.bad] <- 0
-    }
-    x
+  if (pairwise) {
+    v <- combn(v, 2, simplify = FALSE)
   }
 
   # Simplified version of light_profile and light_ice
-  call_pd <- function(z, X = data, vn = "value_", only_values = FALSE, agg = TRUE) {
+  call_pd <- function(X, z, vn = "value_", gid, only_values = FALSE, agg = TRUE) {
     cols <- colnames(X)
     if (!is.null(x$w)) {
-      ww <- X[grid_id, x$w, drop = FALSE]
-      ww[["id_"]] <- grid_id
+      ww <- X[gid, x$w, drop = FALSE]
+      ww[["id_"]] <- gid
     }
-    grid <- X[grid_id, z, drop = FALSE]
-    grid[["id_"]] <- grid_id
+    grid <- X[gid, z, drop = FALSE]
+    grid[["id_"]] <- gid
     X[, z] <- NULL
     X[["id_curve"]] <- seq_len(nrow(X))
     X <- expand_grid(X, grid)
@@ -133,70 +123,84 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
       X[[vn]] <- grouped_center(X, x = vn, w = x$w, by = "id_curve")
       return(X)
     }
-    out <- grouped_stats(X, vn, w = x$w, by = c("id_", by), counts = FALSE, na.rm = TRUE)
-    out <- arrange_at(out, c("id_", by))
+    out <- grouped_stats(X, vn, w = x$w, by = "id_", counts = FALSE, na.rm = TRUE)
+    out <- arrange_at(out, "id_")
     if (!is.null(x$w)) {
       out[[x$w]] <- ww[match(out[["id_"]], ww[["id_"]]), x$w]
     }
-    out[[vn]] <- grouped_center(out, x = vn, w = x$w, by = by)
+    out[[vn]] <- grouped_center(out, x = vn, w = x$w)
     if (only_values) out[, vn, drop = FALSE] else out
   }
+  # Get predictions on grid in the same order as though call_pd
+  call_f <- function(X, vn = "value_", gid) {
+    out <- X[gid, ]
+    out[[vn]] <- predict(x, data = out)
+    out[[vn]] <- grouped_center(out, x = vn, w = x$w)
+    out[["id_"]] <- gid
+    arrange_at(out, c("id_"))[c("id_", vn, x$w)]
+  }
 
-  # Functions that calculates the test statistic by variable (pair)
-  core_func <- function(z) {
-    if (pairwise) {
-      dat <- bind_cols(call_pd(z),
-                       call_pd(z[1], vn = "value_i", only_values = TRUE),
-                       call_pd(z[2], vn = "value_j", only_values = TRUE))
+  # Functions that calculates the test statistic
+  H_statistic <- function(z, dat, grid_id) {
+    if (nrow(dat) <= 2) {
+      return(0)
+    }
+    if (type == "pd") {
+      z_j <- if (pairwise) z[2] else setdiff(colnames(dat), z)
+      pd_f <- if (pairwise) call_pd(dat, z = z, gid = grid_id) else call_f(dat, gid = grid_id)
+      pd_i <- call_pd(dat, z = z[1], vn = "value_i", gid = grid_id, only_values = TRUE)
+      pd_j <- call_pd(dat, z = z_j, vn = "value_j", gid = grid_id, only_values = TRUE)
+      dat <- bind_cols(pd_f, pd_i, pd_j)
       dat[[value_name]] <- (dat[["value_"]] - dat[["value_i"]] - dat[["value_j"]])^2
     }
     else {
-      dat <- call_pd(z, agg = FALSE)
-      dat[[value_name]] <- grouped_center(dat, x = "value_", w = x$w, by = c(by, z))^2
+      dat <- call_pd(dat, z = z, gid = grid_id, agg = FALSE)
+      dat[[value_name]] <- grouped_center(dat, x = "value_", w = x$w, by = "id_")^2
     }
 
-    # Aggregate num by groups
-    num <- grouped_stats(dat, x = value_name, w = x$w, by = by,
-                               counts = FALSE, na.rm = TRUE)
-    if (!normalize) {
-      return(num)
+    # Aggregate & normalize
+    num <- weighted_mean(dat[[value_name]], if (!is.null(x$w)) dat[[x$w]], na.rm = TRUE)
+    if (normalize) {
+      denom <- weighted_mean(dat[["value_"]]^2, if (!is.null(x$w)) dat[[x$w]], na.rm = TRUE)
+      num <- zap_small(num) / denom
     }
-
-    # Calculate denom by groups
-    dat[["denom_"]] <- dat[["value_"]]^2
-    denom <- grouped_stats(dat, x = "denom_", w = x$w, by = by,
-                                 counts = FALSE, na.rm = TRUE)
-
-    # Calculate ratio
-    num[[value_name]] <- replace_bad(num[[value_name]]) / denom[["denom_"]]
-    num
+    zap_small(if (take_sqrt) sqrt(num) else num)
   }
 
   # Calculate statistic for each variable (pair) and combine results
-  if (pairwise) {
-    v_pairs <- combn(v, 2, simplify = FALSE)
-    data <- setNames(lapply(v_pairs, core_func), lapply(v_pairs, paste, collapse = ":"))
-  } else {
-    data <- setNames(lapply(v, core_func), v)
-  }
-  data <- bind_rows(data, .id = variable_name)
-  data[[value_name]] <- replace_bad(data[[value_name]])
+  core_func <- function(X) {
+    # Reduce data set
+    n <- nrow(X)
+    if (n_max < n) {
+      X <- X[sample(n, n_max), , drop = FALSE]
+      n <- nrow(X)
+    }
 
-  # Take square-root
-  if (take_sqrt) {
-    data[[value_name]] <- sqrt(data[[value_name]])
+    # Select grid indices from the reduced data set
+    if (grid_size < n) {
+      grid_id <- sample(n, grid_size)
+    } else {
+      grid_size <- n
+      grid_id <- seq_len(grid_size)
+    }
+
+    # Calculate Friedman's H statistic for each variable (pair)
+    out <- lapply(v, H_statistic, dat = X, grid_id = grid_id)
+    out <- lapply(out, function(z) setNames(data.frame(z), value_name))
+    names(out) <- if (pairwise) lapply(v, paste, collapse = ":") else v
+    bind_rows(out, .id = variable_name)
   }
+
+  agg <- if (is.null(by)) as_tibble(core_func(data)) else
+    ungroup(do(group_by_at(data, by), core_func(.data)))
 
   # Prepare output
-  data[[label_name]] <- x$label
-  data[[error_name]] <- NA
-  if (!is.tbl(data)) {
-    data <- as_tibble(data)
-  }
+  agg[[label_name]] <- x$label
+  agg[[error_name]] <- NA
 
   # Collect results
   var_order <- c(label_name, by, variable_name, value_name, error_name)
-  out <- list(data = data[, var_order], by = by,
+  out <- list(data = agg[, var_order], by = by,
               value_name = value_name, error_name = error_name,
               label_name = label_name, variable_name = variable_name)
   class(out) <- c("light_importance", "light", "list")
