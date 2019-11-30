@@ -83,7 +83,7 @@ fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 fls_addnonadd <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
 
 #
-pw = TRUE
+pw = T
 plot(light_interaction(fls_addnonadd, pairwise = pw))
 plot(light_interaction(fls_addnonadd, pairwise = pw), swap_dim = TRUE)
 plot(light_interaction(fls_addnonadd, pairwise = pw, by = "Species"))
@@ -93,6 +93,16 @@ plot(light_interaction(fls_addnonadd$additive, pairwise = pw))
 plot(light_interaction(fls_addnonadd$additive, pairwise = pw), swap_dim = TRUE)
 plot(light_interaction(fls_addnonadd$additive, pairwise = pw, by = "Species"))
 plot(light_interaction(fls_addnonadd$additive, pairwise = pw, by = "Species"), swap_dim = TRUE)
+
+# All three solutions should be identical
+ir <- mutate(iris, w = Species == "setosa")
+fls_w <- multiflashlight(fls_addnonadd, data = ir, w = "w")
+light_interaction(fls_addnonadd$nonadditive, pairwise = pw, data = iris %>%
+                    filter(Species == "setosa"), grid_size = 50)$data
+light_interaction(fls_addnonadd$nonadditive, pairwise = pw, by = "Species", grid_size = 150, n_max = 150)$data %>%
+  filter(Species %in% "setosa")
+light_interaction(fls_w$nonadditive, pairwise = pw, grid_size = 150, n_max = 150)$data
+
 
 #======================================
 # ICE
@@ -139,9 +149,6 @@ plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
                center = "first"))
 plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE,
                center = "last"))
-
-plot(light_interaction(fls)) # very small interactions for GLM due to exp
-
 
 #======================================
 # Profile
@@ -430,4 +437,59 @@ plot_counts(p, eff, alpha = 0.2) # fixed
 
 (p <- plot(eff, use = "predicted", zero_counts = FALSE))
 plot_counts(p, eff, alpha = 0.2) # fixed
+
+
+
+# INTERACTION SPECIAL CHECKS
+library(iml)
+library(ggplot2)
+library(gbm)
+
+# Generate data
+n <- 1000
+set.seed(326)
+data <- data.frame(
+  v = runif(n),
+  x = runif(n, -1, 1),
+  z = sample(0:1, n, replace = TRUE, prob = c(0.5, 0.5)),
+  w = sample(1:3, n, replace = TRUE),
+  wunif = 1)
+data$y <- with(data, sin(v) + x * z + rnorm(n))
+
+fit <- gbm(y ~ ., data = data, n.trees = 100, n.cores = 8,
+           interaction.depth = 5, shrinkage = 0.05)
+pf <-  function(model, newdata) {
+  predict(model, newdata, n.trees = model$n.trees)
+}
+sDat <- data#[1:50, ]
+
+fl <- flashlight(model = fit, data = sDat, y = "y", label ="lm",
+                 predict_function = pf) # 0.478
+X <- sDat[, setdiff(colnames(data), "y")]
+Y <- sDat[, "y"]
+predictor = Predictor$new(fit, data = X, y = Y, predict.fun = pf)
+
+# Pairwise
+interact.gbm(fit, data = sDat, i.var = c("x", "v"))
+interact.gbm(fit, data = sDat, i.var = c("x", "z"))
+light_interaction(fl, pairwise = TRUE, seed = 4)$data
+Interaction$new(predictor, feature = "x")
+
+## Overall
+light_interaction(fl, seed = 4)$data
+Interaction$new(predictor)
+light_interaction(fl, data = head(sDat, 30), normalize = F)$data
+light_interaction(fl, data = head(sDat, 30), type = "ice", normalize = F)$data
+
+# Weighted
+light_interaction(flashlight(fl, w = "wunif"), seed = 4)$data
+light_interaction(flashlight(fl, w = "wunif"), pairwise = TRUE, seed = 4)$data
+
+# Grouped
+light_interaction(fl, by = "z", seed = 4)$data
+light_interaction(fl, by = "z", pairwise = TRUE, seed = 4)$data
+light_interaction(flashlight(fl, w = "wunif"), seed = 4, by = "z")$data
+light_interaction(flashlight(fl, w = "wunif"), pairwise = TRUE, seed = 4, by = "z")$data
+
+
 
