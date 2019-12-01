@@ -95,7 +95,7 @@ plot(light_interaction(fls_addnonadd$additive, pairwise = pw, by = "Species"))
 plot(light_interaction(fls_addnonadd$additive, pairwise = pw, by = "Species"), swap_dim = TRUE)
 
 # All three solutions should be identical
-ir <- mutate(iris, w = Species == "setosa")
+ir <- mutate(iris, w = (Species == "setosa"))
 fls_w <- multiflashlight(fls_addnonadd, data = ir, w = "w")
 light_interaction(fls_addnonadd$nonadditive, pairwise = pw, data = iris %>%
                     filter(Species == "setosa"), grid_size = 50)$data
@@ -461,7 +461,7 @@ fit <- gbm(y ~ ., data = data, n.trees = 100, n.cores = 8,
 pf <-  function(model, newdata) {
   predict(model, newdata, n.trees = model$n.trees)
 }
-sDat <- data#[1:50, ]
+sDat <- data[1:100, ]
 
 fl <- flashlight(model = fit, data = sDat, y = "y", label ="lm",
                  predict_function = pf) # 0.478

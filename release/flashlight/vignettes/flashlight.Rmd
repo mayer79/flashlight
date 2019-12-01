@@ -92,7 +92,7 @@ Besides looking at *average* profiles, it is often also revealing to consider *q
 
 ### Interaction strength
 
-Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the overall interaction strength) and/or between pairs of covariables. A model-agnostic way to assess such measures is based on partial dependence curves, see Friedman and Popescu [7]. A computationally less demanding alternative to their H-statistic of measuring total interaction strength per covariable can be extracted from cenered ICE: How much of their variability is unexplained by the main effect? 
+Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the overall interaction strength) and/or between pairs of covariables. A model-agnostic way to assess such measures is based on partial dependence curves, see Friedman and Popescu [7]. A computationally less demanding alternative to their H-statistic of measuring total interaction strength per covariable can be extracted from centered ICE: How much of their variability is unexplained by the main effect? 
 
 ### Variable contribution breakdown for single observations
 

@@ -16,6 +16,8 @@
 
 - Added function `grouped_count` to allow grouped and weighted counts.
 
+- Added function `grouped_weighted_mean` for fast grouped weighted means.
+
 - `response`, `residuals`, and `predict` now have a method for multiflashlights.
 
 ## Interface change

@@ -80,10 +80,10 @@ An object of class \code{light_importance}, \code{light} (and a list) with the f
 }
 }
 \description{
-This function provides Friedman's H statistic [1] for overall interaction strength per covariable as well as its version for pairwise interactions. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"}, the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
+This function provides Friedman's H statistic [1] for overall interaction strength per covariable as well as its version for pairwise interactions. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"}, the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of the variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
 }
 \details{
-Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip that step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H.
+Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip this normalization step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of such unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H. Note that in general, for each variable (pair) predicitons are done on a data set with \code{grid_size * n_max}, so be cautious with increasing the defaults too much.
 }
 \section{Methods (by class)}{
 \itemize{

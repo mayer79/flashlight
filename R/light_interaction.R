@@ -122,7 +122,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
       X[[vn]] <- grouped_center(X, x = vn, by = "id_curve", na.rm = TRUE)
       return(X)
     }
-    out <- grouped_stats(X, x = vn, w = w, by = "id_", na.rm = TRUE, counts = FALSE)
+    out <- grouped_weighted_mean(X, x = vn, w = w, by = "id_")
     out <- out[order(out[["id_"]]), ]
     if (has_w) {
       out[[w]] <- ww[[w]][match(out[["id_"]], ww[["id_"]])]
