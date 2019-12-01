@@ -1,3 +1,33 @@
+
+# flashlight 0.5.0
+
+## New functionality
+
+### Major
+
+- Added Friedman's H statistic (global and pairwise interaction strength) to `light_interaction` with variants.
+
+### Minor
+
+- Added more options how to center `light_ice`: Mean center each profile to the same value (within "by" groups) and 0-mean center each profile.
+
+- Added option `rotate_x` to `plot_light_breakdown` and `plot_light_importance`.
+
+- Added function `grouped_center` to allow grouped and weighted 0-mean centering of a numeric variable.
+
+- Added function `grouped_count` to allow grouped and weighted counts.
+
+- Added function `grouped_weighted_mean` for fast grouped weighted means.
+
+- `response`, `residuals`, and `predict` now have a method for multiflashlights.
+
+## Interface change
+
+### Major
+
+- `order_by_importance` argument to `light_breakdown` has been replaced by `visit_strategy`.
+
+
 # flashlight 0.5.0
 
 ## New functionality
