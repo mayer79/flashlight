@@ -16,11 +16,14 @@ light_interaction(x, ...)
   data = x$data,
   by = x$by,
   v = NULL,
-  n_max = 50,
+  pairwise = FALSE,
+  type = c("H", "ice"),
+  normalize = TRUE,
+  take_sqrt = TRUE,
+  grid_size = 30,
+  n_max = 100,
   seed = NULL,
   use_linkinv = FALSE,
-  n_bins = 9,
-  indices = NULL,
   value_name = "value",
   error_name = "error",
   label_name = "label",
@@ -41,15 +44,21 @@ light_interaction(x, ...)
 
 \item{v}{Vector of variables to be assessed.}
 
-\item{n_max}{If \code{indices} is not given, maximum number of rows to consider. Will be randomly picked from \code{data} if necessary.}
+\item{pairwise}{Should overall interaction strength per variable be shown or pairwise interactions? Defaults to \code{FALSE}.}
 
-\item{seed}{An integer random seed.}
+\item{type}{Are measures based on Friedman's H statistic ("H") or on "ice" curves? Option "ice" is available only if \code{pairwise = FALSE}.}
+
+\item{normalize}{Should the variances explained be normalized? Default is \code{TRUE} in order to reproduce Friedman's H statistic.}
+
+\item{take_sqrt}{In order to reproduce Friedman's H statistic, resulting values are root transformed. Set to \code{FALSE} if squared values should be returned.}
+
+\item{grid_size}{Grid size used to form the outer product. Will be randomly picked from data (after limiting to \code{n_max}).}
+
+\item{n_max}{Maximum number of data rows to consider. Will be randomly picked from \code{data} if necessary.}
+
+\item{seed}{An integer random seed used for subsampling.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE.}
-
-\item{n_bins}{Maximum number of unique values to evaluate for numeric \code{v}.}
-
-\item{indices}{A vector of row numbers to consider.}
 
 \item{value_name}{Column name in resulting \code{data} containing the interaction strenght. Defaults to "value".}
 
@@ -71,28 +80,32 @@ An object of class \code{light_importance}, \code{light} (and a list) with the f
 }
 }
 \description{
-Calculates overall interaction strength per covariable by calculating the average within-evaluation-point standard deviation across mean-centered ICE curves, see the vignette for details. Additive covariable effects get a value of 0, while covariables with interaction effects get positive values as their c-ICE curves differ. While relatively efficient to calculate, this method does not show between what specific variable pairs we have strongest interactions. Note that continuous variables are binned using quantile cuts to get more stable results.
+This function provides Friedman's H statistic [1] for overall interaction strength per covariable as well as its version for pairwise interactions. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"}, the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of the variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
 }
 \details{
-The minimum required elements in the (multi-)flashlight are "predict_function", "model", "linkinv" and "data", where the latest can be passed on the fly. Which rows in \code{data} are profiled? This is specified by \code{indices}. If not given and \code{n_max} is smaller than the number of rows in \code{data}, then row indices will be sampled randomly from \code{data}. If the same rows should be used for all flashlights in a multiflashlight, there are two options: Either pass a \code{seed} (with potentially undesired consequences for subsequent code) or a vector of indices used to select rows. In both cases, \code{data} should be the same for all flashlights considered.
+Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip this normalization step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of such unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H. Note that in general, for each variable (pair) predicitons are done on a data set with \code{grid_size * n_max}, so be cautious with increasing the defaults too much.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{default}: Default method not implemented yet.
 
-\item \code{flashlight}: Univariate interaction strengths for a flashlight object.
+\item \code{flashlight}: Interaction strengths for a flashlight object.
 
 \item \code{multiflashlight}: for a multiflashlight object.
 }}
 
 \examples{
-fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
-fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
+fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
+fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
 fl_additive <- flashlight(model = fit_additive, label = "additive")
 fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
-plot(light_interaction(fls))
-plot(light_interaction(fls, by = "Species"), swap_dim = TRUE)
+x <- fls$nonadditive
+plot(st <- light_interaction(fls))
+plot(light_interaction(fls, pairwise = TRUE))
+}
+\references{
+[1] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54..
 }
 \seealso{
 \code{\link{light_ice}}.

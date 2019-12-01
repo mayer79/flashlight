@@ -42,13 +42,13 @@ The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, interaction strength, and variable contribution breakdown for single observations.
 
-3. It allows to assess multiple models in parallel.
+3. It allows to assess multiple models in parallel without any redundancy in the code.
 
 4. It supports "group by" operations.
 
-5. It works with case weights.
+5. All methods are able to utilize case weights.
 
 Currently, models with numeric or binary response are supported.
 
@@ -74,7 +74,7 @@ In linear regression, the fitted model consists of an affine linear function in 
 
 One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. Centered ICE profiles ("c-ICE") help to detect interactions even better.
 
-If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4]. 
+If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4]. Partial dependence profiles (as well as ICE profiles) are not limited to one single variable $X$. Also multiple variables can be systematically varied on a grid to study the multivariate impact on the typical response.
 
 Studying ICE and partial dependence profiles make sense as long as it make sense to investigate the effect of $X$ while holding all other predictors fixed. The unnatural such ceteris paribus assumption is, the less reasonable are the results of ICE and partial dependence. *Accumulated local effects* or *ALE* profiles [5] try to overcome this weakness of ICE and partial dependence considerations. 
 
@@ -92,11 +92,7 @@ Besides looking at *average* profiles, it is often also revealing to consider *q
 
 ### Interaction strength
 
-Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the "overall interaction strength") and/or between specific covariables. One way to calculate interaction strength between two covariables is based on the difference between univariate and bivariate partial dependence profiles. Overall interaction strength can be derived by marginalization. A less computationally intensive alternative is based on mean-centered ICE curves: The higher the average within-evaluation-point variance between curves, the stronger the overall interaction strength associated with variable $v$. If $v_j$ denotes the $j$-th evaluation point of $v$ and $x_{i,j}$ the value of the mean-centered ICE curve of the $i$-th profile at $v_j$, then the (unweighted) overall interaction strength of variable $v$ is estimated as
-$$
-  S(v) = \sqrt{\text{Avg}_j Var_i(x_{i,j})}.
-$$
-To our knowledge, this measure of interaction strength has not yet been proposed, although other approaches based on derivative ICE curves are available in the literature [3]. An alterantive way to calculate $S(v)$ is based on repeated measures ANOVA with one fixed factor $v$ and a within curve repeated measure factor $i$. $S$ is then estimated by its residual standard deviation.
+Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the overall interaction strength) and/or between pairs of covariables. A model-agnostic way to assess such measures is based on partial dependence curves, see Friedman and Popescu [7]. A computationally less demanding alternative to their H-statistic of measuring total interaction strength per covariable can be extracted from centered ICE: How much of their variability is unexplained by the main effect? 
 
 ### Variable contribution breakdown for single observations
 
@@ -146,7 +142,7 @@ most_important(imp, 2)
 
 # ICE profiles for Petal.Width
 plot(light_ice(fl, v = "Petal.Width"))
-plot(light_ice(fl, v = "Petal.Width", center = TRUE))
+plot(light_ice(fl, v = "Petal.Width", center = "first"))
 plot(light_ice(fl, v = "Petal.Width", by = "Species"))
 
 # Partial dependence profiles for Petal.Width
@@ -207,7 +203,7 @@ The process of using the `flashlight` package is as follows:
    
    - `light_effects`: Combines partial dependence, response and prediction profiles. ALE profiles can be added as well.
    
-   - `light_interaction`: Calculates overall interaction strength based on mean-centered ICE curve scatter.
+   - `light_interaction`: Calculates overall and pairwise interaction strength based on 0-mean-centered ICE curve scatter.
    
    - `light_breakdown`: Calculates variable contribution breakdown for a single observation.
 
@@ -419,7 +415,7 @@ Note: Setting `seed` to a fixed value will ensure that the flashlights will cons
 
 Centered ICE profiles ("c-ICE") can help to increase visibility of interactions.
 ```{r}
-cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = TRUE)
+cp <- light_ice(fls, v = "sqft_living", n_max = 30, seed = 35, center = "first")
 plot(cp, alpha = 0.2)
 ```
 
@@ -525,11 +521,11 @@ plot(rvp, swap_dim = TRUE) +
   scale_y_continuous(labels = format_y)
 ```
 
-In the same way as diverging ICE profiles give a clou of presence of interactions, we can use the option `stats = "quartiles"` (with `pd_center = TRUE`) to show divergence of the centered ICE profiles as boxes (predictions at log-scale to suppress interaction-like effects of the retransformation function:
+In the same way as diverging ICE profiles give a clou of presence of interactions, we can use the option `stats = "quartiles"` (with `pd_center`) to show divergence of the mean-centered ICE profiles as boxes (predictions at log-scale to suppress interaction-like effects of the retransformation function):
 
 ```{r}
 rvp <- light_profile(fls, v = "sqft_living", use_linkinv = FALSE, 
-                     stats = "quartiles", pd_center = TRUE) 
+                     stats = "quartiles", pd_center = "mean") 
 plot(rvp)
 ```
 
@@ -585,13 +581,19 @@ The `plot` method of `light_effects` allows to hide certain plot element if it l
 
 ### Interaction strength
 
-Using `light_interaction`, we can investigate which variable has strongest overall interaction effects based on the scatter across c-ICE profiles.
+Based on Friedman's H statistic [7], we can investigate which variable has strongest relative overall interaction effects.
 
 ```{r}
-st <- light_interaction(fls, v = x) 
+st <- light_interaction(fls, v = x, n.max = 50) 
 plot(st)
 ```
-Since we have not used interaction terms in the linear model, all values are zero there. Interestingly, the strongest interaction effect is associated with the `waterfront` dummy, even if its variable importance was low.
+Since we have not used interaction terms in the linear model, all values are zero there.
+
+Pairwise interactions are expensive to compute as each variable pair has to be assessed. We limit the search for interactions to the four variables with highest interaction strength.
+```{r}
+st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE, n.max = 50) 
+plot(st_pair)
+```
 
 ###  Variable contribution breakdown for single observation
 
@@ -634,7 +636,7 @@ plot(light_ice(fls, v = "sqft_living", seed = 4345),
   scale_y_continuous(labels = format_y)
 
 # c-ICE
-plot(light_ice(fls, v = "sqft_living", seed = 4345, center = TRUE, center_at = "middle"), 
+plot(light_ice(fls, v = "sqft_living", seed = 4345, center = "middle"), 
      alpha = 0.8, facet_scales = "free_y") + 
   scale_color_viridis_d(begin = 0.1, end = 0.9) + 
   scale_y_continuous(labels = format_y)
@@ -642,7 +644,7 @@ plot(light_ice(fls, v = "sqft_living", seed = 4345, center = TRUE, center_at = "
 # Effects: Partial dependence
 plot(light_profile(fls, v = "sqft_living"))
 plot(light_profile(fls, v = "sqft_living"), swap_dim = TRUE)
-plot(light_profile(fls, v = "sqft_living", stats = "quartiles", pd_center = TRUE))
+plot(light_profile(fls, v = "sqft_living", stats = "quartiles", center = "mean"))
 
 # Effects: ALE
 plot(light_profile(fls, v = "sqft_living", type = "ale", cut_type = "quantile"))
@@ -688,8 +690,8 @@ plot(light_ice(fls, v = "Petal.Width", indices = indices), alpha = 0.2)
 plot(light_ice(fls, v = "Petal.Width", by = "Species", indices = indices))
 
 # c-ICE -> lines overlap, no interactions at all
-plot(light_ice(fls, v = "Petal.Width", indices = indices, center = TRUE), alpha = 0.2)
-plot(light_ice(fls, v = "Petal.Width", by = "Species", indices = indices, center = TRUE))
+plot(light_ice(fls, v = "Petal.Width", indices = indices, center = "first"), alpha = 0.2)
+plot(light_ice(fls, v = "Petal.Width", by = "Species", indices = indices, center = "first"))
 
 # Partial dependence profiles for Petal.Width
 plot(light_profile(fls, v = "Petal.Width"))
@@ -734,7 +736,7 @@ plot(light_importance(fl, v = c("Sepal.Length", "Petal.Width")), fill = "darkred
 plot(light_ice(fl, v = "Petal.Width"), alpha = 0.4)
 
 # c-ICE profiles for Petal.Width
-plot(light_ice(fl, v = "Petal.Width", center = TRUE), alpha = 0.4)
+plot(light_ice(fl, v = "Petal.Width", center = "first"), alpha = 0.4)
 
 # Partial dependence profiles for Petal.Width
 plot(light_profile(fl, v = "Petal.Width"))
@@ -765,3 +767,4 @@ plot(light_breakdown(fl, new_obs = ir[2, ], v = c("Sepal.Length", "Petal.Width")
 
 [6] Gosiewska A. and Biecek P. (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv (https://arxiv.org/abs/1903.11420).
 
+[7] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.

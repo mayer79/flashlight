@@ -4,13 +4,16 @@
 \alias{response}
 \alias{response.default}
 \alias{response.flashlight}
-\title{Response of flashlight}
+\alias{response.multiflashlight}
+\title{Response of multi/-flashlight}
 \usage{
 response(object, ...)
 
 \method{response}{default}(object, ...)
 
 \method{response}{flashlight}(object, ...)
+
+\method{response}{multiflashlight}(object, ...)
 }
 \arguments{
 \item{object}{An object of class \code{flashlight}.}
@@ -28,6 +31,8 @@ Extracts response from object of class \code{flashlight}.
 \item \code{default}: Default method not implemented yet.
 
 \item \code{flashlight}: Extract response from flashlight object.
+
+\item \code{multiflashlight}: Extract responses from multiflashlight object.
 }}
 
 \examples{
