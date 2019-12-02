@@ -1,9 +1,10 @@
 #' Variable Contribution Breakdown for Single Observation
 #'
-#' Calculates sequential additive variable contribution to the prediction of a single observation, see Gosiewska and Biecek [1] and the details below.
+#' Calculates sequential additive variable contributions (approximate SHAP) to the prediction of a single observation, see Gosiewska and Biecek [1] and the details below.
 #'
 #' The breakdown algorithm works as follows: First, the visit order (x_1, ..., x_m) of the variables \code{v} is specified. Then, in the query \code{data}, the column x_1 is set to the value of x_1 of the single observation \code{new_obs} to be explained. The change in the (weighted) average prediction on \code{data} measures the contribution of x_1 on the prediction of \code{new_obs}. This procedure is iterated over all x_i until eventually, all rows in \code{data} are identical to \code{new_obs}.
-#' A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all possible permutations of \code{v} and its results averaged per variable. This is basically what SHAP values do, see [1] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. Thus we use the short-cut described in [1]. The variables are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$.
+#' A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all possible permutations of \code{v} and its results averaged per variable. This is basically what SHAP values do, see [1] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. We offer two visit strategies to approximate SHAP. The first one uses
+#' the short-cut described in [1]: The variables are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. We call this visit strategy "importance". The second strategy "permutation" averages contributions from a small number of random permutations of v.
 #' Note that the minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", and "data". The latter can also directly be passed to \code{light_breakdown}. Note that by default, no retransformation function is applied.
 #'
 #' @importFrom dplyr semi_join lag tibble
@@ -13,10 +14,9 @@
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to filter \code{data} for rows with equal values in "by" variables as \code{new_obs}.
 #' @param v Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".
-#' @param visit_strategy In what sequence should variables be visited? By "importance", by \code{n_perm} "permutation" or as "v".
-#' @param top_m Maximum number of steps/variable contributions to be calculated.
-#' @param n_max Maximum number of rows in \code{data} to consider. Set to lower value if \code{data} is large.
-#' @param n_perm Number of permutations of visit sequences. Only used if \code{visit_strategy = "permutation"}.
+#' @param visit_strategy In what sequence should variables be visited? By "importance", by \code{n_perm} "permutation" or as "v" (see Details).
+#' @param n_max Maximum number of rows in \code{data} to consider in the reference data. Set to lower value if \code{data} is large.
+#' @param n_perm Number of permutations of random visit sequences. Only used if \code{visit_strategy = "permutation"}.
 #' @param seed An integer random seed used to shuffle rows if \code{n_max} is smaller than the number of rows in \code{data}.
 #' @param use_linkinv Should retransformation function be applied? Default is \code{FALSE}.
 #' @param after_name Column name in resulting \code{data} containing prediction after the step in \code{step_name}. Defaults to "after".
@@ -42,25 +42,10 @@
 #' @export
 #' @references [1] A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
 #' @examples
-#' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' fit_full <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
-#' light_breakdown(mod_full, new_obs = iris[1, ])
-#' light_breakdown(mods, new_obs = iris[1, ])
-#' light_breakdown(mods, new_obs = iris[1, ], top_m = 2)
-#'
-#' ir <- iris
-#' ir$log_sl <- log(ir$Sepal.Length)
-#' fit_lm <- lm(log_sl ~ Petal.Length, data = ir)
-#' fit_glm <- glm(Sepal.Length ~ Petal.Length, data = ir, family = Gamma(link = log))
-#' fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
-#' fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
-#'   predict_function = function(m, X) predict(m, X, type = "response"))
-#' fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
-#' light_breakdown(fls, new_obs = ir[1, ])$data
-#' light_breakdown(fls, new_obs = ir[1, ], use_linkinv = TRUE)$data
+#' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
+#' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+#' light_breakdown(fl, new_obs = iris[1, ])
+#' light_breakdown(fl, new_obs = iris[1, ], visit_strategy = "permutation")
 #' @seealso \code{\link{plot.light_breakdown}}.
 light_breakdown <- function(x, ...) {
   UseMethod("light_breakdown")
@@ -77,7 +62,7 @@ light_breakdown.default <- function(x, ...) {
 light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
                                        v = NULL,
                                        visit_strategy = c("importance", "permutation", "v"),
-                                       top_m = Inf, n_max = Inf, n_perm = 25,
+                                       n_max = Inf, n_perm = 20,
                                        seed = NULL, use_linkinv = FALSE,
                                        after_name = "after", before_name = "before",
                                        label_name = "label", variable_name = "variable",
@@ -106,10 +91,12 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   # Update flashlight with info on linkinv
   x <- flashlight(x, linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
+  # Helper function
   mean_pred <- function(x, data, w = if (!is.null(x$w)) data[[x$w]]) {
     weighted_mean(predict(x, data = data), w = w, na.rm = TRUE)
   }
 
+  # Baseline prediction and target prediction
   baseline <- mean_pred(x, data = data)
   prediction <- unname(predict(x, data = new_obs))
 
@@ -117,8 +104,10 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by, x$w))
   }
+  stopifnot((m <- length(v)) >= 1L,
+            !(c("baseline", "prediction") %in% v))
 
-  # If visit_strategy is not "permutation", choose order
+  # If visit_strategy is not "permutation" or "v", choose order by importance
   if (visit_strategy == "importance") {
     ind_impact <- vapply(v, function(vi) {
       data[[vi]] <- new_obs[[vi]];
@@ -126,19 +115,11 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
     }, FUN.VALUE = numeric(1))
     v <- names(sort(-ind_impact))
   }
-  if (top_m < length(v)) {
-    v <- v[seq_len(top_m)]
-  }
-
-  stopifnot((m <- length(v)) >= 1L,
-            !(c("baseline", "prediction") %in% v))
 
   # Calculate contributions
-  core_func <- function(X, vv = NULL) {
+  core_func <- function(X, perm = FALSE) {
     out <- numeric(m)
-    if (perm <- is.null(vv)) {
-      vv <- sample(v)
-    }
+    vv <- if (perm) sample(v) else v
     for (i in 1:m) {
       X[[vv[i]]] <- new_obs[[vv[i]]]
       out[i] <- mean_pred(x, data = X)
@@ -146,9 +127,9 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
     if (perm) cumsum(c(baseline, diff(c(baseline, out))[match(v, vv)]))[-1] else out
   }
   if (visit_strategy != "permutation") {
-    mean_pred_vector <- core_func(data, vv = v)
+    mean_pred_vector <- core_func(data)
   } else {
-    mean_pred_vector <- rowMeans(replicate(n_perm, core_func(data)), na.rm = TRUE)
+    mean_pred_vector <- rowMeans(replicate(n_perm, core_func(data, perm = TRUE)), na.rm = TRUE)
   }
 
   # Combine results

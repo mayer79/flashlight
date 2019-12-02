@@ -21,7 +21,7 @@ light_interaction(x, ...)
   normalize = TRUE,
   take_sqrt = TRUE,
   grid_size = 30,
-  n_max = 100,
+  n_max = 300,
   seed = NULL,
   use_linkinv = FALSE,
   value_name = "value",

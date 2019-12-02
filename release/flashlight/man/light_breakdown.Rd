@@ -17,9 +17,9 @@ light_breakdown(x, ...)
   data = x$data,
   by = x$by,
   v = NULL,
-  order_by_importance = TRUE,
-  top_m = Inf,
+  visit_strategy = c("importance", "permutation", "v"),
   n_max = Inf,
+  n_perm = 20,
   seed = NULL,
   use_linkinv = FALSE,
   after_name = "after",
@@ -28,6 +28,7 @@ light_breakdown(x, ...)
   variable_name = "variable",
   step_name = "step",
   description_name = "description",
+  description = TRUE,
   digits = 3,
   ...
 )
@@ -47,11 +48,11 @@ light_breakdown(x, ...)
 
 \item{v}{Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".}
 
-\item{order_by_importance}{Logical flag indicated if \code{v} should be ordered automatically based on individual contribution (see description).}
+\item{visit_strategy}{In what sequence should variables be visited? By "importance", by \code{n_perm} "permutation" or as "v" (see Details).}
 
-\item{top_m}{Maximum number of steps/variable contributions to be calculated.}
+\item{n_max}{Maximum number of rows in \code{data} to consider in the reference data. Set to lower value if \code{data} is large.}
 
-\item{n_max}{Maximum number of rows in \code{data} to consider. Set to lower value if \code{data} is large.}
+\item{n_perm}{Number of permutations of random visit sequences. Only used if \code{visit_strategy = "permutation"}.}
 
 \item{seed}{An integer random seed used to shuffle rows if \code{n_max} is smaller than the number of rows in \code{data}.}
 
@@ -69,6 +70,8 @@ light_breakdown(x, ...)
 
 \item{description_name}{Column name in resulting \code{data} containing the description text to be visualized. Defaults to "description".}
 
+\item{description}{Should descriptions be added? Default is \code{TRUE}.}
+
 \item{digits}{Passed to \code{prettyNum} to format numbers in description text.}
 }
 \value{
@@ -85,11 +88,12 @@ An object of class \code{light_breakdown}, \code{light} (and a list) with the fo
 }
 }
 \description{
-Calculates sequential additive variable contribution to the prediction of a single observation, see Gosiewska and Biecek [1] and the details below.
+Calculates sequential additive variable contributions (approximate SHAP) to the prediction of a single observation, see Gosiewska and Biecek [1] and the details below.
 }
 \details{
 The breakdown algorithm works as follows: First, the visit order (x_1, ..., x_m) of the variables \code{v} is specified. Then, in the query \code{data}, the column x_1 is set to the value of x_1 of the single observation \code{new_obs} to be explained. The change in the (weighted) average prediction on \code{data} measures the contribution of x_1 on the prediction of \code{new_obs}. This procedure is iterated over all x_i until eventually, all rows in \code{data} are identical to \code{new_obs}.
-A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all possible permutations of \code{v} and its results averaged per variable. This is basically what SHAP values do, see [1] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. Thus we use the short-cut described in [1]. The variables are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$.
+A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all possible permutations of \code{v} and its results averaged per variable. This is basically what SHAP values do, see [1] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. We offer two visit strategies to approximate SHAP. The first one uses
+the short-cut described in [1]: The variables are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. We call this visit strategy "importance". The second strategy "permutation" averages contributions from a small number of random permutations of v.
 Note that the minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", and "data". The latter can also directly be passed to \code{light_breakdown}. Note that by default, no retransformation function is applied.
 }
 \section{Methods (by class)}{
@@ -102,25 +106,10 @@ Note that the minimum required elements in the (multi-) flashlight are "y", "pre
 }}
 
 \examples{
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
-light_breakdown(mod_full, new_obs = iris[1, ])
-light_breakdown(mods, new_obs = iris[1, ])
-light_breakdown(mods, new_obs = iris[1, ], top_m = 2)
-
-ir <- iris
-ir$log_sl <- log(ir$Sepal.Length)
-fit_lm <- lm(log_sl ~ Petal.Length, data = ir)
-fit_glm <- glm(Sepal.Length ~ Petal.Length, data = ir, family = Gamma(link = log))
-fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
-fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
-  predict_function = function(m, X) predict(m, X, type = "response"))
-fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
-light_breakdown(fls, new_obs = ir[1, ])$data
-light_breakdown(fls, new_obs = ir[1, ], use_linkinv = TRUE)$data
+fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
+fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+light_breakdown(fl, new_obs = iris[1, ])
+light_breakdown(fl, new_obs = iris[1, ], visit_strategy = "permutation")
 }
 \references{
 [1] A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.

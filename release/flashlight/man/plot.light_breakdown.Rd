@@ -27,15 +27,9 @@ Minimal visualization of an object of class \code{light_breakdown} as waterfall 
 The waterfall plot is to be read from top to bottom. The first line describes the (weighted) average prediction in the query data used to start with. Then, each additional line shows how the prediction changes due to the impact of the corresponding variable. The last line finally shows the original prediction of the selected observation. Multiple flashlights are shown in different facets. Positive and negative impacts are visualized with different colors.
 }
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-
-plot(x <- light_breakdown(mod_full, new_obs = iris[1, ]))
-plot(light_breakdown(mods, new_obs = iris[1, ]), size = 2.5)
-plot(light_breakdown(mods, new_obs = iris[1, ]), facet_ncol = 2)
+fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
+fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+plot(light_breakdown(fl, new_obs = iris[1, ]))
 }
 \seealso{
 \code{\link{light_importance}}.
