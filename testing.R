@@ -198,8 +198,8 @@ plot(light_profile(mods, v = "Petal.Width", type = "ale", by = "Species"), swap_
 
 ir <- iris
 ir$log_sl <- log(ir$Sepal.Length)
-fit_lm <- lm(log_sl ~ Petal.Length + Petal.Width, data = ir)
-fit_glm <- glm(Sepal.Length ~ Petal.Length + Petal.Width,
+fit_lm <- lm(log_sl ~ Petal.Length + Petal.Width + Species, data = ir)
+fit_glm <- glm(Sepal.Length ~ Petal.Length + Petal.Width + Species,
   data = ir, family = Gamma(link = log))
 fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
 fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
