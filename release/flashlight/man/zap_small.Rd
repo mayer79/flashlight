@@ -4,7 +4,7 @@
 \alias{zap_small}
 \title{zap_small}
 \usage{
-zap_small(x, eps = 1e-06, val = 0)
+zap_small(x, eps = 1e-12, val = 0)
 }
 \arguments{
 \item{x}{A vector.}

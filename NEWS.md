@@ -6,6 +6,8 @@
 
 - Added Friedman's H statistic (global and pairwise interaction strength) to `light_interaction` with variants.
 
+- Added random permutation strategy to `light_breakdown`, serving as approximate SHAP.
+
 ### Minor
 
 - Added more options how to center `light_ice`: Mean center each profile to the same value (within "by" groups) and 0-mean center each profile.
@@ -22,9 +24,14 @@
 
 ## Interface change
 
-### Major
+### Minor
 
 - Combined arguments `center = TRUE/FALSE` and `center_at` to one argument `center` with default "no". This affects `light_ice`, and `light_profile`.
+
+- `order_by_importance` argument to `light_breakdown` has been replaced by `visit_strategy`.
+
+- Removed `top_m` argument of `light_breakdown` as it does not make sense.
+
 
 ## Other changes
 
