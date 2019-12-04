@@ -6,7 +6,7 @@
 
 - Added Friedman's H statistic (global and pairwise interaction strength) to `light_interaction` with variants.
 
-- Added random permutation strategy to `light_breakdown`, serving as approximate SHAP.
+- Added random permutation visit strategy to `light_breakdown`, serving as approximate SHAP.
 
 ### Minor
 
@@ -45,7 +45,7 @@
 
 ### Major
 
-- `light_ice` was based on `dplyr::crossing`, unintentionally throwing away duplicate rows. This is now replaced by `dplyr::expand_grid`.
+- `light_ice` was based on `dplyr::crossing`, unintentionally throwing away duplicate reference rows. This is now replaced by `dplyr::expand_grid`.
 
 # flashlight 0.4.0
 

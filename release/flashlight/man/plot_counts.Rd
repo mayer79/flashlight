@@ -53,10 +53,6 @@ mods <- multiflashlight(list(mod_full, mod_part))
 
 x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
 plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
-plot_counts(plot(x, zero_counts = FALSE), x, width = 0.3, alpha = 0.2)
-plot_counts(plot(x), x, width = 0.3, alpha = 0.2, show_labels = FALSE)
-plot_counts(plot(x, use = "response"), x, fill = "lightblue")
-plot_counts(plot(x, use = "pd", show.legend = FALSE), x, fill = "lightblue")
 }
 \seealso{
 \code{\link{plot.light_effects}}.

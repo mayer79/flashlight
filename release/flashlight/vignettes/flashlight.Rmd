@@ -203,9 +203,9 @@ The process of using the `flashlight` package is as follows:
    
    - `light_effects`: Combines partial dependence, response and prediction profiles. ALE profiles can be added as well.
    
-   - `light_interaction`: Calculates overall and pairwise interaction strength based on 0-mean-centered ICE curve scatter.
+   - `light_interaction`: Calculates overall and pairwise interaction strength based on Friedman's H statistic.
    
-   - `light_breakdown`: Calculates variable contribution breakdown for a single observation.
+   - `light_breakdown`: Calculates variable contribution breakdown (approximate SHAP) for a single observation.
 
 3. Plot the result: Each of these functions offer a `plot` method with minimal visualization of the results through `ggplot2`. The resulting plot can be customized by adding `theme` and other `ggplot` elements. If customization is insufficient, you can extract the data slot in the object returned by above key functions and build an own plot. 
 
@@ -382,20 +382,6 @@ Oops, what happened? Too many variables were tested for permutation drop in rmse
 plot(imp, fill = "darkred")
 ```
 
-If we want to just extract the names of the most relevant three variables, we just do the following:
-
-```{r}
-most_important(imp, top_m = 3)
-```
-
-What about drop in R-squared? You don't have to update the multiflashlight with that new property. Instead, you can pass it to `light_importance` on the fly. `flashlight` does not know if higher or lower values in the scoring function are better, so you will need to pass that information manually.
-
-```{r}
-imp_r2 <- light_importance(fls, metric = list(r_squared = r_squared), 
-                           v = x, lower_is_better = FALSE)
-plot(imp_r2, fill = "darkred") +
-  ggtitle("Drop in R-squared")
-```
 Minimal required elements in the (multi-)flashlight are the same as in `light_performance`.
 
 Note: If the calculations take too long (e.g. large query data), set `n_max` to some reasonable value. `light_importance` will then randomly pick `n_max` rows and use only these for assessment of importance.
@@ -581,28 +567,28 @@ The `plot` method of `light_effects` allows to hide certain plot element if it l
 
 ### Interaction strength
 
-Based on Friedman's H statistic [7], we can investigate which variable has strongest relative overall interaction effects.
+Based on Friedman's H statistic [7], we can investigate which variable has strongest interaction effect relative to its full effect.
 
 ```{r}
-st <- light_interaction(fls, v = x, n.max = 50) 
+st <- light_interaction(fls, v = x) 
 plot(st)
 ```
 Since we have not used interaction terms in the linear model, all values are zero there.
 
-Pairwise interactions are expensive to compute as each variable pair has to be assessed. We limit the search for interactions to the four variables with highest interaction strength.
+Pairwise interactions are expensive to compute as each variable pair has to be assessed. We limit the search for interactions to the four variables with highest relative interaction strength.
 ```{r}
-st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE, n.max = 50) 
+st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE) 
 plot(st_pair)
 ```
 
 ###  Variable contribution breakdown for single observation
 
-Besides global effects, we can use `light_breakdown` to calculate variable impact on one single (log) prediction. 
+Besides investigating global effects, we can use `light_breakdown` to calculate variable impact on one single (log) prediction. 
 ```{r}
 bd <- light_breakdown(fl_lm, new_obs = valid[1, ], v = x, n_max = 1000, seed = 74) 
 plot(bd, size = 3)
 ```
-We have set `n_max` to 1000 in order to save time. The only variable with positive impact on the prediction is "age". The other variables have a negative impact compared to the 1000 reference observations.
+We have set the size of the reference data set to `n_max = 1000` in order to save time. The only variable with positive impact on the prediction is "age". The other variables have a negative impact compared to the 1000 reference observations.
 
 ## Grouped calculations
 

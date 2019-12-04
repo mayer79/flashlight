@@ -99,18 +99,6 @@ mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 light_importance(mod_full)
-light_importance(mods, m_repetitions = 5)
-
-ir <- iris
-ir$log_sl <- log(ir$Sepal.Length)
-fit_lm <- lm(log_sl ~ Petal.Length, data = ir)
-fit_glm <- glm(Sepal.Length ~ Petal.Length, data = ir, family = Gamma(link = log))
-fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
-fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
-  predict_function = function(m, X) predict(m, X, type = "response"))
-fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
-light_importance(fls, v = "Petal.Length", seed = 45)
-light_importance(fls, v = "Petal.Length", seed = 45, use_linkinv = TRUE)
 }
 \references{
 [1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.

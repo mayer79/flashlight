@@ -18,32 +18,13 @@
 #' @export
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' fit_part <- glm(Sepal.Length ~ Petal.Length, data = iris)
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris,
 #'   y = "Sepal.Length", w = "Petal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris,
-#'   y = "Sepal.Length", w = "Petal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part))
-#'
 #' plot(light_effects(mod_full, v = "Species"))
 #' x <- light_effects(mod_full, v = "Petal.Width")
 #' plot(x)
-#' plot(x, use = "response")
 #' plot(x, use = c("pd", "ale"))
-#' plot_counts(plot(x, use = c("pd", "ale")), x)
-#'
-#' x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
-#' plot(x)
-#' plot_counts(plot(x, use = "response"), x, alpha = 0.2)
-#'
-#' x <- light_effects(mod_full, v = "Petal.Width", by = "Species")
-#' plot(x)
-#' p <- plot(x, zero_counts = FALSE, use = "all")
-#' plot_counts(p, x, alpha = 0.2)
-#'
-#' plot(light_effects(mod_full, v = "Petal.Width", by = "Species",
-#'   stats = "quartiles"))
-#' plot(light_effects(mods, v = "Petal.Width", stats = "quartiles"))
+#' plot(light_effects(mod_full, v = "Petal.Width", stats = "quartiles"))
 #' @seealso \code{\link{light_effects}}, \code{\link{plot_counts}}.
 plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
                                zero_counts = TRUE, size_factor = 1,

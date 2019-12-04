@@ -109,7 +109,6 @@ Note that the minimum required elements in the (multi-) flashlight are "y", "pre
 fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 light_breakdown(fl, new_obs = iris[1, ])
-light_breakdown(fl, new_obs = iris[1, ], visit_strategy = "permutation")
 }
 \references{
 [1] A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.

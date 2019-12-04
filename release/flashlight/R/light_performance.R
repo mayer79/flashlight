@@ -32,9 +32,6 @@
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 #' light_performance(mod_full)
-#' light_performance(mod_full, metric_name = "perf",
-#'   value_name = "rmse", label_name = "model")
-#' light_performance(mod_full, by = "Species")
 #' light_performance(mods, by = "Species")
 #' @seealso \code{\link{plot.light_performance}}.
 light_performance <- function(x, ...) {

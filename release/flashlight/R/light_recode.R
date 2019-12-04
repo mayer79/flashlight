@@ -20,10 +20,6 @@
 #'   levels = c("response", "predicted", "partial dependence"),
 #'   labels = c("Observed", "Fitted", "Effect"))
 #' plot(eff)
-#' perf <- light_performance(mods)
-#' perf <- light_recode(perf, what = "label_name",
-#'   levels = c("part", "full"), labels = c("simple", "complex"))
-#' plot(perf)
 #' @seealso \code{\link{plot.light_effects}}.
 light_recode <- function(x, ...) {
   UseMethod("light_recode")

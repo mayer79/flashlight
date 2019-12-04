@@ -24,11 +24,8 @@
 #' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 #'
 #' plot(light_importance(mod_full, m_repetitions = 4), fill = "darkred")
-#' plot(light_importance(mod_full), top_m = 2)
-#' plot(light_importance(mods))
 #' plot(light_importance(mods), swap_dim = TRUE)
 #' plot(light_importance(mods, by = NULL), fill = "darkgreen")
-#' plot(light_importance(mods, by = NULL), swap_dim = TRUE)
 #' @seealso \code{\link{light_importance}}.
 plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
                                   facet_scales = "fixed", rotate_x = FALSE,

@@ -45,7 +45,6 @@
 #' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 #' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 #' light_breakdown(fl, new_obs = iris[1, ])
-#' light_breakdown(fl, new_obs = iris[1, ], visit_strategy = "permutation")
 #' @seealso \code{\link{plot.light_breakdown}}.
 light_breakdown <- function(x, ...) {
   UseMethod("light_breakdown")

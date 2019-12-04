@@ -144,33 +144,12 @@ For numeric covariables \code{v} with more than \code{n_bins} disjoint values, i
 
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-
 light_profile(mod_full, v = "Species")
-light_profile(mod_full, v = "Species", counts = FALSE)
 light_profile(mod_full, v = "Species", type = "response")
-light_profile(mod_full, v = "Species", type = "ale")
 light_profile(mod_full, v = "Species", stats = "quartiles")
-
-light_profile(mod_full, v = "Petal.Width")
 light_profile(mod_full, v = "Petal.Width", type = "residual")
-light_profile(mod_full, v = "Petal.Width", type = "residual", v_label = FALSE)
-light_profile(mod_full, v = "Petal.Width", type = "residual", dig.lab = 1)
-light_profile(mod_full, v = "Petal.Width", stats = "quartiles")
-light_profile(mod_full, v = "Petal.Width", n_bins = 3)
 light_profile(mod_full, v = "Petal.Width", pd_evaluate_at = 2:4)
-light_profile(mod_full, pd_grid = data.frame(Petal.Width = 2:4))
-
-light_profile(mod_full, v = "Petal.Width", by = "Species")
-
-light_profile(mods, v = "Petal.Width")
-light_profile(mods, v = "Petal.Width", by = "Species")
-light_profile(mods, v = "Petal.Width", by = "Species", type = "predicted")
-light_profile(mods, v = "Petal.Width", by = "Species",
-  type = "predicted", stats = "quartiles")
 }
 \references{
 [1] Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
