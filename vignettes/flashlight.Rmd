@@ -368,17 +368,10 @@ For performance considerations, the minimum required info in the (multi-)flashli
 
 ### Variable importance
 
-Now let's study variable importance of the explainers. By default, it is shown with respect to the first metric in the explainers. In our case, its the root-mean-squared error. 
+Now let's study variable importance of the explainers. By default, it is shown with respect to the first metric in the explainers. In our case, its the root-mean-squared error. We additionally pass the variables we are interested in.
 
 ```{r}
-(imp <- light_importance(fls, n_max = 1000))
-plot(imp)
-```
-
-Oops, what happened? Too many variables were tested for permutation drop in rmse, namely *all* in the data set, except the response. While this can be useful in certain situations, we will just pass the vector `x` of covariables. Furthermore we replace the metric to mean-squared error.
-
-```{r}
-(imp <- light_importance(fls, v = x, metric = list(mse = mse)))
+(imp <- light_importance(fls, v = x))
 plot(imp, fill = "darkred")
 ```
 

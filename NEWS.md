@@ -1,3 +1,11 @@
+# flashlight 0.6.0
+
+## New functionality
+
+### Major
+
+- Added different analysis tools to analyze SHAP values.
+
 # flashlight 0.5.0
 
 ## New functionality

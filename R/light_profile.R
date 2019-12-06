@@ -1,14 +1,14 @@
 #' Partial Dependence and other Profiles
 #'
-#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]) and residuals. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
+#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]), residuals, and SHAP. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
 #'
-#' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
+#' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data". For SHAP it is just "shap". "data" can be passed on the fly.
 #'
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be profiled.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.
-#' @param type Type of the profile: Either "partial dependence", "ale", "predicted", "response", or "residual".
+#' @param type Type of the profile: Either "partial dependence", "ale", "predicted", "response", "residual", or "shap".
 #' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.
 #' @param breaks Cut breaks for a numeric \code{v}.
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{grid} nor \code{pd_evaluate_at} is specified.
@@ -73,8 +73,8 @@ light_profile.default <- function(x, ...) {
 #' @describeIn light_profile Profiles for flashlight.
 #' @export
 light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
-                                     type = c("partial dependence", "ale",
-                                              "predicted", "response", "residual"),
+                                     type = c("partial dependence", "ale", "predicted",
+                                              "response", "residual", "shap"),
                                      stats = c("mean", "quartiles"),
                                      breaks = NULL, n_bins = 11,
                                      cut_type = c("equal", "quantile"), use_linkinv = TRUE,
