@@ -25,15 +25,18 @@
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param error_name Currently not used.
 #' @param variable_name Column name in resulting \code{data} containing the variable names. Defaults to "variable".
+#' @param type_name Column name in the resulting \code{data} with the plot \code{type}.
 #' @param ... Further arguments passed to or from other methods.
 #' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
 #'   \item \code{by} Same as input \code{by}.
+#'   \item \code{type} Same as input \code{type}. For information only.
 #'   \item \code{value_name} Same as input \code{value_name}.
 #'   \item \code{error_name} Same as input \code{error_name}.
 #'   \item \code{label_name} Same as input \code{label_name}.
 #'   \item \code{variable_name} Same as input \code{variable_name}.
+#'   \item \code{type_name} Same as input \code{type_name}.
 #' }
 #' @export
 #' @references [1] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54..
@@ -67,7 +70,8 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          seed = NULL, use_linkinv = FALSE,
                                          value_name = "value",
                                          error_name = "error", label_name = "label",
-                                         variable_name = "variable", ...) {
+                                         variable_name = "variable",
+                                         type_name = type_name, ...) {
   # Checks
   type <- match.arg(type)
   cols <- colnames(data)
@@ -192,12 +196,14 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   # Prepare output
   agg[[label_name]] <- x$label
   agg[[error_name]] <- NA
+  agg[[type_name]] <- type
 
   # Collect results
   var_order <- c(label_name, by, variable_name, value_name, error_name)
-  out <- list(data = agg[, var_order], by = by,
+  out <- list(data = agg[, var_order], by = by, type = type,
               value_name = value_name, error_name = error_name,
-              label_name = label_name, variable_name = variable_name)
+              label_name = label_name, variable_name = variable_name,
+              type_name = type_name)
   class(out) <- c("light_importance", "light", "list")
   out
 }

@@ -1,6 +1,6 @@
 #' Scatter Plot
 #'
-#' Values (e.g. SHAP-values) are plotted against a variable. The object returned is of class \code{ggplot} and can be further customized.
+#' Values are plotted against a variable. The object returned is of class \code{ggplot} and can be further customized.
 #'
 #' @import ggplot2
 #' @importFrom stats reformulate
@@ -20,7 +20,6 @@
 #' fl_a <- flashlight(model = fit_a, label = "a")
 #' fl_b <- flashlight(model = fit_b, label = "b")
 #' fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
-#' fls <- add_shap(fls)
 #' pr <- light_scatter(fls, "Petal.Length")
 #' plot(pr, alpha = 0.2)
 #' plot(light_scatter(fls, "Petal.Length", by = "Species"), alpha = 0.2)

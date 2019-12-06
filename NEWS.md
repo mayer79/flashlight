@@ -6,6 +6,18 @@
 
 - Added different analysis tools to analyze SHAP values.
 
+- Added `light_scatter` and `plot.light_scatter` to show scatter plots of response, predictions, residuals, or SHAP values by some variable.
+
+- `light_importance` is now able to calculate variable importance by SHAP.
+
+## Interface change
+
+### Minor
+
+- Removed currently unused output columns "value_shuffled" and "value_before" of `light_importance`.
+
+- Added argument "type_name" to `light_interaction`. Its output now also contain a slot `type` as well as `type_name`.
+
 # flashlight 0.5.0
 
 ## New functionality
