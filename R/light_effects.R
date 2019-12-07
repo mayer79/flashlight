@@ -1,6 +1,6 @@
-#' Combination of Response, Predicted, Partial Dependence, and ALE Profiles
+#' Combination of Response, Predicted, Partial Dependence, ALE, and SHAP profiles.
 #'
-#' Calculates response- prediction-, partial dependence, and ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}.
+#' Calculates response- prediction-, partial dependence, ALE and SHAP profiles of a (multi-)flashlight with respect to a covariable \code{v}.
 #'
 #' Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles.
 #'
@@ -33,6 +33,8 @@
 #'   \item \code{response} A tibble containing the response profiles.
 #'   \item \code{predicted} A tibble containing the prediction profiles.
 #'   \item \code{pd} A tibble containing the partial dependence profiles.
+#'   \item \code{ale} A tibble containing the ALE profiles.
+#'   \item \code{shap} An optional tibble containing the SHAP profiles.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{stats} Same as input \code{stats}.
@@ -47,6 +49,7 @@
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
+#' mod_full <- add_shap(mod_full)
 #'
 #' light_effects(mod_full, v = "Species")
 #' light_effects(mod_full, v = "Species", stats = "quartiles")
@@ -100,17 +103,19 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   # Partial dependence
   pd <- light_profile(x, v = v, value_name = value_name,
                       label_name = label_name, type_name = type_name,
-                      counts = FALSE, pd_evaluate_at = cuts$bin_means,
-                      pd_indices = pd_indices,
-                      pd_n_max = pd_n_max, pd_seed = pd_seed)$data
+                      counts = FALSE,
+                      pd_evaluate_at = cuts$bin_means,
+                      pd_indices = pd_indices, pd_n_max = pd_n_max,
+                      pd_seed = pd_seed)$data
 
+  # ALE
   ale <- light_profile(x, v = v, type = "ale", value_name = value_name,
                        label_name = label_name, type_name = type_name,
-                       counts = FALSE, breaks = cuts$breaks,
+                       counts = FALSE,
                        pd_evaluate_at = cuts$bin_means,
                        pd_indices = pd_indices, pd_n_max = pd_n_max,
-                       pd_seed = pd_seed, pred = pred,
-                       ale_two_sided = ale_two_sided)$data
+                       pd_seed = pd_seed,
+                       pred = pred, ale_two_sided = ale_two_sided)$data
 
   # Overwrite v variable in data and update flashlight
   data[[v]] <- cuts$data[[v]]
@@ -133,6 +138,15 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                              counts = FALSE, pred = pred)$data
 
   data_sets <- list(response = response, predicted = predicted, pd = pd, ale = ale)
+
+  # SHAP profile
+  if (is.shap(x$shap)) {
+    data_sets$shap <- light_profile(x = x, v = v, type = "shap",
+                                    breaks = cuts$breaks,
+                                    v_labels = FALSE, value_name = value_name,
+                                    label_name = label_name, type_name = type_name,
+                                    counts = FALSE)$data
+  }
 
   # Unify x scale
   if (v_labels) {

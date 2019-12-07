@@ -4,11 +4,9 @@
 
 ### Major
 
-- Added different analysis tools to analyze SHAP values.
-
 - Added `light_scatter` and `plot.light_scatter` to show scatter plots of response, predictions, residuals, or SHAP values by some variable.
 
-- `light_importance` is now able to calculate variable importance by SHAP.
+- `light_importance`, `light_profile`, `light_effect`, and `light_scatter` are now able to work with SHAP values.
 
 ## Interface change
 

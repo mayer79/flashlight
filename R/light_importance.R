@@ -17,7 +17,7 @@
 #' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance along with the calculation of standard errors. Not used for \code{type = "shap"}.
 #' @param metric An optional named list of length one with a metric as element. Defaults to the first metric in the flashlight. The metric needs to be a function with at least four arguments: actual, predicted, case weights w and \code{...}. Irrelevant for \code{type = "shap"}.
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1. Not used for \code{type = "shap"}.
-#' @param use_linkinv Should retransformation function be applied? Default is FALSE. Not used for \code{type = "shap"}.
+#' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param metric_name Name of the resulting column containing the name of the metric. Defaults to "metric". Irrelevant for \code{type = "shap"}.
 #' @param value_name Column name in resulting \code{data} containing the variable importance. Defaults to "value".
 #' @param error_name Column name in resulting \code{data} containing the standard error of drop in performance. Defaults to "error". \code{NA} if \code{m_repetitions = 1}. Irrelevant for \code{type = "shap"}.
@@ -78,11 +78,13 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
   # Initial checks and extraction of data slot for type = "shap"
   if (type == "shap") {
     stopifnot(is.shap(x$shap))
+    if (use_linkinv) {
+      x <- shap_link(x)
+    }
     if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
       warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
     }
-    data <- x$shap$data
-    data <- data[data[[x$shap$variable_name]] %in% v, ]
+    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
   } else {
     stopifnot(!is.null(metric), length(metric) == 1L)
   }
@@ -92,7 +94,7 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
 
   if (type == "shap") {
     # Calculate variable importance
-    data[[value_name]] <- abs(data[[x$shap$shap_name]])
+    data[[value_name]] <- abs(data[["shap_"]])
 
     # Rename variable column
     if (x$shap$variable_name != variable_name) {
@@ -103,7 +105,7 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     imp <- grouped_stats(data, x = value_name, w = x$w,
                          by = c(by, variable_name), counts = FALSE)
 
-    # Organize output
+    # Add missing columns
     imp[[label_name]] <- x$label
     imp[[error_name]] <- NA
     imp[[metric_name]] <- NA

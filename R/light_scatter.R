@@ -9,7 +9,7 @@
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".
 #' @param shap_baseline Should baseline be added to SHAP values? Only relevant for \code{type = "shap"}.
-#' @param use_linkinv Should retransformation function be applied? Default is TRUE. Does not affect \code{type = "shap"}.
+#' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param n_max Maximum number of data rows to consider. Will be randomly picked from the relevant data.
 #' @param seed An integer random seed used for subsampling.
 #' @param value_name Column name in resulting \code{data} containing the values belonging to \code{type}. Defaults to "value".
@@ -62,54 +62,33 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
   # Initial checks and data selection for type = "shap"
   if (type == "shap") {
     stopifnot(is.shap(x$shap))
+    if (use_linkinv) {
+      x <- shap_link(x)
+    }
     if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
       warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
     }
-    data <- x$shap$data
+    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
   }
   stopifnot(v %in% colnames(data),
             (n <- nrow(data)) >= 1,
             !anyDuplicated(c(by, v, value_name, label_name, type_name)))
 
-  if (!is.null(seed)) {
-    set.seed(seed)
-  }
-
-  if (type != "shap") {
-    if (n_max < n) {
-      data <- data[sample(n, n_max), , drop = FALSE]
+  # Subsample rows if data too large
+  if (n_max < n) {
+    if (!is.null(seed)) {
+      set.seed(seed)
     }
+    data <- data[sample(n, n_max), , drop = FALSE]
+  }
+  if (type != "shap") {
     x <- flashlight(x, data = data, linkinv = if (use_linkinv) x$linkinv else function(z) z)
     data[[value_name]] <- switch(type,
                                  response = response(x),
                                  predicted = predict(x),
                                  residual = residuals(x))
   } else {
-    # Rename value column
-    if (x$shap$shap_name != value_name) {
-      data[[value_name]] <- data[[x$shap$shap_name]]
-    }
-
-    # Select rows with SHAP values for variable v
-    vdata <- data[data[[x$shap$variable_name]] == v, ]
-
-    # Add optional baseline
-    if (shap_baseline) {
-      bdata <- data[data[[x$shap$variable_name]] == "baseline", ]
-      if (is.null(x$shap$by)) {
-        bs <- bdata[[value_name]][1]
-      } else {
-        stopifnot(!("mean__" %in% colnames(data)))
-        gmean <- grouped_stats(bdata, x = value_name, by = x$shap$by,
-                               counts = FALSE, value_name = "mean__")
-        bs <- left_join(vdata, gmean, by = x$shap$by)[["mean__"]]
-      }
-      vdata[[value_name]] <- vdata[[value_name]] + bs
-    }
-
-    # Subsample to at most n_max rows
-    n <- nrow(vdata)
-    data <- if (n_max < n) vdata[sample(n, n_max), , drop = FALSE] else vdata
+    data[[value_name]] <- data[["shap_"]] + if (shap_baseline) data[["baseline_"]] else 0
   }
 
   # Organize output
