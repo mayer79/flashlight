@@ -96,7 +96,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
     pred <- predict(x)
   }
 
-  # Set levels of v
+  # Calculate cut information on "data"
   cuts <- auto_cut(data[[v]], breaks = breaks, n_bins = n_bins,
                    cut_type = cut_type, x_name = v, ...)
 
@@ -117,14 +117,19 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                        pd_seed = pd_seed,
                        pred = pred, ale_two_sided = ale_two_sided)$data
 
-  # Overwrite v variable in data and update flashlight
-  data[[v]] <- cuts$data[[v]]
-  x <- flashlight(x, data = data)
+  # ### WHY DO WE NEED THIS PART???
+  # # Overwrite v variable in data and update flashlight
+  # data[[v]] <- cuts$data[[v]]
+  # x <- flashlight(x, data = data)
+  # # Overwrite v also in shap$data
+  # if (is.shap(x$shap)) {
+  #   x$shap$data[[v]] <- auto_cut(x$shap$data[[v]], breaks = cuts$breaks)
+  # }
 
   # Response profile
   response <- light_profile(x = x, v = v, type = "response", stats = stats,
-                            breaks = cuts$breaks,
-                            v_labels = FALSE, value_name = value_name,
+                            breaks = cuts$breaks, v_labels = FALSE,
+                            value_name = value_name,
                             q1_name = q1_name, q3_name = q3_name,
                             label_name = label_name, type_name = type_name,
                             counts = TRUE, counts_name = counts_name,
@@ -132,8 +137,8 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 
   # Prediction profile based on precalculated predictions "pred"
   predicted <- light_profile(x = x, v = v, type = "predicted",
-                             breaks = cuts$breaks,
-                             v_labels = FALSE, value_name = value_name,
+                             breaks = cuts$breaks, v_labels = FALSE,
+                             value_name = value_name,
                              label_name = label_name, type_name = type_name,
                              counts = FALSE, pred = pred)$data
 
@@ -169,21 +174,11 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL, n_bins = 11,
                                           cut_type = c("equal", "quantile"), ...) {
   cut_type <- match.arg(cut_type)
-
   if (is.null(breaks)) {
-    if (is.null(data)) {
-      stopifnot(all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
-                all(vapply(x, function(z) v %in% colnames(z$data), FUN.VALUE = TRUE)))
-      v_vec <- unlist(lapply(x, function(z) z$data[[v]]))
-    } else {
-      stopifnot(nrow(data) >= 1L, v %in% colnames(data))
-      v_vec <- data[[v]]
-    }
-    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins,
-                       cut_type = cut_type)$breaks
+    breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
+                            n_bins = n_bins, cut_type = cut_type)
   }
   all_effects <- lapply(x, light_effects, v = v, data = data, breaks = breaks,
                         n_bins = n_bins, cut_type = cut_type, ...)
-
   light_combine(all_effects, new_class = "light_effects_multi")
 }

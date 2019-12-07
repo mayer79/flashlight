@@ -98,12 +98,9 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   }
   # Additional checks and data extraction.
   if (type == "shap") {
-    stopifnot(is.shap(x$shap))
+    x <- light_check(x, check_shap = TRUE)
     if (use_linkinv) {
       x <- shap_link(x)
-    }
-    if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
-      warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
     }
     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
   } else {
@@ -115,7 +112,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                     linkinv = if (use_linkinv) x$linkinv else function(z) z)
   }
   # Checks
-  stopifnot((n <- nrow(data)) >= 1L,
+  stopifnot(nrow(data) >= 1L,
             !anyDuplicated(c(by, v, if (counts) counts_name,
                              if (stats == "quartiles") c(q1_name, q3_name),
                              value_name, label_name, type_name)))
@@ -123,7 +120,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     stop("Wrong number of predicted values passed.")
   }
 
-  # Partial dependence and ale are obtained by calling light_ice
+  # Partial dependence and ale are obtained by calling light_ice resp. ale_profile
   if (type == "partial dependence") {
     # Get profiles
     cp_profiles <- light_ice(x, v = v, evaluate_at = pd_evaluate_at,
@@ -176,8 +173,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   # Collect results
   out <- list(data = agg, by = by, v = v, type = type, stats = stats,
               value_name = value_name, q1_name = q1_name, q3_name = q3_name,
-              label_name = label_name, type_name = type_name,
-              counts_name = counts_name)
+              label_name = label_name, type_name = type_name, counts_name = counts_name)
   class(out) <- c("light_profile", "light", "list")
   out
 }
@@ -189,19 +185,10 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
                                           cut_type = c("equal", "quantile"),
                                           pd_evaluate_at = NULL, pd_grid = NULL, ...) {
   cut_type <- match.arg(cut_type)
-
+  stopifnot(!is.null(v))
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
-    stopifnot(!is.null(v))
-    if (is.null(data)) {
-      stopifnot(all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
-                all(vapply(x, function(z) v %in% colnames(z$data), FUN.VALUE = TRUE)))
-      v_vec <- unlist(lapply(x, function(z) z$data[[v]]))
-    } else {
-      stopifnot(nrow(data) >= 1L, v %in% colnames(data))
-      v_vec <- data[[v]]
-    }
-    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins,
-                       cut_type = cut_type)$breaks
+    breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
+                            n_bins = n_bins, cut_type = cut_type)
   }
   all_profiles <- lapply(x, light_profile, v = v, data = data,
                          breaks = breaks, n_bins = n_bins, cut_type = cut_type,

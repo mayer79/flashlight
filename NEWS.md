@@ -8,6 +8,10 @@
 
 - `light_importance`, `light_profile`, `light_effect`, and `light_scatter` are now able to work with SHAP values.
 
+### Minor
+
+- The plot function of `light_importance` and `light_interaction` now uses informative labels.
+
 ## Interface change
 
 ### Minor

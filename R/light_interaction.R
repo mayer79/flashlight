@@ -71,7 +71,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          value_name = "value",
                                          error_name = "error", label_name = "label",
                                          variable_name = "variable",
-                                         type_name = type_name, ...) {
+                                         type_name = "type", ...) {
   # Checks
   type <- match.arg(type)
   cols <- colnames(data)

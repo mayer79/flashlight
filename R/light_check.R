@@ -3,6 +3,8 @@
 #' Checks if an object of class \code{flashlight} or \code{multiflashlight} is consistently defined.
 #'
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
+#' @param check_shap Should flashlight be checked for consistency and existence of a shap object?
+#' @param ... Further arguments passed from or to other methods.
 #' @return The input \code{x} or an error message.
 #' @export
 #' @examples
@@ -12,19 +14,19 @@
 #' fl_log <- flashlight(fit_log,  y = "Sepal.Length", label = "ols", linkinv = exp)
 #' light_check(fl)
 #' light_check(fl_log)
-light_check <- function(x) {
+light_check <- function(x, ...) {
   UseMethod("light_check")
 }
 
 #' @describeIn light_check Default check method not implemented yet.
 #' @export
-light_check.default <- function(x) {
+light_check.default <- function(x, ...) {
   stop("No default method available yet.")
 }
 
 #' @describeIn light_check Checks if a flashlight object is consistently defined.
 #' @export
-light_check.flashlight <- function(x) {
+light_check.flashlight <- function(x, check_shap = FALSE, ...) {
   if (is.null(x$label)) {
     stop("label should not be NULL.")
   }
@@ -58,12 +60,21 @@ light_check.flashlight <- function(x) {
     }
     lapply(c("y", "w", "by"), in_colnames)
   }
+  if (check_shap) {
+    stopifnot(is.shap(x$shap))
+    if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
+      warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
+    }
+    if (!all.equal(x$w, x$shap$w)) {
+      warning("SHAP values have been computed using other 'w'. This is not recommended.")
+    }
+  }
   invisible(x)
 }
 
 #' @describeIn light_check Checks if a multiflashlight object is consistently defined.
 #' @export
-light_check.multiflashlight <- function(x) {
+light_check.multiflashlight <- function(x, ...) {
   # by
   if (!all_identical(x, `[[`, "by")) {
     warning("Inconsistent 'by' variables specified.

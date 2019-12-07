@@ -77,12 +77,9 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
 
   # Initial checks and extraction of data slot for type = "shap"
   if (type == "shap") {
-    stopifnot(is.shap(x$shap))
+    x <- light_check(x, check_shap = TRUE)
     if (use_linkinv) {
       x <- shap_link(x)
-    }
-    if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
-      warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
     }
     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
   } else {

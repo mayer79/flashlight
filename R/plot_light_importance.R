@@ -90,7 +90,13 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   if (rotate_x) {
     p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
-  p
-  p + coord_flip()
+  # label
+  type <- switch(x$type,
+                 permutation = "Drop in performance",
+                 shap = "mean(|SHAP|)",
+                 H = "Friedman's H",
+                 ice = "ICE based interaction strength")
+  p + coord_flip() +
+    labs(x = element_blank(), y = type)
 }
 
