@@ -6,7 +6,7 @@
 
 - Added `light_scatter` and `plot.light_scatter` to create scatter plots of response, predictions, residuals, or SHAP values by some variable.
 
-- `light_importance`, `light_profile`, `light_effect`, and `light_scatter` are now able to work with SHAP values.
+- `light_importance`, `light_profile`, and `light_scatter` are now able to work with SHAP values.
 
 ### Minor
 

@@ -17,7 +17,7 @@
 #' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance along with the calculation of standard errors. Not used for \code{type = "shap"}.
 #' @param metric An optional named list of length one with a metric as element. Defaults to the first metric in the flashlight. The metric needs to be a function with at least four arguments: actual, predicted, case weights w and \code{...}. Irrelevant for \code{type = "shap"}.
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1. Not used for \code{type = "shap"}.
-#' @param use_linkinv Should retransformation function be applied? Default is FALSE.
+#' @param use_linkinv Should retransformation function be applied? Default is FALSE. Not uses for \code{type = "shap"}.
 #' @param metric_name Name of the resulting column containing the name of the metric. Defaults to "metric". Irrelevant for \code{type = "shap"}.
 #' @param value_name Column name in resulting \code{data} containing the variable importance. Defaults to "value".
 #' @param error_name Column name in resulting \code{data} containing the standard error of drop in performance. Defaults to "error". \code{NA} if \code{m_repetitions = 1}. Irrelevant for \code{type = "shap"}.
@@ -43,7 +43,6 @@
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part))
-#' mods <- add_shap(mods)
 #' light_importance(mods)
 #' @seealso \code{\link{most_important}}, \code{\link{plot.light_importance}}.
 light_importance <- function(x, ...) {
@@ -82,12 +81,15 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
             !anyDuplicated(c(key_vars, value_name, variable_name, error_name)))
 
   # Update flashlight with everything except data
-  x <- flashlight(x, by = by, metrics = metric, update_and_check_shap = (type == "shap"),
+  x <- flashlight(x, by = by, metrics = metric,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # Additional checks if SHAP and shap data extraction
   if (type == "shap") {
-     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
+    if (!is.shap(x$shap)) {
+      stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
+    }
+    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
   }
 
   # Calculations

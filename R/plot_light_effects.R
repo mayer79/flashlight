@@ -1,13 +1,13 @@
 #' Visualize Multiple Types of Profiles Together
 #'
-#' Visualizes response-, prediction-, partial dependence, ALE and/or SHAP profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
+#' Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
 #'
 #' @import ggplot2
 #' @importFrom stats reformulate
 #' @importFrom dplyr semi_join bind_rows
 #' @method plot light_effects
 #' @param x An object of class \code{light_effects}.
-#' @param use A vector of elements to show. Any subset of ("response", "predicted", "pd", "ale", and "shap") or "all". Defaults to all except "ale"
+#' @param use A vector of elements to show. Any subset of ("response", "predicted", "pd", "ale") or "all". Defaults to all except "ale"
 #' @param zero_counts Logical flag if 0 count levels should be shown on the x axis.
 #' @param size_factor Factor used to enlarge default \code{size} in \code{geom_point} and \code{geom_line}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
@@ -33,7 +33,7 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   # Checks
   stopifnot(length(use) >= 1L)
   if ("all" %in% use) {
-    use <- c("response", "predicted", "pd", "ale", if (is.shap(x$shap)) "shap")
+    use <- c("response", "predicted", "pd", "ale")
   }
   nby <- length(x$by)
   multi <- is.light_effects_multi(x)

@@ -1,8 +1,8 @@
-#' Combination of Response, Predicted, Partial Dependence, ALE, and SHAP profiles.
+#' Combination of Response, Predicted, Partial Dependence, and ALE profiles.
 #'
-#' Calculates response- prediction-, partial dependence, ALE and SHAP profiles of a (multi-)flashlight with respect to a covariable \code{v}.
+#' Calculates response- prediction-, partial dependence, and ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}.
 #'
-#' Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles. Note that the baseline levels used for SHAP refer to the by variables originally used to calculate the SHAP values.
+#' Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles.
 #'
 #' @importFrom dplyr bind_rows
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
@@ -34,7 +34,6 @@
 #'   \item \code{predicted} A tibble containing the prediction profiles.
 #'   \item \code{pd} A tibble containing the partial dependence profiles.
 #'   \item \code{ale} A tibble containing the ALE profiles.
-#'   \item \code{shap} An optional tibble containing the SHAP profiles.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{stats} Same as input \code{stats}.
@@ -49,8 +48,6 @@
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_full <- add_shap(mod_full)
-#'
 #' light_effects(mod_full, v = "Species")
 #' light_effects(mod_full, v = "Species", stats = "quartiles")
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
@@ -90,7 +87,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
             v %in% colnames(data))
 
   # Update flashlight and calculate predictions
-  x <- flashlight(x, data = data, by = by, update_and_check_shap = is.shap(x$shap),
+  x <- flashlight(x, data = data, by = by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # Pre-calculate predictions (to save time)
@@ -115,11 +112,6 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   pred_list <- c(base_list, list(type = "predicted", breaks = cuts$breaks,
                                  v_labels = FALSE, counts = FALSE, pred = pred))
   arg_lists <- list(response = resp_list, predicted = pred_list, pd = pd_list, ale = ale_list)
-  if (is.shap(x$shap)) {
-    shap_list <- c(base_list, list(type = "shap", breaks = cuts$breaks,
-                                   v_labels = FALSE, counts = FALSE))
-    arg_lists$shap <- shap_list
-  }
 
   # Call light_profile for all types
   data_sets <- lapply(arg_lists, function(arg) do.call(light_profile, arg)$data)
