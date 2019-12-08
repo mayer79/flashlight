@@ -8,7 +8,7 @@
 #' @param data An optional \code{data.frame}. Not relevant for \code{type = "shap"}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".
-#' @param shap_baseline Should baseline be added to SHAP values? Only relevant for \code{type = "shap"}.
+#' @param shap_baseline Should baseline be added to SHAP values? Only relevant for \code{type = "shap"}. Note that the baseline level refers to the "by" variables originally used to calculate the SHAP values.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param n_max Maximum number of data rows to consider. Will be randomly picked from the relevant data.
 #' @param seed An integer random seed used for subsampling.
@@ -59,20 +59,23 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
                                      type_name = "type", ...) {
   type <- match.arg(type)
 
-  # Initial checks and data selection for type = "shap"
-  if (type == "shap") {
-    stopifnot(is.shap(x$shap))
-    if (use_linkinv) {
-      x <- shap_link(x)
-    }
-    if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
-      warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
-    }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
-  }
+  # Checks
   stopifnot(v %in% colnames(data),
             (n <- nrow(data)) >= 1,
             !anyDuplicated(c(by, v, value_name, label_name, type_name)))
+
+  # Update flashlight
+  x <- flashlight(x, data = data, by = by,
+                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
+
+  # Additional checks if SHAP and shap data extraction
+  if (type == "shap") {
+    x <- light_check(x, check_shap = TRUE)
+    if (use_linkinv) {
+      x <- shap_link(x)
+    }
+    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+  }
 
   # Subsample rows if data too large
   if (n_max < n) {
@@ -80,16 +83,18 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
       set.seed(seed)
     }
     data <- data[sample(n, n_max), , drop = FALSE]
+    if (type != "shap") {
+      x <- flashlight(x, data = data)
+    }
   }
-  if (type != "shap") {
-    x <- flashlight(x, data = data, linkinv = if (use_linkinv) x$linkinv else function(z) z)
-    data[[value_name]] <- switch(type,
-                                 response = response(x),
-                                 predicted = predict(x),
-                                 residual = residuals(x))
-  } else {
-    data[[value_name]] <- data[["shap_"]] + if (shap_baseline) data[["baseline_"]] else 0
-  }
+
+  # Calculate values
+  data[[value_name]] <- switch(type,
+    response = response(x),
+    predicted = predict(x),
+    residual = residuals(x),
+    shap = data[["shap_"]] + if (shap_baseline) data[["baseline_"]] else 0
+  )
 
   # Organize output
   data[[label_name]] <- x$label

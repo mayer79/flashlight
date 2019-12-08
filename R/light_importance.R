@@ -75,20 +75,26 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     v <- if (type == "shap") x$shap$v else setdiff(colnames(data), c(x$y, by))
   }
 
-  # Initial checks and extraction of data slot for type = "shap"
+  # Checks
+  key_vars <- c(label_name, metric_name, by)
+  stopifnot((n <- nrow(data)) >= 1L,
+            !is.null(metric), length(metric) == 1L,
+            !anyDuplicated(c(key_vars, value_name, variable_name, error_name)))
+
+  # Update flashlight with everything except data
+  x <- flashlight(x, by = by, metrics = metric,
+                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
+
+  # Additional checks if SHAP and shap data extraction
   if (type == "shap") {
     x <- light_check(x, check_shap = TRUE)
     if (use_linkinv) {
       x <- shap_link(x)
     }
     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
-  } else {
-    stopifnot(!is.null(metric), length(metric) == 1L)
   }
-  key_vars <- c(label_name, metric_name, by)
-  stopifnot((n <- nrow(data)) >= 1L,
-            !anyDuplicated(c(key_vars, value_name, variable_name, error_name)))
 
+  # Calculations
   if (type == "shap") {
     # Calculate variable importance
     data[[value_name]] <- abs(data[["shap_"]])
@@ -104,46 +110,34 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
 
     # Add missing columns
     imp[[label_name]] <- x$label
-    imp[[error_name]] <- NA
-    imp[[metric_name]] <- NA
+    imp[ c(error_name, metric_name)] <- NA
   } else {
     if (!is.null(seed)) {
       set.seed(seed)
     }
-
     # Subsample to n_max
     if (n > n_max) {
       data <- data[sample(n, min(n_max, n)), , drop = FALSE]
     }
-
-    # Update flashlight with everything except data and linkinv
-    x <- flashlight(x, by = by, metrics = metric)
-
-    # Performance before shuffling
-    metric_full <- light_performance(x, data = data, use_linkinv = use_linkinv,
-                                     metric_name = metric_name,
-                                     value_name = "value_original",
-                                     label_name = label_name, ...)$data
-
-    # Performance difference after shuffling
-    core_func <- function(z) {
-      shuffled <- data
-      if (length(by)) {
-        shuffled[[z]] <- ave(shuffled[[z]], shuffled[, by, drop = FALSE], FUN = sample)
-      } else {
-        shuffled[[z]] <- sample(shuffled[[z]])
-      }
-      light_performance(x, data = shuffled, use_linkinv = use_linkinv,
-                        metric_name = metric_name,
-                        value_name = "value_shuffled",
-                        label_name = label_name, ...)$data
+    # Helper function
+    perfm <- function(X, vn = "value_original") {
+      light_performance(x, data = X, use_linkinv = TRUE, metric_name = metric_name,
+                        value_name = vn, label_name = label_name, ...)$data
     }
-
+    # Performance before shuffling
+    metric_full <- perfm(data)
+    # Performance difference after shuffling
+    core_func <- function(z, S) {
+      S[[z]] <- if (length(by)) ave(S[[z]], S[, by, drop = FALSE],
+                                    FUN = sample) else sample(S[[z]])
+      perfm(S, vn = "value_shuffled")
+    }
     if (m_repetitions > 1) {
-      imp <- replicate(m_repetitions, setNames(lapply(v, core_func), v), simplify = FALSE)
+      imp <- replicate(m_repetitions, setNames(lapply(v, core_func, S = data), v),
+                       simplify = FALSE)
       imp <- unlist(imp, recursive = FALSE)
       imp <- bind_rows(imp, .id = variable_name)
-      imp <- group_by_at(imp,  c(key_vars, variable_name))
+      imp <- group_by_at(imp, c(key_vars, variable_name))
       se <- function(z, ...) {
         sd(z, ...) / sqrt(sum(!is.na(z)))
       }
@@ -151,7 +145,7 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                           setNames(list(se, mean), c(error_name, "value_shuffled")), na.rm = TRUE)
       imp <- ungroup(imp)
     } else {
-      imp <- setNames(lapply(v, core_func), v)
+      imp <- setNames(lapply(v, core_func, S = data), v)
       imp <- bind_rows(imp, .id = variable_name)
       imp[[error_name]] <- NA
     }

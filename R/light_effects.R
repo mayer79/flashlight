@@ -2,7 +2,7 @@
 #'
 #' Calculates response- prediction-, partial dependence, ALE and SHAP profiles of a (multi-)flashlight with respect to a covariable \code{v}.
 #'
-#' Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles.
+#' Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles. Note that the baseline levels used for SHAP refer to the by variables originally used to calculate the SHAP values.
 #'
 #' @importFrom dplyr bind_rows
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
@@ -92,6 +92,8 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   # Update flashlight and calculate predictions
   x <- flashlight(x, data = data, by = by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
+
+  # Pre-calculate predictions (to save time)
   if (is.null(pred)) {
     pred <- predict(x)
   }
@@ -100,58 +102,27 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   cuts <- auto_cut(data[[v]], breaks = breaks, n_bins = n_bins,
                    cut_type = cut_type, x_name = v, ...)
 
-  # Partial dependence
-  pd <- light_profile(x, v = v, value_name = value_name,
-                      label_name = label_name, type_name = type_name,
-                      counts = FALSE,
-                      pd_evaluate_at = cuts$bin_means,
-                      pd_indices = pd_indices, pd_n_max = pd_n_max,
-                      pd_seed = pd_seed)$data
-
-  # ALE
-  ale <- light_profile(x, v = v, type = "ale", value_name = value_name,
-                       label_name = label_name, type_name = type_name,
-                       counts = FALSE,
-                       pd_evaluate_at = cuts$bin_means,
-                       pd_indices = pd_indices, pd_n_max = pd_n_max,
-                       pd_seed = pd_seed,
-                       pred = pred, ale_two_sided = ale_two_sided)$data
-
-  # ### WHY DO WE NEED THIS PART???
-  # # Overwrite v variable in data and update flashlight
-  # data[[v]] <- cuts$data[[v]]
-  # x <- flashlight(x, data = data)
-  # # Overwrite v also in shap$data
-  # if (is.shap(x$shap)) {
-  #   x$shap$data[[v]] <- auto_cut(x$shap$data[[v]], breaks = cuts$breaks)
-  # }
-
-  # Response profile
-  response <- light_profile(x = x, v = v, type = "response", stats = stats,
-                            breaks = cuts$breaks, v_labels = FALSE,
-                            value_name = value_name,
-                            q1_name = q1_name, q3_name = q3_name,
-                            label_name = label_name, type_name = type_name,
-                            counts = TRUE, counts_name = counts_name,
-                            counts_weighted = counts_weighted)$data
-
-  # Prediction profile based on precalculated predictions "pred"
-  predicted <- light_profile(x = x, v = v, type = "predicted",
-                             breaks = cuts$breaks, v_labels = FALSE,
-                             value_name = value_name,
-                             label_name = label_name, type_name = type_name,
-                             counts = FALSE, pred = pred)$data
-
-  data_sets <- list(response = response, predicted = predicted, pd = pd, ale = ale)
-
-  # SHAP profile
+  # Prepare argument lists for light_profile
+  base_list <- list(x = x, v = v,  value_name = value_name,
+                    label_name = label_name, type_name = type_name)
+  pd_list <- c(base_list, list(counts = FALSE, pd_evaluate_at = cuts$bin_means,
+                               pd_indices = pd_indices, pd_n_max = pd_n_max, pd_seed = pd_seed))
+  ale_list <- c(pd_list, list(type = "ale", pred = pred, ale_two_sided = ale_two_sided))
+  resp_list <- c(base_list, list(type = "response", stats = stats, breaks = cuts$breaks,
+                                 v_labels = FALSE, q1_name = q1_name, q3_name = q3_name,
+                                 counts = TRUE, counts_name = counts_name,
+                                 counts_weighted = counts_weighted))
+  pred_list <- c(base_list, list(type = "predicted", breaks = cuts$breaks,
+                                 v_labels = FALSE, counts = FALSE, pred = pred))
+  arg_lists <- list(response = resp_list, predicted = pred_list, pd = pd_list, ale = ale_list)
   if (is.shap(x$shap)) {
-    data_sets$shap <- light_profile(x = x, v = v, type = "shap",
-                                    breaks = cuts$breaks,
-                                    v_labels = FALSE, value_name = value_name,
-                                    label_name = label_name, type_name = type_name,
-                                    counts = FALSE)$data
+    shap_list <- c(base_list, list(type = "shap", breaks = cuts$breaks,
+                                   v_labels = FALSE, counts = FALSE))
+    arg_lists$shap <- shap_list
   }
+
+  # Call light_profile for all types
+  data_sets <- lapply(arg_lists, function(arg) do.call(light_profile, arg)$data)
 
   # Unify x scale
   if (v_labels) {

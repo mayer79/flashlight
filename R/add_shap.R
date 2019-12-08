@@ -1,6 +1,6 @@
 #' Add SHAP values to (multi-)flashlight
 #'
-#' The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm in [1] is used with importance based visit order. Use \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow.
+#' The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm in [1] is used with importance based visit order. Use \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom utils setTxtProgressBar txtProgressBar

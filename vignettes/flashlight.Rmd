@@ -42,7 +42,7 @@ The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, interaction strength, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, scatter plots, interaction strength, and variable contribution breakdown for single observations.
 
 3. It allows to assess multiple models in parallel without any redundancy in the code.
 
@@ -66,7 +66,9 @@ How precise are models if applied to unseen data? This aspect is of key interest
 
 Which variables are particularly relevant for the model? This aspect is helpful in different ways. Firstly, it might help to simplify the full modelling process by eliminating difficult to assess input variables with low explanatory power. Secondly, its pure information. Thirdly, it might help to identify problems in data structure: if one variable is extremely relevant and all others not, then there might be some sort of information leakage from the response. Thus said, variable importance considerations are very relevant for quality assurance as well. 
 
-Different modelling techniques offer different ways of variable importance. In linear models, we consider e.g. F-test statistics or p values, in tree-based methods, its number of splits or avarage split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [2]. Multiple permutations lead to more stable estimates of variable importance and allow the calculation of standard errors.
+Different modelling techniques offer different ways of variable importance. In linear models, we consider e.g. F-test statistics or p values, in tree-based methods, its number of splits or avarage split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [2]. Multiple permutations lead to more stable estimates of variable importance and allow the calculation of standard errors. 
+
+An elegant alternative uses mean absolute SHAP values (see Subsection "Variable contribution breakdown for single observations").
 
 ### Effects of input variables
 
@@ -88,7 +90,11 @@ ALE profiles at positions $x_i$ are calculated as follows:
 
 An alternative to partial dependence and ALE profiles is to look at combined effects of $X$ including the effects from all other predictors. Such effects are estimated by averaging the predictions within values of the predictor $X$ of interest. If such prediction profile differs considerably from the observed average response, this might be a sign of model underfit. This visualization is sometimes called "marginal plot" or "M plot", see [5]. Residual profiles immediatly show such misfits as well. In classic statistical modelling, this sort of plots are called "fitted versus covariable" plots or "residual versus covariable" plots.
 
-Besides looking at *average* profiles, it is often also revealing to consider *quartile* profiles or to visualize partial dependence, response and prediction profiles in the same plot.
+If SHAP values have been calculated, plotting their average contributions of $X$ against $X$ is an elegant way to visualize the effect of $X$, see Subsection "Variable contribution breakdown for single observations".
+
+Besides looking at *average* profiles, it is often also revealing to consider *quartiles* or to visualize partial dependence, response and prediction profiles in the same plot.
+
+Instead of studying profiles, it might be revealing to look at scatter plots of responses, predictions, residuals, or SHAP values versus $X$.
 
 ### Interaction strength
 
@@ -161,6 +167,9 @@ plot(light_profile(fl, v = "Petal.Width", type = "residual", stats = "quartiles"
 # Response profiles, prediction profiles, partial depencence, and ALE profiles in one
 plot(light_effects(fl, v = "Petal.Width"), use = "all")
 
+# Scatter plots
+plot(light_scatter(fl, v = "Petal.Width", type = "predicted"))
+
 # Variable contribution breakdown for single observation
 plot(light_breakdown(fl, new_obs = iris[2, ]))
 
@@ -198,6 +207,8 @@ The process of using the `flashlight` package is as follows:
    - `light_importance`: Calculates variable importance (worsening in performance by random shuffling) for each or a subset of variables. Possibly within subgroups and using case weights. The most important variable names can be extracted by the function `most_important` on the result of `light_importance`.
    
    - `light_ice`: Calculates ICE profiles across a couple of observations, possibly within groups.
+   
+   - `light_scatter`: Calculates values (e.g. predictions) to be plotted against a variable of interest.
     
    - `light_profile`: Calculates partial dependent profiles across a covariable, possibly within groups. Generated by calling `light_ice` and aggregating the results. The function is flexible: it can also be used to generate ALE, response, residual or prediction profiles or calculate (weighted) quartiles instead of (weighted) means.
    
@@ -212,6 +223,45 @@ The process of using the `flashlight` package is as follows:
 In practice, multiple flashlights are being defined and evaluated in parallel. By the help of a `multiflashlight` object, The `flashlight` packages provides as much support as possible to avoid any redundancy. It can be used to combine fully specified flashlights or, and that is the more interesting option, take minimally defined flashlights (e.g. only `label`, `model` and `predict_function`) and add common arguments like `y`, `by`, `data` and/or `w` (case weights) in calling `multiflashlight`. If necessary, the resulting completed flashlights contained in the multiflashlight can be extracted again by `$`.
 
 All key functions are defined for both `flashlight` and `multiflashlight` objects.
+
+## SHAP values
+
+SHAP values offer a very elegant way to summarize the contribution of each variable to a single prediction. If such decompositions are available for many predictions, they can also be used to study global properties of the model such as variable importance (by averaging the absolute SHAP values of each variable) or effects (by showing SHAP values per variable). The problem with SHAP values is that they are too computationally demanding to compute in general. Only for certain model techniques (e.g. tree based methods), they can be computed exactly. Nevertheless, approximations exist, see [6] for details. Unfortunately, even these approximations take time to compute. The approach followed by `flashlight` is to compute SHAP values once and store them in the `flashlight` object. All available methods for SHAP values will then use these values without recalculating them. Since calculation of SHAP values is based e.g. on the choice of "by" variables or case weights, we suggest do not change these aspects of the flashlight afterwards. 
+
+The workflow is as follows:
+```
+# Fit model
+fit <- lm(Sepal.Length ~ ., data = iris)
+
+# Make flashlight
+fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols",
+                 metrics = list(rmse = rmse, `R-squared` = r_squared))
+                 
+# Calculate SHAP values
+fl <- add_shap(fl)
+
+# Optionally, use type = "shap" for different methods
+plot(light_importance(fl, type = "shap"))
+plot(light_scatter(fl, v = "Petal.Length", type = "shap"))
+plot(light_profile(fl, v = "Petal.Length", type = "shap"))
+plot(light_effects(fl, v = "Petal.Length"), use = c("response", "pd", "shap"))
+```
+
+For larger data and/or slow prediction functions, even computing approximate SHAP values might take too much time. The following options in `add_shap` are available to reduce the running time:
+
+- Reduce the number of variables (`v`).
+
+- Reduce the number of SHAP values (`n_shap`).
+
+- Reduce the size of the reference data set (`n_max`).
+
+- Select `visit_strategy = "importance"` (the default) instead of "permutation". 
+
+- If `visit_strategy = "permutation"`, reduce the number of permutations (`n_perm`).
+
+- Avoid unnecessary flashlights in a multiflashlight.
+
+Once calculated, we suggest do store the resulting values. For a single flashlight x, use `saveRDS(x$shap), file = ...` resp. `x$shap <- readRDS(...)` to do so.
 
 ## Example
 
@@ -368,18 +418,16 @@ For performance considerations, the minimum required info in the (multi-)flashli
 
 ### Variable importance
 
-Now let's study variable importance of the explainers. By default, it is shown with respect to the first metric in the explainers. In our case, its the root-mean-squared error. We additionally pass the variables we are interested in.
+Now let's study variable importance of the explainers. 
 
 ```{r}
 (imp <- light_importance(fls, v = x))
 plot(imp, fill = "darkred")
 ```
 
-Minimal required elements in the (multi-)flashlight are the same as in `light_performance`.
+Note for permutation importance: If the calculations take too long (e.g. large query data), set `n_max` to some reasonable value. `light_importance` will then randomly pick `n_max` rows and use only these for assessment of importance. On the other hand, if the calculations are very fast, consider setting `m_repetitions` to a value > 1 in order to repeat the permutations multiple times. The resulting variable importance corresponds to the average drop in performance and standard errors are added.
 
-Note: If the calculations take too long (e.g. large query data), set `n_max` to some reasonable value. `light_importance` will then randomly pick `n_max` rows and use only these for assessment of importance.
-
-Note: If the calculations are very fast, consider setting `m_repetitions` to a value > 1 in order to repeat the permutations multiple times. The resulting variable importance corresponds to the average drop in performance and standard errors are added.
+If SHAP values have been precomputed by `add_shap`, use `type = "shap"` to show mean absolute shap values per covariable.
 
 ### Individual conditional expectation
 
@@ -558,6 +606,13 @@ plot_counts(p, eff, fill = "blue", alpha = 0.2, width = 0.3)
 
 The `plot` method of `light_effects` allows to hide certain plot element if it looks too dense.
 
+As an alternative to profile plots, we could also consider scatter plots.
+
+```{r}
+pr <- light_scatter(fls, v = "sqft_living", n_max = 300) 
+plot(pr, alpha = 0.2)
+```
+
 ### Interaction strength
 
 Based on Friedman's H statistic [7], we can investigate which variable has strongest interaction effect relative to its full effect.
@@ -632,6 +687,10 @@ p <- plot(z) +
   scale_y_continuous(labels = format_y) +
   coord_cartesian(ylim = c(0, 3e6))
 plot_counts(p, z, alpha = 0.2)
+
+# Scatter
+pr <- light_scatter(fls, v = "sqft_living", n_max = 300) 
+plot(pr, alpha = 0.8)
 
 # Variable contribution breakdown for single observation (on log-scale)
 # -> "by" selects the relevant rows in data/valid

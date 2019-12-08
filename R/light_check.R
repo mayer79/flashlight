@@ -65,7 +65,7 @@ light_check.flashlight <- function(x, check_shap = FALSE, ...) {
     if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
       warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
     }
-    if (!all.equal(x$w, x$shap$w)) {
+    if (!isTRUE(all.equal(x$w, x$shap$w))) {
       warning("SHAP values have been computed using other 'w'. This is not recommended.")
     }
   }

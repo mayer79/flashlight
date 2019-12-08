@@ -31,7 +31,7 @@
 #' @param pd_seed Integer random seed used to select ICE profiles. Only used for type = "partial dependence" and "ale".
 #' @param pd_center How should ICE curves be centered? Default is "no". Choose "first", "middle", or "last" to 0-center at specific evaluation points. Choose "mean" to center all profiles at the within-group means. Choose "0" to mean-center curves at 0. Only relevant for partial dependence.
 #' @param ale_two_sided If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
-#' @param shap_baseline Should baseline be added to SHAP values? Only relevant for \code{type = "shap"}.
+#' @param shap_baseline Should baseline be added to SHAP values? Note that the baseline level refers to the "by" variables originally used to calculate the SHAP values. Only relevant for \code{type = "shap"}.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence and ALE profiles.
 #' @return An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.
 #' \itemize{
@@ -93,24 +93,10 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   cut_type <- match.arg(cut_type)
   pd_center <- match.arg(pd_center)
 
-  if (type == "ale" && stats == "quartiles") {
-    stop("The cumsum step of ALE does not make sense for quartiles.")
+  if (is.null(data)) {
+    data <- x$data
   }
-  # Additional checks and data extraction.
-  if (type == "shap") {
-    x <- light_check(x, check_shap = TRUE)
-    if (use_linkinv) {
-      x <- shap_link(x)
-    }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
-  } else {
-    if (is.null(data)) {
-      data <- x$data
-    }
-    # Update flashlight
-    x <- flashlight(x, data = data, by = by,
-                    linkinv = if (use_linkinv) x$linkinv else function(z) z)
-  }
+
   # Checks
   stopifnot(nrow(data) >= 1L,
             !anyDuplicated(c(by, v, if (counts) counts_name,
@@ -119,30 +105,39 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   if (!is.null(pred) && type == "predicted" && length(pred) != nrow(data)) {
     stop("Wrong number of predicted values passed.")
   }
+  if (type == "ale" && stats == "quartiles") {
+    stop("The cumsum step of ALE does not make sense for quartiles.")
+  }
 
-  # Partial dependence and ale are obtained by calling light_ice resp. ale_profile
+  # Update flashlight
+  x <- flashlight(x, data = data, by = by,
+                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
+
+  # Additional checks if SHAP and shap data extraction
+  if (type == "shap") {
+    x <- light_check(x, check_shap = TRUE)
+    if (use_linkinv) {
+      x <- shap_link(x)
+    }
+    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+  }
+
+  # Calculate profiles
+  arg_list <- list(x = x, v = v, evaluate_at = pd_evaluate_at, breaks = breaks,
+                   n_bins = n_bins, cut_type = cut_type, indices = pd_indices,
+                   n_max = pd_n_max, seed = pd_seed, value_name = value_name)
   if (type == "partial dependence") {
-    # Get profiles
-    cp_profiles <- light_ice(x, v = v, evaluate_at = pd_evaluate_at,
-                             breaks = breaks, grid = pd_grid,
-                             n_bins = n_bins, cut_type = cut_type,
-                             indices = pd_indices, n_max = pd_n_max,
-                             seed = pd_seed, center = pd_center,
-                             value_name = value_name,
-                             label_name = label_name, id_name = "id_xxx")
+    arg_list <- c(arg_list, list(grid = pd_grid, center = pd_center,
+                                 label_name = label_name, id_name = "id_xxx"))
+    cp_profiles <- do.call(light_ice, arg_list)
     v <- cp_profiles$v
     data <- cp_profiles$data
   } else if (type == "ale") {
-    agg <- ale_profile(x, v = v, evaluate_at = pd_evaluate_at,
-                       breaks = breaks,
-                       n_bins = n_bins, cut_type = cut_type,
-                       indices = pd_indices, n_max = pd_n_max,
-                       seed = pd_seed,
-                       value_name = value_name, counts_name = counts_name,
-                       counts = counts, counts_weighted = counts_weighted,
-                       pred = pred, two_sided = ale_two_sided)
+    arg_list <- c(arg_list, list(counts_name = counts_name,
+                                 counts = counts, counts_weighted = counts_weighted,
+                                 pred = pred, two_sided = ale_two_sided))
+    agg <- do.call(ale_profile, arg_list)
   } else {
-    stopifnot(!is.null(v), v %in% colnames(data))
     # Add predictions/response to data
     data[[value_name]] <- switch(type,
       response = response(x),
@@ -151,12 +146,14 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
       shap = data[["shap_"]] + if (shap_baseline) data[["baseline_"]] else 0)
 
     # Replace v values by binned ones
+    stopifnot(!is.null(v), v %in% colnames(data))
     cuts <- auto_cut(data[[v]], breaks = breaks,
                      n_bins = n_bins, cut_type = cut_type, ...)
     data[[v]] <- cuts$data[[if (v_labels) "level" else "value"]]
   }
+
+  # Aggregate predicted values
   if (type != "ale") {
-    # Aggregate predicted values
     agg <- grouped_stats(data = data, x = value_name, w = x$w, by = c(by, v),
                          stats = stats, counts = counts,
                          counts_weighted = counts_weighted,
@@ -164,11 +161,12 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                          q3_name = q3_name, na.rm = TRUE)
   }
 
+  # Finalize results
   agg[[label_name]] <- x$label
 
-  # Code type as factor
-  type_levels <- c("response", "predicted", "partial dependence", "ale", "residual", "shap")
-  agg[[type_name]] <- factor(type, type_levels)
+  # Code type as factor (relevant for light_effects)
+  agg[[type_name]] <- factor(type, c("response", "predicted", "partial dependence",
+                                     "ale", "residual", "shap"))
 
   # Collect results
   out <- list(data = agg, by = by, v = v, type = type, stats = stats,
