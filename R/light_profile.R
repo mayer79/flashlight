@@ -110,16 +110,12 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   }
 
   # Update flashlight
-  x <- flashlight(x, data = data, by = by,
+  x <- flashlight(x, data = data, by = by, update_and_check_shap = (type == "shap"),
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # Additional checks if SHAP and shap data extraction
   if (type == "shap") {
-    x <- light_check(x, check_shap = TRUE)
-    if (use_linkinv) {
-      x <- shap_link(x)
-    }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
   }
 
   # Calculate profiles

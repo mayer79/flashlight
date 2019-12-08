@@ -82,16 +82,12 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
             !anyDuplicated(c(key_vars, value_name, variable_name, error_name)))
 
   # Update flashlight with everything except data
-  x <- flashlight(x, by = by, metrics = metric,
+  x <- flashlight(x, by = by, metrics = metric, update_and_check_shap = (type == "shap"),
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # Additional checks if SHAP and shap data extraction
   if (type == "shap") {
-    x <- light_check(x, check_shap = TRUE)
-    if (use_linkinv) {
-      x <- shap_link(x)
-    }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
+     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
   }
 
   # Calculations

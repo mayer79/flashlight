@@ -90,7 +90,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
             v %in% colnames(data))
 
   # Update flashlight and calculate predictions
-  x <- flashlight(x, data = data, by = by,
+  x <- flashlight(x, data = data, by = by, update_and_check_shap = is.shap(x$shap),
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # Pre-calculate predictions (to save time)

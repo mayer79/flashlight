@@ -65,16 +65,12 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
             !anyDuplicated(c(by, v, value_name, label_name, type_name)))
 
   # Update flashlight
-  x <- flashlight(x, data = data, by = by,
+  x <- flashlight(x, data = data, by = by, update_and_check_shap = (type == "shap"),
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # Additional checks if SHAP and shap data extraction
   if (type == "shap") {
-    x <- light_check(x, check_shap = TRUE)
-    if (use_linkinv) {
-      x <- shap_link(x)
-    }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
   }
 
   # Subsample rows if data too large

@@ -3,7 +3,6 @@
 #' Checks if an object of class \code{flashlight} or \code{multiflashlight} is consistently defined.
 #'
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
-#' @param check_shap Should flashlight be checked for consistency and existence of a shap object?
 #' @param ... Further arguments passed from or to other methods.
 #' @return The input \code{x} or an error message.
 #' @export
@@ -26,7 +25,7 @@ light_check.default <- function(x, ...) {
 
 #' @describeIn light_check Checks if a flashlight object is consistently defined.
 #' @export
-light_check.flashlight <- function(x, check_shap = FALSE, ...) {
+light_check.flashlight <- function(x, ...) {
   if (is.null(x$label)) {
     stop("label should not be NULL.")
   }
@@ -59,15 +58,6 @@ light_check.flashlight <- function(x, check_shap = FALSE, ...) {
       stop("data should be a data.frame.")
     }
     lapply(c("y", "w", "by"), in_colnames)
-  }
-  if (check_shap) {
-    stopifnot(is.shap(x$shap))
-    if (!is.null(x$shap$by) && !(x$shap$by %in% by)) {
-      warning("SHAP values have been computed using other 'by' groups. This is not recommended.")
-    }
-    if (!isTRUE(all.equal(x$w, x$shap$w))) {
-      warning("SHAP values have been computed using other 'w'. This is not recommended.")
-    }
   }
   invisible(x)
 }
