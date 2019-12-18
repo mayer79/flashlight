@@ -1,12 +1,12 @@
 #' Add SHAP values to (multi-)flashlight
 #'
-#' The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm in [1] is used with importance based visit order. Use \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
+#' The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as static element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm in [1] is used with importance based visit order. Use the default \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
 #'
 #' @importFrom dplyr bind_rows
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".
-#' @param visit_strategy In what sequence should variables be visited? By "importance" (fast), by \code{n_perm} "permutation" (slow) or as "v" (not recommended).
+#' @param visit_strategy In what sequence should variables be visited? By \code{n_perm} "permutation" (slow), by "importance" (fast), or as "v" (not recommended).
 #' @param n_shap Number of SHAP decompositions to calculate.
 #' @param n_max Maximum number of rows in \code{data} to consider in the reference data. Set to lower value if \code{data} is large.
 #' @param n_perm Number of permutations of random visit sequences. Only used if \code{visit_strategy = "permutation"}.
@@ -38,7 +38,7 @@ add_shap.default <- function(x, ...) {
 #' @describeIn add_shap Variable attribution to single observation for a flashlight.
 #' @export
 add_shap.flashlight <- function(x, v = NULL,
-                                visit_strategy = c("importance", "permutation", "v"),
+                                visit_strategy = c("permutation", "importance", "v"),
                                 n_shap = 100, n_max = Inf, n_perm = 20,
                                 seed = NULL, use_linkinv = FALSE, verbose = TRUE,
                                 variable_name = "variable", ...) {

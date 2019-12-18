@@ -9,7 +9,7 @@
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for \code{type = "shap"}.
-#' @param n_max Maximum number of data rows to consider. Will be randomly picked from the relevant data.
+#' @param n_max Maximum number of data rows to select. Will be randomly picked from the relevant data.
 #' @param seed An integer random seed used for subsampling.
 #' @param value_name Column name in resulting \code{data} containing the values belonging to \code{type}. Defaults to "value".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
@@ -51,7 +51,7 @@ light_scatter.default <- function(x, ...) {
 #' @export
 light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
                                      type = c("predicted", "response", "residual", "shap"),
-                                     use_linkinv = TRUE, n_max = Inf, seed = NULL,
+                                     use_linkinv = TRUE, n_max = 400, seed = NULL,
                                      value_name = "value", label_name = "label",
                                      type_name = "type", ...) {
   type <- match.arg(type)
