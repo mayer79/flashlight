@@ -1,19 +1,19 @@
 #' Partial Dependence and other Profiles
 #'
-#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]) and residuals. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
+#' Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]), residuals, and shap. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
 #'
-#' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
+#' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
 #'
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be profiled.
-#' @param data An optional \code{data.frame}.
+#' @param data An optional \code{data.frame}. Not used for \code{type = "shap"}.
 #' @param by An optional vector of column names used to additionally group the results.
-#' @param type Type of the profile: Either "partial dependence", "ale", "predicted", "response", or "residual".
+#' @param type Type of the profile: Either "partial dependence", "ale", "predicted", "response", "residual", or "shap".
 #' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.
 #' @param breaks Cut breaks for a numeric \code{v}.
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{grid} nor \code{pd_evaluate_at} is specified.
 #' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
-#' @param use_linkinv Should retransformation function be applied? Default is TRUE.
+#' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for type "shap".
 #' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
 #' @param q1_name Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".
 #' @param q3_name Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".
@@ -73,8 +73,8 @@ light_profile.default <- function(x, ...) {
 #' @describeIn light_profile Profiles for flashlight.
 #' @export
 light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
-                                     type = c("partial dependence", "ale",
-                                              "predicted", "response", "residual"),
+                                     type = c("partial dependence", "ale", "predicted",
+                                              "response", "residual", "shap"),
                                      stats = c("mean", "quartiles"),
                                      breaks = NULL, n_bins = 11,
                                      cut_type = c("equal", "quantile"), use_linkinv = TRUE,
@@ -91,61 +91,66 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   cut_type <- match.arg(cut_type)
   pd_center <- match.arg(pd_center)
 
-  if (type == "ale" && stats == "quartiles") {
-    stop("The cumsum step of ALE does not make sense for quartiles.")
-  }
-
   if (is.null(data)) {
     data <- x$data
   }
+
   # Checks
-  stopifnot((n <- nrow(data)) >= 1L,
+  stopifnot(nrow(data) >= 1L,
             !anyDuplicated(c(by, v, if (counts) counts_name,
                              if (stats == "quartiles") c(q1_name, q3_name),
-                             value_name, label_name)))
+                             value_name, label_name, type_name)))
   if (!is.null(pred) && type == "predicted" && length(pred) != nrow(data)) {
     stop("Wrong number of predicted values passed.")
+  }
+  if (type == "ale" && stats == "quartiles") {
+    stop("The cumsum step of ALE does not make sense for quartiles.")
   }
 
   # Update flashlight
   x <- flashlight(x, data = data, by = by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
-  # Partial dependence and ale are obtained by calling light_ice
+  # Additional checks if SHAP and shap data extraction
+  if (type == "shap") {
+    if (!is.shap(x$shap)) {
+      stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
+    }
+    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+  }
+
+  # Calculate profiles
+  arg_list <- list(x = x, v = v, evaluate_at = pd_evaluate_at, breaks = breaks,
+                   n_bins = n_bins, cut_type = cut_type, indices = pd_indices,
+                   n_max = pd_n_max, seed = pd_seed, value_name = value_name)
   if (type == "partial dependence") {
-    # Get profiles
-    cp_profiles <- light_ice(x, v = v, evaluate_at = pd_evaluate_at,
-                             breaks = breaks, grid = pd_grid,
-                             n_bins = n_bins, cut_type = cut_type,
-                             indices = pd_indices, n_max = pd_n_max,
-                             seed = pd_seed, center = pd_center,
-                             value_name = value_name,
-                             label_name = label_name, id_name = "id_xxx")
+    arg_list <- c(arg_list, list(grid = pd_grid, center = pd_center,
+                                 label_name = label_name, id_name = "id_xxx"))
+    cp_profiles <- do.call(light_ice, arg_list)
     v <- cp_profiles$v
     data <- cp_profiles$data
   } else if (type == "ale") {
-    agg <- ale_profile(x, v = v, breaks = breaks, n_bins = n_bins,
-                       cut_type = cut_type,
-                       value_name = value_name, counts_name = counts_name,
-                       counts = counts, counts_weighted = counts_weighted,
-                       pred = pred, evaluate_at = pd_evaluate_at,
-                       n_max = pd_n_max, indices = pd_indices,
-                       seed = pd_seed, two_sided = ale_two_sided)
+    arg_list <- c(arg_list, list(counts_name = counts_name,
+                                 counts = counts, counts_weighted = counts_weighted,
+                                 pred = pred, two_sided = ale_two_sided))
+    agg <- do.call(ale_profile, arg_list)
   } else {
-    stopifnot(!is.null(v), v %in% colnames(data))
     # Add predictions/response to data
     data[[value_name]] <- switch(type,
       response = response(x),
       predicted = if (is.null(pred)) predict(x) else pred,
-      residual = residuals(x))
+      residual = residuals(x),
+      shap = data[["shap_"]])
 
     # Replace v values by binned ones
+    stopifnot(!is.null(v), v %in% colnames(data))
     cuts <- auto_cut(data[[v]], breaks = breaks,
                      n_bins = n_bins, cut_type = cut_type, ...)
     data[[v]] <- cuts$data[[if (v_labels) "level" else "value"]]
   }
+
+  # Aggregate predicted values
   if (type != "ale") {
-    # Aggregate predicted values
     agg <- grouped_stats(data = data, x = value_name, w = x$w, by = c(by, v),
                          stats = stats, counts = counts,
                          counts_weighted = counts_weighted,
@@ -153,17 +158,17 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                          q3_name = q3_name, na.rm = TRUE)
   }
 
+  # Finalize results
   agg[[label_name]] <- x$label
 
-  # Code type as factor
-  type_levels <- c("response", "predicted", "partial dependence", "ale", "residual")
-  agg[[type_name]] <- factor(type, type_levels)
+  # Code type as factor (relevant for light_effects)
+  agg[[type_name]] <- factor(type, c("response", "predicted", "partial dependence",
+                                     "ale", "residual", "shap"))
 
   # Collect results
   out <- list(data = agg, by = by, v = v, type = type, stats = stats,
               value_name = value_name, q1_name = q1_name, q3_name = q3_name,
-              label_name = label_name, type_name = type_name,
-              counts_name = counts_name)
+              label_name = label_name, type_name = type_name, counts_name = counts_name)
   class(out) <- c("light_profile", "light", "list")
   out
 }
@@ -175,19 +180,10 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
                                           cut_type = c("equal", "quantile"),
                                           pd_evaluate_at = NULL, pd_grid = NULL, ...) {
   cut_type <- match.arg(cut_type)
-
+  stopifnot(!is.null(v))
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
-    stopifnot(!is.null(v))
-    if (is.null(data)) {
-      stopifnot(all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
-                all(vapply(x, function(z) v %in% colnames(z$data), FUN.VALUE = TRUE)))
-      v_vec <- unlist(lapply(x, function(z) z$data[[v]]))
-    } else {
-      stopifnot(nrow(data) >= 1L, v %in% colnames(data))
-      v_vec <- data[[v]]
-    }
-    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins,
-                       cut_type = cut_type)$breaks
+    breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
+                            n_bins = n_bins, cut_type = cut_type)
   }
   all_profiles <- lapply(x, light_profile, v = v, data = data,
                          breaks = breaks, n_bins = n_bins, cut_type = cut_type,

@@ -5,7 +5,7 @@
 \alias{light_effects.default}
 \alias{light_effects.flashlight}
 \alias{light_effects.multiflashlight}
-\title{Combination of Response, Predicted, Partial Dependence, and ALE Profiles}
+\title{Combination of Response, Predicted, Partial Dependence, and ALE profiles.}
 \usage{
 light_effects(x, ...)
 
@@ -100,6 +100,7 @@ An object of classes \code{light_effects}, \code{light} (and a list) with the fo
   \item \code{response} A tibble containing the response profiles.
   \item \code{predicted} A tibble containing the prediction profiles.
   \item \code{pd} A tibble containing the partial dependence profiles.
+  \item \code{ale} A tibble containing the ALE profiles.
   \item \code{by} Same as input \code{by}.
   \item \code{v} The variable(s) evaluated.
   \item \code{stats} Same as input \code{stats}.
@@ -129,7 +130,6 @@ Note that ALE profiles are being calibrated by (weighted) average predictions. T
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-
 light_effects(mod_full, v = "Species")
 light_effects(mod_full, v = "Species", stats = "quartiles")
 }

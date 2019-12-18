@@ -1,4 +1,4 @@
-#' Combination of Response, Predicted, Partial Dependence, and ALE Profiles
+#' Combination of Response, Predicted, Partial Dependence, and ALE profiles.
 #'
 #' Calculates response- prediction-, partial dependence, and ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}.
 #'
@@ -33,6 +33,7 @@
 #'   \item \code{response} A tibble containing the response profiles.
 #'   \item \code{predicted} A tibble containing the prediction profiles.
 #'   \item \code{pd} A tibble containing the partial dependence profiles.
+#'   \item \code{ale} A tibble containing the ALE profiles.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{stats} Same as input \code{stats}.
@@ -47,7 +48,6 @@
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#'
 #' light_effects(mod_full, v = "Species")
 #' light_effects(mod_full, v = "Species", stats = "quartiles")
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
@@ -89,50 +89,32 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   # Update flashlight and calculate predictions
   x <- flashlight(x, data = data, by = by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
+
+  # Pre-calculate predictions (to save time)
   if (is.null(pred)) {
     pred <- predict(x)
   }
 
-  # Set levels of v
+  # Calculate cut information on "data"
   cuts <- auto_cut(data[[v]], breaks = breaks, n_bins = n_bins,
                    cut_type = cut_type, x_name = v, ...)
 
-  # Partial dependence
-  pd <- light_profile(x, v = v, value_name = value_name,
-                      label_name = label_name, type_name = type_name,
-                      counts = FALSE, pd_evaluate_at = cuts$bin_means,
-                      pd_indices = pd_indices,
-                      pd_n_max = pd_n_max, pd_seed = pd_seed)$data
+  # Prepare argument lists for light_profile
+  base_list <- list(x = x, v = v,  value_name = value_name,
+                    label_name = label_name, type_name = type_name)
+  pd_list <- c(base_list, list(counts = FALSE, pd_evaluate_at = cuts$bin_means,
+                               pd_indices = pd_indices, pd_n_max = pd_n_max, pd_seed = pd_seed))
+  ale_list <- c(pd_list, list(type = "ale", pred = pred, ale_two_sided = ale_two_sided))
+  resp_list <- c(base_list, list(type = "response", stats = stats, breaks = cuts$breaks,
+                                 v_labels = FALSE, q1_name = q1_name, q3_name = q3_name,
+                                 counts = TRUE, counts_name = counts_name,
+                                 counts_weighted = counts_weighted))
+  pred_list <- c(base_list, list(type = "predicted", breaks = cuts$breaks,
+                                 v_labels = FALSE, counts = FALSE, pred = pred))
+  arg_lists <- list(response = resp_list, predicted = pred_list, pd = pd_list, ale = ale_list)
 
-  ale <- light_profile(x, v = v, type = "ale", value_name = value_name,
-                       label_name = label_name, type_name = type_name,
-                       counts = FALSE, breaks = cuts$breaks,
-                       pd_evaluate_at = cuts$bin_means,
-                       pd_indices = pd_indices, pd_n_max = pd_n_max,
-                       pd_seed = pd_seed, pred = pred,
-                       ale_two_sided = ale_two_sided)$data
-
-  # Overwrite v variable in data and update flashlight
-  data[[v]] <- cuts$data[[v]]
-  x <- flashlight(x, data = data)
-
-  # Response profile
-  response <- light_profile(x = x, v = v, type = "response", stats = stats,
-                            breaks = cuts$breaks,
-                            v_labels = FALSE, value_name = value_name,
-                            q1_name = q1_name, q3_name = q3_name,
-                            label_name = label_name, type_name = type_name,
-                            counts = TRUE, counts_name = counts_name,
-                            counts_weighted = counts_weighted)$data
-
-  # Prediction profile based on precalculated predictions "pred"
-  predicted <- light_profile(x = x, v = v, type = "predicted",
-                             breaks = cuts$breaks,
-                             v_labels = FALSE, value_name = value_name,
-                             label_name = label_name, type_name = type_name,
-                             counts = FALSE, pred = pred)$data
-
-  data_sets <- list(response = response, predicted = predicted, pd = pd, ale = ale)
+  # Call light_profile for all types
+  data_sets <- lapply(arg_lists, function(arg) do.call(light_profile, arg)$data)
 
   # Unify x scale
   if (v_labels) {
@@ -155,21 +137,11 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL, n_bins = 11,
                                           cut_type = c("equal", "quantile"), ...) {
   cut_type <- match.arg(cut_type)
-
   if (is.null(breaks)) {
-    if (is.null(data)) {
-      stopifnot(all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
-                all(vapply(x, function(z) v %in% colnames(z$data), FUN.VALUE = TRUE)))
-      v_vec <- unlist(lapply(x, function(z) z$data[[v]]))
-    } else {
-      stopifnot(nrow(data) >= 1L, v %in% colnames(data))
-      v_vec <- data[[v]]
-    }
-    breaks <- auto_cut(v_vec, breaks = breaks, n_bins = n_bins,
-                       cut_type = cut_type)$breaks
+    breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
+                            n_bins = n_bins, cut_type = cut_type)
   }
   all_effects <- lapply(x, light_effects, v = v, data = data, breaks = breaks,
                         n_bins = n_bins, cut_type = cut_type, ...)
-
   light_combine(all_effects, new_class = "light_effects_multi")
 }

@@ -14,6 +14,8 @@
 #' @param by A character vector with names of grouping variables.
 #' @param metrics A named list of metrics. Here, a metric is a function with exactly four arguments: actual, predicted, w (case weights) and \code{...} like those in package \code{MetricsWeighted}.
 #' @param label Name of the flashlight. Required.
+#' @param shap An optional shap object. Typically added by calling \code{add_shap}.
+#' @param check When updating the flashlight: Should internal checks be performed? Default is \code{TRUE}.
 #' @param ... Arguments passed from or to other functions.
 #' @return An object of class \code{flashlight} (and \code{list}) containing each input (except \code{x}) as element.
 #' @export
@@ -29,19 +31,20 @@ flashlight <- function(x, ...) {
 #' @describeIn flashlight Used to create a flashlight object. No \code{x} has to be passed in this case.
 #' @export
 flashlight.default <- function(x, model = NULL, data = NULL, y = NULL,
-                               predict_function = predict, linkinv = function(z) z, w = NULL,
-                               by = NULL, metrics = list(rmse = rmse), label = NULL, ...) {
+                               predict_function = predict, linkinv = function(z) z,
+                               w = NULL, by = NULL, metrics = list(rmse = rmse),
+                               label = NULL, shap = NULL, ...) {
   x <- c(list(model = model, data = data, y = y,
               predict_function = predict_function, linkinv = linkinv, w = w,
-              by = by, metrics = metrics, label = label), list(...))
+              by = by, metrics = metrics, label = label, shap = shap), list(...))
   class(x) <- c("flashlight", "list")
   light_check(x)
 }
 
 #' @describeIn flashlight Used to update an existing flashlight object.
 #' @export
-flashlight.flashlight <- function(x, ...) {
+flashlight.flashlight <- function(x, check = TRUE, ...) {
   args <- list(...)
   x[names(args)] <- args
-  light_check(x)
+  if (check) light_check(x) else invisible(x)
 }

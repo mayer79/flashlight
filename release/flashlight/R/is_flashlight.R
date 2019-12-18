@@ -97,4 +97,21 @@ is.light_effects_multi <- function(x) {
   inherits(x, "light_effects_multi")
 }
 
+#' @describeIn is.flashlight Check for shap object.
+#' @export
+is.shap <- function(x) {
+  inherits(x, "shap")
+}
+
+#' @describeIn is.flashlight Check for light_scatter object.
+#' @export
+is.light_scatter <- function(x) {
+  inherits(x, "light_scatter")
+}
+
+#' @describeIn is.flashlight Check for light_scatter_multi object.
+#' @export
+is.light_scatter_multi <- function(x) {
+  inherits(x, "light_scatter_multi")
+}
 

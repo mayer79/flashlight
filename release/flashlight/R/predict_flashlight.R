@@ -15,7 +15,7 @@
 #' predict(fl, data = iris[1:5, ])
 #' predict(fl, data = iris[1:5, ], linkinv = exp)
 predict.flashlight <- function(object, ...) {
-  object <- flashlight(object, ...)
+  object <- flashlight(object, check = FALSE, ...)
   required <- c("predict_function", "linkinv", "model", "data")
   stopifnot(sapply(with(object, required), Negate(is.null)))
   with(object, linkinv(predict_function(model, data)))

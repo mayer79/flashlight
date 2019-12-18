@@ -16,7 +16,7 @@ light_profile(x, ...)
   v = NULL,
   data = NULL,
   by = x$by,
-  type = c("partial dependence", "ale", "predicted", "response", "residual"),
+  type = c("partial dependence", "ale", "predicted", "response", "residual", "shap"),
   stats = c("mean", "quartiles"),
   breaks = NULL,
   n_bins = 11,
@@ -61,11 +61,11 @@ light_profile(x, ...)
 
 \item{v}{The variable to be profiled.}
 
-\item{data}{An optional \code{data.frame}.}
+\item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{type}{Type of the profile: Either "partial dependence", "ale", "predicted", "response", or "residual".}
+\item{type}{Type of the profile: Either "partial dependence", "ale", "predicted", "response", "residual", or "shap".}
 
 \item{stats}{Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.}
 
@@ -75,7 +75,7 @@ light_profile(x, ...)
 
 \item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
+\item{use_linkinv}{Should retransformation function be applied? Default is TRUE. Not used for type "shap".}
 
 \item{value_name}{Column name in resulting \code{data} containing the profile value. Defaults to "value".}
 
@@ -128,10 +128,10 @@ An object of classes \code{light_profile}, \code{light} (and a list) with the fo
 }
 }
 \description{
-Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]) and residuals. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
+Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]), residuals, and shap. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
 }
 \details{
-For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its just "y", "linkinv" and "data". "data" can be passed on the fly for both types.
+For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
 }
 \section{Methods (by class)}{
 \itemize{

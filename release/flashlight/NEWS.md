@@ -1,3 +1,25 @@
+# flashlight 0.6.0
+
+## New functionality
+
+### Major
+
+- Added `light_scatter` and `plot.light_scatter` to create scatter plots of response, predictions, residuals, or SHAP values by some variable.
+
+- `light_importance`, `light_profile`, and `light_scatter` are now able to work with SHAP values.
+
+### Minor
+
+- The plot function of `light_importance` and `light_interaction` now prints informative labels to show what is actually printed.
+
+## Interface change
+
+### Minor
+
+- Removed currently unused output columns "value_shuffled" and "value_before" of `light_importance` due to its incompatibility with the new "shap" importances.
+
+- Added argument "type_name" to `light_interaction`. Its output now also contains a slot `type` as well as `type_name`.
+
 # flashlight 0.5.0
 
 ## New functionality

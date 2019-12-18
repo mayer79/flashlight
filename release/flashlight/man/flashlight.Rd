@@ -19,10 +19,11 @@ flashlight(x, ...)
   by = NULL,
   metrics = list(rmse = rmse),
   label = NULL,
+  shap = NULL,
   ...
 )
 
-\method{flashlight}{flashlight}(x, ...)
+\method{flashlight}{flashlight}(x, check = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{flashlight}. If not provided, a new flashlight is created based on further input. Otherwise, \code{x} is updated based on further input.}
@@ -46,6 +47,10 @@ flashlight(x, ...)
 \item{metrics}{A named list of metrics. Here, a metric is a function with exactly four arguments: actual, predicted, w (case weights) and \code{...} like those in package \code{MetricsWeighted}.}
 
 \item{label}{Name of the flashlight. Required.}
+
+\item{shap}{An optional shap object. Typically added by calling \code{add_shap}.}
+
+\item{check}{When updating the flashlight: Should internal checks be performed? Default is \code{TRUE}.}
 }
 \value{
 An object of class \code{flashlight} (and \code{list}) containing each input (except \code{x}) as element.

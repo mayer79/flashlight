@@ -18,7 +18,7 @@
 \arguments{
 \item{x}{An object of class \code{light_effects}.}
 
-\item{use}{A vector of elements to show. Any subset of ("response", "predicted", "pd" and "ale") or "all". Defaults to all except "ale"}
+\item{use}{A vector of elements to show. Any subset of ("response", "predicted", "pd", "ale") or "all". Defaults to all except "ale"}
 
 \item{zero_counts}{Logical flag if 0 count levels should be shown on the x axis.}
 

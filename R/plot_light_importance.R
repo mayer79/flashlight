@@ -1,6 +1,6 @@
 #' Visualize Variable Importance
 #'
-#' Minimal visualization of an object of class \code{light_importance} as \code{geom_bar}. If multiple repetitions of the algorithm were done, standard errors are added as \code{geom_errorbar}. The object returned is of class \code{ggplot} and can be further customized.
+#' Minimal visualization of an object of class \code{light_importance} as \code{geom_bar}. If available, standard errors are added as \code{geom_errorbar}. The object returned is of class \code{ggplot} and can be further customized.
 #'
 #' The plot is organized as a bar plot with variable names as x-aesthetic. Up to two additional dimensions (multiflashlight and one "by" variable or single flashlight with two "by" variables) can be visualized by facetting and dodge/fill. Set \code{swap_dim = FALSE} to revert the role of these two dimensions. One single additional dimension is visualized by a facet wrap, or - if \code{swap_dim = FALSE} - by dodge/fill.
 #'
@@ -90,7 +90,13 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   if (rotate_x) {
     p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
-  p
-  p + coord_flip()
+  # label
+  type <- switch(x$type,
+                 permutation = "Drop in performance",
+                 shap = "mean(|SHAP|)",
+                 H = "Friedman's H",
+                 ice = "ICE based interaction strength")
+  p + coord_flip() +
+    labs(x = element_blank(), y = type)
 }
 

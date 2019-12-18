@@ -7,16 +7,18 @@
 \alias{light_check.multiflashlight}
 \title{Check flashlight}
 \usage{
-light_check(x)
+light_check(x, ...)
 
-\method{light_check}{default}(x)
+\method{light_check}{default}(x, ...)
 
-\method{light_check}{flashlight}(x)
+\method{light_check}{flashlight}(x, ...)
 
-\method{light_check}{multiflashlight}(x)
+\method{light_check}{multiflashlight}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+
+\item{...}{Further arguments passed from or to other methods.}
 }
 \value{
 The input \code{x} or an error message.

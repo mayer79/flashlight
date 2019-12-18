@@ -6,7 +6,7 @@ The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, ALE, and further effects plots, interaction strength, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, ALE, and further effects plots, scatter plots, interaction strength, and variable contribution breakdown for single observations.
 
 3. It allows to assess multiple models in parallel.
 
@@ -73,6 +73,9 @@ plot(light_profile(fl, v = "Petal.Width", type = "residual", stats = "quartiles"
 
 # Response profiles, prediction profiles, partial depencence, and ALE profiles in one
 plot(light_effects(fl, v = "Petal.Width"), use = "all")
+
+# Scatter plots
+plot(light_scatter(fl, v = "Petal.Width", type = "predicted"))
 
 # Variable contribution breakdown for single observation
 plot(light_breakdown(fl, new_obs = iris[2, ]))

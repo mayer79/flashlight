@@ -16,6 +16,6 @@
 #' residuals(fl, data = iris[1:5, ], linkinv = exp)
 #' resid(fl)[1:5]
 residuals.flashlight <- function(object, ...) {
-  object <- flashlight(object, ...)
+  object <- flashlight(object, check = FALSE, ...)
   response(object) - predict(object)
 }

@@ -16,6 +16,9 @@
 \alias{is.light_profile_multi}
 \alias{is.light_effects}
 \alias{is.light_effects_multi}
+\alias{is.shap}
+\alias{is.light_scatter}
+\alias{is.light_scatter_multi}
 \title{Check functions for flashlight Classes}
 \usage{
 is.flashlight(x)
@@ -47,6 +50,12 @@ is.light_profile_multi(x)
 is.light_effects(x)
 
 is.light_effects_multi(x)
+
+is.shap(x)
+
+is.light_scatter(x)
+
+is.light_scatter_multi(x)
 }
 \arguments{
 \item{x}{Any object.}
@@ -86,6 +95,12 @@ Checks if an object inherits specific class relevant for the flashlight package.
 \item \code{is.light_effects}: Check for light_effects object.
 
 \item \code{is.light_effects_multi}: Check for light_effects_multi object.
+
+\item \code{is.shap}: Check for shap object.
+
+\item \code{is.light_scatter}: Check for light_scatter object.
+
+\item \code{is.light_scatter_multi}: Check for light_scatter_multi object.
 }}
 
 \examples{

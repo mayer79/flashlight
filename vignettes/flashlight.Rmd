@@ -32,17 +32,17 @@ library(ranger)          # random forest
 
 ## Introduction
 
-In contrast to classic statistical modelling techniques like linear regression, modern machine learning approaches tend to provide black box results. In areas like visual computing or natural language processing, this is not an issue since there, focus usually lies on predicting things. Either the predictions are sufficiently useful in practice or the model won't be used. However, in areas where the purpose of a statistical model is also to explain or validate underlying theories (e.g. in medicine, economics, and biology), black box models are of little use. 
+In contrast to classical statistical modelling techniques like linear regression, modern machine learning approaches tend to provide black box results. In areas like visual computing or natural language processing, this is not an issue since their focus is usually on predicting things. Either the predictions are sufficiently useful in practice or the model won't be used. However, in areas where the purpose of a statistical model is also to explain or validate underlying theories (e.g. in medicine, economics, and biology), black box models are of little use.
 
-Thus, there is need to shed light into these black boxes resp. to explain machine learning models as good as possible. An excellent reference is the online book of Christoph Molnar [1]. Of special interest are **model agnostic** approaches that work for any kind of modelling technique, e.g. a linear regression, a neural net or a tree-based method. The only requirement is the availability of a prediction function, i.e. a function takes a data set and returns predictions. 
+Thus, there is need to shed light into these black boxes resp. to explain machine learning models as good as possible. An excellent reference is the online book of Christoph Molnar [[1]](#molnar). Of special interest are **model agnostic** approaches that work for any kind of modelling technique, e.g. a linear regression, a neural net or a tree-based method. The only requirement is the availability of a prediction function, i.e. a function that takes a data set and returns predictions.
 
-To do so is the purpose of the R package `flashlight`, which is inspired by the beautiful `DALEX` package, see (https://CRAN.R-project.org/package=DALEX). 
+This is the purpose of the R package `flashlight`, which is inspired by the beautiful `DALEX` package, see (https://CRAN.R-project.org/package=DALEX).
 
 The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, interaction strength, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, scatter plots, interaction strength, and variable contribution breakdown for single observations.
 
 3. It allows to assess multiple models in parallel without any redundancy in the code.
 
@@ -56,51 +56,55 @@ We will now give a brief introduction to machine learning explanations and then 
 
 ## Background
 
-Important model agnostic machine learning explanations include the following aspects, amongst many other.
+Important model agnostic machine learning explanations include the following aspects, amongst many others.
 
 ### Model performance
 
-How precise are models if applied to unseen data? This aspect is of key interest of basically any supervised machine learning model and helps to identify the best models or, if applied to subgroup, identify problematic segments with low performance. 
+How precise are models if applied to unseen data? This aspect is of key interest of basically any supervised machine learning model and helps to identify the best models or, if applied to subgroups, identify problematic segments with low performance.
 
 ### Variable importance
 
-Which variables are particularly relevant for the model? This aspect is helpful in different ways. Firstly, it might help to simplify the full modelling process by eliminating difficult to assess input variables with low explanatory power. Secondly, its pure information. Thirdly, it might help to identify problems in data structure: if one variable is extremely relevant and all others not, then there might be some sort of information leakage from the response. Thus said, variable importance considerations are very relevant for quality assurance as well. 
+Which variables are particularly relevant for the model? This aspect is helpful in different ways. Firstly, it might help to simplify the full modelling process by eliminating difficult to assess input variables with low explanatory power. Secondly, its pure information. Thirdly, it might help to identify problems in data structure: if one variable is extremely relevant and all others are not, then there might be some sort of information leakage from the response. Finally, variable importance considerations are very relevant for quality assurance as well.
 
-Different modelling techniques offer different ways of variable importance. In linear models, we consider e.g. F-test statistics or p values, in tree-based methods, its number of splits or avarage split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [2]. Multiple permutations lead to more stable estimates of variable importance and allow the calculation of standard errors.
+Different modelling techniques offer different ways of variable importance. In linear models, we consider for example F-test statistics or p values, in tree-based methods the number of splits or average split gains etc. A model agnostic way to assess this is called *permutation importance*: For each input variable $X$, its values are randomly shuffled and the drop in performance with respect to a scoring function is calculated. The more important a variable, the larger the drop. If a variable can be shuffled without any impact on model precision, it is completely irrelevant. The method is described in Fisher et al. 2018 [[2]](#fisher). Multiple permutations lead to more stable estimates of variable importance and allow the calculation of standard errors.
 
 ### Effects of input variables
 
 In linear regression, the fitted model consists of an affine linear function in the inputs. Its coefficients immediately tell us how the response is expected to change if the value of one single input variable $X$ is systematically being adapted. How to describe such effects of a variable $X$ for more complex models that include non-linearities and high-order interactions?
 
-One approach that is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [3]. The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. Centered ICE profiles ("c-ICE") help to detect interactions even better.
+One approach is to study *Individual Conditional Expectation (ICE)* profiles of selected observations: They show how predictions of observation $i$ react when the input variable $X$ is systematically being changed, see [[3]](#goldstein). The more different the profiles are in shape or slope, the stronger are the interaction effects. For a linear regression without interactions, all such profiles would be parallel. Centered ICE profiles ("c-ICE") help to detect interactions even better.
 
-If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [4]. Partial dependence profiles (as well as ICE profiles) are not limited to one single variable $X$. Also multiple variables can be systematically varied on a grid to study the multivariate impact on the typical response.
+If many ICE profiles are averaged, we get *partial dependence profiles* which can be viewed as the average effect of variable $X$, pooled over all interactions. Partial dependence plots where introduced in Friedman's seminal 2001 article on gradient boosting [[4]](#friedman2001). Partial dependence profiles (as well as ICE profiles) are not limited to one single variable $X$. Also multiple variables can be systematically varied on a grid in order to study the multivariate impact on the typical response.
 
-Studying ICE and partial dependence profiles make sense as long as it make sense to investigate the effect of $X$ while holding all other predictors fixed. The unnatural such ceteris paribus assumption is, the less reasonable are the results of ICE and partial dependence. *Accumulated local effects* or *ALE* profiles [5] try to overcome this weakness of ICE and partial dependence considerations. 
+Studying ICE and partial dependence profiles means investigating the effect of $X$ while holding all other predictors fixed. The more unnatural this Ceteris Paribus assumption is, the less reasonable are the results of ICE and partial dependence. *Accumulated local effects* or *ALE* profiles [[5]](#apley) try to overcome this weakness of ICE and partial dependence considerations.
 
-ALE profiles at positions $x_i$ are calculated as follows: 
+ALE profiles at positions $x_i$ are calculated as follows:
 
 1) First, left derivatives $\Delta_i$ are estimated for all $i$: Calculate slope of partial dependence line from $x_i-\varepsilon$ to $x$ based on data points in $[x_i-\varepsilon, x_i]$.
 
 2) The uncalibrated ALE value at $x_i$ is the (integrated/accumulated) partial sum $\sum_{j \le i} \Delta_j$.
 
-3) In the calibration step, the effects are shifted to the level of the response variable or its predictions. 
+3) In the calibration step, the effects are shifted to the level of the response variable or its predictions.
 
-An alternative to partial dependence and ALE profiles is to look at combined effects of $X$ including the effects from all other predictors. Such effects are estimated by averaging the predictions within values of the predictor $X$ of interest. If such prediction profile differs considerably from the observed average response, this might be a sign of model underfit. This visualization is sometimes called "marginal plot" or "M plot", see [5]. Residual profiles immediatly show such misfits as well. In classic statistical modelling, this sort of plots are called "fitted versus covariable" plots or "residual versus covariable" plots.
+An alternative to partial dependence and ALE profiles is to look at combined effects of $X$ including the effects from all other predictors. Such effects are estimated by averaging the predictions within values of the predictor $X$ of interest. If such prediction profile differs considerably from the observed average response, this might be a sign of model underfit. This visualization is sometimes called "marginal plot" or "M plot", see [[5]](#apley). Residual profiles immediately show such misfits as well. In classical statistical modelling, this sort of plots are called "fitted versus covariable" plots or "residual versus covariable" plots.
 
-Besides looking at *average* profiles, it is often also revealing to consider *quartile* profiles or to visualize partial dependence, response and prediction profiles in the same plot.
+If SHAP values have been calculated, plotting their average contributions of $X$ against $X$ is an elegant way to visualize the effect of $X$, see Subsection "Variable contribution breakdown for single observations".
+
+Besides looking at *average* profiles, it is often also revealing to consider *quartiles* or to visualize partial dependence, response and prediction profiles in the same plot.
+
+Instead of studying profiles, it might be revealing to look at scatter plots of responses, predictions, residuals, or SHAP values versus $X$.
 
 ### Interaction strength
 
-Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the overall interaction strength) and/or between pairs of covariables. A model-agnostic way to assess such measures is based on partial dependence curves, see Friedman and Popescu [7]. A computationally less demanding alternative to their H-statistic of measuring total interaction strength per covariable can be extracted from centered ICE: How much of their variability is unexplained by the main effect? 
+Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the overall interaction strength) and/or between pairs of covariables. A model-agnostic way to assess such measures is based on partial dependence curves, see Friedman and Popescu [[7]](#friedman2008). A computationally less demanding alternative to their H-statistic of measuring total interaction strength per covariable can be extracted from centered ICE: How much of their variability is unexplained by the main effect?
 
 ### Variable contribution breakdown for single observations
 
-Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be decomposed into additive effects of input variables, e.g. LIME, LIVE, SHAP or breakdown (Gosiewska and Biecek [6]), see [1] and [6] for an overview. The `flashlight` package currently supports the breakdown method.
+Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be decomposed into additive effects of input variables: LIME, LIVE, SHAP and breakdown (Gosiewska and Biecek [[6]](#gosiewska)), see [[1]](#molnar) and [[6]](#gosiewska) for an overview. The `flashlight` package currently supports the breakdown method.
 
-It works as follows: First, the visit order $(x_1, ..., x_m)$ of variables is specified. Then, in the query data, the column $x_1$ is set to the constant value of $x_1$ of the observation to be explained. The change in the (weighted) average predicted value on the query data measures the contribution of $x_1$ on the prediction. This procedure is iterated over all $x_i$ until eventually, all rows in the query data are identical to the observation to be explained. 
+It works as follows: First, the visit order $(x_1, ..., x_m)$ of variables is specified. Then, in the query data, the column $x_1$ is set to the constant value of $x_1$ of the observation to be explained. The change in the (weighted) average predicted value on the query data measures the contribution of $x_1$ on the prediction. This procedure is iterated over all $x_i$ until eventually, all rows in the query data are identical to the observation to be explained.
 
-A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all $m!$ possible visit orders and its results averaged per variable. This is basically what SHAP values do, see e.g. [6] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. Thus we offer two approximations. The first one is the short-cut described in [6] and implemented in the `ibreakdown` package (https://CRAN.R-project.org/package=iBreakDown): There, the variables $x_i$ are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. The second, computationally more intensive way to approximate SHAP values is based on running the breakdown algorithm on a small number (e.g. 20) random permutations and then averaging the results.
+A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all $m!$ possible visit orders and its results averaged per variable. This is basically what SHAP values do, see e.g. [[6]](#gosiewska) for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. Thus we offer two approximations. The first one is the short-cut described in [[6]](#gosiewska) and implemented in the `ibreakdown` package (https://CRAN.R-project.org/package=iBreakDown): There, the variables $x_i$ are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. The second, computationally more intensive way to approximate SHAP values is based on running the breakdown algorithm on a small number (e.g. 20) random permutations and then averaging the results.
 
 The `flashlight` package offers these tools in a very simple way.
 
@@ -119,7 +123,7 @@ install_github("mayer79/flashlight")
 
 ## Teaser
 
-Let's start with an iris example.
+Let's start with an iris example. For simplicity, we do not split the data into training and testing/validation sets.
 
 ```{r}
 # Fit model
@@ -158,8 +162,11 @@ plot(light_profile(fl, v = "Petal.Width", type = "response", stats = "quartiles"
 plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
 plot(light_profile(fl, v = "Petal.Width", type = "residual", stats = "quartiles"))
 
-# Response profiles, prediction profiles, partial depencence, and ALE profiles in one
+# Response profiles, prediction profiles, partial dependence, and ALE profiles in one
 plot(light_effects(fl, v = "Petal.Width"), use = "all")
+
+# Scatter plots
+plot(light_scatter(fl, v = "Petal.Width", type = "predicted"))
 
 # Variable contribution breakdown for single observation
 plot(light_breakdown(fl, new_obs = iris[2, ]))
@@ -169,49 +176,89 @@ plot(light_breakdown(fl, new_obs = iris[2, ]))
 
 ## flashlights and multiflashlights
 
-The process of using the `flashlight` package is as follows: 
+The process of using the `flashlight` package is as follows:
 
-1. Define a flashlight for each model. This is basically a list with optional components relevant for model interpretation:
+1. Define a flashlight object for each model. This is basically a list with optional components relevant for model interpretation:
 
-   - `model`: The fitted model object like e.g. the one returned by `lm`.
-   
+   - `model`: The fitted model object as the one returned by `lm`.
+
    - `data`: A data set used to evaluate model agnostic tools, e.g. the validation data.
-   
+
    - `y`: The name of the variable in `data` representing the model response.
-   
+
    - `predict_function`: A function taking `model` and `data` and returning numeric predictions.
-   
+
    - `linkinv`: Inverse link function used to retransform the values returned by `predict_function`. Defaults to the identity function `function(z) z`.
-   
+
    - `w`: The name of the variable in `data` representing the case weights.
-   
+
    - `by`: A character vector of names of grouping variables in `data`. These will be used to stratify all results.
-   
+
    - `metrics`: A named list of metrics. These functions need to be available in the workspace and require arguments `actual`, `predicted`, `w` (case weights) as well as a placeholder ... for further arguments. All metrics available in R package `MetricsWeighted` are suitable.
-   
-   - `label`: The label of the model. This is the only required input when building the flashlight.
-   
+
+   - `label`: The name of the model as shown in plots. This is the only required input when building the flashlight.
+
 2. Calculate relevant information by calling the key functions:
 
    - `light_performance`: Calculates performance measures regarding different metrics, possibly within subgroups and weighted by case weights.
-   
+
    - `light_importance`: Calculates variable importance (worsening in performance by random shuffling) for each or a subset of variables. Possibly within subgroups and using case weights. The most important variable names can be extracted by the function `most_important` on the result of `light_importance`.
-   
+
    - `light_ice`: Calculates ICE profiles across a couple of observations, possibly within groups.
-    
-   - `light_profile`: Calculates partial dependent profiles across a covariable, possibly within groups. Generated by calling `light_ice` and aggregating the results. The function is flexible: it can also be used to generate ALE, response, residual or prediction profiles or calculate (weighted) quartiles instead of (weighted) means.
-   
+
+   - `light_scatter`: Calculates values (e.g. predictions) to be plotted against a variable of interest.
+
+   - `light_profile`: Calculates partial dependence profiles across a covariable, possibly within groups. Generated by calling `light_ice` and aggregating the results. The function is flexible: it can also be used to generate ALE, response, residual, prediction, or SHAP profiles and calculate (weighted) quartiles instead of (weighted) means.
+
    - `light_effects`: Combines partial dependence, response and prediction profiles. ALE profiles can be added as well.
-   
+
    - `light_interaction`: Calculates overall and pairwise interaction strength based on Friedman's H statistic.
-   
+
    - `light_breakdown`: Calculates variable contribution breakdown (approximate SHAP) for a single observation.
 
-3. Plot the result: Each of these functions offer a `plot` method with minimal visualization of the results through `ggplot2`. The resulting plot can be customized by adding `theme` and other `ggplot` elements. If customization is insufficient, you can extract the data slot in the object returned by above key functions and build an own plot. 
+3. Plot the result: Each of these functions offer a `plot` method with minimal visualization of the results through `ggplot2`. The resulting plot can be customized by adding `theme` and other `ggplot` elements. If customization is insufficient, you can extract the data slot in the object returned by above key functions and build your own plot.
 
-In practice, multiple flashlights are being defined and evaluated in parallel. By the help of a `multiflashlight` object, The `flashlight` packages provides as much support as possible to avoid any redundancy. It can be used to combine fully specified flashlights or, and that is the more interesting option, take minimally defined flashlights (e.g. only `label`, `model` and `predict_function`) and add common arguments like `y`, `by`, `data` and/or `w` (case weights) in calling `multiflashlight`. If necessary, the resulting completed flashlights contained in the multiflashlight can be extracted again by `$`.
+In practice, multiple flashlights are being defined and evaluated in parallel. By the help of a `multiflashlight` object, The `flashlight` packages provides as much support as possible to avoid any redundancy. It can combine fully specified flashlights or, and that is the more interesting option, take minimally defined flashlights (e.g. only `label`, `model` and `predict_function`) and add common arguments like `y`, `by`, `data` and/or `w` (case weights) in calling `multiflashlight`. If necessary, the resulting completed flashlights contained in the multiflashlight can be extracted again by `$`.
 
 All key functions are defined for both `flashlight` and `multiflashlight` objects.
+
+## SHAP values
+
+SHAP values offer a very elegant way to summarize the additive contribution of each variable to a single prediction. If such decompositions are available for many predictions, they can also be used to study global properties of the model such as variable importance (by averaging the absolute SHAP values of each variable) or effects (by showing SHAP values per variable). The problem with SHAP values is that they are computationally too demanding to be computed in general. Only for certain model techniques (e.g. tree based methods), they can be computed exactly. Nevertheless, approximations exist, see [6] for details. Unfortunately, even these approximations take time to compute. The approach followed by `flashlight` is to compute SHAP values once and store them in the `flashlight` object. All available methods for SHAP values will then use these values without recalculating them. Thus, if e.g. the inverse link function is updated, this has no effect on calculated SHAP values.
+
+The workflow is as follows:
+```
+# Fit model
+fit <- lm(Sepal.Length ~ ., data = iris)
+
+# Make flashlight
+fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols",
+                 metrics = list(rmse = rmse, `R-squared` = r_squared))
+
+# Calculate SHAP values
+fl <- add_shap(fl)
+
+# Optionally, use type = "shap" for different methods
+plot(light_importance(fl, type = "shap"))
+plot(light_scatter(fl, v = "Petal.Length", type = "shap"))
+plot(light_profile(fl, v = "Petal.Length", type = "shap"))
+```
+
+For larger data and/or slow prediction functions, even computing approximate SHAP values might take too much time. The following options in `add_shap` are available to reduce the running time:
+
+- Reduce the number of variables (`v`).
+
+- Reduce the number of SHAP values (`n_shap`).
+
+- Reduce the size of the reference data set (`n_max`).
+
+- Select `visit_strategy = "importance"` (the default) instead of "permutation".
+
+- If `visit_strategy = "permutation"`, reduce the number of permutations (`n_perm`).
+
+- Avoid unnecessary flashlights in a multiflashlight.
+
+Once calculated, we suggest do store the resulting values. For a single flashlight `x`, use `saveRDS(x$shap), file = ...` resp. `x$shap <- readRDS(...)` to do so.
 
 ## Example
 
@@ -223,7 +270,7 @@ The first few observations look as follows:
 head(house_prices)
 ```
 
-Thus we have access to many relevant infos like size, condition as well as location of the objects. We want to use these variables to predict the (log) house prices by the help of the following regression techniques and shed some light on them: 
+Thus we have access to many relevant features like size, condition as well as location of the objects. We want to use these variables to predict the (log) house prices by the help of the following regression techniques and shed some light on them:
 
 - linear regression,
 
@@ -238,7 +285,7 @@ We use 70% of the data to calculate the models, 20% for evaluating their perform
 Let's do some data preparation common for all models under consideration.
 
 ```{r}
-prep <- transform(house_prices, 
+prep <- transform(house_prices,
                   log_price = log(price),
                   grade = as.integer(as.character(grade)),
                   year = factor(lubridate::year(date)),
@@ -246,26 +293,26 @@ prep <- transform(house_prices,
                   zipcode = as.factor(as.character(zipcode)),
                   waterfront = factor(waterfront, levels = c(FALSE, TRUE), labels = c("no", "yes")))
 
-x <- c("grade", "year", "age", "sqft_living", "sqft_lot", "zipcode", 
+x <- c("grade", "year", "age", "sqft_living", "sqft_lot", "zipcode",
        "condition", "waterfront")
 ```       
 
 ### Modelling
 
-The random forest can directly work with this data structure. However, for the linear model, we need a small function with additional feature engineering, i.e. log transforming some input and categorizing the zipcode in large groups. Similarly, for XGBoost, such wrapper function turns non-numeric input variables to numeric. We will make use of these functions for both data preparation and prediction.
+The random forest can directly work with this data structure. However, for the linear model, we need a small function with additional feature engineering. We log transform some input variables and categorize the zipcode in large groups. Similarly, for XGBoost, such a wrapper function turns non-numeric input variables to numeric. We will make use of these functions for both data preparation and prediction.
 ```{r}
 # Data wrapper for the linear model
 prep_lm <- function(data) {
-  data %>% 
+  data %>%
     mutate(sqrt_living = log(sqft_living),
            sqrt_lot = log(sqft_lot))
 }
 
 # Data wrapper for xgboost
 prep_xgb <- function(data, x) {
-  data %>% 
-    select_at(x) %>% 
-    mutate_if(Negate(is.numeric), as.integer) %>% 
+  data %>%
+    select_at(x) %>%
+    mutate_if(Negate(is.numeric), as.integer) %>%
     data.matrix()
 }
 ```
@@ -298,10 +345,10 @@ params <- list(learning_rate = 0.1,
                lambda = 1,
                colsample_bytree = 0.8)
 
-fit_xgb <- xgb.train(params, 
+fit_xgb <- xgb.train(params,
                      data = dtrain,
                      watchlist = list(train = dtrain, valid = dvalid),
-                     nrounds = 250, 
+                     nrounds = 250,
                      print_every_n = 50,
                      objective = "reg:linear",
                      seed = 2698)
@@ -309,12 +356,12 @@ fit_xgb <- xgb.train(params,
 
 ### Creating the flashlights
 
-Let's initialize a flashlight per model. Thanks to individual prediction functions, any model can be used in `flashlight`, even h2o and keras models.
+Let's initialize one flashlight per model. Thanks to individual prediction functions, any model can be used in `flashlight`, even h2o and keras models.
 
 ```{r}
-fl_mean <- flashlight(model = mean(train$log_price), label = "mean", 
+fl_mean <- flashlight(model = mean(train$log_price), label = "mean",
                       predict_function = function(mod, X) rep(mod, nrow(X)))
-fl_lm <- flashlight(model = fit_lm, label = "lm", 
+fl_lm <- flashlight(model = fit_lm, label = "lm",
                     predict_function = function(mod, X) predict(mod, prep_lm(X)))
 fl_rf <- flashlight(model = fit_rf, label = "rf",
                     predict_function = function(mod, X) predict(mod, X)$predictions)
@@ -323,10 +370,10 @@ fl_xgb <- flashlight(model = fit_xgb, label = "xgb",
 print(fl_xgb)
 ```
 
-What about all other relevant elements of a flashlight like the underlying data, the response name, metrics, retransformation functions etc? We could pass them to each of our flashlights. Or, we can combine the flashlights to a multiflashlight and pass additional common arguments there.
+What about all other relevant elements of a flashlight like the underlying data, the response name, metrics, retransformation functions etc? We could pass them to each of our flashlights. Or better, we can combine the flashlights to a multiflashlight and pass additional common arguments there.
 
 ```{r}
-fls <- multiflashlight(list(fl_mean, fl_lm, fl_rf, fl_xgb), y = "log_price", linkinv = exp, 
+fls <- multiflashlight(list(fl_mean, fl_lm, fl_rf, fl_xgb), y = "log_price", linkinv = exp,
                        data = valid, metrics = list(rmse = rmse, `R-squared` = r_squared))
 ```
 
@@ -356,7 +403,7 @@ The plot "politics" of `flashlight` is to provide simple graphics with minimal `
 ```{r}
 head(perf$data)
 
-perf$data %>% 
+perf$data %>%
   ggplot(aes(x = label, y = value, group = metric, color = metric)) +
   geom_point() +
   scale_color_viridis_d(begin = 0.2, end = 0.6)
@@ -368,25 +415,16 @@ For performance considerations, the minimum required info in the (multi-)flashli
 
 ### Variable importance
 
-Now let's study variable importance of the explainers. By default, it is shown with respect to the first metric in the explainers. In our case, its the root-mean-squared error. 
+Now let's study variable importance of the explainers.
 
 ```{r}
-(imp <- light_importance(fls, n_max = 1000))
-plot(imp)
-```
-
-Oops, what happened? Too many variables were tested for permutation drop in rmse, namely *all* in the data set, except the response. While this can be useful in certain situations, we will just pass the vector `x` of covariables. Furthermore we replace the metric to mean-squared error.
-
-```{r}
-(imp <- light_importance(fls, v = x, metric = list(mse = mse)))
+(imp <- light_importance(fls, v = x))
 plot(imp, fill = "darkred")
 ```
 
-Minimal required elements in the (multi-)flashlight are the same as in `light_performance`.
+Note for permutation importance: If the calculation takes too long (e.g. large query data), set `n_max` to some reasonable value. `light_importance` will then randomly pick `n_max` rows and use only these for assessment of importance. On the other hand, if the calculations is very fast, consider setting `m_repetitions` to a value > 1 in order to repeat the permutations multiple times. The resulting variable importance corresponds to the average drop in performance and standard errors are added.
 
-Note: If the calculations take too long (e.g. large query data), set `n_max` to some reasonable value. `light_importance` will then randomly pick `n_max` rows and use only these for assessment of importance.
-
-Note: If the calculations are very fast, consider setting `m_repetitions` to a value > 1 in order to repeat the permutations multiple times. The resulting variable importance corresponds to the average drop in performance and standard errors are added.
+If SHAP values have been precomputed by `add_shap`, use `type = "shap"` to show mean absolute shap values per covariable.
 
 ### Individual conditional expectation
 
@@ -415,7 +453,7 @@ pd
 plot(pd)
 ```
 
-The `light_profile` function offers different ways to specify the evaluation points of the profiles, e.g. by explicitly passing such points. 
+The `light_profile` function offers different ways to specify the evaluation points of the profiles. One option is to explicitly pass such points.
 
 ```{r}
 pd <- light_profile(fls, v = "sqft_living", pd_evaluate_at = seq(1000, 4000, by = 100))
@@ -431,7 +469,7 @@ plot(pd)
 
 ### Accumulated local effects (ALE)
 
-An approximation of main effects without Ceteris Paribus clause are *accumulated local effects* profiles [2]. They are based on accumulating local partial dependence slopes. 
+An approximation of main effects without Ceteris Paribus clause are *accumulated local effects* profiles [[2]](#fisher). They are based on accumulating local partial dependence slopes.
 
 ```{r}
 ale <- light_profile(fls, v = "sqft_living", type = "ale")
@@ -462,10 +500,10 @@ plot(pvp) +
 
 Note the formatting of y values as well as the `formatC` option `format = "fg"` and `big.mark` passed to the constructor of the x labels in order to improve basic appearance. We will recycle some of these settings for the next plots.
 
-Similar the average response profiles (identical for all flashlights, to we only show one of them):
+Similarly, the average response profiles (identical for all flashlights, to we only show one of them):
 
 ```{r}
-rvp <- light_profile(fl_lm, v = "sqft_living", type = "response", format = "fg") 
+rvp <- light_profile(fl_lm, v = "sqft_living", type = "response", format = "fg")
 plot(rvp) +
   scale_y_continuous(labels = format_y)
 ```
@@ -473,8 +511,8 @@ plot(rvp) +
 Same, but quartiles:
 
 ```{r}
-rvp <- light_profile(fl_lm, v = "sqft_living", type = "response", 
-                     stats = "quartiles", format = "fg") 
+rvp <- light_profile(fl_lm, v = "sqft_living", type = "response",
+                     stats = "quartiles", format = "fg")
 plot(rvp) +
   scale_y_continuous(labels = format_y)
 ```
@@ -483,15 +521,15 @@ What about residuals? First, we remove the "mean" flashlight by setting it NULL.
 
 ```{r}
 fls$mean <- NULL
-rvp <- light_profile(fls, v = "sqft_living", type = "residual", 
-                     stats = "quartiles", format = "fg") 
+rvp <- light_profile(fls, v = "sqft_living", type = "residual",
+                     stats = "quartiles", format = "fg")
 plot(rvp) +
   scale_y_continuous(labels = format_y)
 ```
 
 While the tree-based models have smaller residuals and medians close to 0, the linear model shows residual curvature that could be captured by representing `sqft_living` by more parameters.
 
-If unhappy about the "group by" strategy, set `swap_dim` to TRUE.
+If your are unhappy about the "group by" strategy, set `swap_dim` to TRUE.
 
 ```{r}
 plot(rvp, swap_dim = TRUE) +
@@ -501,17 +539,17 @@ plot(rvp, swap_dim = TRUE) +
 For less bars, set `n_bins` in `light_profile`:
 
 ```{r}
-rvp <- light_profile(fls, v = "sqft_living", type = "residual", 
-                     stats = "quartiles", format = "fg", n_bins = 5) 
+rvp <- light_profile(fls, v = "sqft_living", type = "residual",
+                     stats = "quartiles", format = "fg", n_bins = 5)
 plot(rvp, swap_dim = TRUE) +
   scale_y_continuous(labels = format_y)
 ```
 
-In the same way as diverging ICE profiles give a clou of presence of interactions, we can use the option `stats = "quartiles"` (with `pd_center`) to show divergence of the mean-centered ICE profiles as boxes (predictions at log-scale to suppress interaction-like effects of the retransformation function):
+Just as diverging ICE profiles give you a clou about the presence of interactions, we can use the option `stats = "quartiles"` (with `pd_center`) to show divergence of the mean-centered ICE profiles as boxes (predictions at log-scale to suppress interaction-like effects of the retransformation function):
 
 ```{r}
-rvp <- light_profile(fls, v = "sqft_living", use_linkinv = FALSE, 
-                     stats = "quartiles", pd_center = "mean") 
+rvp <- light_profile(fls, v = "sqft_living", use_linkinv = FALSE,
+                     stats = "quartiles", pd_center = "mean")
 plot(rvp)
 ```
 
@@ -527,10 +565,10 @@ In assessing the model quality, it is often useful to visualize
 
 - model effects (partial dependence profiles, or accumulated local effects)
 
-in the same plot and for each input variable. The `flashlight` package offers the function `light_effects` combine such profile plots:
+in the same plot and for each input variable. The `flashlight` package offers the function `light_effects` to combine such profile plots:
 
 ```{r}
-eff <- light_effects(fl_lm, v = "condition") 
+eff <- light_effects(fl_lm, v = "condition")
 p <- plot(eff) +
   scale_y_continuous(labels = format_y)
 p
@@ -542,12 +580,12 @@ Let's add counts to see if the gaps between response and predicted profiles are 
 plot_counts(p, eff, alpha = 0.2)
 ```
 
-The biggest gaps occur with very rare conditions, so the model looks quite fine. 
+The biggest gaps occur at very rare conditions, so the model looks quite fine.
 
 Note: Due to retransformation from log scale, the response profile is slightly higher than the profile of predicted values. If we would evaluate on the modelled log scale, that gap would vanish.
 
 ```{r}
-eff <- light_effects(fl_lm, v = "condition", linkinv = I) 
+eff <- light_effects(fl_lm, v = "condition", linkinv = I)
 p <- plot(eff, use = "all") +
   scale_y_continuous(labels = format_y) +
   ggtitle("Effects plot on modelled log scale")
@@ -557,35 +595,42 @@ p
 Besides adding counts to the figure, representing observed responses as boxplots (no whiskers and outliers in order to avoid too large y scale) might help to judge if there is a problematic misfit.
 
 ```{r}
-eff <- light_effects(fl_lm, v = "condition", stats = "quartiles") 
+eff <- light_effects(fl_lm, v = "condition", stats = "quartiles")
 p <- plot(eff, rotate_x = FALSE) +
    scale_y_continuous(labels = format_y)
 plot_counts(p, eff, fill = "blue", alpha = 0.2, width = 0.3)
 ```
 
-The `plot` method of `light_effects` allows to hide certain plot element if it looks too dense.
+The `plot` method of `light_effects` allows to hide certain plot elements if it looks too dense.
+
+As an alternative to profile plots, we could also consider scatter plots.
+
+```{r}
+pr <- light_scatter(fls, v = "sqft_living", n_max = 300)
+plot(pr, alpha = 0.2)
+```
 
 ### Interaction strength
 
-Based on Friedman's H statistic [7], we can investigate which variable has strongest interaction effect relative to its full effect.
+Based on Friedman's H statistic [[7]](#friedman2008), we can investigate which variable has strongest interaction effect relative to its full effect.
 
 ```{r}
-st <- light_interaction(fls, v = x) 
+st <- light_interaction(fls, v = x)
 plot(st)
 ```
 Since we have not used interaction terms in the linear model, all values are zero there.
 
 Pairwise interactions are expensive to compute as each variable pair has to be assessed. We limit the search for interactions to the four variables with highest relative interaction strength.
 ```{r}
-st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE) 
+st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE)
 plot(st_pair)
 ```
 
 ###  Variable contribution breakdown for single observation
 
-Besides investigating global effects, we can use `light_breakdown` to calculate variable impact on one single (log) prediction. 
+Besides investigating global effects, we can use `light_breakdown` to calculate variable impact on one single (log) prediction.
 ```{r}
-bd <- light_breakdown(fl_lm, new_obs = valid[1, ], v = x, n_max = 1000, seed = 74) 
+bd <- light_breakdown(fl_lm, new_obs = valid[1, ], v = x, n_max = 1000, seed = 74)
 plot(bd, size = 3)
 ```
 We have set the size of the reference data set to `n_max = 1000` in order to save time. The only variable with positive impact on the prediction is "age". The other variables have a negative impact compared to the 1000 reference observations.
@@ -598,28 +643,28 @@ A key feature of the `flashlight` package is to support grouped results. You can
 fls <- multiflashlight(fls, by = "year")
 
 # Performance
-plot(light_performance(fls)) + 
+plot(light_performance(fls)) +
   scale_fill_viridis_d(begin = 0.1, end = 0.9)
 
 # With swapped dimension
-plot(light_performance(fls), swap_dim = TRUE) + 
+plot(light_performance(fls), swap_dim = TRUE) +
   scale_fill_viridis_d(begin = 0.1, end = 0.9)
-  
+
 # Importance
 imp <- light_importance(fls, v = x)
 plot(imp, top_m = 4)
 plot(imp, swap_dim = TRUE)
 
 # Effects: ICE
-plot(light_ice(fls, v = "sqft_living", seed = 4345), 
-     alpha = 0.8, facet_scales = "free_y") + 
-  scale_color_viridis_d(begin = 0.1, end = 0.9) + 
+plot(light_ice(fls, v = "sqft_living", seed = 4345),
+     alpha = 0.8, facet_scales = "free_y") +
+  scale_color_viridis_d(begin = 0.1, end = 0.9) +
   scale_y_continuous(labels = format_y)
 
 # c-ICE
-plot(light_ice(fls, v = "sqft_living", seed = 4345, center = "middle"), 
-     alpha = 0.8, facet_scales = "free_y") + 
-  scale_color_viridis_d(begin = 0.1, end = 0.9) + 
+plot(light_ice(fls, v = "sqft_living", seed = 4345, center = "middle"),
+     alpha = 0.8, facet_scales = "free_y") +
+  scale_color_viridis_d(begin = 0.1, end = 0.9) +
   scale_y_continuous(labels = format_y)
 
 # Effects: Partial dependence
@@ -631,14 +676,18 @@ plot(light_profile(fls, v = "sqft_living", stats = "quartiles", center = "mean")
 plot(light_profile(fls, v = "sqft_living", type = "ale", cut_type = "quantile"))
 plot(light_profile(fls, v = "sqft_living", type = "ale", cut_type = "quantile"), swap_dim = TRUE)
 
-# Effects: Combined plot (only one flashlight) 
+# Effects: Combined plot (only one flashlight)
 # -> we need to manually pass "by" or update the single flashlight
-z <- light_effects(fls, v = "sqft_living", format = "fg", 
+z <- light_effects(fls, v = "sqft_living", format = "fg",
                    stats = "quartiles", n_bins = 5, by = NULL)
-p <- plot(z) + 
+p <- plot(z) +
   scale_y_continuous(labels = format_y) +
   coord_cartesian(ylim = c(0, 3e6))
 plot_counts(p, z, alpha = 0.2)
+
+# Scatter
+pr <- light_scatter(fls, v = "sqft_living", n_max = 300)
+plot(pr, alpha = 0.8)
 
 # Variable contribution breakdown for single observation (on log-scale)
 # -> "by" selects the relevant rows in data/valid
@@ -648,7 +697,7 @@ plot(light_breakdown(fl_lm, new_obs = valid[1, ], v = x, top_m = 3))
 
 ## Working with case weights
 
-In many applications, case weights are involved. All main functions in `flashlight` deal with them automatically. The only thing you need to do is to pass the column name of the column with case weights when initializing the (multi-)flashlight.
+In many applications, case weights need to be taken into account. All main functions in `flashlight` are able to deal with them. The only thing you need to do is to pass the column name of the case weights to `w` when initializing the (multi-)flashlight.
 
 Let's go through the initial iris example again with (artificial) case weights:
 
@@ -664,7 +713,7 @@ plot(light_performance(fls, by = "Species"))
 # Variable importance by drop in rmse
 plot(light_importance(fls, by = "Species"))
 
-# ICE profiles for Petal.Width 
+# ICE profiles for Petal.Width
 # (not affected by weights because nothing is being aggregated)
 indices <- seq(10, 150, by = 10)
 plot(light_ice(fls, v = "Petal.Width", indices = indices), alpha = 0.2)
@@ -685,7 +734,7 @@ plot(light_profile(fls, v = "Petal.Width", by = "Species", type = "ale"))
 # Observed, predicted, and partial dependence profiles
 plot(light_effects(fls, v = "Petal.Width"))
 eff <- light_effects(fls, v = "Petal.Width", stats = "quartiles")
-plot(eff) %>% 
+plot(eff) %>%
   plot_counts(eff, alpha = 0.2, fill = "blue")
 
 # Variable contribution breakdown for single observation (on log-scale)
@@ -704,7 +753,7 @@ fit <- glm(virginica ~ Sepal.Length + Petal.Width, data = ir, family = binomial)
 
 # Make flashlight
 fl <- flashlight(model = fit, data = ir, y = "virginica", label = "lr",
-                 metrics = list(logLoss = logLoss, AUC = AUC), 
+                 metrics = list(logLoss = logLoss, AUC = AUC),
                  predict_function = function(m, d) predict(m, d, type = "response"))
 
 # Performance: rmse and R-squared
@@ -736,16 +785,16 @@ plot(light_breakdown(fl, new_obs = ir[2, ], v = c("Sepal.Length", "Petal.Width")
 
 ## References
 
-[1] Molnar C. (2019). Interpretable machine learning. A Guide for Making Black Box Models Explainable (https://christophm.github.io/interpretable-ml-book/).
+[1] Molnar C. (2019). Interpretable machine learning. A Guide for Making Black Box Models Explainable (https://christophm.github.io/interpretable-ml-book/). {#molnar}
 
-[2] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv (https://arxiv.org/abs/1801.01489).
+[2] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv (https://arxiv.org/abs/1801.01489). {#fisher}
 
-[3] Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1 (https://doi.org/10.1080/10618600.2014.907095).
+[3] Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1 (https://doi.org/10.1080/10618600.2014.907095). {#goldstein}
 
-[4] Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232 (https://doi.org/10.1214/aos/1013203451).
+[4] Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232 (https://doi.org/10.1214/aos/1013203451). {#friedman2001}
 
-[5] Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models. ArXiv (https://arxiv.org/abs/1612.08468).
+[5] Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models. ArXiv (https://arxiv.org/abs/1612.08468). {#apley}
 
-[6] Gosiewska A. and Biecek P. (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv (https://arxiv.org/abs/1903.11420).
+[6] Gosiewska A. and Biecek P. (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv (https://arxiv.org/abs/1903.11420). {#gosiewska}
 
-[7] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.
+[7] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54. {#friedman2008}

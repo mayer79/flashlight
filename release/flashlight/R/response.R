@@ -25,7 +25,7 @@ response.default <- function(object, ...) {
 #' @describeIn response Extract response from flashlight object.
 #' @export
 response.flashlight <- function(object, ...) {
-  object <- flashlight(object, ...)
+  object <- flashlight(object, check = FALSE, ...)
   required <- c("y", "linkinv", "data")
   stopifnot(sapply(with(object, required), Negate(is.null)))
   with(object, linkinv(data[[y]]))
