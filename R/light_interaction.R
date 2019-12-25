@@ -163,10 +163,10 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     # Aggregate & normalize
     num <- weighted_mean(dat[[value_name]], w = if (has_w) dat[[w]], na.rm = TRUE)
     if (normalize) {
-      num <- zap_small(num) /
+      num <- .zap_small(num) /
         weighted_mean(dat[["value_"]]^2, w = if (has_w) dat[[w]], na.rm = TRUE)
     }
-    setNames(data.frame(zap_small(if (take_sqrt) sqrt(num) else num)), value_name)
+    setNames(data.frame(.zap_small(if (take_sqrt) sqrt(num) else num)), value_name)
   }
   # Calculate statistic for each variable (pair) and combine results
   core_func <- function(X) {
@@ -214,3 +214,13 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
 light_interaction.multiflashlight <- function(x, ...) {
   light_combine(lapply(x, light_interaction, ...), new_class = "light_importance_multi")
 }
+
+# Helper function used to clip small values.
+.zap_small <- function(x, eps = 1e-12, val = 0) {
+  .bad <- abs(x) < eps | !is.finite(x)
+  if (any(.bad)) {
+    x[.bad] <- val
+  }
+  x
+}
+

@@ -90,13 +90,8 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   # Update flashlight with info on linkinv
   x <- flashlight(x, linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
-  # Helper function
-  mean_pred <- function(x, data, w = if (!is.null(x$w)) data[[x$w]]) {
-    weighted_mean(predict(x, data = data), w = w, na.rm = TRUE)
-  }
-
   # Baseline prediction and target prediction
-  baseline <- mean_pred(x, data = data)
+  baseline <- .mean_pred(x, data = data)
   prediction <- unname(predict(x, data = new_obs))
 
   # Determine v
@@ -110,7 +105,7 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   if (visit_strategy == "importance") {
     ind_impact <- vapply(v, function(vi) {
       data[[vi]] <- new_obs[[vi]];
-      (mean_pred(x = x, data = data) - baseline)^2
+      (.mean_pred(x = x, data = data) - baseline)^2
     }, FUN.VALUE = numeric(1))
     v <- names(sort(-ind_impact))
   }
@@ -121,7 +116,7 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
     vv <- if (perm) sample(v) else v
     for (i in 1:m) {
       X[[vv[i]]] <- new_obs[[vv[i]]]
-      out[i] <- mean_pred(x, data = X)
+      out[i] <- .mean_pred(x, data = X)
     }
     if (perm) cumsum(c(baseline, diff(c(baseline, out))[match(v, vv)]))[-1] else out
   }
@@ -141,17 +136,11 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
 
   if (description) {
     # Add description text
-    pretty_num <- function(z) {
-      if (is.numeric(z)) {
-        return(prettyNum(z, preserve.width = "individual", digits = digits, ...))
-      }
-      as.character(z)
-    }
-    formatted_input <- vapply(new_obs[, v, drop = FALSE], pretty_num, character(1))
+    formatted_input <- vapply(new_obs[, v, drop = FALSE], .pretty_num, character(1))
     formatted_input <- c("average in data", paste(v, formatted_input, sep = " = "), "prediction")
     formatted_impact <- out[[after_name]] - ifelse(out[[step_name]] > 0, out[[before_name]], 0)
     plus_sign <- formatted_impact >= 0 & out[[step_name]] > 0
-    formatted_impact <- paste0(ifelse(plus_sign, "+", ""), pretty_num(formatted_impact))
+    formatted_impact <- paste0(ifelse(plus_sign, "+", ""), .pretty_num(formatted_impact))
     out[[description_name]] <- paste(formatted_input, formatted_impact, sep = ": ")
   } else {
     out[[description_name]] <- ""
@@ -176,4 +165,16 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
 light_breakdown.multiflashlight <- function(x, ...) {
   light_combine(lapply(x, light_breakdown, ...),
                 new_class = "light_breakdown_multi")
+}
+
+# Helper functions
+.pretty_num <- function(z) {
+  if (is.numeric(z)) {
+    return(prettyNum(z, preserve.width = "individual", digits = digits, ...))
+  }
+  as.character(z)
+}
+
+.mean_pred <- function(x, data, w = if (!is.null(x$w)) data[[x$w]]) {
+  weighted_mean(predict(x, data = data), w = w, na.rm = TRUE)
 }
