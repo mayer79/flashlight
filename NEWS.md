@@ -6,11 +6,15 @@
 
 - Added `light_scatter` and `plot.light_scatter` to create scatter plots of response, predictions, residuals, or SHAP values by some variable.
 
+- Static (approximate) SHAP values can be added to a (multi-)flashlight by calling `add_shap`.
+
 - `light_importance`, `light_profile`, and `light_scatter` are now able to work with SHAP values.
 
 ### Minor
 
-- The plot function of `light_importance` and `light_interaction` now prints informative labels to show what is actually printed.
+- The plot function of `light_importance` and `light_interaction` now prints informative labels to show what is actually calculated.
+
+- Added argument "show_points" to `plot.light_effects` to control if points should be added to the lines or not. Default is `TRUE`.
 
 ## Interface change
 

@@ -84,6 +84,7 @@ fls_addnonadd <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris,
 
 #
 pw = T
+# pw = F
 plot(light_interaction(fls_addnonadd, pairwise = pw))
 plot(light_interaction(fls_addnonadd, pairwise = pw), swap_dim = TRUE)
 plot(light_interaction(fls_addnonadd, pairwise = pw, by = "Species"))
@@ -491,5 +492,18 @@ light_interaction(fl, by = "z", pairwise = TRUE, seed = 4)$data
 light_interaction(flashlight(fl, w = "wunif"), seed = 4, by = "z")$data
 light_interaction(flashlight(fl, w = "wunif"), pairwise = TRUE, seed = 4, by = "z")$data
 
+
+
+# SHAP CHECKS
+fit1 <- lm(Sepal.Length ~ ., data = iris)
+fit2 <- lm(Sepal.Length ~ . + Species:Petal.Length, data = iris)
+fl1 <- flashlight(model = fit1, label = "additive")
+fl2 <- flashlight(model = fit2, label = "non-additive")
+fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
+fls <- add_shap(fls)
+plot(light_importance(fls, type = "shap"))
+plot(light_scatter(fls, v = "Petal.Length", type = "shap"), alpha = 0.2)
+plot(light_scatter(fls, v = "Species", type = "shap"), alpha = 0.2, position = "jitter")
+plot(light_scatter(fls, v = "Petal.Length", type = "shap", by = "Species"), alpha = 0.2)
 
 

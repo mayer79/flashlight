@@ -49,6 +49,7 @@
 #' @export
 #' @references
 #' [1] Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+#'
 #' [2] Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models. ArXiv <arXiv:1612.08468>.
 #'
 #' @examples
@@ -180,7 +181,6 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
                                           cut_type = c("equal", "quantile"),
                                           pd_evaluate_at = NULL, pd_grid = NULL, ...) {
   cut_type <- match.arg(cut_type)
-  stopifnot(!is.null(v))
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
     breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
                             n_bins = n_bins, cut_type = cut_type)

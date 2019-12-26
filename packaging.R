@@ -2,13 +2,15 @@
 # BUILD THE PACKAGE
 #=====================================================================================
 
-library(MetricsWeighted)
-library(dplyr)
-library(tidyr)
-library(rlang)
-library(ggplot2)
-library(ggpubr)
-lapply(list.files("R", full.names = TRUE), source)
+if (FALSE) {
+  library(MetricsWeighted)
+  library(dplyr)
+  library(tidyr)
+  library(rlang)
+  library(ggplot2)
+  library(ggpubr)
+  lapply(list.files("R", full.names = TRUE), source)
+}
 
 library(usethis)
 library(devtools)

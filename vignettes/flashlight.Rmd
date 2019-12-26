@@ -230,22 +230,24 @@ SHAP values offer a very elegant way to summarize the additive contribution of e
 
 The workflow is as follows:
 ```
-# Fit model
-fit <- lm(Sepal.Length ~ ., data = iris)
+# Fit models
+fit1 <- lm(Sepal.Length ~ ., data = iris)
+fit2 <- lm(Sepal.Length ~ . + Species:Petal.Length, data = iris)
 
-# Make flashlight
-fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols",
-                 metrics = list(rmse = rmse, `R-squared` = r_squared))
+# Create multiflashlight
+fl1 <- flashlight(model = fit1, label = "additive")
+fl2 <- flashlight(model = fit2, label = "non-additive")
+fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
 
-# Calculate SHAP values
-fl <- add_shap(fl)
+# Add SHAP values
+fls <- add_shap(fls)
 
-# Optionally, use type = "shap" for different methods
-plot(light_importance(fl, type = "shap"))
-plot(light_scatter(fl, v = "Petal.Length", type = "shap"))
-plot(light_profile(fl, v = "Petal.Length", type = "shap"))
+# Use them in different methods
+plot(light_importance(fls, type = "shap"))
+plot(light_scatter(fls, v = "Petal.Length", type = "shap"), alpha = 0.2)
+plot(light_scatter(fls, v = "Petal.Length", type = "shap", by = "Species"), alpha = 0.2)
+plot(light_profile(fls, v = "Petal.Length", type = "shap"))
 ```
-
 For larger data and/or slow prediction functions, even computing approximate SHAP values might take too much time. The following options in `add_shap` are available to reduce the running time:
 
 - Reduce the number of variables (`v`).
@@ -603,7 +605,15 @@ p <- plot(eff, rotate_x = FALSE) +
 plot_counts(p, eff, fill = "blue", alpha = 0.2, width = 0.3)
 ```
 
-The `plot` method of `light_effects` allows to hide certain plot elements if it looks too dense.
+The `plot` method of `light_effects` allows to hide certain plot elements if it looks too dense. If we would e.g. want to compare partial dependence and accumulated local effects plots, we can use the following approach.
+
+```{r}
+eff <- light_effects(fls, v = "sqft_living", v_labels = FALSE, 
+                     cut_type = "quantile", n_bins = 25)
+plot(eff, use = c("pd", "ale"), show_points = FALSE) + 
+  scale_y_continuous(labels = format_y) +
+  coord_cartesian(xlim = c(1000, 4000), ylim = c(3e5, 9e5))
+```
 
 As an alternative to profile plots, we could also consider scatter plots.
 
