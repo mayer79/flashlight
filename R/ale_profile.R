@@ -79,7 +79,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
                      n_max = n_max, value_name = value_name,
                      id_name = "id_xxx")$data
     if (is_num) {
-      ice[[value_name]] <- if (to == from) 0 else ice[[value_name]] / (to - from)
+      ice[[value_name]] <- if (identical(to, from)) 0 else ice[[value_name]] / (to - from)
     }
 
     # Safe reshaping

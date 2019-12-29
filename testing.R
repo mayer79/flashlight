@@ -4,13 +4,14 @@
 
 # library(devtools) # Get latest MetricsWeighted branch
 # install_github("mayer79/MetricsWeighted", ref = "cran_0.1.1")
+library(flashlight)
 library(MetricsWeighted)
 library(dplyr)
 library(tidyr)
 library(rlang)
 library(ggplot2)
 library(ggpubr)
-lapply(list.files("R", full.names = TRUE), source)
+# lapply(list.files("R", full.names = TRUE), source)
 
 #======================================
 # Performance
@@ -116,6 +117,7 @@ mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal
 mods <- multiflashlight(list(mod_full, mod_part))
 grid <- expand.grid(Species = levels(iris$Species), Petal.Length = 2:4)
 
+light_ice(mod_full, grid = grid)
 plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
 indices <- (1:15) * 10
 plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
@@ -316,7 +318,8 @@ plot_counts(plot(x, use = "all"), x, alpha = 0.2)
 x <- light_effects(mods, v = "Petal.Length") # -> BAD
 plot_counts(plot(x, use = "all"), x, alpha = 0.2)
 plot(light_effects(mods, v = "Petal.Length"), use = "pd")
-plot(light_effects(mods, v = "Petal.Length", v_labels = FALSE)) # not shown
+plot(light_effects(mods, v = "Petal.Length"), use = "ale")
+plot(light_effects(mods, v = "Petal.Length", v_labels = FALSE))
 
 #======================================
 # profile
@@ -483,8 +486,8 @@ light_interaction(fl, data = head(sDat, 30), normalize = F)$data
 light_interaction(fl, data = head(sDat, 30), type = "ice", normalize = F)$data
 
 # Weighted
-light_interaction(flashlight(fl, w = "wunif"), seed = 4)$data
-light_interaction(flashlight(fl, w = "wunif"), pairwise = TRUE, seed = 4)$data
+light_interaction(flashlight(fl, w = "w"), seed = 4)$data
+light_interaction(flashlight(fl, w = "w"), pairwise = TRUE, seed = 4)$data
 
 # Grouped
 light_interaction(fl, by = "z", seed = 4)$data
