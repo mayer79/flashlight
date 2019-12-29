@@ -69,27 +69,31 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                                         variable_name = "variable", ...) {
   type <- match.arg(type)
 
-  # Select v
-  if (is.null(v)) {
-    v <- if (type == "shap") x$shap$v else setdiff(colnames(data), c(x$y, by))
-  }
-
-  # Checks
-  key_vars <- c(label_name, metric_name, by)
-  stopifnot((n <- nrow(data)) >= 1L,
-            !is.null(metric), length(metric) == 1L,
-            !anyDuplicated(c(key_vars, value_name, variable_name, error_name)))
-
-  # Update flashlight with everything except data
-  x <- flashlight(x, by = by, metrics = metric,
-                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
-
-  # Additional checks if SHAP and shap data extraction
+  # Select v; if SHAP, extract data
   if (type == "shap") {
     if (!is.shap(x$shap)) {
       stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
     }
+    if (is.null(v)) {
+      v <- x$shap$v
+    }
     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
+  } else if (is.null(v)) {
+    v <- setdiff(colnames(data), c(x$y, by))
+  }
+
+  # Checks
+  key_vars <- c(label_name, metric_name, by)
+  stopifnot(v %in% colnames(data),
+            (n <- nrow(data)) >= 1L,
+            !anyDuplicated(c(key_vars, value_name, variable_name, error_name)))
+
+  # Subsample to n_max
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
+  if (n > n_max) {
+    data <- data[sample(n, n_max), , drop = FALSE]
   }
 
   # Calculations
@@ -110,20 +114,20 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     imp[[label_name]] <- x$label
     imp[ c(error_name, metric_name)] <- NA
   } else {
-    if (!is.null(seed)) {
-      set.seed(seed)
-    }
-    # Subsample to n_max
-    if (n > n_max) {
-      data <- data[sample(n, min(n_max, n)), , drop = FALSE]
-    }
+    # Update flashlight with everything except data
+    stopifnot(!is.null(metric), length(metric) == 1L)
+    x <- flashlight(x, by = by, metrics = metric,
+                    linkinv = if (use_linkinv) x$linkinv else function(z) z)
+
     # Helper function
     perfm <- function(X, vn = "value_original") {
       light_performance(x, data = X, use_linkinv = TRUE, metric_name = metric_name,
                         value_name = vn, label_name = label_name, ...)$data
     }
+
     # Performance before shuffling
     metric_full <- perfm(data)
+
     # Performance difference after shuffling
     core_func <- function(z, S) {
       S[[z]] <- if (length(by)) ave(S[[z]], S[, by, drop = FALSE],

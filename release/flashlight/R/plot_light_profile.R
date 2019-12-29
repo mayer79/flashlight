@@ -88,6 +88,6 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
   if (rotate_x) {
     p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
-  p
+  p + ylab(x$type)
 }
 

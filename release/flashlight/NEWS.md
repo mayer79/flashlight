@@ -12,7 +12,7 @@
 
 ### Minor
 
-- The plot function of `light_importance` and `light_interaction` now prints informative labels to show what is actually calculated.
+- The plot functions of `light_importance`, `light_interaction`, and `light_profile` now prints informative labels to show what is actually calculated.
 
 - Added argument "show_points" to `plot.light_effects` to control if points should be added to the lines or not. Default is `TRUE`.
 

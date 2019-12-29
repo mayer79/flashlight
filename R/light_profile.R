@@ -92,13 +92,18 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   cut_type <- match.arg(cut_type)
   pd_center <- match.arg(pd_center)
 
-  if (is.null(data)) {
+  # If SHAP, extract data
+  if (type == "shap") {
+    if (!is.shap(x$shap)) {
+      stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
+    }
+    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+  } else if (is.null(data)) {
     data <- x$data
   }
 
-  # Checks
-  stopifnot(nrow(data) >= 1L,
-            !anyDuplicated(c(by, v, if (counts) counts_name,
+  # Checks (more will be done below or in the called functions)
+  stopifnot(!anyDuplicated(c(by, union(v, names(pd_grid)), if (counts) counts_name,
                              if (stats == "quartiles") c(q1_name, q3_name),
                              value_name, label_name, type_name)))
   if (!is.null(pred) && type == "predicted" && length(pred) != nrow(data)) {
@@ -109,15 +114,9 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   }
 
   # Update flashlight
-  x <- flashlight(x, data = data, by = by,
-                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
-
-  # Additional checks if SHAP and shap data extraction
-  if (type == "shap") {
-    if (!is.shap(x$shap)) {
-      stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
-    }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+  if (type != "shap") {
+    x <- flashlight(x, data = data, by = by,
+                    linkinv = if (use_linkinv) x$linkinv else function(z) z)
   }
 
   # Calculate profiles
@@ -136,6 +135,10 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                                  pred = pred, two_sided = ale_two_sided))
     agg <- do.call(ale_profile, arg_list)
   } else {
+    stopifnot(!is.null(v),
+              v %in% colnames(data),
+              nrow(data) >= 1L)
+
     # Add predictions/response to data
     data[[value_name]] <- switch(type,
       response = response(x),
@@ -144,7 +147,6 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
       shap = data[["shap_"]])
 
     # Replace v values by binned ones
-    stopifnot(!is.null(v), v %in% colnames(data))
     cuts <- auto_cut(data[[v]], breaks = breaks,
                      n_bins = n_bins, cut_type = cut_type, ...)
     data[[v]] <- cuts$data[[if (v_labels) "level" else "value"]]
@@ -181,6 +183,7 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
                                           cut_type = c("equal", "quantile"),
                                           pd_evaluate_at = NULL, pd_grid = NULL, ...) {
   cut_type <- match.arg(cut_type)
+
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
     breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
                             n_bins = n_bins, cut_type = cut_type)

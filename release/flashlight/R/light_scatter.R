@@ -56,16 +56,7 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
                                      type_name = "type", ...) {
   type <- match.arg(type)
 
-  # Checks
-  stopifnot(v %in% colnames(data),
-            (n <- nrow(data)) >= 1,
-            !anyDuplicated(c(by, v, value_name, label_name, type_name)))
-
-  # Update flashlight
-  x <- flashlight(x, data = data, by = by,
-                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
-
-  # Additional checks if SHAP and shap data extraction
+  # If SHAP, extract data
   if (type == "shap") {
     if (!is.shap(x$shap)) {
       stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
@@ -73,15 +64,24 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
     data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
   }
 
+  # Checks
+  vars <- c(label_name, type_name, by, v, value_name)
+  stopifnot(v %in% colnames(data),
+            (n <- nrow(data)) >= 1,
+            !anyDuplicated(vars))
+
   # Subsample rows if data too large
+  if (!is.null(seed)) {
+    set.seed(seed)
+  }
   if (n_max < n) {
-    if (!is.null(seed)) {
-      set.seed(seed)
-    }
     data <- data[sample(n, n_max), , drop = FALSE]
-    if (type != "shap") {
-      x <- flashlight(x, data = data)
-    }
+  }
+
+  # Update flashlight
+  if (type != "shap") {
+    x <- flashlight(x, data = data, by = by,
+                    linkinv = if (use_linkinv) x$linkinv else function(z) z)
   }
 
   # Calculate values
@@ -95,9 +95,9 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
   # Organize output
   data[[label_name]] <- x$label
   data[[type_name]] <- type
-  data <- as_tibble(data[, c(label_name, type_name, x$w, by, v, value_name)])
 
-  out <- list(data = data, by = by, v = v, type = type, value_name = value_name,
+  out <- list(data = as_tibble(data[, vars]), by = by, v = v,
+              type = type, value_name = value_name,
               label_name = label_name, type_name = type_name)
   class(out) <- c("light_scatter", "light", "list")
   out
