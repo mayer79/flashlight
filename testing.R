@@ -506,7 +506,43 @@ fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
 fls <- add_shap(fls)
 plot(light_importance(fls, type = "shap"))
 plot(light_scatter(fls, v = "Petal.Length", type = "shap"), alpha = 0.2)
-plot(light_scatter(fls, v = "Species", type = "shap"), alpha = 0.2, position = "jitter")
+plot(light_scatter(fls, v = "Species", type = "shap"), alpha = 0.2)
 plot(light_scatter(fls, v = "Petal.Length", type = "shap", by = "Species"), alpha = 0.2)
 
 
+#========================
+# DIAMONDS
+#========================
+
+library(ggplot2)
+library(ranger)
+diamonds$log_price <- log(diamonds$price)
+.ind <- c(caret::createDataPartition(diamonds$price, p = 0.2, list = FALSE))
+test <- diamonds[.ind, ]
+train <- diamonds[-.ind, ]
+fit_glm <- glm(price ~ log(carat) + color + clarity + cut, data = train, family = Gamma(link = "log"))
+fit_rf <- ranger(log_price ~ carat + color + clarity + cut, data = train)
+x <- c("carat", "color", "clarity", "cut")
+
+fl_glm <- flashlight(model = fit_glm, label = "glm")
+fl_rf <- flashlight(model = fit_rf, label = "rf",
+                    predict_function = function(m, X) predict(m, X)$predictions)
+fls <- multiflashlight(list(fl_glm, fl_rf), data = test, linkinv = exp, y = "log_price",
+                       metrics = list(rmse = rmse, r_squared = r_squared))
+predict(fls, data = head(test))
+plot(light_performance(fls), fill = "darkgreen")
+plot(light_importance(fls, v = x), fill = "darkgreen")
+plot(light_interaction(fls, v = x, pairwise = TRUE), fill = "darkgreen")
+
+li <- light_effects(fls, v = "color")
+plot_counts(plot(li, use = "all"), li, alpha = 0.2)
+
+li <- light_effects(fls, v = "cut")
+plot_counts(plot(li, use = "all"), li, alpha = 0.2)
+
+li <- light_effects(fls, v = "clarity")
+plot_counts(plot(li, use = "all"), li, alpha = 0.2)
+
+li <- light_effects(fls, v = "carat", breaks = c(seq(0.1, 1, 0.1), 2, 5))
+plot_counts(plot(li, use = "all") +
+              coord_cartesian(ylim = c(-10000, 20000)), li, alpha = 0.2)
