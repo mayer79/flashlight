@@ -47,7 +47,7 @@ plot(light_performance(fl), fill = "darkred")
 plot(light_performance(fl, by = "Species"), fill = "darkred")
 
 # Variable importance by increase in rmse
-imp <- light_importance(fl, m_repetitions = 4)
+imp <- light_importance(fl, m_repetitions = 10)
 plot(imp, fill = "darkred")
 plot(light_importance(fl, by = "Species")) +
    scale_fill_viridis_d(begin = 0.2, end = 0.8)

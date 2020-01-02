@@ -2,7 +2,7 @@ Type: Package
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
 Version: 0.6.0
-Date: 2019-12-29
+Date: 2020-01-02
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
