@@ -14,14 +14,13 @@
 #' @param v Vector of variables to assess importance for. Defaults to all variables in \code{data} except "by" and "y".
 #' @param n_max Maximum number of rows to consider. Not used for \code{type = "shap"}.
 #' @param seed An integer random seed used to select and shuffle rows. Not used for \code{type = "shap"}.
-#' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance and allows the calculation of an approximate z-confidence interval. Not used for \code{type = "shap"}.
-#' @param conf_level Confidence level of the two-sided z confidence interval for the true importance. Note that the default 0.9 is chosen to allow one-sided decisions at the approximate 5 percent level of significance. Only used if \code{m_repetitions > 1}. The half length of the confidence interval is stored in the output \code{data} in column \code{error_name}.
+#' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance and allows the calculation of standard errors measuring the uncertainty from permuting. Not used for \code{type = "shap"}.
 #' @param metric An optional named list of length one with a metric as element. Defaults to the first metric in the flashlight. The metric needs to be a function with at least four arguments: actual, predicted, case weights w and \code{...}. Irrelevant for \code{type = "shap"}.
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1. Not used for \code{type = "shap"}.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE. Not uses for \code{type = "shap"}.
 #' @param metric_name Name of the resulting column containing the name of the metric. Defaults to "metric". Irrelevant for \code{type = "shap"}.
 #' @param value_name Column name in resulting \code{data} containing the variable importance. Defaults to "value".
-#' @param error_name Column name in resulting \code{data} containing the half length of the confidence interval for the true drop in performance. Defaults to "error".
+#' @param error_name Column name in resulting \code{data} containing the standard error of permutation importance. Defaults to "error".
 #' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
 #' @param variable_name Column name in resulting \code{data} containing the variable names. Defaults to "variable".
 #' @param ... Further arguments passed to \code{light_performance}. Not used for \code{type = "shap"}.
@@ -62,7 +61,6 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                                         type = c("permutation", "shap"),
                                         v = NULL, n_max = Inf,
                                         seed = NULL, m_repetitions = 1,
-                                        conf_level = 0.9,
                                         metric = x$metrics[1],
                                         lower_is_better = TRUE, use_linkinv = FALSE,
                                         metric_name = "metric",
@@ -142,7 +140,7 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
       imp <- bind_rows(imp, .id = variable_name)
       imp <- group_by_at(imp, c(key_vars, variable_name))
       se <- function(z, ...) {
-        qnorm(1 - (1 - conf_level) / 2) * sd(z, ...) / sqrt(sum(!is.na(z)))
+        sd(z, ...) / sqrt(sum(!is.na(z)))
       }
       imp <- summarize_at(imp, "value_shuffled",
                           setNames(list(se, mean), c(error_name, "value_shuffled")), na.rm = TRUE)

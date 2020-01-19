@@ -20,7 +20,6 @@ light_importance(x, ...)
   n_max = Inf,
   seed = NULL,
   m_repetitions = 1,
-  conf_level = 0.9,
   metric = x$metrics[1],
   lower_is_better = TRUE,
   use_linkinv = FALSE,
@@ -51,9 +50,7 @@ light_importance(x, ...)
 
 \item{seed}{An integer random seed used to select and shuffle rows. Not used for \code{type = "shap"}.}
 
-\item{m_repetitions}{Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance and allows the calculation of an approximate z-confidence interval. Not used for \code{type = "shap"}.}
-
-\item{conf_level}{Confidence level of the two-sided z confidence interval for the true importance. Note that the default 0.9 is chosen to allow one-sided decisions at the approximate 5 percent level of significance. Only used if \code{m_repetitions > 1}. The half length of the confidence interval is stored in the output \code{data} in column \code{error_name}.}
+\item{m_repetitions}{Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance and allows the calculation of standard errors measuring the uncertainty from permuting. Not used for \code{type = "shap"}.}
 
 \item{metric}{An optional named list of length one with a metric as element. Defaults to the first metric in the flashlight. The metric needs to be a function with at least four arguments: actual, predicted, case weights w and \code{...}. Irrelevant for \code{type = "shap"}.}
 
@@ -65,7 +62,7 @@ light_importance(x, ...)
 
 \item{value_name}{Column name in resulting \code{data} containing the variable importance. Defaults to "value".}
 
-\item{error_name}{Column name in resulting \code{data} containing the half length of the confidence interval for the true drop in performance. Defaults to "error".}
+\item{error_name}{Column name in resulting \code{data} containing the standard error of permutation importance. Defaults to "error".}
 
 \item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
 

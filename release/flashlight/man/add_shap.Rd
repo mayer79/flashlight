@@ -15,9 +15,9 @@ add_shap(x, ...)
   x,
   v = NULL,
   visit_strategy = c("permutation", "importance", "v"),
-  n_shap = 100,
+  n_shap = 200,
   n_max = Inf,
-  n_perm = 20,
+  n_perm = 12,
   seed = NULL,
   use_linkinv = FALSE,
   verbose = TRUE,
@@ -71,6 +71,8 @@ fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 x <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 x <- add_shap(x)
 is.shap(x$shap)
+plot(light_importance(x, type = "shap"))
+plot(light_scatter(x, type = "shap", v = "Petal.Length"))
 }
 }
 \references{

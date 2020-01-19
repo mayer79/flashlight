@@ -24,6 +24,8 @@
 #' x <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 #' x <- add_shap(x)
 #' is.shap(x$shap)
+#' plot(light_importance(x, type = "shap"))
+#' plot(light_scatter(x, type = "shap", v = "Petal.Length"))
 #' }
 add_shap <- function(x, ...) {
   UseMethod("add_shap")
@@ -39,12 +41,14 @@ add_shap.default <- function(x, ...) {
 #' @export
 add_shap.flashlight <- function(x, v = NULL,
                                 visit_strategy = c("permutation", "importance", "v"),
-                                n_shap = 100, n_max = Inf, n_perm = 20,
+                                n_shap = 200, n_max = Inf, n_perm = 12,
                                 seed = NULL, use_linkinv = FALSE, verbose = TRUE,
                                 variable_name = "variable", ...) {
   visit_strategy <- match.arg(visit_strategy)
   data <- x$data
-  stopifnot((n <- nrow(data)) >= 1L)
+  stopifnot(!is.null(data))
+
+  n <- nrow(data)
 
   if (!is.null(seed)) {
     set.seed(seed)
