@@ -24,8 +24,6 @@
 
 - Added argument "type_name" to `light_interaction`. Its output now also contains a slot `type` as well as `type_name`.
 
-- Previously, error bars of `light_importance` represented standard errors, i.e. two-sided z confidence intervals with confidence level of 0.68. This level can now be set though the argument "conf_level". Its default is 0.9 to allow one-sided test decisions at the approximate 5% level of significance. 
-
 # flashlight 0.5.0
 
 ## New functionality
