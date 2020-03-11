@@ -80,8 +80,8 @@ plot(light_scatter(fl, v = "Petal.Width", type = "predicted"))
 # Variable contribution breakdown for single observation
 plot(light_breakdown(fl, new_obs = iris[2, ]))
 
-# Scatter plots
-plot(light_surrogate(fl))
+# Global surrogate
+plot(light_global_surrogate(fl))
 
 ```
 Check out the vignette to see the full capabilities of the package.

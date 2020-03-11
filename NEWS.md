@@ -4,7 +4,7 @@
 
 ### Major
 
-- Added `light_surrogate` and `plot.light_surrogate` to create global surrogate tree models that explain predictions from the original models in a simple to understand way.
+- Added `light_global_surrogate` and `plot.light_global_surrogate` to create a global surrogate tree model that explains predictions from the original model in a simple to understand way.
 
 # flashlight 0.6.0
 

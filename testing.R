@@ -11,6 +11,8 @@ library(tidyr)
 library(rlang)
 library(ggplot2)
 library(ggpubr)
+library(rpart)
+library(rpart.plot)
 # lapply(list.files("R", full.names = TRUE), source)
 
 #======================================
@@ -442,7 +444,16 @@ plot_counts(p, eff, alpha = 0.2) # fixed
 (p <- plot(eff, use = "predicted", zero_counts = FALSE))
 plot_counts(p, eff, alpha = 0.2) # fixed
 
-
+# GLOBAL SURROGATE
+fit1 <- lm(Sepal.Length ~ ., data = iris)
+fit2 <- lm(Sepal.Length ~ Petal.Length, data = iris)
+fl1 <- flashlight(model = fit1, label = "full")
+fl2 <- flashlight(model = fit2, label = "partial")
+fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
+surr <- light_global_surrogate(fls)
+plot(surr, cex = 0.6)
+plot(light_global_surrogate(fls$full))
+plot(light_global_surrogate(fls$full, by = "Species"))
 
 # INTERACTION SPECIAL CHECKS
 library(iml)

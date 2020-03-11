@@ -115,3 +115,14 @@ is.light_scatter_multi <- function(x) {
   inherits(x, "light_scatter_multi")
 }
 
+#' @describeIn is.flashlight Check for light_global_surrogate object.
+#' @export
+is.light_global_surrogate <- function(x) {
+  inherits(x, "light_global_surrogate")
+}
+
+#' @describeIn is.flashlight Check for light_global_surrogate_multi object.
+#' @export
+is.light_global_surrogate_multi <- function(x) {
+  inherits(x, "light_global_surrogate_multi")
+}
