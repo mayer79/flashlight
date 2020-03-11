@@ -1,3 +1,11 @@
+# flashlight 0.7.0
+
+## New functionality
+
+### Major
+
+- Added `light_surrogate` and `plot.light_surrogate` to create global surrogate tree models that explain predictions from the original models in a simple to understand way.
+
 # flashlight 0.6.0
 
 ## New functionality

@@ -14,7 +14,7 @@
 #' @export
 #' @examples
 #' grouped_counts(iris)
-#' grouped_counts(iris, by = "Species")
+#' grouped_counts2(iris, by = "Species")
 #' grouped_counts(iris, w = "Petal.Length")
 #' grouped_counts(iris, by = "Species", w = "Petal.Length")
 grouped_counts <- function(data, by = NULL, w = NULL, value_name = "n", ...) {
@@ -35,3 +35,12 @@ grouped_counts <- function(data, by = NULL, w = NULL, value_name = "n", ...) {
   ungroup(do(group_by_at(data, by), core_fun(.data)))
 }
 
+mean_nm <- "mean"
+count_nm <- "count"
+
+grouped_counts2 <- function(data, by = NULL, w = NULL, value_name = "n", ...) {
+  stopifnot(c(w, by) %in% colnames(data),
+            !anyDuplicated(c(value_name, by)))
+  summarize(data, !!value_name := if (!is.null(by)) count(!!by, wt = !!w, ...) else
+    if (is.null(w)) n() else sum(!!w, ...))
+}
