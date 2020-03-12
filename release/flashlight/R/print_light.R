@@ -17,10 +17,10 @@ print.light <- function(x, ...) {
   cat("\nI am an object with class(es)", paste(class(x), collapse = ", "), "\n")
   x_cs <- x[vapply(x, FUN = is.data.frame, FUN.VALUE = TRUE)]
   if (length(x_cs)) {
-    cat("\ndata.frames (head):\n")
+    cat("\ndata.frames (maximum 6 rows shown):\n")
     for (nm in names(x_cs)) {
       cat("\n", nm, "\n")
-      print(as.data.frame(head(x_cs[[nm]])))
+      print(head(x_cs[[nm]]))
     }
   }
   invisible(x)

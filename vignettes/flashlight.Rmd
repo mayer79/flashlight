@@ -44,7 +44,7 @@ The main props of `flashlight`:
 
 1. It is simple, yet flexible.
 
-2. It offers model agnostic tools like model performance, variable importance, ICE profiles, partial dependence, further effects plots, scatter plots, interaction strength, and variable contribution breakdown for single observations.
+2. It offers model agnostic tools like model performance, variable importance, global surrogate models, ICE profiles, partial dependence, further effects plots, scatter plots, interaction strength, and variable contribution breakdown for single observations.
 
 3. It allows to assess multiple models in parallel without any redundancy in the code.
 
@@ -102,11 +102,16 @@ Besides measuring overall variable importance, an interesting aspect is to measu
 
 ### Variable contribution breakdown for single observations
 
-Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be decomposed into additive effects of input variables: LIME, LIVE, SHAP and breakdown, see [@molnar] and [@gosiewska] for an overview. The `flashlight` package currently supports the breakdown method.
+Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be explained: LIME, LIVE, SHAP and breakdown, see [@molnar] and [@gosiewska] for an overview. The `flashlight` package currently supports the breakdown method as well as approximate SHAP. These two methods are based on additive decomposition of a prediction.
 
-It works as follows: First, the visit order $(x_1, ..., x_m)$ of variables is specified. Then, in the query data, the column $x_1$ is set to the constant value of $x_1$ of the observation to be explained. The change in the (weighted) average predicted value on the query data measures the contribution of $x_1$ on the prediction. This procedure is iterated over all $x_i$ until eventually, all rows in the query data are identical to the observation to be explained.
+The breakdown algorithm works as follows: First, the visit order $(x_1, ..., x_m)$ of variables is specified. Then, in the query data, the column $x_1$ is set to the constant value of $x_1$ of the observation to be explained. The change in the (weighted) average predicted value on the query data measures the contribution of $x_1$ on the prediction. This procedure is iterated over all $x_i$ until eventually, all rows in the query data are identical to the observation to be explained.
 
-A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all $m!$ possible visit orders and its results averaged per variable. This is basically what SHAP values do, see e.g. [@gosiewska] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. Thus we offer two approximations. The first one is the short-cut described in [@gosiewska] and implemented in the `ibreakdown` package (https://CRAN.R-project.org/package=iBreakDown): There, the variables $x_i$ are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. The second, computationally more intensive way to approximate SHAP values is based on running the breakdown algorithm on a small number (e.g. 12) random permutations and then averaging the results.
+A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all $m!$ possible visit orders and its results averaged per variable. This is what SHAP does, see e.g. [@gosiewska] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. Thus we offer two approximations. The first one is the short-cut described in [@gosiewska] and implemented in the `ibreakdown` package (https://CRAN.R-project.org/package=iBreakDown): There, the variables $x_i$ are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. We call this approach "breakdown". The second, computationally more intensive way to approximate SHAP values is based on running the breakdown algorithm on a small number (e.g. 12) random permutations and then averaging the results. We call this approach (approximate) "SHAP".
+
+### Global surrogate models
+As suggested in [@molnar], one way to explain a complex model is to fit an easy to interprete model like a decision tree to the *predictions of the complex model* and then study this simple surrogate model. The quality of its approximation can be measured by the R-squared of the surrogate model.
+
+### flashlight
 
 The `flashlight` package offers these tools in a very simple way.
 
@@ -173,6 +178,9 @@ plot(light_scatter(fl, v = "Petal.Width", type = "predicted"))
 # Variable contribution breakdown for single observation
 plot(light_breakdown(fl, new_obs = iris[2, ]))
 
+# Global surrogate
+plot(light_global_surrogate(fl))
+
 ```
 
 
@@ -217,6 +225,8 @@ The process of using the `flashlight` package is as follows:
    - `light_interaction`: Calculates overall and pairwise interaction strength based on Friedman's H statistic.
 
    - `light_breakdown`: Calculates variable contribution breakdown (approximate SHAP) for a single observation.
+   
+   - `light_global_surrogate`: Fits an easy to interprete decision tree to the predictions of the model.
 
 3. Plot the result: Each of these functions offer a `plot` method with minimal visualization of the results through `ggplot2`. The resulting plot can be customized by adding `theme` and other `ggplot` elements. If customization is insufficient, you can extract the data slot in the object returned by above key functions and build your own plot.
 
@@ -224,9 +234,9 @@ In practice, multiple flashlights are being defined and evaluated in parallel. B
 
 All key functions are defined for both `flashlight` and `multiflashlight` objects.
 
-## SHAP values
+## SHAP
 
-SHAP values offer a very elegant way to summarize the additive contribution of each variable to a single prediction. If such decompositions are available for many predictions, they can also be used to study global properties of the model such as variable importance (by averaging the absolute SHAP values of each variable) or effects (by showing SHAP values per variable). The problem with SHAP values is that they are computationally too demanding to be computed in general. Only for certain model techniques (e.g. tree based methods), they can be computed exactly. Nevertheless, approximations exist, see [@gosiewska] for details. Unfortunately, even these approximations take time to compute. The approach followed by `flashlight` is to compute SHAP values once and store them in the `flashlight` object. All available methods for SHAP values will then use these values without recalculating them. Thus, if e.g. the inverse link function is updated, this has no effect on calculated SHAP values.
+SHAP (see [@Lundberg2017]) offer a very elegant way to summarize the additive contribution of each variable to a single prediction, see . If such decompositions are available for many predictions, they can also be used to study global properties of the model such as variable importance (by averaging the absolute SHAP values of each variable) or effects (by showing SHAP values per variable). The problem with SHAP values is that they are computationally too demanding to be computed in general. Only for certain model techniques (e.g. tree based methods, see [@Lundberg2020]), they can be computed exactly. Nevertheless, approximations exist, see [@gosiewska] for details. Unfortunately, even these approximations take time to compute. The approach followed by `flashlight` is to compute SHAP values once and store them in the `flashlight` object. All available methods for SHAP values will then use these values without recalculating them. Thus, if e.g. the inverse link function is updated, this has no effect on calculated SHAP values.
 
 The workflow is as follows:
 ```
@@ -647,6 +657,16 @@ plot(bd, size = 3)
 ```
 We have set the size of the reference data set to `n_max = 1000` in order to save time. The only variable with positive impact on the prediction is "age". The other variables have a negative impact compared to the 1000 reference observations.
 
+###  Global surrogate trees
+A very different, but intuitive approach is to fit the original predictions of the models by simple decision trees and then visualize these trees.
+```{r}
+surr <- light_global_surrogate(fls$xgb, v = x)
+print(surr$data$r_squared)
+plot(surr)
+```
+
+Even if it is extremely simple to explain, the surrogate model is not a bad approximation (see R-squared).
+
 ## Grouped calculations
 
 A key feature of the `flashlight` package is to support grouped results. You can initialize the (multi-)flashlight with column names of one or many grouping variables or ask for grouped calculations in all major `flashlight` functions. Plots are adapted accordingly.
@@ -705,6 +725,8 @@ plot(pr, alpha = 0.8)
 # -> "by" selects the relevant rows in data/valid
 plot(light_breakdown(fl_lm, new_obs = valid[1, ], v = x, top_m = 3))
 
+# Global surrogate
+plot(light_global_surrogate(fls$xgb, v = x, maxdepth = 3))
 ```
 
 ## Working with case weights
@@ -751,6 +773,9 @@ plot(eff) %>%
 
 # Variable contribution breakdown for single observation (on log-scale)
 plot(light_breakdown(fls, new_obs = iris[2, ]), size = 2.5)
+
+# Global surrogate
+plot(light_global_surrogate(fls))
 ```
 
 ## Binary classification

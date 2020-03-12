@@ -19,6 +19,8 @@
 \alias{is.shap}
 \alias{is.light_scatter}
 \alias{is.light_scatter_multi}
+\alias{is.light_global_surrogate}
+\alias{is.light_global_surrogate_multi}
 \title{Check functions for flashlight Classes}
 \usage{
 is.flashlight(x)
@@ -56,6 +58,10 @@ is.shap(x)
 is.light_scatter(x)
 
 is.light_scatter_multi(x)
+
+is.light_global_surrogate(x)
+
+is.light_global_surrogate_multi(x)
 }
 \arguments{
 \item{x}{Any object.}
@@ -101,6 +107,10 @@ Checks if an object inherits specific class relevant for the flashlight package.
 \item \code{is.light_scatter}: Check for light_scatter object.
 
 \item \code{is.light_scatter_multi}: Check for light_scatter_multi object.
+
+\item \code{is.light_global_surrogate}: Check for light_global_surrogate object.
+
+\item \code{is.light_global_surrogate_multi}: Check for light_global_surrogate_multi object.
 }}
 
 \examples{
