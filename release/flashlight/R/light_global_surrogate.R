@@ -4,7 +4,7 @@
 #'
 #' The size of the tree can be modified by passing \code{...} arguments to \code{rpart}.
 #'
-#' @importFrom rpart rpart
+#' @importFrom rpart rpart rpart.control
 #' @importFrom stats setNames
 #' @importFrom dplyr as_tibble group_by_at do ungroup
 #' @importFrom rlang .data
@@ -35,7 +35,7 @@
 #' fl1 <- flashlight(model = fit1, label = "full")
 #' fl2 <- flashlight(model = fit2, label = "partial")
 #' fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
-#' light_global_surrogate(fls, maxdepth = 4)
+#' light_global_surrogate(fls, maxdepth = 3)
 #'
 #' @seealso \code{\link{plot.light_global_surrogate}}.
 light_global_surrogate <- function(x, ...) {
@@ -55,7 +55,8 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
                                               n_max = Inf, seed = NULL,
                                               keep_max_levels = 4,
                                               label_name = "label",
-                                              tree_name = "tree", ...) {
+                                              tree_name = "tree",
+                                              ...) {
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by, x$w))
   }
@@ -86,7 +87,8 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
   # Core function
   core_func <- function(X) {
     fit <- rpart(reformulate(v, "pred_"), data = X,
-                 weights = if (!is.null(x$w)) X[[x$w]], ...)
+                 weights = if (!is.null(x$w)) X[[x$w]],
+                 model = FALSE, y = FALSE, xval = 0, ...)
     r2 <- r_squared(X[["pred_"]], predict(fit, X))
     setNames(data.frame(r2, I(list(fit))), c("r_squared", tree_name))
   }

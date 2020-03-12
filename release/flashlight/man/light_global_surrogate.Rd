@@ -80,7 +80,7 @@ fit2 <- lm(Sepal.Length ~ Petal.Length, data = iris)
 fl1 <- flashlight(model = fit1, label = "full")
 fl2 <- flashlight(model = fit2, label = "partial")
 fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
-light_global_surrogate(fls, maxdepth = 4)
+light_global_surrogate(fls, maxdepth = 3)
 
 }
 \references{

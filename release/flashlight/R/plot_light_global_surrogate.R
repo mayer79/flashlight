@@ -7,7 +7,7 @@
 #' @method plot light_global_surrogate
 #' @param x An object of class \code{light_global_surrogate}.
 #' @param type Plot type, see help of \code{rpart.plot}. Default is 5.
-#' @param main If multiple trees are shown in the same figure, should titles be plotted? Default is \code{TRUE}.
+#' @param auto_main Automatic plot titles (only if multiple trees are shown in the same figure).
 #' @param mfrow If multiple trees are shown in the same figure: what value of \code{mfrow} to use in \code{par}?
 #' @param ... Further arguments passed to \code{rpart.plot}.
 #' @return An object of class \code{ggplot2}.
@@ -23,7 +23,7 @@
 #' plot(light_global_surrogate(fls$full))
 #' plot(light_global_surrogate(fls$full, by = "Species"))
 #' @seealso \code{\link{light_global_surrogate}}.
-plot.light_global_surrogate <- function(x, type = 5, main = TRUE, mfrow = NULL, ...) {
+plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE, mfrow = NULL, ...) {
   data <- x$data
   multi <- is.light_global_surrogate_multi(x)
   ndim <- length(x$by) + multi
@@ -38,11 +38,13 @@ plot.light_global_surrogate <- function(x, type = 5, main = TRUE, mfrow = NULL, 
     }
     old_params <- par(mfrow = mfrow)
     on.exit(par(old_params))
+
     for (i in seq_len(m)) {
-      rpart.plot(data$tree[[i]], roundint = FALSE, type = type, main = if (main) dim_col[i], ...)
+      rpart.plot(data$tree[[i]], roundint = FALSE, type = type,
+                 main = if (auto_main) dim_col[i], ...)
     }
   } else {
-    stop("Either one 'by' variable or a multiflashlight is supported for visibility.")
+    stop("Either one 'by' variable or a multiflashlight is supported.")
   }
 }
 

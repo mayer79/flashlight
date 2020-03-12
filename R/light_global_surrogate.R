@@ -35,7 +35,7 @@
 #' fl1 <- flashlight(model = fit1, label = "full")
 #' fl2 <- flashlight(model = fit2, label = "partial")
 #' fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
-#' light_global_surrogate(fls, maxdepth = 4, xval = 10)
+#' light_global_surrogate(fls, maxdepth = 3)
 #'
 #' @seealso \code{\link{plot.light_global_surrogate}}.
 light_global_surrogate <- function(x, ...) {
@@ -88,8 +88,7 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
   core_func <- function(X) {
     fit <- rpart(reformulate(v, "pred_"), data = X,
                  weights = if (!is.null(x$w)) X[[x$w]],
-                 #control = rpart.control(xval = 0),
-                 ...)
+                 model = FALSE, y = FALSE, xval = 0, ...)
     r2 <- r_squared(X[["pred_"]], predict(fit, X))
     setNames(data.frame(r2, I(list(fit))), c("r_squared", tree_name))
   }

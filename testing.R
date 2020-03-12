@@ -323,6 +323,8 @@ plot(light_effects(mods, v = "Petal.Length"), use = "pd")
 plot(light_effects(mods, v = "Petal.Length"), use = "ale")
 plot(light_effects(mods, v = "Petal.Length", v_labels = FALSE))
 
+plot(light_global_surrogate(mods))
+
 #======================================
 # profile
 #======================================

@@ -100,9 +100,9 @@ Instead of studying profiles, it might be revealing to look at scatter plots of 
 
 Besides measuring overall variable importance, an interesting aspect is to measure the strength of non-additivity associated with each covariable (i.e. the overall interaction strength) and/or between pairs of covariables. A model-agnostic way to assess such measures is based on partial dependence curves, see [@friedman2008]. A computationally less demanding alternative to their H-statistic of measuring total interaction strength per covariable can be extracted from centered ICE: How much of their variability is unexplained by the main effect?
 
-### Variable contribution breakdown for single observations and SHAP
+### Variable contribution breakdown for single observations
 
-Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be decomposed into additive effects of input variables: LIME, LIVE, SHAP and breakdown, see [@molnar] and [@gosiewska] for an overview. The `flashlight` package currently supports the breakdown method as well as approximate SHAP.
+Instead of studying global variable importance and effects, there are different techniques to entangle how a *single prediction* can be explained: LIME, LIVE, SHAP and breakdown, see [@molnar] and [@gosiewska] for an overview. The `flashlight` package currently supports the breakdown method as well as approximate SHAP. These two methods are based on additive decomposition of a prediction.
 
 The breakdown algorithm works as follows: First, the visit order $(x_1, ..., x_m)$ of variables is specified. Then, in the query data, the column $x_1$ is set to the constant value of $x_1$ of the observation to be explained. The change in the (weighted) average predicted value on the query data measures the contribution of $x_1$ on the prediction. This procedure is iterated over all $x_i$ until eventually, all rows in the query data are identical to the observation to be explained.
 
@@ -234,9 +234,9 @@ In practice, multiple flashlights are being defined and evaluated in parallel. B
 
 All key functions are defined for both `flashlight` and `multiflashlight` objects.
 
-## SHAP values
+## SHAP
 
-SHAP values offer a very elegant way to summarize the additive contribution of each variable to a single prediction. If such decompositions are available for many predictions, they can also be used to study global properties of the model such as variable importance (by averaging the absolute SHAP values of each variable) or effects (by showing SHAP values per variable). The problem with SHAP values is that they are computationally too demanding to be computed in general. Only for certain model techniques (e.g. tree based methods), they can be computed exactly. Nevertheless, approximations exist, see [@gosiewska] for details. Unfortunately, even these approximations take time to compute. The approach followed by `flashlight` is to compute SHAP values once and store them in the `flashlight` object. All available methods for SHAP values will then use these values without recalculating them. Thus, if e.g. the inverse link function is updated, this has no effect on calculated SHAP values.
+SHAP (see [@Lundberg2017]) offer a very elegant way to summarize the additive contribution of each variable to a single prediction, see . If such decompositions are available for many predictions, they can also be used to study global properties of the model such as variable importance (by averaging the absolute SHAP values of each variable) or effects (by showing SHAP values per variable). The problem with SHAP values is that they are computationally too demanding to be computed in general. Only for certain model techniques (e.g. tree based methods, see [@Lundberg2020]), they can be computed exactly. Nevertheless, approximations exist, see [@gosiewska] for details. Unfortunately, even these approximations take time to compute. The approach followed by `flashlight` is to compute SHAP values once and store them in the `flashlight` object. All available methods for SHAP values will then use these values without recalculating them. Thus, if e.g. the inverse link function is updated, this has no effect on calculated SHAP values.
 
 The workflow is as follows:
 ```

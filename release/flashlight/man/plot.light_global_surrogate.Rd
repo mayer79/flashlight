@@ -4,14 +4,14 @@
 \alias{plot.light_global_surrogate}
 \title{Plot Global Surrogate Trees}
 \usage{
-\method{plot}{light_global_surrogate}(x, type = 5, main = TRUE, mfrow = NULL, ...)
+\method{plot}{light_global_surrogate}(x, type = 5, auto_main = TRUE, mfrow = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{light_global_surrogate}.}
 
 \item{type}{Plot type, see help of \code{rpart.plot}. Default is 5.}
 
-\item{main}{If multiple trees are shown in the same figure, should titles be plotted? Default is \code{TRUE}.}
+\item{auto_main}{Automatic plot titles (only if multiple trees are shown in the same figure).}
 
 \item{mfrow}{If multiple trees are shown in the same figure: what value of \code{mfrow} to use in \code{par}?}
 
