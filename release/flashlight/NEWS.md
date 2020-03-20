@@ -1,3 +1,8 @@
+# flashlight 0.7.1
+
+Emergency release. Fixes a problem introduced with ggplot 3.3.0 when plotting light_importance and light_interaction objects.
+
+
 # flashlight 0.7.0
 
 ## New functionality

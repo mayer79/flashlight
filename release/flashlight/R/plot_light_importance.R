@@ -52,12 +52,11 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   data[["high_"]] <- data[[x$value_name]] + data[[x$error_name]]
 
   # Differentiate some plot cases
-  p <- ggplot(data, aes_string(y = x$value_name, x = x$variable_name,
-                               ymin = "low_", ymax = "high_"))
+  p <- ggplot(data, aes_string(y = x$value_name, x = x$variable_name))
   if (ndim == 0L) {
     p <- p + geom_bar(stat = "identity", ...)
     if (error_bars) {
-      p <- p + geom_errorbar(width = 0, color = "black")
+      p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black")
     }
   } else if (ndim == 1L) {
     first_dim <- if (multi) x$label_name else x$by[1]
@@ -65,14 +64,14 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
       p <- p + geom_bar(aes_string(fill = first_dim),
                         stat = "identity", position = "dodge", ...)
       if (error_bars) {
-        p <- p + geom_errorbar(aes_string(group = first_dim),
+        p <- p + geom_errorbar(aes_string(group = first_dim, ymin = "low_", ymax = "high_"),
                                width = 0, color = "black", position = position_dodge(0.9))
       }
     } else {
       p <- p + geom_bar(stat = "identity", ...) +
         facet_wrap(reformulate(first_dim), scales = facet_scales)
       if (error_bars) {
-        p <- p + geom_errorbar(width = 0, color = "black")
+        p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black")
       }
     }
   } else {
@@ -83,7 +82,7 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
                       stat = "identity", position = "dodge", ...) +
       facet_wrap(reformulate(wrap_var), scales = facet_scales)
     if (error_bars) {
-      p <- p + geom_errorbar(aes_string(group = dodge_var),
+      p <- p + geom_errorbar(aes_string(group = dodge_var, ymin = "low_", ymax = "high_"),
                              width = 0, color = "black", position = position_dodge(0.9))
     }
   }
