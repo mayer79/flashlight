@@ -39,7 +39,7 @@
 #'   \item \code{type_name} Same as input \code{type_name}.
 #' }
 #' @export
-#' @references Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54..
+#' @references Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.
 #' @examples
 #' fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
 #' fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
