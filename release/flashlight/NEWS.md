@@ -2,7 +2,7 @@
 
 ## Visible changes of defaults
 
-- `light_interaction` now uses a default grid size of 100 instead of 30 to calculate partial dependency profiles. Furthermore, the used sample size to calculate the interaction statistics have been increased from 300 to 500. The two changes improve considerably the stability of the results at the price of a substantial increase in runtime.
+- `light_interaction` now uses a default grid size of 200 instead of 30 to calculate partial dependency profiles. Furthermore, the used sample size to calculate the interaction statistics have been increased from 300 to 1000. The two changes improve considerably the stability of the results at the price of a substantial increase in runtime. For slow prediction functions, choose lower values as suitable.
 
 ## New functionality
 
