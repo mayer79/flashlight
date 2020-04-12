@@ -4,18 +4,27 @@
 \alias{plot.light_performance}
 \title{Visualize Model Performance}
 \usage{
-\method{plot}{light_performance}(x, swap_dim = FALSE, facet_scales = "free_y", rotate_x = FALSE, ...)
+\method{plot}{light_performance}(
+  x,
+  swap_dim = FALSE,
+  geom = c("bar", "point"),
+  facet_scales = "free_y",
+  rotate_x = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{light_performance}.}
 
 \item{swap_dim}{Should representation of dimensions (either two "by" variables or one "by" variable and multiflashlight) of x aesthetic and dodge fill aesthetic be swapped? Default is FALSE.}
 
+\item{geom}{Geometry of plot (either "bar" or "point")}
+
 \item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
 
-\item{...}{Further arguments passed to \code{geom_bar}.}
+\item{...}{Further arguments passed to \code{geom_bar} or \code{geom_point}.}
 }
 \value{
 An object of class \code{ggplot2}.

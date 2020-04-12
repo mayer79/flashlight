@@ -47,11 +47,11 @@ light_performance(x, ...)
 \value{
 An object of class \code{light_performance}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
-  \item \code{by} Same as input \code{by}.
-  \item \code{metric_name} Same as input \code{metric_name}.
-  \item \code{value_name} Same as input \code{value_name}.
-  \item \code{label_name} Same as input \code{label_name}.
+\item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
+\item \code{by} Same as input \code{by}.
+\item \code{metric_name} Same as input \code{metric_name}.
+\item \code{value_name} Same as input \code{value_name}.
+\item \code{label_name} Same as input \code{label_name}.
 }
 }
 \description{

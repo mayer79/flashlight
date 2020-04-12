@@ -54,7 +54,7 @@ add_shap(x, ...)
 An object of class \code{flashlight} or \code{multiflashlight} with additional element "shap" of class "shap" (and "list").
 }
 \description{
-The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as static element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm in [1] is used with importance based visit order. Use the default \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
+The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as static element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm (see reference) is used with importance based visit order. Use the default \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -76,5 +76,5 @@ plot(light_scatter(x, type = "shap", v = "Petal.Length"))
 }
 }
 \references{
-[1] A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
+A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
 }

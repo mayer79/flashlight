@@ -26,13 +26,13 @@ create_package(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
     Type = "Package",
-    Version = "0.7.1",
+    Version = "0.7.2",
     Date = Sys.Date(),
     Description = "Shed light on black box machine learning models by the help of model performance, variable importance, global surrogate models, ICE profiles, partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>), further effects plots, scatter plots, interaction strength, and variable contribution breakdown (approximate SHAP) for single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>). All tools are implemented to work with case weights and allow for stratified analysis. Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
     URL = "https://github.com/mayer79/flashlight",
     BugReports = "https://github.com/mayer79/flashlight/issues",
-    Depends = "R (>= 3.5.0)",
+    Depends = "R (>= 3.1.0)",
     VignetteBuilder = "knitr",
     License = "GPL(>= 2)",
     Maintainer = "Michael Mayer <mayermichael79@gmail.com>"))
@@ -44,7 +44,7 @@ file.copy(file.path(pkg, "DESCRIPTION"), to = getwd(), overwrite = TRUE)
 use_package("stats", "Imports")
 use_package("utils", "Imports")
 use_package("dplyr", "Imports")
-use_package("tidyr", "Imports")
+use_package("tidyr", "Imports", min_version = "1.0.0")
 use_package("rlang", "Imports")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
@@ -54,10 +54,8 @@ use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 
 # Suggests
 use_package("knitr", "Suggests")
-use_package("lubridate", "Suggests")
 use_package("ranger", "Suggests")
 use_package("xgboost", "Suggests")
-use_package("caret", "Suggests")
 use_package("moderndive", "Suggests")
 
 # Set up other files -------------------------------------------------

@@ -29,20 +29,6 @@
 #' plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
 #' plot(light_ice(mods, v = "Petal.Width", n_bins = 5, indices = indices))
 #' plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
-#'
-#' ir <- iris
-#' ir$log_sl <- log(ir$Sepal.Length)
-#' fit_lm <- lm(log_sl ~ Petal.Length + Petal.Width, data = ir)
-#' fit_glm <- glm(Sepal.Length ~ Petal.Length + Petal.Width,
-#'   data = ir, family = Gamma(link = log))
-#' fl_lm <- flashlight(model = fit_lm, label = "lm", y = "log_sl", linkinv = exp)
-#' fl_glm <- flashlight(model = fit_glm, label = "glm", y = "Sepal.Length",
-#'   predict_function = function(m, X) predict(m, X, type = "response"))
-#' fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
-#' plot(light_ice(fls, v = "Petal.Length", indices = indices))
-#' plot(light_ice(fls, v = "Petal.Length", indices = indices, center = "first"))
-#' plot(light_ice(fls, v = "Petal.Length", indices = indices, by = "Species", center = "first"))
-#' plot(light_ice(fls, v = "Petal.Length", indices = indices, use_linkinv = FALSE))
 #' @seealso \code{\link{light_ice}}.
 plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
   nby <- length(x$by)

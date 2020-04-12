@@ -23,11 +23,11 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+library(ggplot2)
 library(flashlight)      # model interpretation
 library(MetricsWeighted) # metrics
 library(dplyr)           # data prep
 library(moderndive)      # data
-library(caret)           # data split
 library(xgboost)         # gradient boosting
 library(ranger)          # random forest
 ```
@@ -147,8 +147,7 @@ plot(light_performance(fl, by = "Species"), fill = "darkred")
 # Variable importance by increase in rmse
 imp <- light_importance(fl, m_repetitions = 4)
 plot(imp, fill = "darkred")
-plot(light_importance(fl, by = "Species")) +
-   scale_fill_viridis_d(begin = 0.2, end = 0.8)
+plot(light_importance(fl, by = "Species"))
 most_important(imp, 2)
 
 # ICE profiles for Petal.Width
@@ -299,13 +298,14 @@ We use 70% of the data to calculate the models, 20% for evaluating their perform
 Let's do some data preparation common for all models under consideration.
 
 ```{r}
-prep <- transform(house_prices,
-                  log_price = log(price),
-                  grade = as.integer(as.character(grade)),
-                  year = factor(lubridate::year(date)),
-                  age = lubridate::year(date) - yr_built,
-                  zipcode = as.factor(as.character(zipcode)),
-                  waterfront = factor(waterfront, levels = c(FALSE, TRUE), labels = c("no", "yes")))
+prep <- mutate(house_prices,
+               log_price = log(price),
+               grade = as.integer(as.character(grade)),
+               year = as.numeric(format(date, '%Y')),
+               age = year - yr_built,
+               year = factor(year),
+               zipcode = as.factor(as.character(zipcode)),
+               waterfront = factor(waterfront, levels = c(FALSE, TRUE), labels = c("no", "yes")))
 
 x <- c("grade", "year", "age", "sqft_living", "sqft_lot", "zipcode",
        "condition", "waterfront")
@@ -336,7 +336,7 @@ Then, we split the data and train our models.
 ```{r}
 # Train / valid / test split (70% / 20% / 10%)
 set.seed(56745)
-ind <- caret::createFolds(factor(prep[["zipcode"]]), k = 10, list = FALSE)
+ind <- sample(10, nrow(prep), replace = TRUE)
 
 train <- prep[ind >= 4, ]
 valid <- prep[ind %in% 2:3, ]
@@ -364,8 +364,7 @@ fit_xgb <- xgb.train(params,
                      watchlist = list(train = dtrain, valid = dvalid),
                      nrounds = 250,
                      print_every_n = 50,
-                     objective = "reg:linear",
-                     seed = 2698)
+                     objective = "reg:linear")
 ```
 
 ### Creating the flashlights
@@ -419,8 +418,7 @@ head(perf$data)
 
 perf$data %>%
   ggplot(aes(x = label, y = value, group = metric, color = metric)) +
-  geom_point() +
-  scale_color_viridis_d(begin = 0.2, end = 0.6)
+  geom_point()
 ```
 
 The same logic holds for all other main functions in the `flashlight` package.
@@ -637,14 +635,15 @@ plot(pr, alpha = 0.2)
 Based on Friedman's H statistic [@friedman2008], we can investigate which variable has strongest interaction effect relative to its full effect.
 
 ```{r}
-st <- light_interaction(fls, v = x)
+st <- light_interaction(fls, v = x, grid_size = 30, n_max = 100)
 plot(st)
 ```
 Since we have not used interaction terms in the linear model, all values are zero there.
 
 Pairwise interactions are expensive to compute as each variable pair has to be assessed. We limit the search for interactions to the four variables with highest relative interaction strength.
 ```{r}
-st_pair <- light_interaction(fls, v = most_important(st, 4), pairwise = TRUE)
+st_pair <- light_interaction(fls, v = most_important(st, 4), 
+                             pairwise = TRUE, grid_size = 30, n_max = 100)
 plot(st_pair)
 ```
 
@@ -675,12 +674,10 @@ A key feature of the `flashlight` package is to support grouped results. You can
 fls <- multiflashlight(fls, by = "year")
 
 # Performance
-plot(light_performance(fls)) +
-  scale_fill_viridis_d(begin = 0.1, end = 0.9)
+plot(light_performance(fls))
 
 # With swapped dimension
-plot(light_performance(fls), swap_dim = TRUE) +
-  scale_fill_viridis_d(begin = 0.1, end = 0.9)
+plot(light_performance(fls), swap_dim = TRUE)
 
 # Importance
 imp <- light_importance(fls, v = x)
@@ -690,13 +687,11 @@ plot(imp, swap_dim = TRUE)
 # Effects: ICE
 plot(light_ice(fls, v = "sqft_living", seed = 4345),
      alpha = 0.8, facet_scales = "free_y") +
-  scale_color_viridis_d(begin = 0.1, end = 0.9) +
   scale_y_continuous(labels = format_y)
 
 # c-ICE
 plot(light_ice(fls, v = "sqft_living", seed = 4345, center = "middle"),
      alpha = 0.8, facet_scales = "free_y") +
-  scale_color_viridis_d(begin = 0.1, end = 0.9) +
   scale_y_continuous(labels = format_y)
 
 # Effects: Partial dependence

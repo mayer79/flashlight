@@ -1,10 +1,10 @@
 #' Variable Contribution Breakdown for Single Observation
 #'
-#' Calculates sequential additive variable contributions (approximate SHAP) to the prediction of a single observation, see Gosiewska and Biecek [1] and the details below.
+#' Calculates sequential additive variable contributions (approximate SHAP) to the prediction of a single observation, see Gosiewska and Biecek (see reference) and the details below.
 #'
 #' The breakdown algorithm works as follows: First, the visit order (x_1, ..., x_m) of the variables \code{v} is specified. Then, in the query \code{data}, the column x_1 is set to the value of x_1 of the single observation \code{new_obs} to be explained. The change in the (weighted) average prediction on \code{data} measures the contribution of x_1 on the prediction of \code{new_obs}. This procedure is iterated over all x_i until eventually, all rows in \code{data} are identical to \code{new_obs}.
-#' A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all possible permutations of \code{v} and its results averaged per variable. This is basically what SHAP values do, see [1] for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. We offer two visit strategies to approximate SHAP. The first one uses
-#' the short-cut described in [1]: The variables are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. We call this visit strategy "importance". The second strategy "permutation" averages contributions from a small number of random permutations of v.
+#' A complication with this approach is that the visit order is relevant, at least for non-additive models. Ideally, the algorithm could be repeated for all possible permutations of \code{v} and its results averaged per variable. This is basically what SHAP values do, see the reference below for an explanation. Unfortunately, there is no efficient way to do this in a model agnostic way. We offer two visit strategies to approximate SHAP. The first one uses
+#' the short-cut described in the reference below: The variables are sorted by the size of their contribution in the same way as the breakdown algorithm but without iteration, i.e. starting from the original query data for each variable $x_i$. We call this visit strategy "importance". The second strategy "permutation" averages contributions from a small number of random permutations of v.
 #' Note that the minimum required elements in the (multi-) flashlight are a "predict_function", "model", and "data". The latter can also directly be passed to \code{light_breakdown}. Note that by default, no retransformation function is applied.
 #'
 #' @importFrom dplyr semi_join lag tibble
@@ -40,7 +40,7 @@
 #'   \item \code{description_name} Same as input \code{description_name}.
 #' }
 #' @export
-#' @references [1] A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
+#' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
 #' @examples
 #' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 #' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")

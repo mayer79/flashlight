@@ -56,13 +56,13 @@ light_scatter(x, ...)
 \value{
 An object of class \code{light_scatter}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
-  \item \code{by} Same as input \code{by}.
-  \item \code{v} The variable evaluated.
-  \item \code{type} Same as input \code{type}. For information only.
-  \item \code{value_name} Same as input \code{value_name}.
-  \item \code{label_name} Same as input \code{label_name}.
-  \item \code{type_name} Same as input \code{type_name}.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+\item \code{by} Same as input \code{by}.
+\item \code{v} The variable evaluated.
+\item \code{type} Same as input \code{type}. For information only.
+\item \code{value_name} Same as input \code{value_name}.
+\item \code{label_name} Same as input \code{label_name}.
+\item \code{type_name} Same as input \code{type_name}.
 }
 }
 \description{

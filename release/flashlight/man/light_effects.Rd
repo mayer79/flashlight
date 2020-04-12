@@ -97,19 +97,19 @@ light_effects(x, ...)
 \value{
 An object of classes \code{light_effects}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{response} A tibble containing the response profiles.
-  \item \code{predicted} A tibble containing the prediction profiles.
-  \item \code{pd} A tibble containing the partial dependence profiles.
-  \item \code{ale} A tibble containing the ALE profiles.
-  \item \code{by} Same as input \code{by}.
-  \item \code{v} The variable(s) evaluated.
-  \item \code{stats} Same as input \code{stats}.
-  \item \code{value_name} Same as input \code{value_name}.
-  \item \code{q1_name} Same as input \code{q1_name}.
-  \item \code{q3_name} Same as input \code{q3_name}.
-  \item \code{label_name} Same as input \code{label_name}.
-  \item \code{type_name} Same as input \code{type}.
-  \item \code{counts_name} Same as input \code{counts_name}.
+\item \code{response} A tibble containing the response profiles.
+\item \code{predicted} A tibble containing the prediction profiles.
+\item \code{pd} A tibble containing the partial dependence profiles.
+\item \code{ale} A tibble containing the ALE profiles.
+\item \code{by} Same as input \code{by}.
+\item \code{v} The variable(s) evaluated.
+\item \code{stats} Same as input \code{stats}.
+\item \code{value_name} Same as input \code{value_name}.
+\item \code{q1_name} Same as input \code{q1_name}.
+\item \code{q3_name} Same as input \code{q3_name}.
+\item \code{label_name} Same as input \code{label_name}.
+\item \code{type_name} Same as input \code{type}.
+\item \code{counts_name} Same as input \code{counts_name}.
 }
 }
 \description{

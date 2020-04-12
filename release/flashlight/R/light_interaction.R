@@ -1,8 +1,8 @@
 #' Interaction Strength
 #'
-#' This function provides Friedman's H statistic [1] for overall interaction strength per covariable as well as its version for pairwise interactions. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"}, the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of the variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
+#' This function provides Friedman's H statistic for overall interaction strength per covariable as well as its version for pairwise interactions, see reference below. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"}, the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of the variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
 #'
-#' Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip this normalization step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of such unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H. Note that in general, for each variable (pair) predicitons are done on a data set with \code{grid_size * n_max}, so be cautious with increasing the defaults too much. The minimum required elements in the (multi-) flashlight are a "predict_function", "model", and "data".
+#' Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip this normalization step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of such unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H. Note that in general, for each variable (pair) predictions are done on a data set with \code{grid_size * n_max}, so be cautious with increasing the defaults too much. Still, even with larger \code{grid_size} and \code{n_max}, there might be considerable variation across different runs, thus setting a seed might be required for reproducibility. The minimum required elements in the (multi-) flashlight are a "predict_function", "model", and "data".
 #'
 #' @importFrom stats setNames
 #' @importFrom dplyr as_tibble bind_rows bind_cols group_by_at do ungroup
@@ -39,7 +39,7 @@
 #'   \item \code{type_name} Same as input \code{type_name}.
 #' }
 #' @export
-#' @references [1] Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54..
+#' @references Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54..
 #' @examples
 #' fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
 #' fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
@@ -66,7 +66,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          v = NULL, pairwise = FALSE,
                                          type = c("H", "ice"),
                                          normalize = TRUE, take_sqrt = TRUE,
-                                         grid_size = 30, n_max = 300,
+                                         grid_size = 100, n_max = 500,
                                          seed = NULL, use_linkinv = FALSE,
                                          value_name = "value",
                                          error_name = "error", label_name = "label",
@@ -170,7 +170,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   }
   # Calculate statistic for each variable (pair) and combine results
   core_func <- function(X) {
-    # Reduce data sice and select grid values
+    # Reduce data size and select grid values
     n <- nrow(X)
     if (n_max < n) {
       X <- X[sample(n, n_max), , drop = FALSE]
