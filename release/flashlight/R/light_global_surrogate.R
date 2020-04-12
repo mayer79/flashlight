@@ -1,6 +1,6 @@
 #' Global Surrogate Tree
 #'
-#' Model predictions are modelled by a single decision tree, serving as an easy to interprete surrogate to the original model. As suggested in Molnar [1], the quality of the surrogate tree can be measured by its R-squared.
+#' Model predictions are modelled by a single decision tree, serving as an easy to interprete surrogate to the original model. As suggested in Molnar (see reference below), the quality of the surrogate tree can be measured by its R-squared.
 #'
 #' The size of the tree can be modified by passing \code{...} arguments to \code{rpart}.
 #'
@@ -28,7 +28,7 @@
 #'   \item \code{tree_name} Name of column with tree objects.
 #' }
 #' @export
-#' @references [1] Molnar C. (2019). Interpretable Machine Learning.
+#' @references Molnar C. (2019). Interpretable Machine Learning.
 #' @examples
 #' fit1 <- lm(Sepal.Length ~ ., data = iris)
 #' fit2 <- lm(Sepal.Length ~ Petal.Length, data = iris)

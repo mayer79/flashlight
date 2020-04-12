@@ -53,14 +53,14 @@ light_global_surrogate(x, ...)
 \value{
 An object of class \code{light_global_surrogate}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
-  \item \code{by} Same as input \code{by}.
-  \item \code{label_name} Same as input \code{label_name}.
-  \item \code{tree_name} Name of column with tree objects.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+\item \code{by} Same as input \code{by}.
+\item \code{label_name} Same as input \code{label_name}.
+\item \code{tree_name} Name of column with tree objects.
 }
 }
 \description{
-Model predictions are modelled by a single decision tree, serving as an easy to interprete surrogate to the original model. As suggested in Molnar [1], the quality of the surrogate tree can be measured by its R-squared.
+Model predictions are modelled by a single decision tree, serving as an easy to interprete surrogate to the original model. As suggested in Molnar (see reference below), the quality of the surrogate tree can be measured by its R-squared.
 }
 \details{
 The size of the tree can be modified by passing \code{...} arguments to \code{rpart}.
@@ -84,7 +84,7 @@ light_global_surrogate(fls, maxdepth = 3)
 
 }
 \references{
-[1] Molnar C. (2019). Interpretable Machine Learning.
+Molnar C. (2019). Interpretable Machine Learning.
 }
 \seealso{
 \code{\link{plot.light_global_surrogate}}.

@@ -114,21 +114,21 @@ light_profile(x, ...)
 \value{
 An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
-  \item \code{by} Names of group by variable.
-  \item \code{v} The variable(s) evaluated.
-  \item \code{type} Same as input \code{type}. For information only.
-  \item \code{stats} Same as input \code{stats}.
-  \item \code{value_name} Same as input \code{value_name}.
-  \item \code{q1_name} Same as input \code{q1_name}.
-  \item \code{q3_name} Same as input \code{q3_name}.
-  \item \code{label_name} Same as input \code{label_name}.
-  \item \code{type_name} Same as input \code{type_name}.
-  \item \code{counts_name} Same as input \code{counts_name}.
+\item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
+\item \code{by} Names of group by variable.
+\item \code{v} The variable(s) evaluated.
+\item \code{type} Same as input \code{type}. For information only.
+\item \code{stats} Same as input \code{stats}.
+\item \code{value_name} Same as input \code{value_name}.
+\item \code{q1_name} Same as input \code{q1_name}.
+\item \code{q3_name} Same as input \code{q3_name}.
+\item \code{label_name} Same as input \code{label_name}.
+\item \code{type_name} Same as input \code{type_name}.
+\item \code{counts_name} Same as input \code{counts_name}.
 }
 }
 \description{
-Calculates different types of profiles across covariable values. By default, partial dependence profiles [1] are calculated. Other options are profiles of ALE (accumulated local effects, see [2]), response, predicted values ("M plots" or "marginal plots", see [2]), residuals, and shap. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in [2], we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
+Calculates different types of profiles across covariable values. By default, partial dependence profiles are calculated (see Friedman). Other options are profiles of ALE (accumulated local effects, see Apley), response, predicted values ("M plots" or "marginal plots", see Apley), residuals, and shap. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in Apley, we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
 }
 \details{
 For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
@@ -152,9 +152,9 @@ light_profile(mod_full, v = "Petal.Width", type = "residual")
 light_profile(mod_full, v = "Petal.Width", pd_evaluate_at = 2:4)
 }
 \references{
-[1] Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
 
-[2] Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models. ArXiv <arXiv:1612.08468>.
+Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
 }
 \seealso{
 \code{\link{light_effects}}, \code{\link{plot.light_profile}}.

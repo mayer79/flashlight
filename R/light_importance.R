@@ -1,6 +1,6 @@
 #' Variable Importance
 #'
-#' Two algorithms to calculate variable importance are available: (a) Permutation importance and (b) SHAP importance. Algorithm (a) measures importance of variable v as the drop in performance by permuting the values of v, see Fisher et al. 2018 [1]. Algorithm (b) measures variable importance by averaging absolute SHAP values.
+#' Two algorithms to calculate variable importance are available: (a) Permutation importance and (b) SHAP importance. Algorithm (a) measures importance of variable v as the drop in performance by permuting the values of v, see Fisher et al. 2018 (reference below). Algorithm (b) measures variable importance by averaging absolute SHAP values.
 #'
 #' For algorithm (a), the minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". For algorithm (b), the only required element is "shap". Call \code{add_shap} once to add such object.
 #' Note: The values of the permutation algorithm (a) are on the scale of the selected metric. For shap algorithm (b), the values are on the scale of absolute values of the predictions.
@@ -36,7 +36,7 @@
 #'   \item \code{variable_name} Same as input \code{variable_name}.
 #' }
 #' @export
-#' @references [1] Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.
+#' @references Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.
 #' @examples
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)

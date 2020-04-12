@@ -32,10 +32,10 @@ auto_cut(
 \value{
 A list with the following four elements:
 \itemize{
-  \item \code{data} A \code{data.frame} with colums \code{x_name} and \code{level_name} each with the same length as \code{x}. The column \code{x_name} has values in output \code{bin_means} while the column \code{level_name} has values in \code{bin_labels}.
-  \item \code{breaks} A vector of increasing and unique breaks used to cut a numeric \code{x} with too many distinct levels. NULL otherwise.
-  \item \code{bin_means} The midpoints of subsequent breaks, or if there are no \code{breaks} in the output, factor levels or distinct values of \code{x}.
-  \item \code{bin_labels} Break labels of the form "(low, high]" if there are \code{breaks} in the output, otherwise the same as \code{bin_means}. Same order as \code{bin_means}.
+\item \code{data} A \code{data.frame} with colums \code{x_name} and \code{level_name} each with the same length as \code{x}. The column \code{x_name} has values in output \code{bin_means} while the column \code{level_name} has values in \code{bin_labels}.
+\item \code{breaks} A vector of increasing and unique breaks used to cut a numeric \code{x} with too many distinct levels. NULL otherwise.
+\item \code{bin_means} The midpoints of subsequent breaks, or if there are no \code{breaks} in the output, factor levels or distinct values of \code{x}.
+\item \code{bin_labels} Break labels of the form "(low, high]" if there are \code{breaks} in the output, otherwise the same as \code{bin_means}. Same order as \code{bin_means}.
 }
 }
 \description{

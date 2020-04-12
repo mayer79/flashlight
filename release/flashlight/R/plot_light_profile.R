@@ -11,6 +11,7 @@
 #' @param swap_dim If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of dodge/fill variable and facet variable. If multiflashlight or one "by" variable, use facets instead of colors.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees? TRUE, except for type "partial dependence".
+#' @param show_points Should points be added to the line (default is \code{TRUE}).
 #' @param ... Further arguments passed to \code{geom_point} and \code{geom_line}.
 #' @return An object of class \code{ggplot2}.
 #' @export
@@ -27,7 +28,8 @@
 #' plot(light_profile(mods, v = "Petal.Width", by = "Species"))
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
-                               rotate_x = x$type != "partial dependence", ...) {
+                               rotate_x = x$type != "partial dependence",
+                               show_points = TRUE, ...) {
   data <- x$data
   nby <- length(x$by)
   multi <- is.light_profile_multi(x)
@@ -50,8 +52,10 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
       p <- p + geom_crossbar(...)
     }
     else {
-      p <- p + geom_point(...) +
-        geom_line(aes(group = 1), ...)
+      p <- p + geom_line(aes(group = 1), ...)
+      if (show_points) {
+        p <- p + geom_point(...)
+      }
     }
   } else if (ndim == 1L) {
     first_dim <- if (multi) x$label_name else x$by[1]
@@ -59,8 +63,10 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
       if (x$stats == "quartiles") {
         p <- p + geom_crossbar(aes_string(color = first_dim), position = "dodge", ...)
       } else {
-        p <- p + geom_point(aes_string(color = first_dim), ...) +
-          geom_line(aes_string(color = first_dim, group = first_dim), ...)
+        p <- p + geom_line(aes_string(color = first_dim, group = first_dim), ...)
+        if (show_points) {
+          p <- p + geom_point(aes_string(color = first_dim), ...)
+        }
       }
     } else {
       p <- p +
@@ -68,8 +74,10 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
       if (x$stats == "quartiles") {
         p <- p + geom_crossbar(...)
       } else {
-        p <- p + geom_point(...) +
-          geom_line(aes(group = 1), ...)
+        p <- p + geom_line(aes(group = 1), ...)
+        if (show_points) {
+          p <- p + geom_point(...)
+        }
       }
     }
   } else {
@@ -80,8 +88,10 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
     if (x$stats == "quartiles") {
       p <- p + geom_crossbar(aes_string(color = col_var), position = "dodge", ...)
     } else {
-      p <- p + geom_point(aes_string(color = col_var), ...) +
-        geom_line(aes_string(color = col_var, group = col_var), ...)
+      p <- p + geom_line(aes_string(color = col_var, group = col_var), ...)
+      if (show_points) {
+        p <- p + geom_point(aes_string(color = col_var), ...)
+      }
     }
     p <- p + facet_wrap(wrap_var, scales = facet_scales)
   }

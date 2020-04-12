@@ -1,3 +1,25 @@
+# flashlight 0.7.2
+
+## Visible changes of defaults
+
+- `light_interaction` now uses a default grid size of 100 instead of 30 to calculate partial dependency profiles. Furthermore, the used sample size to calculate the interaction statistics have been increased from 300 to 500. The two changes improve considerably the stability of the results at the price of a substantial increase in runtime.
+
+## New functionality
+
+### Minor
+
+- Like for `light_effects`, the plot method of `light_profile` has received an argument `show_points` to suppress the plotting of points.
+
+- The plot method for `light_performance` has received a `geom` argument. It allows to switch from bars to points.
+
+## Requirement changes
+
+- Now requires at least tidyr >= 1.0.0 since `expand_grid` is used to calculate ICE profiles.
+
+- R dependency has been lowered from 3.5 to 3.1.
+
+- Removed suggested packages caret and lubridate.
+
 # flashlight 0.7.1
 
 Emergency release. Fixes a problem introduced with ggplot 3.3.0 when plotting light_importance and light_interaction objects.

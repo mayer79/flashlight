@@ -32,9 +32,7 @@ plot(light_performance(mods))
 plot(light_performance(mods, by = "Species"))
 plot(light_performance(mods, by = "Species"), swap_dim = TRUE) +
   scale_fill_viridis_d()
-
-mod_part <- flashlight(mod_part, metrics = list(mse = mse))
-mod_full <- flashlight(mod_full, metrics = list(r_squared = r_squared))
+plot(light_performance(mods, by = "Species"), geom = "point", size = 10)
 
 #======================================
 # Importance
@@ -180,6 +178,7 @@ plot(light_profile(mod_full, v = "Petal.Width", by = "Species"))
 plot(light_profile(mod_full, v = "Petal.Width", by = "Species"), swap_dim = TRUE)
 
 plot(light_profile(mods, v = "Species"))
+plot(light_profile(mods, v = "Species"), show_points = FALSE)
 plot(light_profile(mods, v = "Petal.Width"))
 plot(light_profile(mods, v = "Petal.Width"), swap_dim = TRUE)
 plot(light_profile(mods, v = "Petal.Width", by = "Species"))
@@ -214,7 +213,6 @@ fls <- multiflashlight(list(fl_lm, fl_glm), data = ir)
 plot(light_profile(fls, v = "Petal.Length"))
 plot(light_profile(fls, v = "Petal.Length", use_linkinv = FALSE))
 plot(light_profile(fls, v = "Petal.Length", type = "ale",  use_linkinv = FALSE))
-
 
 
 #======================================
@@ -322,6 +320,8 @@ plot_counts(plot(x, use = "all"), x, alpha = 0.2)
 plot(light_effects(mods, v = "Petal.Length"), use = "pd")
 plot(light_effects(mods, v = "Petal.Length"), use = "ale")
 plot(light_effects(mods, v = "Petal.Length", v_labels = FALSE))
+
+plot(light_interaction(mods))
 
 plot(light_global_surrogate(mods))
 

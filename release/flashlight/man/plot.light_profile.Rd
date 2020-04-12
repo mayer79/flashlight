@@ -9,6 +9,7 @@
   swap_dim = FALSE,
   facet_scales = "free_x",
   rotate_x = x$type != "partial dependence",
+  show_points = TRUE,
   ...
 )
 }
@@ -20,6 +21,8 @@
 \item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees? TRUE, except for type "partial dependence".}
+
+\item{show_points}{Should points be added to the line (default is \code{TRUE}).}
 
 \item{...}{Further arguments passed to \code{geom_point} and \code{geom_line}.}
 }
