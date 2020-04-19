@@ -29,7 +29,7 @@ light_breakdown(x, ...)
   step_name = "step",
   description_name = "description",
   description = TRUE,
-  digits = 3,
+  digits = 2,
   ...
 )
 
@@ -77,14 +77,14 @@ light_breakdown(x, ...)
 \value{
 An object of class \code{light_breakdown}, \code{light} (and a list) with the following elements.
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
-\item \code{by} Same as input \code{by}.
-\item \code{after_name} Same as input \code{after_name}.
-\item \code{before_name} Same as input \code{before_name}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{variable_name} Same as input \code{variable_name}.
-\item \code{step_name} Same as input \code{step_name}.
-\item \code{description_name} Same as input \code{description_name}.
+  \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+  \item \code{by} Same as input \code{by}.
+  \item \code{after_name} Same as input \code{after_name}.
+  \item \code{before_name} Same as input \code{before_name}.
+  \item \code{label_name} Same as input \code{label_name}.
+  \item \code{variable_name} Same as input \code{variable_name}.
+  \item \code{step_name} Same as input \code{step_name}.
+  \item \code{description_name} Same as input \code{description_name}.
 }
 }
 \description{

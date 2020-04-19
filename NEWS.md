@@ -1,3 +1,17 @@
+# flashlight 0.7.3
+
+## Vignettes
+
+- Vignette on flashlight with `caret`.
+
+- Vignette on flashlight with `mlr3`.
+
+- Vignette on flashlight with `h2o`.
+
+## Minor changes of defaults
+
+- The plots of `light_breakdown` have been slightly improved.
+
 # flashlight 0.7.2
 
 ## Visible changes of defaults

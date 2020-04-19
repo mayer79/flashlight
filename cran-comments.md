@@ -1,11 +1,7 @@
-# Normal release
+# Documentation release
 
-This is a normal release with the following minor changes.
+- This release adds three vignettes. One about caret, the other about mlr3 and finally the third on h2o. 
 
-- updated requirements for R version and tidyr version,
+It's the first time I release a package with more than one vignette, so not sure if I got everything right.
 
-- removed two suggested packages,
-
-- improved defaults for one explainer, and
-
-- two plot methods have received more options.
+- Got rid of a depreciation warning from ggplot2.

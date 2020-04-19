@@ -346,15 +346,16 @@ test <- prep[ind == 1, ]
 fit_lm <- lm(update.formula(form, . ~ . + I(sqft_living^2)), data = prep_lm(train))
 
 # Random forest
-fit_rf <- ranger(form, data = train, respect.unordered.factors = TRUE, seed = 8373)
+fit_rf <- ranger(form, data = train, respect.unordered.factors = TRUE, 
+                 num.trees = 100, seed = 8373)
 cat("R-squared OOB:", fit_rf$r.squared)
 
 # Gradient boosting
 dtrain <- xgb.DMatrix(prep_xgb(train, x), label = train[["log_price"]])
 dvalid <- xgb.DMatrix(prep_xgb(valid, x), label = valid[["log_price"]])
 
-params <- list(learning_rate = 0.1,
-               max_depth = 6,
+params <- list(learning_rate = 0.2,
+               max_depth = 5,
                alpha = 1,
                lambda = 1,
                colsample_bytree = 0.8)
@@ -362,8 +363,8 @@ params <- list(learning_rate = 0.1,
 fit_xgb <- xgb.train(params,
                      data = dtrain,
                      watchlist = list(train = dtrain, valid = dvalid),
-                     nrounds = 250,
-                     print_every_n = 50,
+                     nrounds = 50,
+                     print_every_n = 10,
                      objective = "reg:linear")
 ```
 
@@ -635,7 +636,7 @@ plot(pr, alpha = 0.2)
 Based on Friedman's H statistic [@friedman2008], we can investigate which variable has strongest interaction effect relative to its full effect.
 
 ```{r}
-st <- light_interaction(fls, v = x, grid_size = 30, n_max = 100)
+st <- light_interaction(fls, v = x, grid_size = 30, n_max = 50, seed = 42)
 plot(st)
 ```
 Since we have not used interaction terms in the linear model, all values are zero there.
@@ -643,7 +644,7 @@ Since we have not used interaction terms in the linear model, all values are zer
 Pairwise interactions are expensive to compute as each variable pair has to be assessed. We limit the search for interactions to the four variables with highest relative interaction strength.
 ```{r}
 st_pair <- light_interaction(fls, v = most_important(st, 4), 
-                             pairwise = TRUE, grid_size = 30, n_max = 100)
+                             pairwise = TRUE, n_max = 50, seed = 42)
 plot(st_pair)
 ```
 

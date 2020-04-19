@@ -26,7 +26,7 @@ create_package(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
     Type = "Package",
-    Version = "0.7.2",
+    Version = "0.7.3",
     Date = Sys.Date(),
     Description = "Shed light on black box machine learning models by the help of model performance, variable importance, global surrogate models, ICE profiles, partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>), further effects plots, scatter plots, interaction strength, and variable contribution breakdown (approximate SHAP) for single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>). All tools are implemented to work with case weights and allow for stratified analysis. Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
@@ -54,9 +54,14 @@ use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 
 # Suggests
 use_package("knitr", "Suggests")
+use_package("rmarkdown", "Suggests")
 use_package("ranger", "Suggests")
 use_package("xgboost", "Suggests")
 use_package("moderndive", "Suggests")
+use_package("caret", "Suggests")
+use_package("mlr3", "Suggests")
+use_package("mlr3learners", "Suggests")
+use_package("h2o", "Suggests")
 
 # Set up other files -------------------------------------------------
 # use_readme_md()
@@ -98,8 +103,6 @@ library(flashlight)
 check_win_devel(pkg)
 
 check_rhub(pkg)
-
-# setwd(pkg)
 
 devtools::release(pkg)
 
