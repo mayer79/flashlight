@@ -1,6 +1,6 @@
 # Documentation release
 
-- This release adds three vignettes. One about caret, the other about mlr3 and finally the third on h2o. 
+- This release adds two vignettes. One about caret, the other about mlr3. 
 
 It's the first time I release a package with more than one vignette, so not sure if I got everything right.
 

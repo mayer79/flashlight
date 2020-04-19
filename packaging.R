@@ -61,7 +61,7 @@ use_package("moderndive", "Suggests")
 use_package("caret", "Suggests")
 use_package("mlr3", "Suggests")
 use_package("mlr3learners", "Suggests")
-use_package("h2o", "Suggests")
+# use_package("h2o", "Suggests")
 
 # Set up other files -------------------------------------------------
 # use_readme_md()
@@ -106,5 +106,7 @@ check_rhub(pkg)
 
 devtools::release(pkg)
 
-usethis::use_pkgdown()
-pkgdown::build_site(pkg)
+if (FALSE) {
+  usethis::use_pkgdown()
+  pkgdown::build_site()
+}

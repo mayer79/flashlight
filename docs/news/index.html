@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">flashlight</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.3</span>
       </span>
     </div>
 
@@ -85,12 +89,35 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/flashlight_caret.html">Using flashlight with caret</a>
+    </li>
+    <li>
+      <a href="../articles/flashlight_h2o.html">Using flashlight with h2o</a>
+    </li>
+    <li>
+      <a href="../articles/flashlight_mlr3.html">Using flashlight with mlr3</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/mayer79/flashlight/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -104,53 +131,284 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
-      
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/mayer79/flashlight/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="flashlight-020" class="section level1">
-<h1 class="page-header">
-<a href="#flashlight-020" class="anchor"></a>flashlight 0.2.0<small> 2019-09-18 </small>
+    <div id="flashlight-073" class="section level1">
+<h1 class="page-header" data-toc-text="0.7.3">
+<a href="#flashlight-073" class="anchor"></a>flashlight 0.7.3<small> Unreleased </small>
 </h1>
+<div id="vignettes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#vignettes" class="anchor"></a>Vignettes</h2>
+<ul>
+<li><p>Vignette on flashlight with <code>caret</code>.</p></li>
+<li><p>Vignette on flashlight with <code>mlr3</code>.</p></li>
+<li><p>Vignette on flashlight with <code>h2o</code>.</p></li>
+</ul>
+</div>
+<div id="minor-changes-of-defaults" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes-of-defaults" class="anchor"></a>Minor changes of defaults</h2>
+<ul>
+<li>The plots of <code>light_breakdown</code> have been slightly improved.</li>
+</ul>
+</div>
+</div>
+    <div id="flashlight-072" class="section level1">
+<h1 class="page-header" data-toc-text="0.7.2">
+<a href="#flashlight-072" class="anchor"></a>flashlight 0.7.2<small> 2020-04-14 </small>
+</h1>
+<div id="visible-changes-of-defaults" class="section level2">
+<h2 class="hasAnchor">
+<a href="#visible-changes-of-defaults" class="anchor"></a>Visible changes of defaults</h2>
+<ul>
+<li>
+<code>light_interaction</code> now uses a default grid size of 200 instead of 30 to calculate partial dependency profiles. Furthermore, the used sample size to calculate the interaction statistics have been increased from 300 to 1000. The two changes improve considerably the stability of the results at the price of a substantial increase in runtime. For slow prediction functions, choose lower values as suitable.</li>
+</ul>
+</div>
 <div id="new-functionality" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-functionality" class="anchor"></a>New functionality</h2>
+<div id="minor" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor" class="anchor"></a>Minor</h3>
 <ul>
-<li>Added variable contribution breakdown for single observations.</li>
+<li><p>Like for <code>light_effects</code>, the plot method of <code>light_profile</code> has received an argument <code>show_points</code> to suppress the plotting of points.</p></li>
+<li><p>The plot method for <code>light_performance</code> has received a <code>geom</code> argument. It allows to switch from bars to points.</p></li>
 </ul>
+</div>
+</div>
+<div id="requirement-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#requirement-changes" class="anchor"></a>Requirement changes</h2>
+<ul>
+<li><p>Now requires at least tidyr &gt;= 1.0.0 since <code>expand_grid</code> is used to calculate ICE profiles.</p></li>
+<li><p>R dependency has been lowered from 3.5 to 3.1.</p></li>
+<li><p>Removed suggested packages caret and lubridate.</p></li>
+</ul>
+</div>
+</div>
+    <div id="flashlight-071" class="section level1">
+<h1 class="page-header" data-toc-text="0.7.1">
+<a href="#flashlight-071" class="anchor"></a>flashlight 0.7.1<small> 2020-03-20 </small>
+</h1>
+<p>Emergency release. Fixes a problem introduced with ggplot 3.3.0 when plotting light_importance and light_interaction objects.</p>
+</div>
+    <div id="flashlight-070" class="section level1">
+<h1 class="page-header" data-toc-text="0.7.0">
+<a href="#flashlight-070" class="anchor"></a>flashlight 0.7.0<small> 2020-03-12 </small>
+</h1>
+<div id="new-functionality-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functionality-1" class="anchor"></a>New functionality</h2>
+<div id="major" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major" class="anchor"></a>Major</h3>
+<ul>
+<li>Added <code>light_global_surrogate</code> and <code>plot.light_global_surrogate</code> to create a global surrogate tree model that explains predictions from the original model in a simple to understand way.</li>
+</ul>
+</div>
+</div>
+</div>
+    <div id="flashlight-060" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.0">
+<a href="#flashlight-060" class="anchor"></a>flashlight 0.6.0<small> 2020-01-19 </small>
+</h1>
+<div id="new-functionality-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functionality-2" class="anchor"></a>New functionality</h2>
+<div id="major-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major-1" class="anchor"></a>Major</h3>
+<ul>
+<li><p>Added <code>light_scatter</code> and <code>plot.light_scatter</code> to create scatter plots of response, predictions, residuals, or SHAP values by some variable.</p></li>
+<li><p>Static (approximate) SHAP values can be added to a (multi-)flashlight by calling <code>add_shap</code>.</p></li>
+<li><p><code>light_importance</code>, <code>light_profile</code>, and <code>light_scatter</code> are now able to work with SHAP values.</p></li>
+</ul>
+</div>
+<div id="minor-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-1" class="anchor"></a>Minor</h3>
+<ul>
+<li><p>The plot functions of <code>light_importance</code>, <code>light_interaction</code>, and <code>light_profile</code> now prints informative labels to show what is actually calculated.</p></li>
+<li><p>Added argument âshow_pointsâ to <code>plot.light_effects</code> to control if points should be added to the lines or not. Default is <code>TRUE</code>.</p></li>
+</ul>
+</div>
 </div>
 <div id="interface-change" class="section level2">
 <h2 class="hasAnchor">
 <a href="#interface-change" class="anchor"></a>Interface change</h2>
+<div id="minor-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-2" class="anchor"></a>Minor</h3>
 <ul>
-<li>Removed <code>zero_counts</code> argument in <code>plot_counts</code>.</li>
+<li><p>Removed currently unused output columns âvalue_shuffledâ and âvalue_beforeâ of <code>light_importance</code> due to its incompatibility with the new âshapâ importances.</p></li>
+<li><p>Added argument âtype_nameâ to <code>light_interaction</code>. Its output now also contains a slot <code>type</code> as well as <code>type_name</code>.</p></li>
 </ul>
+</div>
+</div>
+</div>
+    <div id="flashlight-050" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.0">
+<a href="#flashlight-050" class="anchor"></a>flashlight 0.5.0<small> 2019-12-05 </small>
+</h1>
+<div id="new-functionality-3" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functionality-3" class="anchor"></a>New functionality</h2>
+<div id="major-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major-2" class="anchor"></a>Major</h3>
+<ul>
+<li><p>Added Friedmanâs H statistic (global and pairwise interaction strength) to <code>light_interaction</code> with variants.</p></li>
+<li><p>Added random permutation visit strategy to <code>light_breakdown</code>, serving as approximate SHAP.</p></li>
+</ul>
+</div>
+<div id="minor-3" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-3" class="anchor"></a>Minor</h3>
+<ul>
+<li><p>Added more options how to center <code>light_ice</code>: Mean center each profile to the same value (within âbyâ groups) and 0-mean center each profile.</p></li>
+<li><p>Added option <code>rotate_x</code> to <code>plot_light_breakdown</code> and <code>plot_light_importance</code>.</p></li>
+<li><p>Added function <code>grouped_center</code> to allow grouped and weighted 0-mean centering of a numeric variable.</p></li>
+<li><p>Added function <code>grouped_count</code> to allow grouped and weighted counts.</p></li>
+<li><p>Added function <code>grouped_weighted_mean</code> for fast grouped weighted means.</p></li>
+<li><p><code>response</code>, <code>residuals</code>, and <code>predict</code> now have a method for multiflashlights.</p></li>
+</ul>
+</div>
+</div>
+<div id="interface-change-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#interface-change-1" class="anchor"></a>Interface change</h2>
+<div id="minor-4" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-4" class="anchor"></a>Minor</h3>
+<ul>
+<li><p>Combined arguments <code>center = TRUE/FALSE</code> and <code>center_at</code> to one argument <code>center</code> with default ânoâ. This affects <code>light_ice</code>, and <code>light_profile</code>.</p></li>
+<li><p><code>order_by_importance</code> argument to <code>light_breakdown</code> has been replaced by <code>visit_strategy</code>.</p></li>
+<li><p>Removed <code>top_m</code> argument of <code>light_breakdown</code> as it does not make sense.</p></li>
+</ul>
+</div>
+</div>
+<div id="other-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#other-changes" class="anchor"></a>Other changes</h2>
+<div id="minor-5" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-5" class="anchor"></a>Minor</h3>
+<ul>
+<li><p><code>auto_cut</code>, the workhorse behind quantile binning a numeric input variable x, is now using ecdf based quantiles in order to ensure all evaluation points are in the domain of x.</p></li>
+<li><p>Centering at âfirstâ, âmiddleâ, and âlastâ in <code>light_ice</code> now anchors the curves at 0 to be in line with other implementations.</p></li>
+</ul>
+</div>
 </div>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
+<div id="major-3" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major-3" class="anchor"></a>Major</h3>
 <ul>
 <li>
-<code>zero_counts</code> in <code>plot_counts</code> and <code>plot.light_effects</code> had no effect for single flashlights with no “by” variable. This is fixed.</li>
+<code>light_ice</code> was based on <code>dplyr::crossing</code>, unintentionally throwing away duplicate reference rows. This is now replaced by <code>dplyr::expand_grid</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+    <div id="flashlight-040" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.0">
+<a href="#flashlight-040" class="anchor"></a>flashlight 0.4.0<small> 2019-11-10 </small>
+</h1>
+<div id="new-functionality-4" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functionality-4" class="anchor"></a>New functionality</h2>
+<div id="major-4" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major-4" class="anchor"></a>Major</h3>
+<ul>
+<li><p>Added <code>light_interaction</code>, a measure of overall interaction strength per covariable based on standard deviation across c-ICE curves.</p></li>
+<li><p>Added the option <code>m_repetitions = 1</code> to <code>light_importance</code>. Set to higher value to get more stable estimates of variable importance as well as standard errors for small data.</p></li>
+</ul>
+</div>
+<div id="minor-6" class="section level3">
+<h3 class="hasAnchor">
+<a href="#minor-6" class="anchor"></a>Minor</h3>
+<ul>
+<li><p>Added the option <code>digits</code> to <code>plot_counts</code> with default 0. Helps to format large counts or fractional counts.</p></li>
+<li><p>Added to option <code>center_at</code> to <code>light_ice</code> in order to control if ICE curves should be centered at position âfirstâ, âmiddleâ, or âlastâ. Similarly, added <code>pd_center_at</code> to <code>light_profile</code>.</p></li>
+</ul>
+</div>
+</div>
+<div id="bug-fixes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li>Fixed a bug related to the color legend of the <code>plot</code>-method of <code>light_ice</code>.</li>
+</ul>
+</div>
+</div>
+    <div id="flashlight-030" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.0">
+<a href="#flashlight-030" class="anchor"></a>flashlight 0.3.0<small> 2019-10-13 </small>
+</h1>
+<div id="new-functionality-5" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functionality-5" class="anchor"></a>New functionality</h2>
+<ul>
+<li><p>Added <code>type = "ale"</code> to <code>light_profile</code> to show accumulated local effects plots (ALE plots). They are now also calculated by <code>light_effects</code>. In the <code>plot</code> method, set <code>use = "all"</code> to show all profiles. The default is all without ALE plots.</p></li>
+<li><p>Added the possibility to center ICE curves at first evaluation point to improve visibility of interactions. Together with partial dependence with quartile aggregation, this is an interesting possibility to detect interactions.</p></li>
+<li><p><code>grouped_stats</code> has received an argument <code>value_name</code>.</p></li>
+</ul>
+</div>
+<div id="bug-fixes-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-2" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li><p>Option <code>cut_type</code> was not active for partial dependence profiles.</p></li>
+<li><p>Option <code>cut_tpye</code> was not active for the multiflashlight method of <code>light_profile</code>.</p></li>
+</ul>
+</div>
+</div>
+    <div id="flashlight-020" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#flashlight-020" class="anchor"></a>flashlight 0.2.0<small> 2019-09-18 </small>
+</h1>
+<div id="new-functionality-6" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-functionality-6" class="anchor"></a>New functionality</h2>
+<ul>
+<li>Added variable contribution breakdown for single observations.</li>
+</ul>
+</div>
+<div id="interface-change-2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#interface-change-2" class="anchor"></a>Interface change</h2>
+<ul>
+<li>Removed <code>zero_counts</code> argument in <code>plot_counts</code>.</li>
+</ul>
+</div>
+<div id="bug-fixes-3" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-3" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li>
+<code>zero_counts</code> in <code>plot_counts</code> and <code>plot.light_effects</code> had no effect for single flashlights with no âbyâ variable. This is fixed.</li>
 </ul>
 </div>
 </div>
     <div id="flashlight-010" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.1.0">
 <a href="#flashlight-010" class="anchor"></a>flashlight 0.1.0<small> 2019-08-25 </small>
 </h1>
 <p>This is the initial release.</p>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#flashlight-020">0.2.0</a></li>
-        <li><a href="#flashlight-010">0.1.0</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -162,7 +420,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.0.</p>
 </div>
 
       </footer>

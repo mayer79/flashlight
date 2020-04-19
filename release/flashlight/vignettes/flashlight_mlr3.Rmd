@@ -35,7 +35,7 @@ library(mlr3learners)
 
 This vignette shows how to use `flashlight` for interpretation of models trained with `mlr3`. It is very straightforward - no extra line of code is required.
 
-## Training a linear regression and a regression tree on the `cars` data set from package `caret`
+## Training a linear regression and a random forest on the `cars` data set from package `caret`
 
 ```{r}
 data(cars)
@@ -77,8 +77,8 @@ task_cars <- TaskRegr$new(id = "cars", backend = tr, target = y)
 fit_lm <- lrn("regr.lm")
 fit_lm$train(task_cars)
 
-fit_rpart <- lrn("regr.rpart", cp = 0.001, xval = 0)
-fit_rpart$train(task_cars)
+fit_rf <- lrn("regr.ranger", num.trees = 250, respect.unordered.factors = "partition")
+fit_rf$train(task_cars)
 ```
 
 ## flashlights
@@ -87,9 +87,9 @@ Then we collect all infos to build (multi-)flashlights, the core objects for exp
 
 ```{r}
 fl_lm <- flashlight(model = fit_lm, label = "lm")
-fl_rpart <- flashlight(model = fit_rpart, label = "rpart")
+fl_rf <- flashlight(model = fit_rf, label = "rf")
 
-fls <- multiflashlight(list(fl_lm, fl_rpart), y = y, data = te, 
+fls <- multiflashlight(list(fl_lm, fl_rf), y = y, data = te, 
                        metrics = list(RMSE = rmse, `R-Squared` = r_squared))
 ```
 
@@ -111,7 +111,7 @@ light_performance(fls) %>%
 Let's study permutation importance regarding RMSE metric.
 
 ```{r}
-imp <- light_importance(fls, m_repetitions = 4) 
+imp <- light_importance(fls) 
 plot(imp, fill = "darkred")
 ```
 
@@ -165,4 +165,11 @@ light_breakdown(fls, new_obs = te[1, ]) %>%
   plot(size = 3, facet_ncol = 2)
 ```
 
-There is much more to explore: SHAP values, global surrogate models, etc.
+### Global surrogate
+
+Let's approximate the random forest model by a simple decision tree.
+
+```{r}
+light_global_surrogate(fls$rf) %>% 
+  plot()
+```

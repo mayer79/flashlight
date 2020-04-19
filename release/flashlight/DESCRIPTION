@@ -47,6 +47,5 @@ Suggests:
     moderndive,
     caret,
     mlr3,
-    mlr3learners,
-    h2o
+    mlr3learners
 RoxygenNote: 7.1.0

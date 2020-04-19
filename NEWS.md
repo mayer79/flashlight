@@ -6,8 +6,6 @@
 
 - Vignette on flashlight with `mlr3`.
 
-- Vignette on flashlight with `h2o`.
-
 ## Minor changes of defaults
 
 - The plots of `light_breakdown` have been slightly improved.
