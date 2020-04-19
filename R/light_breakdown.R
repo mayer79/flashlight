@@ -66,7 +66,7 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
                                        after_name = "after", before_name = "before",
                                        label_name = "label", variable_name = "variable",
                                        step_name = "step", description_name = "description",
-                                       description = TRUE, digits = 3, ...) {
+                                       description = TRUE, digits = 2, ...) {
   visit_strategy <- match.arg(visit_strategy)
   stopifnot(nrow(new_obs) == 1L, nrow(data) >= 1L,
             sort(colnames(new_obs)) == sort(colnames(data)),

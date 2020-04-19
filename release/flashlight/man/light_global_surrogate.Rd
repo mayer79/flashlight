@@ -53,10 +53,10 @@ light_global_surrogate(x, ...)
 \value{
 An object of class \code{light_global_surrogate}, \code{light} (and a list) with the following elements.
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
-\item \code{by} Same as input \code{by}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{tree_name} Name of column with tree objects.
+  \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+  \item \code{by} Same as input \code{by}.
+  \item \code{label_name} Same as input \code{label_name}.
+  \item \code{tree_name} Name of column with tree objects.
 }
 }
 \description{

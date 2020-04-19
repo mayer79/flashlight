@@ -33,7 +33,7 @@ plot.light_breakdown <- function(x, facet_scales = "free",
     geom_rect(aes_string(fill = "fill_"), color = "black", show.legend = FALSE) +
     labs(x = element_blank(), y = "prediction") +
     geom_label(aes_string(label = x$description_name), hjust = -0.05, ...) +
-    scale_y_continuous(expand = expand_scale(mult = c(0, 0.4))) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.67))) +
     scale_x_reverse() +
     coord_flip() +
     theme(panel.grid.major.y = element_blank(),

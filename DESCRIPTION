@@ -1,8 +1,8 @@
 Type: Package
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.7.2
-Date: 2020-04-12
+Version: 0.7.3
+Date: 2020-04-19
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
@@ -28,8 +28,6 @@ VignetteBuilder:
     knitr
 Encoding: UTF-8
 LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
 Imports: 
     stats,
     utils,
@@ -43,6 +41,11 @@ Imports:
     MetricsWeighted (>= 0.3.0)
 Suggests: 
     knitr,
+    rmarkdown,
     ranger,
     xgboost,
-    moderndive
+    moderndive,
+    caret,
+    mlr3,
+    mlr3learners,
+    h2o

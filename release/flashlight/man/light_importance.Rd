@@ -71,14 +71,14 @@ light_importance(x, ...)
 \value{
 An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
-\item \code{by} Same as input \code{by}.
-\item \code{type} Same as input \code{type}. For information only.
-\item \code{metric_name} Column name representing the name of the metric. For information only.
-\item \code{value_name} Same as input \code{value_name}.
-\item \code{error_name} Same as input \code{error_name}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{variable_name} Same as input \code{variable_name}.
+  \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+  \item \code{by} Same as input \code{by}.
+  \item \code{type} Same as input \code{type}. For information only.
+  \item \code{metric_name} Column name representing the name of the metric. For information only.
+  \item \code{value_name} Same as input \code{value_name}.
+  \item \code{error_name} Same as input \code{error_name}.
+  \item \code{label_name} Same as input \code{label_name}.
+  \item \code{variable_name} Same as input \code{variable_name}.
 }
 }
 \description{
