@@ -74,13 +74,13 @@ light_ice(x, ...)
 \value{
 An object of class \code{light_ice}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
-  \item \code{by} Same as input \code{by}.
-  \item \code{v} The variable(s) evaluated.
-  \item \code{center} How centering was done.
-  \item \code{value_name} Same as input \code{value_name}.
-  \item \code{label_name} Same as input \code{label_name}.
-  \item \code{id_name} Same as input \code{id_name}.
+\item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
+\item \code{by} Same as input \code{by}.
+\item \code{v} The variable(s) evaluated.
+\item \code{center} How centering was done.
+\item \code{value_name} Same as input \code{value_name}.
+\item \code{label_name} Same as input \code{label_name}.
+\item \code{id_name} Same as input \code{id_name}.
 }
 }
 \description{

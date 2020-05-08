@@ -74,14 +74,14 @@ light_interaction(x, ...)
 \value{
 An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
-  \item \code{by} Same as input \code{by}.
-  \item \code{type} Same as input \code{type}. For information only.
-  \item \code{value_name} Same as input \code{value_name}.
-  \item \code{error_name} Same as input \code{error_name}.
-  \item \code{label_name} Same as input \code{label_name}.
-  \item \code{variable_name} Same as input \code{variable_name}.
-  \item \code{type_name} Same as input \code{type_name}.
+\item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
+\item \code{by} Same as input \code{by}.
+\item \code{type} Same as input \code{type}. For information only.
+\item \code{value_name} Same as input \code{value_name}.
+\item \code{error_name} Same as input \code{error_name}.
+\item \code{label_name} Same as input \code{label_name}.
+\item \code{variable_name} Same as input \code{variable_name}.
+\item \code{type_name} Same as input \code{type_name}.
 }
 }
 \description{

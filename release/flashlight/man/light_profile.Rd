@@ -114,17 +114,17 @@ light_profile(x, ...)
 \value{
 An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.
 \itemize{
-  \item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
-  \item \code{by} Names of group by variable.
-  \item \code{v} The variable(s) evaluated.
-  \item \code{type} Same as input \code{type}. For information only.
-  \item \code{stats} Same as input \code{stats}.
-  \item \code{value_name} Same as input \code{value_name}.
-  \item \code{q1_name} Same as input \code{q1_name}.
-  \item \code{q3_name} Same as input \code{q3_name}.
-  \item \code{label_name} Same as input \code{label_name}.
-  \item \code{type_name} Same as input \code{type_name}.
-  \item \code{counts_name} Same as input \code{counts_name}.
+\item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
+\item \code{by} Names of group by variable.
+\item \code{v} The variable(s) evaluated.
+\item \code{type} Same as input \code{type}. For information only.
+\item \code{stats} Same as input \code{stats}.
+\item \code{value_name} Same as input \code{value_name}.
+\item \code{q1_name} Same as input \code{q1_name}.
+\item \code{q3_name} Same as input \code{q3_name}.
+\item \code{label_name} Same as input \code{label_name}.
+\item \code{type_name} Same as input \code{type_name}.
+\item \code{counts_name} Same as input \code{counts_name}.
 }
 }
 \description{

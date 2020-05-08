@@ -10,6 +10,10 @@
 
 - The plots of `light_breakdown` have been slightly improved.
 
+## Bug fix
+
+- `light_effects` and `light_profile` did not work correctly if `pred` are provided together with a `pd_indices`.
+
 # flashlight 0.7.2
 
 ## Visible changes of defaults

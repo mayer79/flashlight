@@ -97,7 +97,6 @@ install(pkg)
 # Load
 library(flashlight)
 
-
 # modify .Rbuildignore in build project to ignore the proj file.
 
 check_win_devel(pkg)
@@ -105,8 +104,3 @@ check_win_devel(pkg)
 check_rhub(pkg)
 
 devtools::release(pkg)
-
-if (FALSE) {
-  usethis::use_pkgdown()
-  pkgdown::build_site()
-}
