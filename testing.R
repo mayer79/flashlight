@@ -366,6 +366,7 @@ mods <- multiflashlight(list(mod_full, mod_part))
 # light_effects(mods, v = "Petal.Length") # bad
 light_effects(mods, v = "Petal.Length", breaks = 0:8) # good
 light_effects(mods, v = "Petal.Length", v_labels = FALSE) # good
+plot(light_effects(flashlight(mods$full, w = "Sepal.Width"), v = "Species", pd_indices = c(1, 60, 70)))
 
 # Different data: Use eigher fixed breaks or v_labels = FALSE
 mod_full <- flashlight(model = fit_full, label = "full",

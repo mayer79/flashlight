@@ -40,6 +40,9 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
   }
   if (!is.null(indices)) {
     data <- data[indices, , drop = FALSE]
+    if (!is.null(pred)) {
+      pred <- pred[indices]
+    }
   }
   is_num <- is.numeric(data[[v]])
 
