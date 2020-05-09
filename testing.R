@@ -557,6 +557,7 @@ plot_counts(plot(li, use = "all"), li, alpha = 0.2)
 li <- light_effects(fls, v = "clarity")
 plot_counts(plot(li, use = "all"), li, alpha = 0.2)
 
-li <- light_effects(fls, v = "carat", breaks = c(seq(0.1, 1, 0.1), 2, 5))
+li <- light_effects(fls, v = "carat", breaks = c(seq(0.1, 1, 0.1), 2, 6))
 plot_counts(plot(li, use = "all") +
               coord_cartesian(ylim = c(-10000, 20000)), li, alpha = 0.2)
+
