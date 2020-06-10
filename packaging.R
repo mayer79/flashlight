@@ -32,7 +32,7 @@ create_package(
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
     URL = "https://github.com/mayer79/flashlight",
     BugReports = "https://github.com/mayer79/flashlight/issues",
-    Depends = "R (>= 3.1.0)",
+    Depends = "R (>= 3.2.0)",
     VignetteBuilder = "knitr",
     License = "GPL(>= 2)",
     Maintainer = "Michael Mayer <mayermichael79@gmail.com>"))
@@ -43,7 +43,8 @@ file.copy(file.path(pkg, "DESCRIPTION"), to = getwd(), overwrite = TRUE)
 # Imports
 use_package("stats", "Imports")
 use_package("utils", "Imports")
-use_package("dplyr", "Imports")
+use_package("tidyselect", "Imports")
+use_package("dplyr", "Imports", min_version = "1.0.0")
 use_package("tidyr", "Imports", min_version = "1.0.0")
 use_package("rlang", "Imports")
 use_package("rpart", "Imports")
