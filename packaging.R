@@ -78,12 +78,21 @@ files <- list.files("R", full.names = TRUE)
 file.copy(files, file.path(pkg, "R"), overwrite = TRUE)
 devtools::document(pkg)
 
+# Tests
+if (!dir.exists(file.path(pkg, "tests"))) {
+  dir.create(file.path(pkg, "tests"))
+}
+file.copy("tests", pkg, recursive = TRUE)
+# test(pkg)
+
 # Copy vignette
-dir.create(file.path(pkg, "vignettes"))
-dir.create(file.path(pkg, "doc"))
-dir.create(file.path(pkg, "Meta"))
-file.copy(list.files("vignettes", full.names = TRUE), file.path(pkg, "vignettes"), overwrite = TRUE)
-devtools::build_vignettes(pkg)
+if (TRUE) {
+  dir.create(file.path(pkg, "vignettes"))
+  dir.create(file.path(pkg, "doc"))
+  dir.create(file.path(pkg, "Meta"))
+  file.copy(list.files("vignettes", full.names = TRUE), file.path(pkg, "vignettes"), overwrite = TRUE)
+  devtools::build_vignettes(pkg)
+}
 
 # Check
 check(pkg, manual = TRUE)
