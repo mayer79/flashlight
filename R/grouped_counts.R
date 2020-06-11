@@ -2,7 +2,7 @@
 #'
 #' Calculates weighted counts grouped by optional columns.
 #'
-#' @importFrom dplyr group_by summarize across
+#' @importFrom dplyr group_by summarize across cur_data
 #' @importFrom tidyselect all_of
 #' @importFrom stats setNames
 #' @param data A \code{data.frame}.

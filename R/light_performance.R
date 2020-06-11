@@ -5,7 +5,7 @@
 #' The minimal required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". The latter two can also directly be passed to \code{light_performance}. Note that by default, no retransformation function is applied.
 #'
 #' @importFrom MetricsWeighted performance
-#' @importFrom dplyr group_by summarize across
+#' @importFrom dplyr group_by summarize across cur_data
 #' @importFrom tidyselect all_of
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
