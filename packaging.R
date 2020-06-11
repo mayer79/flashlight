@@ -4,13 +4,11 @@
 
 if (FALSE) {
   library(MetricsWeighted)
-  library(dplyr)
-  library(tidyr)
-  library(rlang)
-  library(ggplot2)
+  library(tidyverse)
   library(ggpubr)
   library(rpart)
   library(rpart.plot)
+  library(testthat)
   lapply(list.files("R", full.names = TRUE), source)
 }
 
