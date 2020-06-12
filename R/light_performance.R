@@ -26,13 +26,10 @@
 #' }
 #' @export
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
-#' light_performance(mod_full)
-#' light_performance(mods, by = "Species")
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+#' light_performance(fl)
+#' light_performance(fl, by = "Species")
 #' @seealso \code{\link{plot.light_performance}}.
 light_performance <- function(x, ...) {
   UseMethod("light_performance")

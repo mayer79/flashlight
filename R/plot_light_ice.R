@@ -20,8 +20,6 @@
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part))
-#' grid <- expand.grid(Species = levels(iris$Species), Petal.Length = 2:4)
-#'
 #' plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
 #' indices <- (1:15) * 10
 #' plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
