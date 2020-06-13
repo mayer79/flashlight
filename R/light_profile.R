@@ -107,7 +107,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     stop("Wrong number of predicted values passed.")
   }
   if (type == "ale" && stats == "quartiles") {
-    stop("The cumsum step of ALE does not make sense for quartiles.")
+    stop("The cumsum step of ALE does not make sense for quartiles, so this option is not available.")
   }
 
   # Update flashlight
