@@ -15,6 +15,13 @@ test_that("by variable work", {
   expect_equal(dim(surr$data), c(3L, 4L))
 })
 
+test_that("argument 'v' works", {
+  fit <- lm(Sepal.Length ~ ., data = iris)
+  x <- flashlight(model = fit, label = "lm", data = iris)
+  surr <- light_global_surrogate(x, v = "Petal.Length")
+  expect_equal(dim(surr$data), c(1L, 3L))
+})
+
 test_that("multiflashlights work", {
   fit1 <- lm(Sepal.Length ~ Species, data = iris)
   fl1 <- flashlight(model = fit1, label = "Species", data = iris, y = "Sepal.Length")
