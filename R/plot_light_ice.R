@@ -22,10 +22,8 @@
 #' mods <- multiflashlight(list(mod_full, mod_part))
 #' plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
 #' indices <- (1:15) * 10
-#' plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
 #' plot(light_ice(mods, v = "Species", indices = indices))
 #' plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
-#' plot(light_ice(mods, v = "Petal.Width", n_bins = 5, indices = indices))
 #' plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 #' @seealso \code{\link{light_ice}}.
 plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
