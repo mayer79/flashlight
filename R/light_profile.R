@@ -53,13 +53,10 @@
 #' Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
 #'
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' light_profile(mod_full, v = "Species")
-#' light_profile(mod_full, v = "Species", type = "response")
-#' light_profile(mod_full, v = "Species", stats = "quartiles")
-#' light_profile(mod_full, v = "Petal.Width", type = "residual")
-#' light_profile(mod_full, v = "Petal.Width", pd_evaluate_at = 2:4)
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+#' light_profile(fl, v = "Species")
+#' light_profile(fl, v = "Petal.Width", type = "residual")
 #' @seealso \code{\link{light_effects}}, \code{\link{plot.light_profile}}.
 light_profile <- function(x, ...) {
   UseMethod("light_profile")

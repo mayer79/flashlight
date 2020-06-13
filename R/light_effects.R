@@ -46,10 +46,9 @@
 #' }
 #' @export
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' light_effects(mod_full, v = "Species")
-#' light_effects(mod_full, v = "Species", stats = "quartiles")
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+#' light_effects(fl, v = "Species")
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 light_effects <- function(x, ...) {
   UseMethod("light_effects")
