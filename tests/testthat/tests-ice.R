@@ -19,9 +19,10 @@ test_that("by functionality, indices and evaluate_at work", {
   expect_true(inherits(plot(ice), "ggplot"))
 })
 
+fit <- lm(Sepal.Length ~ Species, data = iris)
+fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+
 test_that("center first work", {
-  fit <- lm(Sepal.Length ~ Species, data = iris)
-  fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
   ice <- light_ice(fl, v = "Species", n_max = 1, center = "first")
   expect_equal(as.numeric(ice$data$value)[-1], as.numeric(coef(fit))[-1])
   expect_true(inherits(plot(ice), "ggplot"))

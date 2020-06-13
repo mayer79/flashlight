@@ -1,8 +1,9 @@
 context("light_profile")
 
+fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+
 test_that("light_profile works correctly for type response", {
-  fit <- lm(Sepal.Length ~ Species + 0, data = iris)
-  fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
   pr <- light_profile(fl, v = "Species", type = "response")
   expect_equal(pr$data$value,
                aggregate(Sepal.Length ~ Species, data = iris, FUN = mean)$Sepal.Length)
@@ -120,13 +121,13 @@ test_that("light_profile reacts on weights", {
   expect_equal(pr$data$value[1], with(iris[1:50, ], weighted.mean(Sepal.Length, Sepal.Width)))
 })
 
-test_that("light_effects works and produces same as individual profiles", {
-  fit1 <- lm(Sepal.Length ~ Species, data = iris)
-  fl1 <- flashlight(model = fit1, label = "Species", data = iris, y = "Sepal.Length")
-  fit2 <- lm(Sepal.Length ~ 1, data = iris)
-  fl2 <- flashlight(model = fit2, label = "Empty", data = iris, y = "Sepal.Length")
-  fls <- multiflashlight(list(fl1, fl2))
+fit1 <- lm(Sepal.Length ~ Species, data = iris)
+fl1 <- flashlight(model = fit1, label = "Species", data = iris, y = "Sepal.Length")
+fit2 <- lm(Sepal.Length ~ 1, data = iris)
+fl2 <- flashlight(model = fit2, label = "Empty", data = iris, y = "Sepal.Length")
+fls <- multiflashlight(list(fl1, fl2))
 
+test_that("light_effects works and produces same as individual profiles", {
   eff <- light_effects(fls, v = "Petal.Length")
 
   pd <- light_profile(fls, v = "Petal.Length", counts = FALSE)
