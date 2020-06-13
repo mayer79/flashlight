@@ -90,3 +90,13 @@ test_that("light_performance works for weighted multi-flashlight with one metric
   expect_equal(perf_weighted$data$value[2], 0.3358, tolerance = 0.001)
   expect_true(inherits(plot(perf_weighted), "ggplot"))
 })
+
+test_that("R-squared for weighted flashlight is the same as the one from summary.lm", {
+  fit <- lm(Sepal.Length ~ ., data = iris, weights = iris$Sepal.Width)
+  fl <- flashlight(model = fit, label = "lm", data = iris, w = "Sepal.Width",
+                   y = "Sepal.Length", metrics = list(r2 = r_squared))
+  perf <- light_performance(fl)
+  expect_equal(perf$data$value, summary(fit)$r.squared, tolerance = 0.001)
+  expect_true(inherits(plot(perf), "ggplot"))
+})
+

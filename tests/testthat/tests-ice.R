@@ -53,3 +53,15 @@ test_that("basic functionality works for multiflashlight", {
   expect_equal(as.numeric(ice$data$value[3:4]), rep(mean(iris$Sepal.Length), 2))
   expect_true(inherits(plot(ice), "ggplot"))
 })
+
+test_that("weights have no impact on results", {
+  fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+  fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+  ice <- light_ice(fl, v = "Species", indices = 1:3)
+
+  fl_weighted <- flashlight(model = fit, label = "weighted by Petal.Length",
+                            data = iris, y = "Sepal.Length", w = "Petal.Length")
+  ice_weighted <- light_ice(fl_weighted, v = "Species", indices = 1:3)
+
+  expect_equal(ice$value, ice_weighted$value)
+})
