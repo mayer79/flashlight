@@ -1,5 +1,14 @@
 context("light_performance")
 
+test_that("basic functionality works", {
+  fit <- lm(Sepal.Length ~ ., data = iris)
+  fl <- flashlight(model = fit, label = "lm", data = iris,
+                   y = "Sepal.Length", metrics = list(r2 = r_squared))
+  perf <- light_performance(fl)
+  expect_equal(perf$data$value, summary(fit)$r.squared, tolerance = 0.001)
+  expect_true(inherits(plot(perf), "ggplot"))
+})
+
 test_that("light_performance works for one flashlight with one metric and no by", {
   fit <- lm(Sepal.Length ~ ., data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
