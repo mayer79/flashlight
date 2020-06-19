@@ -1,17 +1,16 @@
 context("shap")
 
 fit <- lm(Sepal.Length ~ Petal.Width, data = iris)
-fl <- flashlight(model = fit1, label = "lm", data = iris, y = "Sepal.Length")
-fl <- add_shap(fl, n_shap = 10, seed = 1)
+fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+fl <- add_shap(fl, n_shap = 10, seed = 1, verbose = FALSE)
 
 test_that("add_shap works", {
-  is.shap(fl$shap)
+  expect_true(is.shap(fl$shap))
 })
 
 test_that("shap mode for light_importance works", {
   imp_perm <- light_importance(fl)
   imp_shap <- light_importance(fl, type = "shap")
-  most_important(imp_perm, 1)
   expect_false(all(imp_perm$data$value == imp_shap$data$value))
   expect_equal(most_important(imp_perm, 1), most_important(imp_shap, 1))
   expect_true(inherits(plot(imp_shap), "ggplot"))

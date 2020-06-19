@@ -7,7 +7,6 @@
 #' @import ggplot2
 #' @importFrom stats reformulate
 #' @method plot light_ice
-#' @author Michael Mayer
 #' @param x An object of class \code{light_ice}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is FALSE.

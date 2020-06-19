@@ -20,6 +20,7 @@ dir.create(file.path("release"))
 pkg <- file.path("release", "flashlight")
 
 create_package(
+  open = FALSE,
   pkg,
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
@@ -44,7 +45,6 @@ use_package("utils", "Imports")
 use_package("tidyselect", "Imports")
 use_package("dplyr", "Imports", min_version = "1.0.0")
 use_package("tidyr", "Imports", min_version = "1.0.0")
-# use_package("rlang", "Imports")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("ggplot2", "Imports")
@@ -80,7 +80,7 @@ if (!dir.exists(file.path(pkg, "tests"))) {
   dir.create(file.path(pkg, "tests"))
 }
 file.copy("tests", pkg, recursive = TRUE)
-# test(pkg)
+test(pkg)
 
 # Copy vignette
 if (TRUE) {

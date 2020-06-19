@@ -1,12 +1,12 @@
 # flashlight 0.7.3
 
-This is a documentation and maintainance release .
+This is a documentation and maintainance release.
 
 ## Maintainance
 
 - Switched to dplyr 1.0.0.
 
-- Added unit tests.
+- Added 270+ unit tests.
 
 - Added vignettes on how to use flashlight with `caret` and `mlr3`.
 

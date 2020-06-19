@@ -19,7 +19,7 @@ test_that("light_performance works for one flashlight with one metric and no by"
 })
 
 test_that("light_performance works for one flashlight with multiple metrics and no by", {
-  perf <- light_performance(fl, metrics = list(mae = mae, rmse = rmse, r2 = r_squared))
+  perf <- light_performance(fl, metrics = list(mae = MetricsWeighted::mae, rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(3, 3))
   expect_equal(perf$data$value, c(0.243, 0.301, 0.867), tolerance = 0.001)
   expect_true(inherits(plot(perf), "ggplot"))
@@ -34,7 +34,7 @@ test_that("light_performance works for one flashlight with one metric and a by v
 
 test_that("light_performance works for one flashlight with multiple metrics and a by variable", {
   perf <- light_performance(fl, by = "Species",
-                            metrics = list(mae = mae, rmse = rmse, r2 = r_squared))
+                            metrics = list(mae = MetricsWeighted::mae, rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(9, 4))
   expect_equal(perf$data$value[2], 0.254, tolerance = 0.001)
   expect_true(inherits(plot(perf), "ggplot"))
@@ -62,7 +62,7 @@ test_that("light_performance works for multi-flashlight with one metric and no b
 })
 
 test_that("light_performance works for multi-flashlight with multiple metrics and no by", {
-  perf <- light_performance(fls, metrics = list(mae = mae, rmse = rmse, r2 = r_squared))
+  perf <- light_performance(fls, metrics = list(mae = MetricsWeighted::mae, rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(6, 3))
   expect_equal(perf$data$value[1:3], c(0.243, 0.301, 0.867), tolerance = 0.001)
   expect_true(inherits(plot(perf), "ggplot"))
@@ -77,7 +77,7 @@ test_that("light_performance works for multi-flashlight with one metric and a by
 
 test_that("light_performance works for multi-flashlight with multiple metrics and a by variable", {
   perf <- light_performance(fls, by = "Species",
-                            metrics = list(mae = mae, rmse = rmse, r2 = r_squared))
+                            metrics = list(mae = MetricsWeighted::mae, rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(18, 4))
   expect_equal(perf$data$value[2], 0.254, tolerance = 0.001)
   expect_true(inherits(plot(perf), "ggplot"))

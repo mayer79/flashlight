@@ -2,9 +2,9 @@
 
 - This release adds two vignettes. One about caret, the other about mlr3.
 
-- Added unit tests.
+- Added 270+ unit tests.
 
-- Switched to new dplyr technology.
+- Switched to dplyr 1.0.0.
 
 - Minor bug fixes, see News.md.
 
