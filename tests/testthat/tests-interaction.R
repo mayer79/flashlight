@@ -17,6 +17,13 @@ test_that("basic functionality works for light_interaction", {
   expect_true(inherits(plot(inter), "ggplot"))
 })
 
+test_that("light_interaction reacts on weights", {
+  inter <- light_interaction(flashlight(fls$nonadditive, w = "Sepal.Width"))
+  expect_equal(inter$data$value,
+               c(0.03917691, 0.03917691, 0), tolerance = 0.0001)
+  expect_true(inherits(plot(inter), "ggplot"))
+})
+
 test_that("basic functionality works for light_interaction (ICE approach)", {
   inter <- light_interaction(fls$additive, type = "ice")
   expect_equal(inter$data$value, rep(0, 4))
@@ -75,4 +82,14 @@ test_that("light_interaction reacts on multiflashlight", {
   expect_equal(inter$data$value[inter$data$label == "nonadditive"][4],
                0.0207711, tolerance = 0.001)
 })
+
+test_that("light_interaction reacts on 'by'", {
+  inter <- light_interaction(fls$nonadditive, by = "Species")
+  dat <- inter$data
+  expect_equal(dat$value[dat$variable == "Sepal.Width"], rep(0, 3))
+  expect_equal(dat$value[dat$variable %in% c("Petal.Width", "Petal.Length")],
+               rep(c(0.00404, 0.007588311, 0.0077), each = 2L), tolerance = 0.0001)
+  expect_true(inherits(plot(inter), "ggplot"))
+})
+
 

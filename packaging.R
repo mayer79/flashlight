@@ -60,7 +60,6 @@ use_package("moderndive", "Suggests")
 use_package("caret", "Suggests")
 use_package("mlr3", "Suggests")
 use_package("mlr3learners", "Suggests")
-# use_package("h2o", "Suggests")
 
 # Set up other files -------------------------------------------------
 # use_readme_md()

@@ -1,6 +1,6 @@
 # flashlight 0.7.3
 
-This is a documentation and maintainance release without new features.
+This is a documentation and maintainance release .
 
 ## Maintainance
 
