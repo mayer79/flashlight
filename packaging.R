@@ -54,6 +54,7 @@ use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 # Suggests
 use_package("knitr", "Suggests")
 use_package("rmarkdown", "Suggests")
+use_package("testthat", "Suggests")
 use_package("ranger", "Suggests")
 use_package("xgboost", "Suggests")
 use_package("moderndive", "Suggests")
@@ -92,7 +93,7 @@ if (TRUE) {
 }
 
 # Check
-check(pkg, manual = TRUE)
+check(pkg) #, manual = FALSE, vignettes = FALSE)
 
 # Create
 build(pkg)
