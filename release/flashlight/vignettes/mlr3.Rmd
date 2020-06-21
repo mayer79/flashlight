@@ -6,7 +6,7 @@ bibliography: "biblio.bib"
 link-citations: true
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{flashlight_mlr3}
+  %\VignetteIndexEntry{Using flashlight with mlr3}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -149,7 +149,7 @@ eff %>%
 
 ### Interaction strength
 
-How strong are the pairwise interactions among the four most important predictors? Surprise, surprice: for the linear regression, there are none!
+How strong are the pairwise interactions among the four most important predictors? Surprise, surprise: for the linear regression, there are none!
 
 ```{r}
 light_interaction(fls, v = most_important(imp, 4), pairwise = TRUE, n_max = 50, seed = 63) %>%

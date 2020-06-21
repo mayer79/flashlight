@@ -44,9 +44,9 @@ mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal
 mods <- multiflashlight(list(mod_full, mod_part))
 eff <- light_effects(mods, v = "Species")
 eff <- light_recode(eff, what = "type_name",
-  levels = c("response", "predicted", "partial dependence"),
-  labels = c("Observed", "Fitted", "Effect"))
-plot(eff)
+                    levels = c("response", "predicted", "partial dependence", "ale"),
+                    labels = c("Observed", "Fitted", "PD", "ALE"))
+plot(eff, use = "all")
 }
 \seealso{
 \code{\link{plot.light_effects}}.

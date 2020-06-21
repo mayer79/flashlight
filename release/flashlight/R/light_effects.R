@@ -22,7 +22,7 @@
 #' @param counts_name Name of the column containing counts.
 #' @param counts_weighted Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
 #' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.
-#' @param pred Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make.
+#' @param pred Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Not implemented for multiflashlight.
 #' @param pd_indices A vector of row numbers to consider in calculating partial dependence and ALE profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence and ALE.
 #' @param pd_n_max Maximum number of ICE profiles to consider for partial depencence and ALE calculation (will be randomly picked from \code{data}).
 #' @param pd_seed An integer random seed used to sample ICE profiles for partial dependence and ALE.
@@ -46,10 +46,9 @@
 #' }
 #' @export
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' light_effects(mod_full, v = "Species")
-#' light_effects(mod_full, v = "Species", stats = "quartiles")
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+#' light_effects(fl, v = "Species")
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 light_effects <- function(x, ...) {
   UseMethod("light_effects")
@@ -137,6 +136,9 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
 light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL, n_bins = 11,
                                           cut_type = c("equal", "quantile"), ...) {
   cut_type <- match.arg(cut_type)
+  if ("pred" %in% names(list(...))) {
+    stop("'pred' not implemented for multiflashlight")
+  }
   if (is.null(breaks)) {
     breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
                             n_bins = n_bins, cut_type = cut_type)

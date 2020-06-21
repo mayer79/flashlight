@@ -6,8 +6,8 @@
 #'
 #' @importFrom rpart rpart rpart.control
 #' @importFrom stats setNames
-#' @importFrom dplyr as_tibble group_by_at do ungroup
-#' @importFrom rlang .data
+#' @importFrom dplyr as_tibble group_by summarize across cur_data
+#' @importFrom tidyselect all_of
 #' @importFrom MetricsWeighted r_squared
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
@@ -30,12 +30,9 @@
 #' @export
 #' @references Molnar C. (2019). Interpretable Machine Learning.
 #' @examples
-#' fit1 <- lm(Sepal.Length ~ ., data = iris)
-#' fit2 <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' fl1 <- flashlight(model = fit1, label = "full")
-#' fl2 <- flashlight(model = fit2, label = "partial")
-#' fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
-#' light_global_surrogate(fls, maxdepth = 3)
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' x <- flashlight(model = fit, label = "lm", data = iris)
+#' light_global_surrogate(x)
 #'
 #' @seealso \code{\link{plot.light_global_surrogate}}.
 light_global_surrogate <- function(x, ...) {
@@ -55,13 +52,15 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
                                               n_max = Inf, seed = NULL,
                                               keep_max_levels = 4,
                                               label_name = "label",
-                                              tree_name = "tree",
-                                              ...) {
+                                              tree_name = "tree", ...) {
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by, x$w))
+  } else if (!is.null(by)) {
+    v <- setdiff(v, by)
   }
   # Checks
   stopifnot(v %in% colnames(data),
+            !is.null(data),
             (n <- nrow(data)) >= 1L,
             !anyDuplicated(c(label_name, tree_name, by)))
 
@@ -95,7 +94,8 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
 
   # Call core function for each "by" group
   res <- if (is.null(by)) as_tibble(core_func(data)) else
-    ungroup(do(group_by_at(data, by), core_func(.data)))
+    summarize(group_by(data, across(all_of(by))),
+              core_func(cur_data()), .groups = "drop")
 
   # Prepare output
   res[[label_name]] <- x$label

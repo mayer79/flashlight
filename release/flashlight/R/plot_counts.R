@@ -19,13 +19,9 @@
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' fit_part <- glm(Sepal.Length ~ Petal.Length, data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part))
-#'
-#' x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+#' x <- light_effects(fl, v = "Species")
 #' plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
 #' @seealso \code{\link{plot.light_effects}}.
 #' @export

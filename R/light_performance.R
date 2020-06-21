@@ -5,8 +5,8 @@
 #' The minimal required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". The latter two can also directly be passed to \code{light_performance}. Note that by default, no retransformation function is applied.
 #'
 #' @importFrom MetricsWeighted performance
-#' @importFrom dplyr group_by_at do ungroup as_tibble
-#' @importFrom rlang .data
+#' @importFrom dplyr group_by summarize across cur_data
+#' @importFrom tidyselect all_of
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results. Will overwrite \code{x$by}.
@@ -26,13 +26,10 @@
 #' }
 #' @export
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
-#' light_performance(mod_full)
-#' light_performance(mods, by = "Species")
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+#' light_performance(fl)
+#' light_performance(fl, by = "Species")
 #' @seealso \code{\link{plot.light_performance}}.
 light_performance <- function(x, ...) {
   UseMethod("light_performance")
@@ -61,15 +58,13 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by, metrics = 
   data[[x$y]] <- response(x)
 
   # Aggregate the result within by groups
-
-  # Function that does the ungrouped calculation
   core_fun <- function(X) {
-    performance(data = X, actual = x$y, predicted = "pred_", w = x$w,
+    performance(X, actual = x$y, predicted = "pred_", w = x$w,
                 metrics = metrics, key = metric_name, value = value_name, ...)
   }
-  agg <- if (is.null(by)) as_tibble(core_fun(data)) else
-    ungroup(do(group_by_at(data, by), core_fun(.data)))
-  agg[[label_name]] <- x$label
+  data[[label_name]] <- x$label
+  data <- group_by(data, across(all_of(c(label_name, by))))
+  agg <- summarize(data, core_fun(cur_data()), .groups = "drop")
 
   # Collect results
   out <- list(data = agg, by = by, metric_name = metric_name,

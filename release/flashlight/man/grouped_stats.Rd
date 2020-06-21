@@ -48,23 +48,12 @@ grouped_stats(
 A \code{data.frame} with columns \code{by}, \code{x} and optionally \code{counts_name}.
 }
 \description{
-Calculates weighted means, quartiles, or variances (and counts) of a variable grouped by optional columns.
+Calculates weighted means, quartiles, or variances (and counts) of a variable grouped by optional columns. By default, counts are not weighted, even if there is a weighting variable.
 }
 \examples{
 grouped_stats(iris, "Sepal.Width")
 grouped_stats(iris, "Sepal.Width", stats = "quartiles")
 grouped_stats(iris, "Sepal.Width", stats = "variance")
-grouped_stats(iris, "Sepal.Width", w = "Petal.Width")
 grouped_stats(iris, "Sepal.Width", w = "Petal.Width", counts_weighted = TRUE)
-
 grouped_stats(iris, "Sepal.Width", by = "Species")
-grouped_stats(iris, "Sepal.Width", stats = "quartiles", by = "Species")
-grouped_stats(iris, "Sepal.Width", stats = "variance", by = "Species")
-grouped_stats(iris, "Sepal.Width", w = "Petal.Width", by = "Species")
-grouped_stats(iris, "Sepal.Width", w = "Petal.Width",
-  counts_weighted = TRUE, by = "Species")
-
-grouped_stats(iris, "Sepal.Width", counts = FALSE)
-grouped_stats(iris, "Sepal.Width", counts_name = "n",
-  stats = "quartiles", q1_name = "p25", q3_name = "p75")
 }

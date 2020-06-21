@@ -44,10 +44,8 @@ fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
-
-plot(light_importance(mod_full, m_repetitions = 4), fill = "darkred")
+plot(light_importance(mod_part, m_repetitions = 4), fill = "darkred")
 plot(light_importance(mods), swap_dim = TRUE)
-plot(light_importance(mods, by = NULL), fill = "darkgreen")
 }
 \seealso{
 \code{\link{light_importance}}.

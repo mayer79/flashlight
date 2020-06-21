@@ -36,16 +36,11 @@ Minimal visualization of an object of class \code{light_profile}. The object ret
 Either lines and points are plotted (if stats = "mean") or quartile boxes. If there is a "by" variable or a multiflashlight, this first dimension is taken care by color (or if \code{swap_dim = TRUE} by facets). If there are two "by" variables or a multiflashlight with one "by" variable, the first "by" variable is visualized as color, the second one or the multiflashlight via facet (change with \code{swap_dim}).
 }
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-
-plot(light_profile(mod_full, v = "Species"))
-plot(light_profile(mod_full, v = "Species", type = "residual", stats = "quartiles"))
-plot(light_profile(mod_full, v = "Petal.Width", by = "Species"))
-plot(light_profile(mods, v = "Petal.Width", by = "Species"))
+fit <- lm(Sepal.Length ~ ., data = iris)
+fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+plot(light_profile(fl, v = "Species"))
+plot(light_profile(fl, v = "Petal.Width", by = "Species", evaluate_at = 2:4))
+plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
 }
 \seealso{
 \code{\link{light_profile}}, \code{\link{plot.light_effects}}.

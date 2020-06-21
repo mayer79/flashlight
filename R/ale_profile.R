@@ -2,8 +2,8 @@
 #'
 #' Internal function used by \code{light_profile} to calculate ALE profiles.
 #'
-#' @importFrom dplyr as_tibble left_join group_by_at do ungroup bind_rows
-#' @importFrom rlang .data
+#' @importFrom dplyr as_tibble left_join bind_rows group_by summarize across cur_data
+#' @importFrom tidyselect all_of
 #' @importFrom stats setNames
 #' @param x An object of class \code{flashlight}.
 #' @param v The variable to be profiled.
@@ -111,11 +111,14 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
 
   # Accumulate effects. Integrate out gaps
   wcumsum <- function(X) {
-    X[[value_name]] <- cumsum(X[[value_name]] * (if (is_num) c(0, diff(X[[v]])) else 1))
+    X[[value_name]] <- as.numeric(cumsum(X[[value_name]] *
+                                           (if (is_num) c(0, diff(X[[v]])) else 1)))
     X
   }
   ale <- if (is.null(x$by)) wcumsum(ale) else
-      ungroup(do(group_by_at(ale, x$by), wcumsum(.data)))
+    summarize(group_by(ale, across(all_of(x$by))),
+              wcumsum(cur_data()), .groups = "drop")
+
   if (is.factor(data[[v]])) {
     ale[[v]] <- factor(ale[[v]], levels = levels(data[[v]]))
   }

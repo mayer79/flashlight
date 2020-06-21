@@ -1,11 +1,11 @@
 #' Grouped Weighted Means, Quartiles, or Variances
 #'
-#' Calculates weighted means, quartiles, or variances (and counts) of a variable grouped by optional columns.
+#' Calculates weighted means, quartiles, or variances (and counts) of a variable grouped by optional columns. By default, counts are not weighted, even if there is a weighting variable.
 #'
-#' @importFrom dplyr group_by_at do ungroup
+#' @importFrom dplyr group_by summarize across cur_data
+#' @importFrom tidyselect all_of
 #' @importFrom stats setNames
 #' @importFrom MetricsWeighted weighted_mean weighted_quantile weighted_var
-#' @importFrom rlang .data
 #' @param data A \code{data.frame}.
 #' @param x Variable name in \code{data} to summarize.
 #' @param w Optional name of the column in \code{data} with case weights.
@@ -24,19 +24,8 @@
 #' grouped_stats(iris, "Sepal.Width")
 #' grouped_stats(iris, "Sepal.Width", stats = "quartiles")
 #' grouped_stats(iris, "Sepal.Width", stats = "variance")
-#' grouped_stats(iris, "Sepal.Width", w = "Petal.Width")
 #' grouped_stats(iris, "Sepal.Width", w = "Petal.Width", counts_weighted = TRUE)
-#'
 #' grouped_stats(iris, "Sepal.Width", by = "Species")
-#' grouped_stats(iris, "Sepal.Width", stats = "quartiles", by = "Species")
-#' grouped_stats(iris, "Sepal.Width", stats = "variance", by = "Species")
-#' grouped_stats(iris, "Sepal.Width", w = "Petal.Width", by = "Species")
-#' grouped_stats(iris, "Sepal.Width", w = "Petal.Width",
-#'   counts_weighted = TRUE, by = "Species")
-#'
-#' grouped_stats(iris, "Sepal.Width", counts = FALSE)
-#' grouped_stats(iris, "Sepal.Width", counts_name = "n",
-#'   stats = "quartiles", q1_name = "p25", q3_name = "p75")
 grouped_stats <- function(data, x, w = NULL, by = NULL,
                           stats = c("mean", "quartiles", "variance"),
                           counts = TRUE, counts_weighted = FALSE,
@@ -75,5 +64,6 @@ grouped_stats <- function(data, x, w = NULL, by = NULL,
   if (!length(by)) {
     return(core_fun(data))
   }
-  ungroup(do(group_by_at(data, by), core_fun(.data)))
+  summarize(group_by(data, across(all_of(by))),
+            core_fun(cur_data()), .groups = "drop")
 }

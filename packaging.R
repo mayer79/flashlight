@@ -4,13 +4,11 @@
 
 if (FALSE) {
   library(MetricsWeighted)
-  library(dplyr)
-  library(tidyr)
-  library(rlang)
-  library(ggplot2)
+  library(tidyverse)
   library(ggpubr)
   library(rpart)
   library(rpart.plot)
+  library(testthat)
   lapply(list.files("R", full.names = TRUE), source)
 }
 
@@ -22,6 +20,7 @@ dir.create(file.path("release"))
 pkg <- file.path("release", "flashlight")
 
 create_package(
+  open = FALSE,
   pkg,
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
@@ -32,7 +31,7 @@ create_package(
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
     URL = "https://github.com/mayer79/flashlight",
     BugReports = "https://github.com/mayer79/flashlight/issues",
-    Depends = "R (>= 3.1.0)",
+    Depends = "R (>= 3.2.0)",
     VignetteBuilder = "knitr",
     License = "GPL(>= 2)",
     Maintainer = "Michael Mayer <mayermichael79@gmail.com>"))
@@ -43,9 +42,9 @@ file.copy(file.path(pkg, "DESCRIPTION"), to = getwd(), overwrite = TRUE)
 # Imports
 use_package("stats", "Imports")
 use_package("utils", "Imports")
-use_package("dplyr", "Imports")
+use_package("tidyselect", "Imports")
+use_package("dplyr", "Imports", min_version = "1.0.0")
 use_package("tidyr", "Imports", min_version = "1.0.0")
-use_package("rlang", "Imports")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("ggplot2", "Imports")
@@ -55,13 +54,13 @@ use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 # Suggests
 use_package("knitr", "Suggests")
 use_package("rmarkdown", "Suggests")
+use_package("testthat", "Suggests")
 use_package("ranger", "Suggests")
 use_package("xgboost", "Suggests")
 use_package("moderndive", "Suggests")
 use_package("caret", "Suggests")
 use_package("mlr3", "Suggests")
 use_package("mlr3learners", "Suggests")
-# use_package("h2o", "Suggests")
 
 # Set up other files -------------------------------------------------
 # use_readme_md()
@@ -77,15 +76,24 @@ files <- list.files("R", full.names = TRUE)
 file.copy(files, file.path(pkg, "R"), overwrite = TRUE)
 devtools::document(pkg)
 
+# Tests
+if (!dir.exists(file.path(pkg, "tests"))) {
+  dir.create(file.path(pkg, "tests"))
+}
+file.copy("tests", pkg, recursive = TRUE)
+test(pkg)
+
 # Copy vignette
-dir.create(file.path(pkg, "vignettes"))
-dir.create(file.path(pkg, "doc"))
-dir.create(file.path(pkg, "Meta"))
-file.copy(list.files("vignettes", full.names = TRUE), file.path(pkg, "vignettes"), overwrite = TRUE)
-devtools::build_vignettes(pkg)
+if (TRUE) {
+  dir.create(file.path(pkg, "vignettes"))
+  dir.create(file.path(pkg, "doc"))
+  dir.create(file.path(pkg, "Meta"))
+  file.copy(list.files("vignettes", full.names = TRUE), file.path(pkg, "vignettes"), overwrite = TRUE)
+  devtools::build_vignettes(pkg)
+}
 
 # Check
-check(pkg, manual = TRUE)
+check(pkg) #, manual = FALSE, vignettes = FALSE)
 
 # Create
 build(pkg)

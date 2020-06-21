@@ -51,5 +51,4 @@ manual_comb <- light_combine(list(perf_lm, perf_glm),
   new_class = "light_performance_multi")
 auto_comb <- light_performance(mods)
 all.equal(manual_comb, auto_comb)
-light_combine(perf_lm)
 }

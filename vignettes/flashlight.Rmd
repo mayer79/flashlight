@@ -6,7 +6,7 @@ bibliography: "biblio.bib"
 link-citations: true
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{flashlight}
+  %\VignetteIndexEntry{Using flashlight}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -363,7 +363,7 @@ params <- list(learning_rate = 0.2,
 fit_xgb <- xgb.train(params,
                      data = dtrain,
                      watchlist = list(train = dtrain, valid = dvalid),
-                     nrounds = 50,
+                     nrounds = 250,
                      print_every_n = 10,
                      objective = "reg:linear")
 ```

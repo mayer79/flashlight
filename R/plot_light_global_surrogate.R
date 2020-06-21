@@ -13,15 +13,9 @@
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
-#' fit1 <- lm(Sepal.Length ~ ., data = iris)
-#' fit2 <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' fl1 <- flashlight(model = fit1, label = "full")
-#' fl2 <- flashlight(model = fit2, label = "partial")
-#' fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
-#' surr <- light_global_surrogate(fls)
-#' plot(surr, cex = 0.6)
-#' plot(light_global_surrogate(fls$full))
-#' plot(light_global_surrogate(fls$full, by = "Species"))
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' x <- flashlight(model = fit, label = "lm", data = iris)
+#' plot(light_global_surrogate(x))
 #' @seealso \code{\link{light_global_surrogate}}.
 plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE, mfrow = NULL, ...) {
   data <- x$data

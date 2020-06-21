@@ -45,13 +45,9 @@ Add counts as labelled bar plot on top of light_effects plot.
 Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
 }
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-fit_part <- glm(Sepal.Length ~ Petal.Length, data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-
-x <- light_effects(mod_full, v = "Petal.Width", stats = "quartiles")
+fit <- lm(Sepal.Length ~ ., data = iris)
+fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+x <- light_effects(fl, v = "Species")
 plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
 }
 \seealso{

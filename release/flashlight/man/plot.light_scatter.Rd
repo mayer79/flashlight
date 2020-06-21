@@ -24,16 +24,14 @@ An object of class \code{ggplot2}.
 Values are plotted against a variable. The object returned is of class \code{ggplot} and can be further customized. To avoid overplotting, pass e.g. \code{alpha = 0.2} or \code{position = "jitter"}.
 }
 \examples{
-\dontrun{
-fit_a <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
-fit_b <- lm(Sepal.Length ~ . + Petal.Length, data = iris)
-fl_a <- flashlight(model = fit_a, label = "a")
-fl_b <- flashlight(model = fit_b, label = "b")
+fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
+fit_b <- lm(Sepal.Length ~ ., data = iris)
+fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
+fl_b <- flashlight(model = fit_b, label = "all")
 fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
-pr <- light_scatter(fls, "Petal.Length")
+pr <- light_scatter(fls, v = "Petal.Length")
 plot(pr, alpha = 0.2)
 plot(light_scatter(fls, "Petal.Length", by = "Species"), alpha = 0.2)
-}
 }
 \seealso{
 \code{\link{light_scatter}}.

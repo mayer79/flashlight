@@ -95,7 +95,7 @@ light_profile(x, ...)
 
 \item{v_labels}{If FALSE, return group centers of \code{v} instead of labels. Only relevant for types "response", "predicted" or "residual" and if \code{v} is being binned. In that case useful if e.g. different flashlights use different data sets and bin labels would not match.}
 
-\item{pred}{Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Only relevant for \code{type = "predicted"} and \code{type = "ale"}.}
+\item{pred}{Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Only relevant for \code{type = "predicted"} and \code{type = "ale"}. Not implemented for multiflashlight.}
 
 \item{pd_evaluate_at}{Vector with values of \code{v} used to evaluate the profile. Only relevant for type = "partial dependence" and "ale".}
 
@@ -143,13 +143,10 @@ For numeric covariables \code{v} with more than \code{n_bins} disjoint values, i
 }}
 
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-light_profile(mod_full, v = "Species")
-light_profile(mod_full, v = "Species", type = "response")
-light_profile(mod_full, v = "Species", stats = "quartiles")
-light_profile(mod_full, v = "Petal.Width", type = "residual")
-light_profile(mod_full, v = "Petal.Width", pd_evaluate_at = 2:4)
+fit <- lm(Sepal.Length ~ ., data = iris)
+fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+light_profile(fl, v = "Species")
+light_profile(fl, v = "Petal.Width", type = "residual")
 }
 \references{
 Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.

@@ -16,16 +16,11 @@
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part))
-#'
-#' plot(light_profile(mod_full, v = "Species"))
-#' plot(light_profile(mod_full, v = "Species", type = "residual", stats = "quartiles"))
-#' plot(light_profile(mod_full, v = "Petal.Width", by = "Species"))
-#' plot(light_profile(mods, v = "Petal.Width", by = "Species"))
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+#' plot(light_profile(fl, v = "Species"))
+#' plot(light_profile(fl, v = "Petal.Width", by = "Species", evaluate_at = 2:4))
+#' plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                                rotate_x = x$type != "partial dependence",

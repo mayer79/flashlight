@@ -39,22 +39,9 @@
 #' @export
 #' @references Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1 <doi.org/10.1080/10618600.2014.907095>.
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part))
-#' grid <- expand.grid(Species = levels(iris$Species), Petal.Length = 2:4)
-#' light_ice(mod_full, v = "Species")
-#' light_ice(mod_full, v = "Species", indices = (1:15) * 10)
-#' light_ice(mod_full, v = "Species", evaluate_at = levels(iris$Species))
-#' light_ice(mod_full, grid = grid, data = iris[1,])$data
-#' light_ice(mods, v = "Species", indices = (1:15) * 10)
-#' light_ice(mods, v = "Species", indices = (1:15) * 10, center = "first")
-#' light_ice(mods, v = "Petal.Width", n_bins = 5)
-#' light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5)
-#' light_ice(mods, v = "Petal.Width", by = "Species",
-#'   id_name = "profile", value_name = "val", label_name = "lab")
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+#' light_ice(fl, v = "Species")
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_ice}}.
 light_ice <- function(x, ...) {
   UseMethod("light_ice")
@@ -129,8 +116,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
     centered_values <- grouped_center(data, x = value_name, by = id_name, na.rm = TRUE)
     if (is.null(by)) {
       data[[value_name]] <- centered_values +
-        weighted_mean(data[[value_name]], w
-                      = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
+        weighted_mean(data[[value_name]], w = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
     } else {
       group_means <- grouped_stats(data, x = value_name, w = x$w, by = by, counts = FALSE,
                                    value_name = "global_mean", na.rm = TRUE)

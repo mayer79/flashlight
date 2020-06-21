@@ -2,7 +2,7 @@
 #'
 #' This function prepares values for drawing a scatter plot of predicted values, responses, residuals, or SHAP values against a selected variable.
 #'
-#' @importFrom dplyr left_join as_tibble
+#' @importFrom dplyr as_tibble
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be shown on the x-axis.
 #' @param data An optional \code{data.frame}. Not relevant for \code{type = "shap"}.
@@ -27,15 +27,13 @@
 #' }
 #' @export
 #' @examples
-#' fit_a <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
-#' fit_b <- lm(Sepal.Length ~ . + Petal.Length, data = iris)
-#' fl_a <- flashlight(model = fit_a, label = "a")
-#' fl_b <- flashlight(model = fit_b, label = "b")
+#' fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
+#' fit_b <- lm(Sepal.Length ~ ., data = iris)
+#' fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
+#' fl_b <- flashlight(model = fit_b, label = "all")
 #' fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
-#' pr <- light_scatter(fls, "Petal.Length")
-#' plot(pr, alpha = 0.2)
-#' plot(light_scatter(fls, "Petal.Length", by = "Species"), alpha = 0.2)
-#'
+#' pr <- light_scatter(fls, v = "Petal.Length")
+#' plot(light_scatter(fls, "Petal.Length", by = "Species", type = "residual"), alpha = 0.2)
 #' @seealso \code{\link{plot.light_scatter}}.
 light_scatter <- function(x, ...) {
   UseMethod("light_scatter")

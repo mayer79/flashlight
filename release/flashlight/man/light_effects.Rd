@@ -84,7 +84,7 @@ light_effects(x, ...)
 
 \item{v_labels}{If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.}
 
-\item{pred}{Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make.}
+\item{pred}{Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Not implemented for multiflashlight.}
 
 \item{pd_indices}{A vector of row numbers to consider in calculating partial dependence and ALE profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence and ALE.}
 
@@ -128,10 +128,9 @@ Note that ALE profiles are being calibrated by (weighted) average predictions. T
 }}
 
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-light_effects(mod_full, v = "Species")
-light_effects(mod_full, v = "Species", stats = "quartiles")
+fit <- lm(Sepal.Length ~ ., data = iris)
+fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+light_effects(fl, v = "Species")
 }
 \seealso{
 \code{\link{light_profile}}, \code{\link{plot.light_effects}}.

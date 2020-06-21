@@ -5,7 +5,8 @@
 #' For algorithm (a), the minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". For algorithm (b), the only required element is "shap". Call \code{add_shap} once to add such object.
 #' Note: The values of the permutation algorithm (a) are on the scale of the selected metric. For shap algorithm (b), the values are on the scale of absolute values of the predictions.
 #'
-#' @importFrom dplyr left_join bind_rows group_by_at ungroup summarize_at
+#' @importFrom dplyr left_join bind_rows group_by summarize across cur_data
+#' @importFrom tidyselect all_of
 #' @importFrom stats ave setNames sd qnorm
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}. Not used for \code{type = "shap"}.
@@ -38,12 +39,9 @@
 #' @export
 #' @references Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.
 #' @examples
-#' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-#' mods <- multiflashlight(list(mod_full, mod_part))
-#' light_importance(mods)
+#' fit <- lm(Sepal.Length ~ Petal.Length, data = iris)
+#' fl <- flashlight(model = fit, label = "full", data = iris, y = "Sepal.Length")
+#' light_importance(fl)
 #' @seealso \code{\link{most_important}}, \code{\link{plot.light_importance}}.
 light_importance <- function(x, ...) {
   UseMethod("light_importance")
@@ -134,17 +132,18 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
       perfm(S, vn = "value_shuffled")
     }
     if (m_repetitions > 1) {
+      # Helper function that returns standard error and mean
+      mean_error <- function(X) {
+        x <- X[["value_shuffled"]]
+        x <- x[!is.na(x)]
+        setNames(data.frame(sd(x) / sqrt(length(x)), mean(x)), c(error_name, "value_shuffled"))
+      }
       imp <- replicate(m_repetitions, setNames(lapply(v, core_func, S = data), v),
                        simplify = FALSE)
       imp <- unlist(imp, recursive = FALSE)
       imp <- bind_rows(imp, .id = variable_name)
-      imp <- group_by_at(imp, c(key_vars, variable_name))
-      se <- function(z, ...) {
-        sd(z, ...) / sqrt(sum(!is.na(z)))
-      }
-      imp <- summarize_at(imp, "value_shuffled",
-                          setNames(list(se, mean), c(error_name, "value_shuffled")), na.rm = TRUE)
-      imp <- ungroup(imp)
+      imp <- group_by(imp, across(all_of(c(key_vars, variable_name))))
+      imp <- summarize(imp, mean_error(cur_data()), .groups = "drop")
     } else {
       imp <- setNames(lapply(v, core_func, S = data), v)
       imp <- bind_rows(imp, .id = variable_name)

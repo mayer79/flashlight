@@ -3,7 +3,7 @@
 #' Returns the most important variable names sorted descendingly.
 #'
 #' @importFrom utils head
-#' @importFrom dplyr group_by_at summarize_at arrange_at desc
+#' @importFrom dplyr group_by summarize arrange desc across
 #' @param x An object of class \code{light_importance}.
 #' @param top_m Maximum number of important variables to be returned. Defaults to \code{Inf}, i.e. return all variables in descending order of importance.
 #' @return A character vector of variable names sorted in descending order by importance.
@@ -28,8 +28,9 @@ most_important.default <- function(x, top_m = Inf) {
 #' @describeIn most_important Extracts most important variables from an object of class \code{light_importance}.
 #' @export
 most_important.light_importance <- function(x, top_m = Inf) {
-  data <- group_by_at(x$data, x$variable_name)
-  total_importance <- summarize_at(data, x$value_name, sum, na.rm = TRUE)
-  total_importance <- arrange_at(total_importance, x$value_name, desc)
+  data <- group_by(x$data, across(x$variable_name))
+  total_importance <- summarize(data, across(x$value_name, sum, na.rm = TRUE),
+                                .groups = "drop")
+  total_importance <- arrange(total_importance, across(x$value_name, desc))
   head(total_importance[[x$variable_name]], top_m)
 }

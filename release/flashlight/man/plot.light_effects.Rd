@@ -42,14 +42,9 @@ An object of class \code{ggplot2}.
 Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
 }
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris,
-  y = "Sepal.Length", w = "Petal.Length")
-plot(light_effects(mod_full, v = "Species"))
-x <- light_effects(mod_full, v = "Petal.Width")
-plot(x)
-plot(x, use = c("pd", "ale"))
-plot(light_effects(mod_full, v = "Petal.Width", stats = "quartiles"))
+fit <- lm(Sepal.Length ~ ., data = iris)
+fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
+plot(light_effects(fl, v = "Species"))
 }
 \seealso{
 \code{\link{light_effects}}, \code{\link{plot_counts}}.

@@ -75,12 +75,9 @@ The size of the tree can be modified by passing \code{...} arguments to \code{rp
 }}
 
 \examples{
-fit1 <- lm(Sepal.Length ~ ., data = iris)
-fit2 <- lm(Sepal.Length ~ Petal.Length, data = iris)
-fl1 <- flashlight(model = fit1, label = "full")
-fl2 <- flashlight(model = fit2, label = "partial")
-fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
-light_global_surrogate(fls, maxdepth = 3)
+fit <- lm(Sepal.Length ~ ., data = iris)
+x <- flashlight(model = fit, label = "lm", data = iris)
+light_global_surrogate(x)
 
 }
 \references{

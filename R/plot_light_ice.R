@@ -7,7 +7,6 @@
 #' @import ggplot2
 #' @importFrom stats reformulate
 #' @method plot light_ice
-#' @author Michael Mayer
 #' @param x An object of class \code{light_ice}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is FALSE.
@@ -20,14 +19,10 @@
 #' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
 #' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
 #' mods <- multiflashlight(list(mod_full, mod_part))
-#' grid <- expand.grid(Species = levels(iris$Species), Petal.Length = 2:4)
-#'
 #' plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
 #' indices <- (1:15) * 10
-#' plot(light_ice(mod_full, v = "Species"), rotate_x = TRUE)
 #' plot(light_ice(mods, v = "Species", indices = indices))
 #' plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
-#' plot(light_ice(mods, v = "Petal.Width", n_bins = 5, indices = indices))
 #' plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 #' @seealso \code{\link{light_ice}}.
 plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {

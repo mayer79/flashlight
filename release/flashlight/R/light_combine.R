@@ -22,7 +22,6 @@
 #'   new_class = "light_performance_multi")
 #' auto_comb <- light_performance(mods)
 #' all.equal(manual_comb, auto_comb)
-#' light_combine(perf_lm)
 light_combine <- function(x, ...) {
   UseMethod("light_combine")
 }

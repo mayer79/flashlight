@@ -105,9 +105,8 @@ fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data 
 fl_additive <- flashlight(model = fit_additive, label = "additive")
 fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
-x <- fls$nonadditive
-plot(st <- light_interaction(fls))
-plot(light_interaction(fls, pairwise = TRUE))
+plot(st <- light_interaction(fls), fill = "darkgreen")
+plot(light_interaction(fls, pairwise = TRUE), fill = "darkgreen")
 }
 \references{
 Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.

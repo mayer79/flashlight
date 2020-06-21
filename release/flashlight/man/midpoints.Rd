@@ -13,9 +13,5 @@ midpoints(breaks)
 Vector of the same length as x minus 1 with midpoints of breaks.
 }
 \description{
-Takes a vector of breaks and calculates midpoints of subsequent unique breaks.
-}
-\examples{
-midpoints(1:4)
-midpoints(c(4, 4:1))
+Internal function that takes a vector of breaks and calculates midpoints of subsequent unique breaks.
 }

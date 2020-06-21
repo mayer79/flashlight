@@ -98,12 +98,9 @@ Note: The values of the permutation algorithm (a) are on the scale of the select
 }}
 
 \examples{
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-light_importance(mods)
+fit <- lm(Sepal.Length ~ Petal.Length, data = iris)
+fl <- flashlight(model = fit, label = "full", data = iris, y = "Sepal.Length")
+light_importance(fl)
 }
 \references{
 Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.

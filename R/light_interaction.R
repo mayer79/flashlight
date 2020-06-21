@@ -5,10 +5,10 @@
 #' Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip this normalization step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of such unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H. Note that in general, for each variable (pair) predictions are done on a data set with \code{grid_size * n_max}, so be cautious with increasing the defaults too much. Still, even with larger \code{grid_size} and \code{n_max}, there might be considerable variation across different runs, thus setting a seed might be required for reproducibility. The minimum required elements in the (multi-) flashlight are a "predict_function", "model", and "data".
 #'
 #' @importFrom stats setNames
-#' @importFrom dplyr as_tibble bind_rows bind_cols group_by_at do ungroup
+#' @importFrom dplyr as_tibble bind_rows bind_cols group_by summarize across cur_data cur_group
+#' @importFrom tidyselect all_of
 #' @importFrom tidyr expand_grid
 #' @importFrom utils combn
-#' @importFrom rlang .data
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.
@@ -46,9 +46,8 @@
 #' fl_additive <- flashlight(model = fit_additive, label = "additive")
 #' fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
 #' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
-#' x <- fls$nonadditive
-#' plot(st <- light_interaction(fls))
-#' plot(light_interaction(fls, pairwise = TRUE))
+#' plot(st <- light_interaction(fls), fill = "darkgreen")
+#' plot(light_interaction(fls, pairwise = TRUE), fill = "darkgreen")
 #' @seealso \code{\link{light_ice}}.
 light_interaction <- function(x, ...) {
   UseMethod("light_interaction")
@@ -190,8 +189,12 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   }
 
   # Call core function for each "by" group
-  agg <- if (is.null(by)) as_tibble(core_func(data)) else
-    ungroup(do(group_by_at(data, by), core_func(.data)))
+  if (is.null(by)) {
+    agg <- as_tibble(core_func(data))
+  } else {
+    gdata <- group_by(data, across(all_of(by)))
+    agg <- summarize(gdata, core_func(bind_cols(cur_group(), cur_data())), .groups = "drop")
+  }
 
   # Prepare output
   agg[[label_name]] <- x$label
