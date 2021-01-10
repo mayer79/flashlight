@@ -103,7 +103,7 @@ fl <- flashlight(model = fit, label = "full", data = iris, y = "Sepal.Length")
 light_importance(fl)
 }
 \references{
-Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. ArXiv <arxiv.org/abs/1801.01489>.
+Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.
 }
 \seealso{
 \code{\link{most_important}}, \code{\link{plot.light_importance}}.

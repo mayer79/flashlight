@@ -111,7 +111,7 @@ fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 light_breakdown(fl, new_obs = iris[1, ])
 }
 \references{
-A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
+A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
 }
 \seealso{
 \code{\link{plot.light_breakdown}}.

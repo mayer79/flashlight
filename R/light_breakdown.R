@@ -40,7 +40,7 @@
 #'   \item \code{description_name} Same as input \code{description_name}.
 #' }
 #' @export
-#' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
+#' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
 #' @examples
 #' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 #' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
