@@ -25,7 +25,7 @@ create_package(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
     Type = "Package",
-    Version = "0.7.3",
+    Version = "0.7.4",
     Date = Sys.Date(),
     Description = "Shed light on black box machine learning models by the help of model performance, variable importance, global surrogate models, ICE profiles, partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>), further effects plots, scatter plots, interaction strength, and variable contribution breakdown (approximate SHAP) for single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>). All tools are implemented to work with case weights and allow for stratified analysis. Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
@@ -88,7 +88,8 @@ if (TRUE) {
   dir.create(file.path(pkg, "vignettes"))
   dir.create(file.path(pkg, "doc"))
   dir.create(file.path(pkg, "Meta"))
-  file.copy(list.files("vignettes", full.names = TRUE), file.path(pkg, "vignettes"), overwrite = TRUE)
+  file.copy(list.files("vignettes", full.names = TRUE),
+            file.path(pkg, "vignettes"), overwrite = TRUE)
   devtools::build_vignettes(pkg)
 }
 
@@ -109,6 +110,6 @@ library(flashlight)
 
 check_win_devel(pkg)
 
-check_rhub(pkg)
+check_rhub(pkg, env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always"))
 
 devtools::release(pkg)

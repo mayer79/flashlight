@@ -26,7 +26,7 @@ install.packages("flashlight")
 Latest version from github:
 ```
 library(devtools)
-install_github("mayer79/flashlight")
+install_github("mayer79/flashlight", subdir = "release/flashlight")
 ```
 
 ## Example Code

@@ -1,3 +1,7 @@
+# flashlight 0.7.4
+
+This is a maintainance release to deal with an issue with XGBoost.
+
 # flashlight 0.7.3
 
 This is a documentation and maintainance release.
