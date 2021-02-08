@@ -1,5 +1,7 @@
 # The flashlight package
 
+[![CRAN version](http://www.r-pkg.org/badges/version/flashlight)](https://cran.r-project.org/package=flashlight) [![](https://cranlogs.r-pkg.org/badges/flashlight)](https://cran.r-project.org/package=flashlight) [![](https://cranlogs.r-pkg.org/badges/grand-total/flashlight?color=orange)](https://cran.r-project.org/package=flashlight)
+
 The goal of this package is shed light on black box machine learning models.
 
 The main props of `flashlight`:
