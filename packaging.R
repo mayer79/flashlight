@@ -25,7 +25,7 @@ create_package(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
     Type = "Package",
-    Version = "0.7.4",
+    Version = "0.7.5",
     Date = Sys.Date(),
     Description = "Shed light on black box machine learning models by the help of model performance, variable importance, global surrogate models, ICE profiles, partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>), further effects plots, scatter plots, interaction strength, and variable contribution breakdown (approximate SHAP) for single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>). All tools are implemented to work with case weights and allow for stratified analysis. Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
@@ -48,7 +48,7 @@ use_package("tidyr", "Imports", min_version = "1.0.0")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("ggplot2", "Imports")
-use_package("ggpubr", "Imports")
+use_package("cowplot", "Imports")
 use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 
 # Suggests

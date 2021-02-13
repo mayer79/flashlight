@@ -1,3 +1,7 @@
+# flashlight 0.7.5
+
+Another maintainance release to remove dependency on ggpubr.
+
 # flashlight 0.7.4
 
 This is a maintainance release to deal with an issue with XGBoost.
