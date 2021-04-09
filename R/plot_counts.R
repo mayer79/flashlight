@@ -5,7 +5,7 @@
 #' Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
 #'
 #' @import ggplot2
-#' @importFrom ggpubr ggarrange
+#' @importFrom cowplot plot_grid
 #' @importFrom dplyr right_join
 #' @param p The result of \code{plot.light_effects}.
 #' @param x An object of class \code{light_effects}.
@@ -58,5 +58,5 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x", show_label
                           scales = facet_scales, nrow = 1L)
   }
   # Arrange
-  ggarrange(ct, p, heights = c(0.2, 1), ncol = 1, nrow = 2, align = "v")
+  plot_grid(ct, p, rel_heights = c(0.2, 1), ncol = 1, nrow = 2, align = "v")
 }
