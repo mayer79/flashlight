@@ -35,8 +35,7 @@ light_combine.default <- function(x, ...) {
 #' @describeIn light_combine Since there is nothing to combine, the input is returned except for additional classes.
 #' @export
 light_combine.light <- function(x, new_class = NULL, ...) {
-  class(x) <- union(new_class, class(x))
-  x
+  add_classes(x, new_class)
 }
 
 #' @describeIn light_combine Combine a list of similar light objects.
@@ -48,8 +47,7 @@ light_combine.list <- function(x, new_class = NULL, ...) {
             all_identical(x, names))
 
   out <- x[[1]]
-  stopifnot("label_name" %in% names(out))
-  lab <- out$label_name
+  lab <- getOption("flashlight.label_name")
   data_slots <- names(out)[vapply(out, FUN = is.data.frame, FUN.VALUE = TRUE)]
   other_slots <- setdiff(names(out), data_slots)
 

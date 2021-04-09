@@ -5,7 +5,6 @@
 if (FALSE) {
   library(MetricsWeighted)
   library(tidyverse)
-  library(ggpubr)
   library(rpart)
   library(rpart.plot)
   library(testthat)
