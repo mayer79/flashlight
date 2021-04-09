@@ -46,13 +46,19 @@ light_performance.flashlight <- function(
     value_name = NULL, label_name = NULL, ...
   ) {
 
+  warning_on_names(metric_name, value_name, label_name)
+
   # Initialization
   metric_name <- getOption("flashlight.metric_name")
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
 
-  stopifnot(!anyDuplicated(c(metric_name, value_name, label_name, "pred_", by)),
-            "Must specify metric" = !is.null(metrics))
+  stopifnot(
+    !anyDuplicated(c(metric_name, value_name, label_name, "pred_", by)),
+    "No metric!" = !is.null(metrics),
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "No 'y' defined in flashlight!" = !is.null(x$y)
+  )
 
   # Update flashlight
   x <- flashlight(x, data = data, by = by,

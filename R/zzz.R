@@ -3,7 +3,9 @@
   op.flashlight <- list(
     flashlight.metric_name = "metric",
     flashlight.value_name = "value",
-    flashlight.label_name = "label"
+    flashlight.label_name = "label",
+    flashlight.error_name = "error",
+    flashlight.variable_name = "variable"
   )
   toset <- !(names(op.flashlight) %in% names(op))
   if (any(toset)) {

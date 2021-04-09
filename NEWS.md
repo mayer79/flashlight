@@ -1,3 +1,9 @@
+# flashlight 1.0.0
+
+## Visible changes
+
+- All `zzz_names` arguments are deprecated and are now set as `options(flashlight.zzz_names = ...)`.
+
 # flashlight 0.7.5
 
 Another maintainance release to remove dependency on ggpubr.
