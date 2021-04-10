@@ -12,17 +12,14 @@
 #' @param by An optional vector of column names used to additionally group the results. Will overwrite \code{x$by}.
 #' @param metrics An optional named list with metrics. Each metric takes at least four arguments: actual, predicted, case weights w and \code{...}.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
-#' @param metric_name Column name in resulting \code{data} containing the name of the metric. Defaults to "metric".
-#' @param value_name Column name in resulting \code{data} containing the value of the metric. Defaults to "value".
-#' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
+#' @param metric_name Deprecated. Use \code{options(flashlight.metric_name = ...)}.
+#' @param value_name Deprecated. Use \code{options(flashlight.value_name = ...)}.
+#' @param label_name Deprecated. Use \code{options(flashlight.label_name = ...)}.
 #' @param ... Arguments passed from or to other functions.
 #' @return An object of class \code{light_performance}, \code{light} (and a list) with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.
-#'   \item \code{metric_name} Same as input \code{metric_name}.
-#'   \item \code{value_name} Same as input \code{value_name}.
-#'   \item \code{label_name} Same as input \code{label_name}.
 #' }
 #' @export
 #' @examples
@@ -43,11 +40,25 @@ light_performance.default <- function(x, ...) {
 
 #' @describeIn light_performance Model performance of flashlight object.
 #' @export
-light_performance.flashlight <- function(x, data = x$data, by = x$by, metrics = x$metrics,
-                                         use_linkinv = FALSE, metric_name = "metric",
-                                         value_name = "value", label_name = "label", ...) {
-  stopifnot(!anyDuplicated(c(metric_name, value_name, label_name, "pred_", by)),
-            !is.null(metrics))
+light_performance.flashlight <- function(
+    x, data = x$data, by = x$by, metrics = x$metrics,
+    use_linkinv = FALSE, metric_name = NULL,
+    value_name = NULL, label_name = NULL, ...
+  ) {
+
+  warning_on_names(metric_name, value_name, label_name)
+
+  # Initialization
+  metric_name <- getOption("flashlight.metric_name")
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+
+  stopifnot(
+    !anyDuplicated(c(metric_name, value_name, label_name, "pred_", by)),
+    "No metric!" = !is.null(metrics),
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "No 'y' defined in flashlight!" = !is.null(x$y)
+  )
 
   # Update flashlight
   x <- flashlight(x, data = data, by = by,
@@ -66,11 +77,9 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by, metrics = 
   data <- group_by(data, across(all_of(c(label_name, by))))
   agg <- summarize(data, core_fun(cur_data()), .groups = "drop")
 
-  # Collect results
-  out <- list(data = agg, by = by, metric_name = metric_name,
-              value_name = value_name, label_name = label_name)
-  class(out) <- c("light_performance", "light", "list")
-  out
+  # Organize output
+  add_classes(list(data = agg, by = by),
+              classes = c("light_performance", "light"))
 }
 
 #' @describeIn light_performance Model performance of multiflashlight object.

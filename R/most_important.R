@@ -28,7 +28,6 @@ most_important.default <- function(x, top_m = Inf) {
 #' @describeIn most_important Extracts most important variables from an object of class \code{light_importance}.
 #' @export
 most_important.light_importance <- function(x, top_m = Inf) {
-  # Initialize
   value_name <- getOption("flashlight.value_name")
   variable_name <- getOption("flashlight.variable_name")
 
@@ -37,6 +36,7 @@ most_important.light_importance <- function(x, top_m = Inf) {
     data, across(all_of(value_name), sum, na.rm = TRUE),
     .groups = "drop"
   )
-  total_importance <- arrange(total_importance, across(all_of(value_name), desc))
+  total_importance <- arrange(total_importance,
+                              across(all_of(value_name), desc))
   head(total_importance[[variable_name]], top_m)
 }

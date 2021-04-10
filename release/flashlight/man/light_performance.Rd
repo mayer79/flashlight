@@ -17,9 +17,9 @@ light_performance(x, ...)
   by = x$by,
   metrics = x$metrics,
   use_linkinv = FALSE,
-  metric_name = "metric",
-  value_name = "value",
-  label_name = "label",
+  metric_name = NULL,
+  value_name = NULL,
+  label_name = NULL,
   ...
 )
 
@@ -38,20 +38,17 @@ light_performance(x, ...)
 
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE.}
 
-\item{metric_name}{Column name in resulting \code{data} containing the name of the metric. Defaults to "metric".}
+\item{metric_name}{Deprecated. Use \code{options(flashlight.metric_name = ...)}.}
 
-\item{value_name}{Column name in resulting \code{data} containing the value of the metric. Defaults to "value".}
+\item{value_name}{Deprecated. Use \code{options(flashlight.value_name = ...)}.}
 
-\item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
+\item{label_name}{Deprecated. Use \code{options(flashlight.label_name = ...)}.}
 }
 \value{
 An object of class \code{light_performance}, \code{light} (and a list) with the following elements.
 \itemize{
 \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
 \item \code{by} Same as input \code{by}.
-\item \code{metric_name} Same as input \code{metric_name}.
-\item \code{value_name} Same as input \code{value_name}.
-\item \code{label_name} Same as input \code{label_name}.
 }
 }
 \description{

@@ -54,7 +54,7 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
 
   # Checks
   stopifnot(
-    "No data provided!" = !is.null(data) && nrow(data) >= 1L,
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "Not all 'v' in 'data'" = v %in% colnames(data),
     !anyDuplicated(c(label_name, tree_name, by))
