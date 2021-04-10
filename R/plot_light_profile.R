@@ -25,6 +25,12 @@
 plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                                rotate_x = x$type != "partial dependence",
                                show_points = TRUE, ...) {
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+  q1_name <- getOption("flashlight.q1_name")
+  q3_name <- getOption("flashlight.q3_name")
+  type_name <- getOption("flashlight.type_name")
+
   data <- x$data
   nby <- length(x$by)
   multi <- is.light_profile_multi(x)
@@ -38,9 +44,10 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
   }
   # Distinguish some cases
   if (x$stats == "quartiles") {
-    p <- ggplot(x$data, aes_string(y = x$value, x = x$v, ymin = x$q1_name, ymax = x$q3_name))
+    p <- ggplot(x$data, aes_string(y = value_name, x = x$v,
+                                   ymin = q1_name, ymax = q3_name))
   } else {
-    p <- ggplot(x$data, aes_string(y = x$value, x = x$v))
+    p <- ggplot(x$data, aes_string(y = value_name, x = x$v))
   }
   if (ndim == 0L) {
     if (x$stats == "quartiles") {
@@ -53,12 +60,14 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
       }
     }
   } else if (ndim == 1L) {
-    first_dim <- if (multi) x$label_name else x$by[1]
+    first_dim <- if (multi) label_name else x$by[1]
     if (!swap_dim) {
       if (x$stats == "quartiles") {
-        p <- p + geom_crossbar(aes_string(color = first_dim), position = "dodge", ...)
+        p <- p +
+          geom_crossbar(aes_string(color = first_dim), position = "dodge", ...)
       } else {
-        p <- p + geom_line(aes_string(color = first_dim, group = first_dim), ...)
+        p <- p +
+          geom_line(aes_string(color = first_dim, group = first_dim), ...)
         if (show_points) {
           p <- p + geom_point(aes_string(color = first_dim), ...)
         }
@@ -76,12 +85,13 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
       }
     }
   } else {
-    second_dim <- if (multi) x$label_name else x$by[2]
+    second_dim <- if (multi) label_name else x$by[2]
     wrap_var <- if (swap_dim) x$by[1] else second_dim
     col_var <- if (swap_dim) second_dim else x$by[1]
 
     if (x$stats == "quartiles") {
-      p <- p + geom_crossbar(aes_string(color = col_var), position = "dodge", ...)
+      p <- p +
+        geom_crossbar(aes_string(color = col_var), position = "dodge", ...)
     } else {
       p <- p + geom_line(aes_string(color = col_var, group = col_var), ...)
       if (show_points) {
@@ -91,7 +101,8 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
     p <- p + facet_wrap(wrap_var, scales = facet_scales)
   }
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p + ylab(x$type)
 }

@@ -61,6 +61,8 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
   cut_type <- match.arg(cut_type)
   center <- match.arg(center)
 
+  warning_on_names(c("value_name", "label_name", "id_name"), ...)
+
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
   id_name <- getOption("flashlight.id_name")
