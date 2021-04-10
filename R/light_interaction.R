@@ -86,7 +86,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     set.seed(seed)
   }
 
-  # Determine v
+  # Determine v if not yet available
   if (is.null(v)) {
     v <- setdiff(cols, c(x$y, by, x$w))
   }

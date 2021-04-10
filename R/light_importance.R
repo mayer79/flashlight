@@ -71,20 +71,26 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     if (is.null(v)) {
       v <- x$shap$v
     }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] %in% v, ]
+    data <- x$shap$data[x$shap$data[[variable_name]] %in% v, ]
   } else if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by))
   }
-  # Checks
-  key_vars <- c(label_name, metric_name, by)
-  stopifnot(v %in% colnames(data),
-            (n <- nrow(data)) >= 1L,
-            !anyDuplicated(c(key_vars, value_name, variable_name, error_name)))
 
-  # Subsample to n_max
+  # Checks compatible with both shap and permutation importance
+  key_vars <- c(label_name, metric_name, by)
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "'by' not in 'data'!" = by %in% colnames(data),
+    "Not all 'v' in 'data'" = v %in% colnames(data),
+    !anyDuplicated(c(key_vars, value_name, variable_name, error_name))
+  )
+  n <- nrow(data)
+
   if (!is.null(seed)) {
     set.seed(seed)
   }
+
+  # Subsample to n_max
   if (n > n_max) {
     data <- data[sample(n, n_max), , drop = FALSE]
   }
@@ -94,11 +100,6 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     # Calculate variable importance
     data[[value_name]] <- abs(data[["shap_"]])
 
-    # Rename variable column
-    if (x$shap$variable_name != variable_name) {
-      data[[variable_name]] <- data[[x$shap$variable_name]]
-    }
-
     # Group results by variable
     imp <- grouped_stats(data, x = value_name, w = x$w,
                          by = c(by, variable_name), counts = FALSE)
@@ -107,8 +108,13 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     imp[[label_name]] <- x$label
     imp[ c(error_name, metric_name)] <- NA
   } else {
+    stopifnot(
+      "Need a metric." = !is.null(metric),
+      "Need exactly one metric." = length(metric) == 1L,
+      "No 'y' defined in flashlight!" = !is.null(x$y)
+    )
+
     # Update flashlight with everything except data
-    stopifnot(!is.null(metric), length(metric) == 1L)
     x <- flashlight(x, by = by, metrics = metric,
                     linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
@@ -132,9 +138,11 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
       mean_error <- function(X) {
         x <- X[["value_shuffled"]]
         x <- x[!is.na(x)]
-        setNames(data.frame(sd(x) / sqrt(length(x)), mean(x)), c(error_name, "value_shuffled"))
+        setNames(data.frame(sd(x) / sqrt(length(x)), mean(x)),
+                 c(error_name, "value_shuffled"))
       }
-      imp <- replicate(m_repetitions, setNames(lapply(v, core_func, S = data), v),
+      imp <- replicate(m_repetitions,
+                       setNames(lapply(v, core_func, S = data), v),
                        simplify = FALSE)
       imp <- unlist(imp, recursive = FALSE)
       imp <- bind_rows(imp, .id = variable_name)
