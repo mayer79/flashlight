@@ -19,12 +19,6 @@
 #' @param n_perm Number of permutations of random visit sequences. Only used if \code{visit_strategy = "permutation"}.
 #' @param seed An integer random seed used to shuffle rows if \code{n_max} is smaller than the number of rows in \code{data}.
 #' @param use_linkinv Should retransformation function be applied? Default is \code{FALSE}.
-#' @param after_name Column name in resulting \code{data} containing prediction after the step in \code{step_name}. Defaults to "after".
-#' @param before_name Column name in resulting \code{data} containing prediction before the step in \code{step_name}. Defaults to "before".
-#' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
-#' @param variable_name Column name in resulting \code{data} containing the variable names. Defaults to "variable".
-#' @param step_name Column name in resulting \code{data} containing the step of the prediction process. Defaults to "step".
-#' @param description_name Column name in resulting \code{data} containing the description text to be visualized. Defaults to "description".
 #' @param description Should descriptions be added? Default is \code{TRUE}.
 #' @param digits Passed to \code{prettyNum} to format numbers in description text.
 #' @param ... Further arguments passed to \code{prettyNum} to format numbers in description text.
@@ -32,12 +26,6 @@
 #' \itemize{
 #'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.
-#'   \item \code{after_name} Same as input \code{after_name}.
-#'   \item \code{before_name} Same as input \code{before_name}.
-#'   \item \code{label_name} Same as input \code{label_name}.
-#'   \item \code{variable_name} Same as input \code{variable_name}.
-#'   \item \code{step_name} Same as input \code{step_name}.
-#'   \item \code{description_name} Same as input \code{description_name}.
 #' }
 #' @export
 #' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
@@ -60,18 +48,33 @@ light_breakdown.default <- function(x, ...) {
 #' @export
 light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
                                        v = NULL,
-                                       visit_strategy = c("importance", "permutation", "v"),
+                                       visit_strategy = c("importance",
+                                                          "permutation", "v"),
                                        n_max = Inf, n_perm = 20,
                                        seed = NULL, use_linkinv = FALSE,
-                                       after_name = "after", before_name = "before",
-                                       label_name = "label", variable_name = "variable",
-                                       step_name = "step", description_name = "description",
                                        description = TRUE, digits = 2, ...) {
   visit_strategy <- match.arg(visit_strategy)
-  stopifnot(nrow(new_obs) == 1L, nrow(data) >= 1L,
-            sort(colnames(new_obs)) == sort(colnames(data)),
-            !anyDuplicated(c(after_name, before_name, label_name,
-                             variable_name, description_name)))
+
+  warning_on_names(c("after_name", "before_name", "description_name",
+                     "label_name", "step_name", "variable_name"), ...)
+
+  after_name <- getOption("flashlight.after_name")
+  before_name <- getOption("flashlight.before_name")
+  description_name <- getOption("flashlight.description_name")
+  label_name <- getOption("flashlight.label_name")
+  step_name <- getOption("flashlight.step_name")
+  variable_name <- getOption("flashlight.variable_name")
+
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "'by' not in 'data'!" = by %in% colnames(data),
+    "Not all 'v' in 'data'" = v %in% colnames(data),
+    "'new_obs' has to consist of one row" = nrow(new_obs) == 1L,
+    "'new_obs' not consistent with 'data'" =
+      sort(colnames(new_obs)) == sort(colnames(data)),
+    !anyDuplicated(c(after_name, before_name, label_name,
+                     variable_name, description_name))
+  )
 
   if (!is.null(seed)) {
     set.seed(seed)
@@ -82,6 +85,7 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
     data <- semi_join(data, new_obs, by = by)
   }
   stopifnot((n <- nrow(data)) >= 1L)
+
   # Subsample to n_max
   if (n > n_max) {
     data <- data[sample(n, min(n_max, n)), , drop = FALSE]
@@ -123,7 +127,9 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   if (visit_strategy != "permutation") {
     mean_pred_vector <- core_func(data)
   } else {
-    mean_pred_vector <- rowMeans(replicate(n_perm, core_func(data, perm = TRUE)), na.rm = TRUE)
+    mean_pred_vector <- rowMeans(
+      replicate(n_perm, core_func(data, perm = TRUE)), na.rm = TRUE
+    )
   }
 
   # Combine results
@@ -143,28 +149,27 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
       as.character(z)
     }
     # Add description text
-    formatted_input <- vapply(new_obs[, v, drop = FALSE], .pretty_num, FUN.VALUE = character(1))
-    formatted_input <- c("average in data", paste(v, formatted_input, sep = " = "), "prediction")
-    formatted_impact <- out[[after_name]] - ifelse(out[[step_name]] > 0, out[[before_name]], 0)
+    formatted_input <- vapply(new_obs[, v, drop = FALSE], .pretty_num,
+                              FUN.VALUE = character(1))
+    formatted_input <- c("average in data",
+                         paste(v, formatted_input, sep = " = "),
+                         "prediction")
+    formatted_impact <- out[[after_name]] - ifelse(out[[step_name]] > 0,
+                                                   out[[before_name]], 0)
     plus_sign <- formatted_impact >= 0 & out[[step_name]] > 0
-    formatted_impact <- paste0(ifelse(plus_sign, "+", ""), .pretty_num(formatted_impact))
-    out[[description_name]] <- paste(formatted_input, formatted_impact, sep = ": ")
+    formatted_impact <- paste0(ifelse(plus_sign, "+", ""),
+                               .pretty_num(formatted_impact))
+    out[[description_name]] <- paste(formatted_input,
+                                     formatted_impact, sep = ": ")
   } else {
     out[[description_name]] <- ""
   }
 
-  # Add "by" variables
+  # Organize output
   if (length(by)) {
     out[, by] <- new_obs[rep(1, nrow(out)), by, drop = FALSE]
   }
-
-  # Organize output
-  out <- list(data = out, by = by,
-              after_name = after_name, before_name = before_name,
-              label_name = label_name, variable_name = variable_name,
-              step_name = step_name, description_name = description_name)
-  class(out) <- c("light_breakdown", "light", "list")
-  out
+  add_classes(list(data = out, by = by), c("light_breakdown", "light"))
 }
 
 #' @describeIn light_breakdown Variable attribution to single observation for a multiflashlight.

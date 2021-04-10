@@ -92,7 +92,6 @@ test_that("light_interaction reacts on 'by'", {
   expect_true(inherits(plot(inter), "ggplot"))
 })
 
-
 test_that("Options work", {
   fit <- lm(Sepal.Length ~ ., data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris,
