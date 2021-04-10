@@ -19,8 +19,11 @@
 #' grouped_counts(iris, by = "Species", w = "Petal.Length")
 grouped_counts <- function(data, by = NULL, w = NULL, value_name = "n", ...) {
   # Initial checks
-  stopifnot(c(w, by) %in% colnames(data),
-            !anyDuplicated(c(value_name, by)))
+  stopifnot(
+    is.data.frame(data),
+    c(w, by) %in% colnames(data),
+    !anyDuplicated(c(value_name, by))
+  )
 
   # Function that does the ungrouped calculation
   core_fun <- function(X) {

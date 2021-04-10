@@ -173,7 +173,8 @@ test_that("light_effects works with 'by'", {
 })
 
 test_that("light_scatter works for type response", {
-  sc <- light_scatter(fls, v = "Petal.Length", type = "response", data = iris[1:5, ])
+  sc <- light_scatter(fls, v = "Petal.Length",
+                      type = "response", data = iris[1:5, ])
   expect_equal(sc$data$value, rep(iris$Sepal.Length[1:5], 2))
   expect_true(inherits(plot(sc), "ggplot"))
 })
@@ -188,4 +189,16 @@ test_that("light_scatter works for type residual", {
   sc <- light_scatter(fl1, v = "Species", type = "residual", data = iris[1:50, ])
   expect_equal(mean(sc$data$value), 0)
   expect_true(inherits(plot(sc), "ggplot"))
+})
+
+test_that("Options work for light_scatter", {
+  new_options = list(
+    flashlight.label_name = "ell",
+    flashlight.value_name = "val"
+  )
+  withr::with_options(new_options, {
+    sc <- light_scatter(fl1, v = "Petal.Length", type = "predicted")
+    expect_true(all(c("ell", "val") %in% colnames(sc$data)))
+    expect_true(inherits(plot(sc), "ggplot"))
+  })
 })
