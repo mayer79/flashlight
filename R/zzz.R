@@ -5,6 +5,7 @@
     flashlight.before_name = "before",
     flashlight.description_name = "description",
     flashlight.error_name = "error",
+    flashlight.id_name = "id",
     flashlight.label_name = "label",
     flashlight.metric_name = "metric",
     flashlight.step_name = "step",
