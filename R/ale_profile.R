@@ -5,6 +5,7 @@
 #' @importFrom dplyr as_tibble left_join bind_rows group_by summarize across cur_data
 #' @importFrom tidyselect all_of
 #' @importFrom stats setNames
+#' @importFrom withr with_options
 #' @param x An object of class \code{flashlight}.
 #' @param v The variable to be profiled.
 #' @param breaks Cut breaks for a numeric \code{v}. Only used if no \code{evaluate_at} is specified.
@@ -33,7 +34,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
 
   value_name <- getOption("flashlight.value_name")
   counts_name <- getOption("flashlight.counts_name")
-  id_name <- getOption("flashlight.id_name")
+  id_name <- "id_xxx"  # safer than default
 
   data <- x$data
   stopifnot(
@@ -113,7 +114,10 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
     from = evaluate_at[c(1L, 1:(length(evaluate_at) - 1L))],
     to = evaluate_at
   )
-  ale <- bind_rows(apply(eval_pair, 1, ale_core))
+  withr::with_options(
+    list(flashlight.id_name = id_name),
+    ale <- bind_rows(apply(eval_pair, 1, ale_core))
+  )
 
   # Remove missing values before accumulation
   if (any(bad <- is.na(ale[[value_name]]))) {

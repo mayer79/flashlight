@@ -4,6 +4,7 @@
 #'
 #' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
 #'
+#' @importFrom withr with_options
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be profiled.
 #' @param data An optional \code{data.frame}. Not used for \code{type = "shap"}.
@@ -130,7 +131,9 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                    indices = pd_indices, n_max = pd_n_max, seed = pd_seed)
   if (type == "partial dependence") {
     arg_list <- c(arg_list, list(grid = pd_grid, center = pd_center))
-    cp_profiles <- do.call(light_ice, arg_list)
+    withr::with_options(list(flashlight.id_name = "id_xxx"),  # safer than default
+      cp_profiles <- do.call(light_ice, arg_list)
+    )
     v <- cp_profiles$v
     data <- cp_profiles$data
   } else if (type == "ale") {

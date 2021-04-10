@@ -202,3 +202,24 @@ test_that("Options work for light_scatter", {
     expect_true(inherits(plot(sc), "ggplot"))
   })
 })
+
+test_that("Options work for light_profile", {
+  fit <- lm(Sepal.Length ~ Petal.Width, data = iris)
+  fl <- flashlight(model = fit, label = "lm", data = iris)
+
+  new_options = list(
+    flashlight.label_name = "ell",
+    flashlight.value_name = "val",
+    flashlight.q1_name = "qq1",
+    flashlight.q3_name = "qq3",
+    flashlight.type_name = "tt",
+    flashlight.counts_name = "n"
+  )
+  withr::with_options(new_options, {
+    pd <- light_profile(fl, v = "Petal.Width", stats = "quartiles")
+    expect_true(all(c("ell", "val", "qq1", "qq3", "tt", "n") %in%
+                      colnames(pd$data)))
+    expect_true(inherits(plot(pd), "ggplot"))
+  })
+})
+

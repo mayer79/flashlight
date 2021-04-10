@@ -5,9 +5,11 @@
 if (FALSE) {
   library(MetricsWeighted)
   library(tidyverse)
+  library(cowplot)
   library(rpart)
   library(rpart.plot)
   library(testthat)
+  library(withr)
   lapply(list.files("R", full.names = TRUE), source)
   .onLoad()
 }
@@ -48,9 +50,10 @@ use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("stats", "Imports")
-use_package("utils", "Imports")
 use_package("tidyr", "Imports", min_version = "1.0.0")
 use_package("tidyselect", "Imports")
+use_package("utils", "Imports")
+use_package("withr", "Imports")
 
 # Suggests
 use_package("caret", "Suggests")
@@ -61,7 +64,6 @@ use_package("moderndive", "Suggests")
 use_package("ranger", "Suggests")
 use_package("rmarkdown", "Suggests")
 use_package("testthat", "Suggests")
-use_package("withr", "Suggests")
 use_package("xgboost", "Suggests")
 
 # Set up other files -------------------------------------------------

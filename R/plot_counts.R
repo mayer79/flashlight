@@ -25,27 +25,34 @@
 #' plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
 #' @seealso \code{\link{plot.light_effects}}.
 #' @export
-plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x", show_labels = TRUE,
-                        big.mark = "'", scientific = FALSE, digits = 0, ...) {
+plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
+                        show_labels = TRUE, big.mark = "'",
+                        scientific = FALSE, digits = 0, ...) {
   # Checks
   stopifnot(is.ggplot(p), is.light_effects(x),
             !("lab_" %in% colnames(x$response)))
 
+  label_name <- getOption("flashlight.label_name")
+  counts_name <- getOption("flashlight.counts_name")
+
   multi <- is.light_effects_multi(x)
 
   # Deal with zero counts
-  key <- c(x$by, x$v, x$label_name)
-  x$response <- right_join(x$response, unique(p$data[, key, drop = FALSE]), by = key)
-  if (any((bad <- is.na(x$response[[x$counts_name]])))) {
-    x$response[[x$counts_name]][bad] <- 0
+  key <- c(x$by, x$v, label_name)
+  x$response <- right_join(x$response, unique(p$data[, key, drop = FALSE]),
+                           by = key)
+  if (any((bad <- is.na(x$response[[counts_name]])))) {
+    x$response[[counts_name]][bad] <- 0
   }
 
   # Prepare for plotting
   if (show_labels) {
-    x$response[["lab_"]] <- format(round(x$response[[x$counts_name]], digits),
-                                   big.mark = big.mark, scientific = scientific)
+    x$response[["lab_"]] <- format(
+      round(x$response[[counts_name]], digits),
+      big.mark = big.mark, scientific = scientific
+    )
   }
-  ct <- ggplot(x$response, aes_string(x = x$v, y = x$counts_name)) +
+  ct <- ggplot(x$response, aes_string(x = x$v, y = counts_name)) +
     geom_bar(stat = "identity", ...) +
     theme_void() +
     theme(strip.text.x = element_blank(), panel.grid = element_blank())
@@ -54,7 +61,7 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x", show_label
                          angle = 90, hjust = -0.1, size = text_size)
   }
   if (multi || length(x$by)) {
-    ct <- ct + facet_wrap(reformulate(if (multi) x$label_name else x$by[1]),
+    ct <- ct + facet_wrap(reformulate(if (multi) label_name else x$by[1]),
                           scales = facet_scales, nrow = 1L)
   }
   # Arrange
