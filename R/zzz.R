@@ -5,7 +5,8 @@
     flashlight.value_name = "value",
     flashlight.label_name = "label",
     flashlight.error_name = "error",
-    flashlight.variable_name = "variable"
+    flashlight.variable_name = "variable",
+    flashlight.tree_name = "tree"
   )
   toset <- !(names(op.flashlight) %in% names(op))
   if (any(toset)) {

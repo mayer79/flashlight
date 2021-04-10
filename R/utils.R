@@ -13,9 +13,8 @@ rename_one <- function(x, old, new) {
 }
 
 # Deprecation warning
-warning_on_names <- function(...) {
-  if (!all(vapply(list(...), is.null, FUN.VALUE = logical(1)))) {
-    warning("The use of 'xyz_name' arguments is deprecated.
-              Use 'options(flashlight.xyz_name = ...)' instead.")
+warning_on_names <- function(to_check, ...) {
+  if (any(to_check %in% names(list(...)))) {
+    warning("Using 'xyz_name' arguments is deprecated. Use 'options(flashlight.xyz_name = ...)' instead.")
   }
 }

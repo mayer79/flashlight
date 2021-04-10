@@ -12,9 +12,6 @@
 #' @param by An optional vector of column names used to additionally group the results. Will overwrite \code{x$by}.
 #' @param metrics An optional named list with metrics. Each metric takes at least four arguments: actual, predicted, case weights w and \code{...}.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
-#' @param metric_name Deprecated. Use \code{options(flashlight.metric_name = ...)}.
-#' @param value_name Deprecated. Use \code{options(flashlight.value_name = ...)}.
-#' @param label_name Deprecated. Use \code{options(flashlight.label_name = ...)}.
 #' @param ... Arguments passed from or to other functions.
 #' @return An object of class \code{light_performance}, \code{light} (and a list) with the following elements.
 #' \itemize{
@@ -40,13 +37,10 @@ light_performance.default <- function(x, ...) {
 
 #' @describeIn light_performance Model performance of flashlight object.
 #' @export
-light_performance.flashlight <- function(
-    x, data = x$data, by = x$by, metrics = x$metrics,
-    use_linkinv = FALSE, metric_name = NULL,
-    value_name = NULL, label_name = NULL, ...
-  ) {
-
-  warning_on_names(metric_name, value_name, label_name)
+light_performance.flashlight <- function(x, data = x$data, by = x$by,
+                                         metrics = x$metrics,
+                                         use_linkinv = FALSE, ...) {
+  warning_on_names(c("metric_name", "value_name", "label_name"), ...)
 
   # Initialization
   metric_name <- getOption("flashlight.metric_name")

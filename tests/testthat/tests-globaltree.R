@@ -29,3 +29,19 @@ test_that("multiflashlights work", {
   expect_equal(dim(surr$data), c(2L, 3L))
   expect_equal(surr$data$r_squared, c(1, 0.978), tolerance = 0.001)
 })
+
+
+test_that("Options work", {
+  fit <- lm(Sepal.Length ~ ., data = iris)
+  fl <- flashlight(model = fit, label = "lm", data = iris)
+  new_options = list(
+    flashlight.label_name = "ell",
+    flashlight.tree_name = "tt"
+  )
+  withr::with_options(new_options, {
+    surr <- light_global_surrogate(fl)
+    expect_true(all(c("ell", "tt") %in% colnames(surr$data)))
+    expect_true(inherits(plot(surr), "list"))
+  })
+})
+
