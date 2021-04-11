@@ -1,6 +1,8 @@
-# Maintainance release
+# New release 0.8.0
 
-I have decided to remove ggpubr from the dependency list and replaced it by a much more slim approach directly based on cowplot.
+- Major code improvement.
+- Some exotic and unnecessary arguments have vanished.
+- Improved error messages.
 
 
 

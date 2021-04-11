@@ -1,4 +1,4 @@
-# flashlight 1.0.0
+# flashlight 0.8.0
 
 ## Visible changes
 
