@@ -70,7 +70,7 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
     "'v' not in 'data'!" = v %in% colnames(data),
     !anyDuplicated(vars)
   )
-  if (type %in% c("response", "residual") && !("y" %in% names(x))) {
+  if (type %in% c("response", "residual") && is.null(x$y)) {
     stop("You need to specify 'y' in flashlight.")
   }
   n <- nrow(data)

@@ -147,7 +147,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
       "'v' misses." = !is.null(v),
       "'v' not in data." = v %in% colnames(data)
     )
-    if (type %in% c("response", "residual") && !("y" %in% names(x))) {
+    if (type %in% c("response", "residual") && is.null(x$y)) {
       stop("You need to specify 'y' in flashlight.")
     }
 

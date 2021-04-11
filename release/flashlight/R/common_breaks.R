@@ -12,8 +12,10 @@
 common_breaks <- function(x, v, data, breaks, n_bins, cut_type) {
   if (is.null(data)) {
     # Stack v from all data in flashlights
-    stopifnot(all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
-              all(vapply(x, function(z) v %in% colnames(z$data), FUN.VALUE = TRUE)))
+    stopifnot(
+      all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
+      all(vapply(x, function(z) v %in% colnames(z$data), FUN.VALUE = TRUE))
+    )
     v_vec <- unlist(lapply(x, function(z) z$data[[v]]))
   } else {
     stopifnot(nrow(data) >= 1L, v %in% colnames(data))

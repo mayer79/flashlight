@@ -4,6 +4,7 @@
 #'
 #' @importFrom utils head
 #' @importFrom dplyr group_by summarize arrange desc across
+#' @importFrom tidyselect all_of
 #' @param x An object of class \code{light_importance}.
 #' @param top_m Maximum number of important variables to be returned. Defaults to \code{Inf}, i.e. return all variables in descending order of importance.
 #' @return A character vector of variable names sorted in descending order by importance.
@@ -31,7 +32,7 @@ most_important.light_importance <- function(x, top_m = Inf) {
   value_name <- getOption("flashlight.value_name")
   variable_name <- getOption("flashlight.variable_name")
 
-  data <- group_by(x$data, across(variable_name))
+  data <- group_by(x$data, across(all_of(variable_name)))
   total_importance <- summarize(
     data, across(all_of(value_name), sum, na.rm = TRUE),
     .groups = "drop"

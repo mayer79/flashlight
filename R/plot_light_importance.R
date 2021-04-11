@@ -25,11 +25,9 @@
 #' plot(light_importance(mod_part, m_repetitions = 4), fill = "darkred")
 #' plot(light_importance(mods), swap_dim = TRUE)
 #' @seealso \code{\link{light_importance}}.
-plot.light_importance <- function(
-    x, top_m = Inf, swap_dim = FALSE, facet_scales = "fixed",
-    rotate_x = FALSE, error_bars = TRUE, ...
-  ) {
-
+plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
+                                  facet_scales = "fixed",
+                                  rotate_x = FALSE, error_bars = TRUE, ...) {
   # Initialization
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
@@ -53,7 +51,8 @@ plot.light_importance <- function(
   # Subset and revert for plotting
   most_imp <- most_important(x, top_m = top_m)
   data <- data[data[[variable_name]] %in% most_imp, , drop = FALSE]
-  data[[variable_name]] <- factor(data[[variable_name]], levels = rev(most_imp))
+  data[[variable_name]] <- factor(data[[variable_name]],
+                                  levels = rev(most_imp))
   data[["low_"]] <- data[[value_name]] - data[[error_name]]
   data[["high_"]] <- data[[value_name]] + data[[error_name]]
 
@@ -99,7 +98,8 @@ plot.light_importance <- function(
     }
   }
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   # label
   type <- switch(x$type,

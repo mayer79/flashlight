@@ -16,9 +16,15 @@
 #' predict(fl, data = iris[1:5, ], linkinv = exp)
 predict.flashlight <- function(object, ...) {
   object <- flashlight(object, check = FALSE, ...)
-  if (any(vapply(object[c("predict_function", "linkinv", "model", "data")],
-                 is.null, FUN.VALUE = TRUE))) {
-    stop("Not enough info to predict.")
+  if (is.null(object[["data"]])) {
+    stop("No 'data' to predict.")
   }
-  with(object, linkinv(predict_function(model, data)))
+  if (!is.data.frame(object[["data"]])) {
+    stop("'data' needs to be a data.frame.")
+  }
+  pred <- with(object, linkinv(predict_function(model, data)))
+  if (!is.numeric(pred) && !is.logical(pred)) {
+    stop("Non-numeric/non-logical predictions detected. Please modify 'predict_function' accordingly.")
+  }
+  pred
 }

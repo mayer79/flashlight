@@ -37,7 +37,8 @@ create_package(
     VignetteBuilder = "knitr",
     License = "GPL(>= 2)",
     LazyData = NULL,
-    Maintainer = "Michael Mayer <mayermichael79@gmail.com>"))
+    Maintainer = "Michael Mayer <mayermichael79@gmail.com>")
+)
 
 file.copy(file.path(pkg, "DESCRIPTION"), to = getwd(), overwrite = TRUE)
 # Use package has no option to look for pkg, so we first copy description from pkg, modify it and move back

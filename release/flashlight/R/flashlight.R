@@ -31,12 +31,16 @@ flashlight <- function(x, ...) {
 #' @describeIn flashlight Used to create a flashlight object. No \code{x} has to be passed in this case.
 #' @export
 flashlight.default <- function(x, model = NULL, data = NULL, y = NULL,
-                               predict_function = predict, linkinv = function(z) z,
-                               w = NULL, by = NULL, metrics = list(rmse = rmse),
+                               predict_function = predict,
+                               linkinv = function(z) z,
+                               w = NULL, by = NULL,
+                               metrics = list(rmse = rmse),
                                label = NULL, shap = NULL, ...) {
   x <- c(list(model = model, data = data, y = y,
-              predict_function = predict_function, linkinv = linkinv, w = w,
-              by = by, metrics = metrics, label = label, shap = shap), list(...))
+              predict_function = predict_function,
+              linkinv = linkinv, w = w,
+              by = by, metrics = metrics, label = label,
+              shap = shap), list(...))
   class(x) <- c("flashlight", "list")
   light_check(x)
 }

@@ -35,7 +35,7 @@
 #' fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
 #' fl_additive <- flashlight(model = fit_additive, label = "additive")
 #' fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
-#' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
+#' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris)
 #' plot(st <- light_interaction(fls), fill = "darkgreen")
 #' plot(light_interaction(fls, pairwise = TRUE), fill = "darkgreen")
 #' @seealso \code{\link{light_ice}}.

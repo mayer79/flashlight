@@ -27,7 +27,8 @@
 #' @seealso \code{\link{light_performance}}.
 plot.light_performance <- function(x, swap_dim = FALSE,
                                    geom = c("bar", "point"),
-                                   facet_scales = "free_y", rotate_x = FALSE, ...) {
+                                   facet_scales = "free_y",
+                                   rotate_x = FALSE, ...) {
   # Initialization
   metric_name <- getOption("flashlight.metric_name")
   value_name <- getOption("flashlight.value_name")
@@ -61,7 +62,8 @@ plot.light_performance <- function(x, swap_dim = FALSE,
       p <- p + geom_bar(aes_string(fill = dodge_var),
                         stat = "identity", position = "dodge", ...)
     } else if (geom == "point") {
-      p <- p + geom_point(aes_string(group = dodge_var, color = dodge_var), ...)
+      p <- p +
+        geom_point(aes_string(group = dodge_var, color = dodge_var), ...)
     }
   }
 
@@ -70,7 +72,8 @@ plot.light_performance <- function(x, swap_dim = FALSE,
     p <- p + facet_wrap(reformulate(metric_name), scales = facet_scales)
   }
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p
 }
