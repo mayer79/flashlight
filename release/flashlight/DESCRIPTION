@@ -2,7 +2,7 @@ Type: Package
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
 Version: 1.0.0
-Date: 2021-04-09
+Date: 2021-04-11
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
@@ -37,9 +37,10 @@ Imports:
     rpart,
     rpart.plot,
     stats,
-    utils,
     tidyr (>= 1.0.0),
-    tidyselect
+    tidyselect,
+    utils,
+    withr
 Suggests: 
     knitr,
     caret,
@@ -49,5 +50,4 @@ Suggests:
     ranger,
     rmarkdown,
     testthat,
-    withr,
     xgboost

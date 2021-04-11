@@ -53,14 +53,18 @@ light_combine.list <- function(x, new_class = NULL, ...) {
 
   # Compare non-data slots for identity
   if (length(other_slots)) {
-    stopifnot(vapply(other_slots, FUN = function(s) all_identical(x, `[[`, s), FUN.VALUE = TRUE))
+    stopifnot(
+      vapply(other_slots, FUN = function(s) all_identical(x, `[[`, s),
+             FUN.VALUE = TRUE)
+    )
   }
 
   # Row bind data elements
   if (length(data_slots)) {
     for (d in data_slots) {
       out[[d]] <- bind_rows(lapply(x, `[[`, d))
-      out[[d]][[lab]] <- factor(out[[d]][[lab]], levels = unique(out[[d]][[lab]]))
+      out[[d]][[lab]] <- factor(out[[d]][[lab]],
+                                levels = unique(out[[d]][[lab]]))
     }
   }
   class(out) <- union(new_class, class(x[[1]]))

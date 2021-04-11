@@ -22,12 +22,6 @@ light_profile(x, ...)
   n_bins = 11,
   cut_type = c("equal", "quantile"),
   use_linkinv = TRUE,
-  value_name = "value",
-  q1_name = "q1",
-  q3_name = "q3",
-  label_name = "label",
-  type_name = "type",
-  counts_name = "counts",
   counts = TRUE,
   counts_weighted = FALSE,
   v_labels = TRUE,
@@ -77,18 +71,6 @@ light_profile(x, ...)
 
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE. Not used for type "shap".}
 
-\item{value_name}{Column name in resulting \code{data} containing the profile value. Defaults to "value".}
-
-\item{q1_name}{Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".}
-
-\item{q3_name}{Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".}
-
-\item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
-
-\item{type_name}{Column name in the resulting \code{data} with the plot \code{type}.}
-
-\item{counts_name}{Name of the column containing counts if \code{counts} is TRUE.}
-
 \item{counts}{Should counts be added?}
 
 \item{counts_weighted}{If \code{counts} is TRUE: Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
@@ -119,12 +101,6 @@ An object of classes \code{light_profile}, \code{light} (and a list) with the fo
 \item \code{v} The variable(s) evaluated.
 \item \code{type} Same as input \code{type}. For information only.
 \item \code{stats} Same as input \code{stats}.
-\item \code{value_name} Same as input \code{value_name}.
-\item \code{q1_name} Same as input \code{q1_name}.
-\item \code{q3_name} Same as input \code{q3_name}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{type_name} Same as input \code{type_name}.
-\item \code{counts_name} Same as input \code{counts_name}.
 }
 }
 \description{

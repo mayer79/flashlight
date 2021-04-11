@@ -14,12 +14,6 @@
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}.
 #' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins (recommended if interested in ALE).
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
-#' @param value_name Column name in resulting data objects containing the profile value. Defaults to "value".
-#' @param q1_name Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".
-#' @param q3_name Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".
-#' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
-#' @param type_name Name of the column in \code{data} containing \code{type}.
-#' @param counts_name Name of the column containing counts.
 #' @param counts_weighted Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
 #' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.
 #' @param pred Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Not implemented for multiflashlight.
@@ -37,12 +31,6 @@
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{stats} Same as input \code{stats}.
-#'   \item \code{value_name} Same as input \code{value_name}.
-#'   \item \code{q1_name} Same as input \code{q1_name}.
-#'   \item \code{q3_name} Same as input \code{q3_name}.
-#'   \item \code{label_name} Same as input \code{label_name}.
-#'   \item \code{type_name} Same as input \code{type}.
-#'   \item \code{counts_name} Same as input \code{counts_name}.
 #' }
 #' @export
 #' @examples
@@ -66,24 +54,30 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                                      stats = c("mean", "quartiles"),
                                      breaks = NULL, n_bins = 11,
                                      cut_type = c("equal", "quantile"),
-                                     use_linkinv = TRUE, value_name = "value",
-                                     q1_name = "q1", q3_name = "q3", label_name = "label",
-                                     type_name = "type", counts_name = "counts",
-                                     counts_weighted = FALSE, v_labels = TRUE, pred = NULL,
-                                     pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL,
+                                     use_linkinv = TRUE,
+                                     counts_weighted = FALSE,
+                                     v_labels = TRUE, pred = NULL,
+                                     pd_indices = NULL, pd_n_max = 1000,
+                                     pd_seed = NULL,
                                      ale_two_sided = TRUE, ...) {
   stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
+
+  warning_on_names(c("value_name", "label_name", "q1_name",
+                     "q3_name", "type_name", "counts_name"), ...)
 
   if (is.null(data)) {
     data <- x$data
   }
 
   # Checks
-  stopifnot((n <- nrow(data)) >= 1L,
-            !anyDuplicated(c(by, v, "level", counts_name, value_name, label_name,
-                             if (stats == "quartiles") c(q1_name, q3_name))),
-            v %in% colnames(data))
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "'by' not in 'data'!" = by %in% colnames(data),
+    "'v' not in 'data'." = v %in% colnames(data),
+    "'v' not specified." = !is.null(v),
+    !anyDuplicated(c(by, v))
+  )
 
   # Update flashlight and calculate predictions
   x <- flashlight(x, data = data, by = by,
@@ -92,6 +86,8 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   # Pre-calculate predictions (to save time)
   if (is.null(pred)) {
     pred <- predict(x)
+  } else if (length(pred) != nrow(data)) {
+    stop("Wrong number of predicted values passed.")
   }
 
   # Calculate cut information on "data"
@@ -99,42 +95,49 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                    cut_type = cut_type, x_name = v, ...)
 
   # Prepare argument lists for light_profile
-  base_list <- list(x = x, v = v,  value_name = value_name,
-                    label_name = label_name, type_name = type_name)
-  pd_list <- c(base_list, list(counts = FALSE, pd_evaluate_at = cuts$bin_means,
-                               pd_indices = pd_indices, pd_n_max = pd_n_max, pd_seed = pd_seed))
-  ale_list <- c(pd_list, list(type = "ale", pred = pred, ale_two_sided = ale_two_sided))
-  resp_list <- c(base_list, list(type = "response", stats = stats, breaks = cuts$breaks,
-                                 v_labels = FALSE, q1_name = q1_name, q3_name = q3_name,
-                                 counts = TRUE, counts_name = counts_name,
-                                 counts_weighted = counts_weighted))
-  pred_list <- c(base_list, list(type = "predicted", breaks = cuts$breaks,
-                                 v_labels = FALSE, counts = FALSE, pred = pred))
-  arg_lists <- list(response = resp_list, predicted = pred_list, pd = pd_list, ale = ale_list)
+  pd_list <- list(x = x, v = v, counts = FALSE,
+                  pd_evaluate_at = cuts$bin_means,
+                  pd_indices = pd_indices, pd_n_max = pd_n_max,
+                  pd_seed = pd_seed)
+  ale_list <- c(pd_list, list(type = "ale", pred = pred,
+                              ale_two_sided = ale_two_sided))
+  resp_list <- list(x = x, v = v, type = "response", stats = stats,
+                    breaks = cuts$breaks, v_labels = FALSE,
+                    counts = TRUE, counts_weighted = counts_weighted)
+  pred_list <- list(x = x, v = v, type = "predicted", breaks = cuts$breaks,
+                    v_labels = FALSE, counts = FALSE, pred = pred)
+  arg_lists <- list(
+    response = resp_list,
+    predicted = pred_list,
+    pd = pd_list,
+    ale = ale_list
+  )
 
   # Call light_profile for all types
-  data_sets <- lapply(arg_lists, function(arg) do.call(light_profile, arg)$data)
+  data_sets <- lapply(
+    arg_lists,
+    function(arg) do.call(light_profile, arg)$data
+  )
 
   # Unify x scale
   if (v_labels) {
     for (nm in names(data_sets)) {
-      data_sets[[nm]][[v]] <- cuts$bin_labels[match(data_sets[[nm]][[v]], cuts$bin_means)]
+      data_sets[[nm]][[v]] <-
+        cuts$bin_labels[match(data_sets[[nm]][[v]], cuts$bin_means)]
     }
   }
 
   # Collect results
-  out <- c(data_sets,
-           list(by = by, v = v, stats = stats, value_name = value_name,
-           q1_name = q1_name, q3_name = q3_name, label_name = label_name,
-           type_name = type_name, counts_name = counts_name))
-  class(out) <- c("light_effects", "light", "list")
-  out
+  out <- c(data_sets, list(by = by, v = v, stats = stats))
+  add_classes(out, c("light_effects", "light"))
 }
 
 #' @describeIn light_effects Effect profiles for a multiflashlight object.
 #' @export
-light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL, n_bins = 11,
-                                          cut_type = c("equal", "quantile"), ...) {
+light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL,
+                                          n_bins = 11,
+                                          cut_type = c("equal", "quantile"),
+                                          ...) {
   cut_type <- match.arg(cut_type)
   if ("pred" %in% names(list(...))) {
     stop("'pred' not implemented for multiflashlight")

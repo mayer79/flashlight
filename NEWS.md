@@ -4,7 +4,7 @@
 
 - All `zzz_names` arguments are deprecated and are now set as `options(flashlight.zzz_names = ...)`.
 
-- `light_ice` now uses ggplot functionality `override.aes` to suppress `alpha` in legend.
+- `light_ice` and `light_scatter` now use `ggplot`'s `override.aes` to suppress `alpha` in legend.
 
 # flashlight 0.7.5
 

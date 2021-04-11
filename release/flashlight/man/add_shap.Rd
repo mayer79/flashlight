@@ -21,7 +21,6 @@ add_shap(x, ...)
   seed = NULL,
   use_linkinv = FALSE,
   verbose = TRUE,
-  variable_name = "variable",
   ...
 )
 
@@ -47,8 +46,6 @@ add_shap(x, ...)
 \item{use_linkinv}{Should retransformation function be applied? We suggest to keep the default (\code{FALSE}) as the values can be retransformed later.}
 
 \item{verbose}{Should progress bar be shown? Default is \code{TRUE}.}
-
-\item{variable_name}{Column name in \code{data} of element "shap" containing the variable names. Defaults to "variable".}
 }
 \value{
 An object of class \code{flashlight} or \code{multiflashlight} with additional element "shap" of class "shap" (and "list").
@@ -73,6 +70,7 @@ x <- add_shap(x)
 is.shap(x$shap)
 plot(light_importance(x, type = "shap"))
 plot(light_scatter(x, type = "shap", v = "Petal.Length"))
+plot(light_scatter(x, type = "shap", v = "Petal.Length", by = "Species"))
 }
 }
 \references{

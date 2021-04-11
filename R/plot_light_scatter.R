@@ -42,7 +42,8 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
   } else if (ndim == 1L) {
     first_dim <- if (multi) label_name else x$by[1]
     if (swap_dim) {
-      p <- p + geom_point(aes_string(color = first_dim), ...)
+      p <- p + geom_point(aes_string(color = first_dim), ...) +
+        guides(color = guide_legend(override.aes = list(alpha = 1)))
     } else {
       p <- p + geom_point(...) +
         facet_wrap(reformulate(first_dim), scales = facet_scales)
@@ -52,7 +53,8 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
     wrap_var <- if (swap_dim) x$by[1] else second_dim
     col_var <- if (swap_dim) second_dim else x$by[1]
     p <- p + geom_point(aes_string(color = col_var), ...) +
-      facet_wrap(wrap_var, scales = facet_scales)
+      facet_wrap(wrap_var, scales = facet_scales) +
+      guides(color = guide_legend(override.aes = list(alpha = 1)))
   }
   if (rotate_x) {
     p <- p +

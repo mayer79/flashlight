@@ -10,8 +10,6 @@ ale_profile(
   breaks = NULL,
   n_bins = 11,
   cut_type = c("equal", "quantile"),
-  value_name = "value",
-  counts_name = "counts",
   counts = TRUE,
   counts_weighted = FALSE,
   pred = NULL,
@@ -20,7 +18,8 @@ ale_profile(
   n_max = 1000,
   seed = NULL,
   two_sided = FALSE,
-  calibrate = TRUE
+  calibrate = TRUE,
+  ...
 )
 }
 \arguments{
@@ -33,10 +32,6 @@ ale_profile(
 \item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}. Only used if no \code{evaluate_at} is specified.}
 
 \item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.}
-
-\item{value_name}{Column name containing the profile value. Defaults to "value".}
-
-\item{counts_name}{Name of the column containing counts if \code{counts} is TRUE.}
 
 \item{counts}{Should counts be added?}
 
@@ -55,6 +50,8 @@ ale_profile(
 \item{two_sided}{Standard ALE profiles are calculated via left derivatives. Set to TRUE if two-sided derivatives should be calculated. Only works for continuous \code{v}. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.}
 
 \item{calibrate}{Should values be calibrated based on average preditions? Default is TRUE.}
+
+\item{...}{Other arguments passed to this function (currently unused).}
 }
 \value{
 A tibble containing results.

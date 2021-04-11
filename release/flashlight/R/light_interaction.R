@@ -21,22 +21,12 @@
 #' @param n_max Maximum number of data rows to consider. Will be randomly picked from \code{data} if necessary.
 #' @param seed An integer random seed used for subsampling.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
-#' @param value_name Column name in resulting \code{data} containing the interaction strenght. Defaults to "value".
-#' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
-#' @param error_name Currently not used.
-#' @param variable_name Column name in resulting \code{data} containing the variable names. Defaults to "variable".
-#' @param type_name Column name in the resulting \code{data} with the plot \code{type}.
 #' @param ... Further arguments passed to or from other methods.
 #' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{type} Same as input \code{type}. For information only.
-#'   \item \code{value_name} Same as input \code{value_name}.
-#'   \item \code{error_name} Same as input \code{error_name}.
-#'   \item \code{label_name} Same as input \code{label_name}.
-#'   \item \code{variable_name} Same as input \code{variable_name}.
-#'   \item \code{type_name} Same as input \code{type_name}.
 #' }
 #' @export
 #' @references Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.
@@ -66,29 +56,37 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          type = c("H", "ice"),
                                          normalize = TRUE, take_sqrt = TRUE,
                                          grid_size = 200, n_max = 1000,
-                                         seed = NULL, use_linkinv = FALSE,
-                                         value_name = "value",
-                                         error_name = "error", label_name = "label",
-                                         variable_name = "variable",
-                                         type_name = "type", ...) {
-  # Checks
+                                         seed = NULL,
+                                         use_linkinv = FALSE, ...) {
   type <- match.arg(type)
-  cols <- colnames(data)
+
+  warning_on_names(c("value_name", "label_name",
+                     "variable_name", "error_name"), ...)
+
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+  variable_name <- getOption("flashlight.variable_name")
+  error_name <- getOption("flashlight.error_name")
+
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "'by' not in 'data'!" = by %in% colnames(data),
+    "Not all 'v' in 'data'" = v %in% colnames(data),
+    !(c("id_", "id_curve", "w_") %in% colnames(data)),
+    !anyDuplicated(c(by, v, value_name, label_name, error_name,
+                     variable_name, "w_", "id_", "id_curve",
+                     "value_", "value_i", "value_j", "denom_"))
+  )
   if (type == "ice" && pairwise) {
     stop("Pairwise interactions are implemented only for type = 'H'.")
   }
-  stopifnot((n <- nrow(data)) >= 1L,
-            !(c("id_", "id_curve", "w_") %in% cols),
-            !anyDuplicated(c(by, v, value_name, label_name, error_name,
-                             variable_name, "w_", "id_", "id_curve",
-                             "value_", "value_i", "value_j", "denom_")))
+  cols <- colnames(data)
 
-  # Set seed
   if (!is.null(seed)) {
     set.seed(seed)
   }
 
-  # Determine v
+  # Determine v if not yet available
   if (is.null(v)) {
     v <- setdiff(cols, c(x$y, by, x$w))
   }
@@ -105,11 +103,13 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   }
 
   # Update flashlight (except for data)
-  x <- flashlight(x, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z)
+  x <- flashlight(x, by = by,
+                  linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # HELPER FUNCTIONS
   # Version of light_profile and light_ice
-  call_pd <- function(X, z, vn = "value_", gid, only_values = FALSE, agg = TRUE) {
+  call_pd <- function(X, z, vn = "value_", gid,
+                      only_values = FALSE, agg = TRUE) {
     # Weights of the grid ids
     if (has_w) {
       ww <- X[gid, w, drop = FALSE]
@@ -133,6 +133,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     out[[vn]] <- grouped_center(out, x = vn, w = w)
     if (only_values) out[, vn, drop = FALSE] else out
   }
+
   # Get predictions on grid in the same order as through call_pd
   call_f <- function(X, vn = "value_", gid) {
     out <- X[gid, ]
@@ -149,23 +150,34 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     if (type == "H") {
       z_i <- z[1]
       z_j <- if (pairwise) z[2] else setdiff(cols, z_i)
-      pd_f <- if (pairwise) call_pd(dat, z = z, gid = grid_id) else call_f(dat, gid = grid_id)
-      pd_i <- call_pd(dat, z = z_i, vn = "value_i", gid = grid_id, only_values = TRUE)
-      pd_j <- call_pd(dat, z = z_j, vn = "value_j", gid = grid_id, only_values = TRUE)
+      if (pairwise) {
+        pd_f <- call_pd(dat, z = z, gid = grid_id)
+      } else {
+        pd_f <- call_f(dat, gid = grid_id)
+      }
+      pd_i <- call_pd(dat, z = z_i, vn = "value_i",
+                      gid = grid_id, only_values = TRUE)
+      pd_j <- call_pd(dat, z = z_j, vn = "value_j",
+                      gid = grid_id, only_values = TRUE)
       dat <- bind_cols(pd_f, pd_i, pd_j)
-      dat[[value_name]] <- (dat[["value_"]] - dat[["value_i"]] - dat[["value_j"]])^2
+      dat[[value_name]] <- (dat[["value_"]] - dat[["value_i"]] -
+                              dat[["value_j"]])^2
     }
     else {
       dat <- call_pd(dat, z = z, gid = grid_id, agg = FALSE)
-      dat[[value_name]] <- grouped_center(dat, x = "value_", w = w, by = "id_")^2
+      dat[[value_name]] <- grouped_center(dat, x = "value_",
+                                          w = w, by = "id_")^2
     }
     # Aggregate & normalize
-    num <- weighted_mean(dat[[value_name]], w = if (has_w) dat[[w]], na.rm = TRUE)
+    num <- weighted_mean(dat[[value_name]],
+                         w = if (has_w) dat[[w]], na.rm = TRUE)
     if (normalize) {
       num <- .zap_small(num) /
-        weighted_mean(dat[["value_"]]^2, w = if (has_w) dat[[w]], na.rm = TRUE)
+        weighted_mean(dat[["value_"]]^2,
+                      w = if (has_w) dat[[w]], na.rm = TRUE)
     }
-    setNames(data.frame(.zap_small(if (take_sqrt) sqrt(num) else num)), value_name)
+    setNames(data.frame(.zap_small(if (take_sqrt) sqrt(num) else num)),
+             value_name)
   }
   # Calculate statistic for each variable (pair) and combine results
   core_func <- function(X) {
@@ -193,29 +205,24 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     agg <- as_tibble(core_func(data))
   } else {
     gdata <- group_by(data, across(all_of(by)))
-    agg <- summarize(gdata, core_func(bind_cols(cur_group(), cur_data())), .groups = "drop")
+    agg <- summarize(gdata, core_func(bind_cols(cur_group(), cur_data())),
+                     .groups = "drop")
   }
 
   # Prepare output
   agg[[label_name]] <- x$label
   agg[[error_name]] <- NA
-  agg[[type_name]] <- type
-
-  # Collect results
   var_order <- c(label_name, by, variable_name, value_name, error_name)
-  out <- list(data = agg[, var_order], by = by, type = type,
-              value_name = value_name, error_name = error_name,
-              label_name = label_name, variable_name = variable_name,
-              type_name = type_name)
-  class(out) <- c("light_importance", "light", "list")
-  out
+  add_classes(list(data = agg[, var_order], by = by, type = type),
+              c("light_importance", "light"))
 }
 
 
 #' @describeIn light_interaction for a multiflashlight object.
 #' @export
 light_interaction.multiflashlight <- function(x, ...) {
-  light_combine(lapply(x, light_interaction, ...), new_class = "light_importance_multi")
+  light_combine(lapply(x, light_interaction, ...),
+                new_class = "light_importance_multi")
 }
 
 # Helper function used to clip small values.

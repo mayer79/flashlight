@@ -24,6 +24,9 @@
 #' @seealso \code{\link{light_scatter}}.
 plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                               rotate_x = FALSE, ...) {
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+
   data <- x$data
   nby <- length(x$by)
   multi <- is.light_scatter_multi(x)
@@ -33,26 +36,29 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
          multiflashlight with more than one by variable.")
   }
   # Distinguish some cases
-  p <- ggplot(x$data, aes_string(y = x$value, x = x$v))
+  p <- ggplot(x$data, aes_string(y = value_name, x = x$v))
   if (ndim == 0L) {
     p <- p + geom_point(...)
   } else if (ndim == 1L) {
-    first_dim <- if (multi) x$label_name else x$by[1]
+    first_dim <- if (multi) label_name else x$by[1]
     if (swap_dim) {
-      p <- p + geom_point(aes_string(color = first_dim), ...)
+      p <- p + geom_point(aes_string(color = first_dim), ...) +
+        guides(color = guide_legend(override.aes = list(alpha = 1)))
     } else {
       p <- p + geom_point(...) +
         facet_wrap(reformulate(first_dim), scales = facet_scales)
      }
   } else {
-    second_dim <- if (multi) x$label_name else x$by[2]
+    second_dim <- if (multi) label_name else x$by[2]
     wrap_var <- if (swap_dim) x$by[1] else second_dim
     col_var <- if (swap_dim) second_dim else x$by[1]
     p <- p + geom_point(aes_string(color = col_var), ...) +
-      facet_wrap(wrap_var, scales = facet_scales)
+      facet_wrap(wrap_var, scales = facet_scales) +
+      guides(color = guide_legend(override.aes = list(alpha = 1)))
   }
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p + ylab(x$type)
 }

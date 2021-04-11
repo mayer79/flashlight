@@ -13,7 +13,6 @@
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? We suggest to keep the default (\code{FALSE}) as the values can be retransformed later.
 #' @param verbose Should progress bar be shown? Default is \code{TRUE}.
-#' @param variable_name Column name in \code{data} of element "shap" containing the variable names. Defaults to "variable".
 #' @param ... Further arguments passed from or to other methods.
 #' @return An object of class \code{flashlight} or \code{multiflashlight} with additional element "shap" of class "shap" (and "list").
 #' @export
@@ -26,6 +25,7 @@
 #' is.shap(x$shap)
 #' plot(light_importance(x, type = "shap"))
 #' plot(light_scatter(x, type = "shap", v = "Petal.Length"))
+#' plot(light_scatter(x, type = "shap", v = "Petal.Length", by = "Species"))
 #' }
 add_shap <- function(x, ...) {
   UseMethod("add_shap")
@@ -40,28 +40,40 @@ add_shap.default <- function(x, ...) {
 #' @describeIn add_shap Variable attribution to single observation for a flashlight.
 #' @export
 add_shap.flashlight <- function(x, v = NULL,
-                                visit_strategy = c("permutation", "importance", "v"),
+                                visit_strategy = c("permutation",
+                                                   "importance", "v"),
                                 n_shap = 200, n_max = Inf, n_perm = 12,
-                                seed = NULL, use_linkinv = FALSE, verbose = TRUE,
-                                variable_name = "variable", ...) {
+                                seed = NULL, use_linkinv = FALSE,
+                                verbose = TRUE, ...) {
   visit_strategy <- match.arg(visit_strategy)
+
+  warning_on_names("variable_name", ...)
+
+  variable_name <- getOption("flashlight.variable_name")
+  before_name <- getOption("flashlight.before_name")
+  after_name <- getOption("flashlight.after_name")
+
+  key_vars <- c(variable_name, "baseline_", before_name, after_name, "shap_")
+
+  # Determine data and n
   data <- x$data
-  stopifnot(!is.null(data))
-
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "n_shap should be positive" = n_shap >= 1L,
+    "n_max should be positive" = n_max >= 1L,
+    "n_shap should not be larger than n_max" = n_max >= n_shap
+  )
   n <- nrow(data)
-
   if (!is.null(seed)) {
     set.seed(seed)
   }
-
-  # Subsample data to n_max rows
-  if (n_max < n) {
+  if (n > n_max) {
     data <- data[sample(n, n_max), , drop = FALSE]
     n <- n_max
   }
 
-  # Which rows to decompose?
-  if (n_shap < n) {
+  # Which rows (new_obs) to decompose?
+  if (n > n_shap) {
     new_obs <- data[sample(n, n_shap), , drop = FALSE]
   } else {
     new_obs <- data
@@ -75,22 +87,24 @@ add_shap.flashlight <- function(x, v = NULL,
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$by, x$w, x$y))
   }
-  key_vars <- c(variable_name, "baseline_", "before_", "after_", "shap_")
-  stopifnot(length(v) >= 1L,
-            !(c("baseline", "prediction") %in% v),
-            !anyDuplicated(c(x$by, x$w, v, key_vars)))
+  stopifnot(
+    "No 'v' specified." = length(v) >= 1L,
+    "Not all 'v' in data." = v %in% colnames(data),
+    !anyDuplicated(c(x$by, x$w, v, key_vars))
+  )
 
   core_func <- function(i) {
-    shp <- light_breakdown(xx, new_obs = new_obs[i, ], v = v,
-                           visit_strategy = visit_strategy,
-                           n_max = Inf, n_perm = n_perm, use_linkinv = use_linkinv,
-                           after_name = "after_", before_name = "before_",
-                           label_name = "label_", variable_name = variable_name,
-                           description = FALSE)$data
+    shp <- light_breakdown(
+      xx, new_obs = new_obs[i, ], v = v,
+      visit_strategy = visit_strategy,
+      n_max = Inf, n_perm = n_perm,
+      use_linkinv = use_linkinv, description = FALSE
+    )$data
+
     # Move baseline to column
-    bs <- shp[["before_"]][1]
+    bs <- shp[[before_name]][1]
     shp <- shp[shp[[variable_name]] %in% v, ]
-    shp[["shap_"]] <- shp[["after_"]] - shp[["before_"]]
+    shp[["shap_"]] <- shp[[after_name]] - shp[[before_name]]
     shp[["baseline_"]] <- bs
 
     # Full
@@ -112,8 +126,7 @@ add_shap.flashlight <- function(x, v = NULL,
 
   # Organize output
   shap <- c(x[c("by", "w", "linkinv")],
-            list(data = bind_rows(out), variable_name = variable_name,
-                 v = v, use_linkinv = use_linkinv))
+            list(data = bind_rows(out), v = v, use_linkinv = use_linkinv))
   class(shap) <- "shap"
   flashlight(x, shap = shap)
 }

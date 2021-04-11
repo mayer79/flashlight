@@ -17,15 +17,11 @@
 #' @param n_max Maximum number of data rows to consider to build the tree.
 #' @param seed An integer random seed used to select data rows if \code{n_max} is lower than the number of data rows.
 #' @param keep_max_levels Number of levels of categorical and factor variables to keep. Other levels are combined to a level "Other". This prevents \code{rpart} to take too long to split non-numeric variables with many levels.
-#' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
-#' @param tree_name Column name in resulting \code{data} containing the trees. Defaults to "tree".
 #' @param ... Arguments passed to \code{rpart}, such as \code{maxdepth}.
 #' @return An object of class \code{light_global_surrogate}, \code{light} (and a list) with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.
-#'   \item \code{label_name} Same as input \code{label_name}.
-#'   \item \code{tree_name} Name of column with tree objects.
 #' }
 #' @export
 #' @references Molnar C. (2019). Interpretable Machine Learning.
@@ -50,20 +46,29 @@ light_global_surrogate.default <- function(x, ...) {
 light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
                                               v = NULL, use_linkinv = TRUE,
                                               n_max = Inf, seed = NULL,
-                                              keep_max_levels = 4,
-                                              label_name = "label",
-                                              tree_name = "tree", ...) {
+                                              keep_max_levels = 4, ...) {
+  warning_on_names(c("label_name", "tree_name"), ...)
+
+  label_name <- getOption("flashlight.label_name")
+  tree_name <- getOption("flashlight.tree_name")
+
+  # Checks
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "'by' not in 'data'!" = by %in% colnames(data),
+    "Not all 'v' in 'data'" = v %in% colnames(data),
+    !anyDuplicated(c(label_name, tree_name, by))
+  )
+
+  # Set v and remove 'by' from it
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by, x$w))
   } else if (!is.null(by)) {
     v <- setdiff(v, by)
   }
-  # Checks
-  stopifnot(v %in% colnames(data),
-            !is.null(data),
-            (n <- nrow(data)) >= 1L,
-            !anyDuplicated(c(label_name, tree_name, by)))
 
+  # Subsample if data is very large
+  n <- nrow(data)
   if (n > n_max) {
     if (!is.null(seed)) {
       set.seed(seed)
@@ -74,16 +79,16 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
   x <- flashlight(x, data = data, by = by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
-  # Lump factors
+  # Add response of tree model
+  stopifnot(!("pred_" %in% colnames(data)))
+  data[["pred_"]] <- predict(x)
+
+  # Lump factors with many levels for tree fit
   for (vv in v) {
     data[[vv]] <- .fct_lump(data[[vv]], keep_max_levels = keep_max_levels)
   }
 
-  # Calculations
-  stopifnot(!("pred_" %in% colnames(data)))
-  data[["pred_"]] <- predict(x)
-
-  # Core function
+  # Fit tree within by group
   core_func <- function(X) {
     fit <- rpart(reformulate(v, "pred_"), data = X,
                  weights = if (!is.null(x$w)) X[[x$w]],
@@ -91,20 +96,15 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
     r2 <- r_squared(X[["pred_"]], predict(fit, X))
     setNames(data.frame(r2, I(list(fit))), c("r_squared", tree_name))
   }
-
-  # Call core function for each "by" group
   res <- if (is.null(by)) as_tibble(core_func(data)) else
     summarize(group_by(data, across(all_of(by))),
               core_func(cur_data()), .groups = "drop")
 
-  # Prepare output
-  res[[label_name]] <- x$label
-
   # Organize output
+  res[[label_name]] <- x$label
   out <- list(data = res[, c(label_name, by, "r_squared", tree_name)],
-              by = by, label_name = label_name, tree_name = tree_name)
-  class(out) <- c("light_global_surrogate", "light", "list")
-  out
+              by = by)
+  add_classes(out, c("light_global_surrogate", "light"))
 }
 
 #' @describeIn light_global_surrogate Surrogate model for a multiflashlight.

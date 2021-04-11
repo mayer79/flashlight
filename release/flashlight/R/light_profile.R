@@ -4,6 +4,7 @@
 #'
 #' For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
 #'
+#' @importFrom withr with_options
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable to be profiled.
 #' @param data An optional \code{data.frame}. Not used for \code{type = "shap"}.
@@ -14,12 +15,6 @@
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{grid} nor \code{pd_evaluate_at} is specified.
 #' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for type "shap".
-#' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
-#' @param q1_name Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".
-#' @param q3_name Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".
-#' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
-#' @param type_name Column name in the resulting \code{data} with the plot \code{type}.
-#' @param counts_name Name of the column containing counts if \code{counts} is TRUE.
 #' @param counts Should counts be added?
 #' @param counts_weighted If \code{counts} is TRUE: Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
 #' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant for types "response", "predicted" or "residual" and if \code{v} is being binned. In that case useful if e.g. different flashlights use different data sets and bin labels would not match.
@@ -39,12 +34,6 @@
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{type} Same as input \code{type}. For information only.
 #'   \item \code{stats} Same as input \code{stats}.
-#'   \item \code{value_name} Same as input \code{value_name}.
-#'   \item \code{q1_name} Same as input \code{q1_name}.
-#'   \item \code{q3_name} Same as input \code{q3_name}.
-#'   \item \code{label_name} Same as input \code{label_name}.
-#'   \item \code{type_name} Same as input \code{type_name}.
-#'   \item \code{counts_name} Same as input \code{counts_name}.
 #' }
 #' @export
 #' @references
@@ -71,38 +60,58 @@ light_profile.default <- function(x, ...) {
 #' @describeIn light_profile Profiles for flashlight.
 #' @export
 light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
-                                     type = c("partial dependence", "ale", "predicted",
-                                              "response", "residual", "shap"),
+                                     type = c("partial dependence", "ale",
+                                              "predicted", "response",
+                                              "residual", "shap"),
                                      stats = c("mean", "quartiles"),
                                      breaks = NULL, n_bins = 11,
-                                     cut_type = c("equal", "quantile"), use_linkinv = TRUE,
-                                     value_name = "value", q1_name = "q1", q3_name = "q3",
-                                     label_name = "label", type_name = "type",
-                                     counts_name = "counts", counts = TRUE,
-                                     counts_weighted = FALSE, v_labels = TRUE,
-                                     pred = NULL, pd_evaluate_at = NULL, pd_grid = NULL,
-                                     pd_indices = NULL, pd_n_max = 1000, pd_seed = NULL,
-                                     pd_center = c("no", "first", "middle", "last", "mean", "0"),
+                                     cut_type = c("equal", "quantile"),
+                                     use_linkinv = TRUE, counts = TRUE,
+                                     counts_weighted = FALSE,
+                                     v_labels = TRUE, pred = NULL,
+                                     pd_evaluate_at = NULL, pd_grid = NULL,
+                                     pd_indices = NULL, pd_n_max = 1000,
+                                     pd_seed = NULL,
+                                     pd_center = c("no", "first", "middle",
+                                                   "last", "mean", "0"),
                                      ale_two_sided = FALSE, ...) {
   type <- match.arg(type)
   stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
   pd_center <- match.arg(pd_center)
 
+  warning_on_names(c("value_name", "label_name", "q1_name",
+                     "q3_name", "type_name", "counts_name"), ...)
+
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+  q1_name <- getOption("flashlight.q1_name")
+  q3_name <- getOption("flashlight.q3_name")
+  type_name <- getOption("flashlight.type_name")
+  counts_name <- getOption("flashlight.counts_name")
+
   # If SHAP, extract data
   if (type == "shap") {
     if (!is.shap(x$shap)) {
       stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
     }
-    data <- x$shap$data[x$shap$data[[x$shap$variable_name]] == v, ]
+    variable_name <- getOption("flashlight.variable_name")
+    data <- x$shap$data[x$shap$data[[variable_name]] == v, ]
   } else if (is.null(data)) {
     data <- x$data
   }
 
   # Checks (more will be done below or in the called functions)
-  stopifnot(!anyDuplicated(c(by, union(v, names(pd_grid)), if (counts) counts_name,
-                             if (stats == "quartiles") c(q1_name, q3_name),
-                             value_name, label_name, type_name)))
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "'by' not in 'data'!" = by %in% colnames(data),
+    "'v' not in 'data'." = v %in% colnames(data),
+    "'v' or 'pd_grid' misses." = !is.null(pd_grid) || !is.null(v),
+    !anyDuplicated(c(by, union(v, names(pd_grid)),
+      if (counts) counts_name,
+      if (stats == "quartiles") c(q1_name, q3_name),
+      value_name, label_name, type_name))
+  )
   if (!is.null(pred) && type == "predicted" && length(pred) != nrow(data)) {
     stop("Wrong number of predicted values passed.")
   }
@@ -117,31 +126,38 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   }
 
   # Calculate profiles
-  arg_list <- list(x = x, v = v, evaluate_at = pd_evaluate_at, breaks = breaks,
-                   n_bins = n_bins, cut_type = cut_type, indices = pd_indices,
-                   n_max = pd_n_max, seed = pd_seed, value_name = value_name)
+  arg_list <- list(x = x, v = v, evaluate_at = pd_evaluate_at,
+                   breaks = breaks, n_bins = n_bins, cut_type = cut_type,
+                   indices = pd_indices, n_max = pd_n_max, seed = pd_seed)
   if (type == "partial dependence") {
-    arg_list <- c(arg_list, list(grid = pd_grid, center = pd_center,
-                                 label_name = label_name, id_name = "id_xxx"))
-    cp_profiles <- do.call(light_ice, arg_list)
+    arg_list <- c(arg_list, list(grid = pd_grid, center = pd_center))
+    withr::with_options(list(flashlight.id_name = "id_xxx"),  # safer than default
+      cp_profiles <- do.call(light_ice, arg_list)
+    )
     v <- cp_profiles$v
     data <- cp_profiles$data
   } else if (type == "ale") {
-    arg_list <- c(arg_list, list(counts_name = counts_name,
-                                 counts = counts, counts_weighted = counts_weighted,
-                                 pred = pred, two_sided = ale_two_sided))
+    arg_list <- c(
+      arg_list, list(counts = counts, counts_weighted = counts_weighted,
+                     pred = pred, two_sided = ale_two_sided)
+    )
     agg <- do.call(ale_profile, arg_list)
   } else {
-    stopifnot(!is.null(v),
-              v %in% colnames(data),
-              nrow(data) >= 1L)
+    stopifnot(
+      "'v' misses." = !is.null(v),
+      "'v' not in data." = v %in% colnames(data)
+    )
+    if (type %in% c("response", "residual") && !("y" %in% names(x))) {
+      stop("You need to specify 'y' in flashlight.")
+    }
 
     # Add predictions/response to data
     data[[value_name]] <- switch(type,
       response = response(x),
       predicted = if (is.null(pred)) predict(x) else pred,
       residual = residuals(x),
-      shap = data[["shap_"]])
+      shap = data[["shap_"]]
+    )
 
     # Replace v values by binned ones
     cuts <- auto_cut(data[[v]], breaks = breaks,
@@ -151,26 +167,27 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
 
   # Aggregate predicted values
   if (type != "ale") { # ale is already aggregated
-    agg <- grouped_stats(data = data, x = value_name, w = x$w, by = c(by, v),
-                         stats = stats, counts = counts,
-                         counts_weighted = counts_weighted,
-                         counts_name = counts_name, q1_name = q1_name,
-                         q3_name = q3_name, na.rm = TRUE)
+    agg <- grouped_stats(
+      data = data, x = value_name, w = x$w, by = c(by, v),
+      stats = stats, counts = counts,
+      counts_weighted = counts_weighted,
+      counts_name = counts_name, q1_name = q1_name,
+      q3_name = q3_name, na.rm = TRUE
+    )
   }
 
   # Finalize results
   agg[[label_name]] <- x$label
 
   # Code type as factor (relevant for light_effects)
-  agg[[type_name]] <- factor(type, c("response", "predicted", "partial dependence",
-                                     "ale", "residual", "shap"))
+  agg[[type_name]] <- factor(
+    type, c("response", "predicted", "partial dependence",
+            "ale", "residual", "shap")
+  )
 
   # Collect results
-  out <- list(data = agg, by = by, v = v, type = type, stats = stats,
-              value_name = value_name, q1_name = q1_name, q3_name = q3_name,
-              label_name = label_name, type_name = type_name, counts_name = counts_name)
-  class(out) <- c("light_profile", "light", "list")
-  out
+  out <- list(data = agg, by = by, v = v, type = type, stats = stats)
+  add_classes(out, c("light_profile", "light"))
 }
 
 #' @describeIn light_profile Profiles for multiflashlight.
@@ -178,7 +195,8 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
 light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
                                           breaks = NULL, n_bins = 11,
                                           cut_type = c("equal", "quantile"),
-                                          pd_evaluate_at = NULL, pd_grid = NULL, ...) {
+                                          pd_evaluate_at = NULL,
+                                          pd_grid = NULL, ...) {
   cut_type <- match.arg(cut_type)
 
   if ("pred" %in% names(list(...))) {

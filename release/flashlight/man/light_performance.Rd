@@ -17,9 +17,6 @@ light_performance(x, ...)
   by = x$by,
   metrics = x$metrics,
   use_linkinv = FALSE,
-  metric_name = NULL,
-  value_name = NULL,
-  label_name = NULL,
   ...
 )
 
@@ -37,12 +34,6 @@ light_performance(x, ...)
 \item{metrics}{An optional named list with metrics. Each metric takes at least four arguments: actual, predicted, case weights w and \code{...}.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE.}
-
-\item{metric_name}{Deprecated. Use \code{options(flashlight.metric_name = ...)}.}
-
-\item{value_name}{Deprecated. Use \code{options(flashlight.value_name = ...)}.}
-
-\item{label_name}{Deprecated. Use \code{options(flashlight.label_name = ...)}.}
 }
 \value{
 An object of class \code{light_performance}, \code{light} (and a list) with the following elements.

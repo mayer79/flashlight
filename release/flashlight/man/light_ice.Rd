@@ -26,9 +26,6 @@ light_ice(x, ...)
   seed = NULL,
   use_linkinv = TRUE,
   center = c("no", "first", "middle", "last", "mean", "0"),
-  value_name = "value",
-  label_name = "label",
-  id_name = "id",
   ...
 )
 
@@ -64,12 +61,6 @@ light_ice(x, ...)
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
 
 \item{center}{How should curves be centered? Default is "no". Choose "first", "middle", or "last" to 0-center at specific evaluation points. Choose "mean" to center all profiles at the within-group means. Choose "0" to mean-center curves at 0.}
-
-\item{value_name}{Column name in resulting \code{data} containing the profile value. Defaults to "value".}
-
-\item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
-
-\item{id_name}{Column name in resulting \code{data} containing the row id of the profile. Defaults to "id_name".}
 }
 \value{
 An object of class \code{light_ice}, \code{light} (and a list) with the following elements.
@@ -78,9 +69,6 @@ An object of class \code{light_ice}, \code{light} (and a list) with the followin
 \item \code{by} Same as input \code{by}.
 \item \code{v} The variable(s) evaluated.
 \item \code{center} How centering was done.
-\item \code{value_name} Same as input \code{value_name}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{id_name} Same as input \code{id_name}.
 }
 }
 \description{
@@ -100,7 +88,7 @@ There are two ways to specify the variable(s) to be profiled. The first option i
 
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+fl <- flashlight(model = fit, label = "lm", data = iris)
 light_ice(fl, v = "Species")
 }
 \references{

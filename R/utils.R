@@ -18,3 +18,15 @@ warning_on_names <- function(to_check, ...) {
     warning("Using 'xyz_name' arguments is deprecated. Use 'options(flashlight.xyz_name = ...)' instead.")
   }
 }
+
+# Calculates midpoints of subsequent unique breaks
+midpoints <- function(breaks) {
+  # to do: deal with missings
+  stopifnot(is.numeric(breaks))
+  breaks <- sort(unique(breaks))
+  stopifnot((m <- length(breaks)) >= 2L)
+  (breaks[-m] + breaks[-1]) / 2
+}
+
+
+
