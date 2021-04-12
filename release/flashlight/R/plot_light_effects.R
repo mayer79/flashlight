@@ -24,14 +24,20 @@
 #' @seealso \code{\link{light_effects}}, \code{\link{plot_counts}}.
 plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
                                zero_counts = TRUE, size_factor = 1,
-                               facet_scales = "free_x",
-                               facet_nrow = 1L, rotate_x = TRUE,
-                               show_points = TRUE, ...) {
+                               facet_scales = "free_x", facet_nrow = 1L,
+                               rotate_x = TRUE, show_points = TRUE, ...) {
   # Checks
   stopifnot(length(use) >= 1L)
   if ("all" %in% use) {
     use <- c("response", "predicted", "pd", "ale")
   }
+
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+  q1_name <- getOption("flashlight.q1_name")
+  q3_name <- getOption("flashlight.q3_name")
+  type_name <- getOption("flashlight.type_name")
+
   nby <- length(x$by)
   multi <- is.light_effects_multi(x)
   if (nby + multi > 1L) {
@@ -44,40 +50,45 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   # Remove 0 count entries in "data"
   n <- nrow(data)
   if (!zero_counts && n) {
-    data <- semi_join(data, x$response, by = c(x$label_name, x$by, x$v))
+    data <- semi_join(data, x$response, by = c(label_name, x$by, x$v))
   }
 
   # Prepare crossbar if required
   crossbar_required <- x$stats == "quartiles" && "response" %in% use
   if (crossbar_required) {
-    crossbar <- geom_crossbar(data = x$response, aes_string(ymin = x$q1_name, ymax = x$q3_name),
-                              width = 0.3, fill = "darkblue", colour = "black", alpha = 0.1, ...)
+    crossbar <- geom_crossbar(
+      data = x$response, aes_string(ymin = q1_name, ymax = q3_name),
+      width = 0.3, fill = "darkblue", colour = "black", alpha = 0.1, ...
+    )
   }
 
   # Put together the plot
   if (n) {
-    tp <- x$type_name
-    p <- ggplot(data, aes_string(y = x$value_name, x = x$v)) +
-      geom_line(aes_string(color = tp, group = tp), size = size_factor / 3, ...)
+    tp <- type_name
+    p <- ggplot(data, aes_string(y = value_name, x = x$v)) +
+      geom_line(aes_string(color = tp, group = tp),
+                size = size_factor / 3, ...)
     if (show_points) {
-      p <- p + geom_point(aes_string(color = tp, group = tp), size = size_factor, ...)
+      p <- p + geom_point(aes_string(color = tp, group = tp),
+                          size = size_factor, ...)
     }
     if (crossbar_required) {
       p <- p + crossbar
     }
   } else {
-    p <- ggplot(x$response, aes_string(y = x$value_name, x = x$v)) +
+    p <- ggplot(x$response, aes_string(y = value_name, x = x$v)) +
       crossbar
   }
   if (multi || nby) {
-    p <- p + facet_wrap(reformulate(if (multi) x$label_name else x$by[1]),
+    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[1]),
                         scales = facet_scales, nrow = facet_nrow)
   }
   p <- p +
     theme_bw() +
     theme(legend.position = "bottom", legend.title = element_blank())
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p
 }

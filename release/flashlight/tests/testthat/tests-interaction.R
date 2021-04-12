@@ -92,4 +92,19 @@ test_that("light_interaction reacts on 'by'", {
   expect_true(inherits(plot(inter), "ggplot"))
 })
 
-
+test_that("Options work", {
+  fit <- lm(Sepal.Length ~ ., data = iris)
+  fl <- flashlight(model = fit, label = "lm", data = iris,
+                   y = "Sepal.Length", metrics = list(r2 = r_squared))
+  new_options = list(
+    flashlight.label_name = "ell",
+    flashlight.variable_name = "var",
+    flashlight.value_name = "val",
+    flashlight.error_name = "err"
+  )
+  withr::with_options(new_options, {
+    inter <- light_interaction(fl)
+    expect_true(all(c("ell", "var", "val", "err") %in% colnames(inter$data)))
+    expect_true(inherits(plot(inter), "ggplot"))
+  })
+})

@@ -59,3 +59,18 @@ test_that("light_breakdown reacts on multiflashlight", {
   expect_true(inherits(plot(br), "ggplot"))
 })
 
+test_that("Options work", {
+  new_options = list(
+    flashlight.after_name = "a",
+    flashlight.before_name = "b",
+    flashlight.description_name = "d",
+    flashlight.label_name = "ell",
+    flashlight.step_name = "s",
+    flashlight.variable_name = "var"
+  )
+  withr::with_options(new_options, {
+    br <- light_breakdown(fl1, iris[1, ])
+    expect_true(all(c("a", "b", "d", "ell", "s", "var") %in% colnames(br$data)))
+    expect_true(inherits(plot(br), "ggplot"))
+  })
+})

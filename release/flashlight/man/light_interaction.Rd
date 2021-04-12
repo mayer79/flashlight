@@ -24,11 +24,6 @@ light_interaction(x, ...)
   n_max = 1000,
   seed = NULL,
   use_linkinv = FALSE,
-  value_name = "value",
-  error_name = "error",
-  label_name = "label",
-  variable_name = "variable",
-  type_name = "type",
   ...
 )
 
@@ -60,16 +55,6 @@ light_interaction(x, ...)
 \item{seed}{An integer random seed used for subsampling.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE.}
-
-\item{value_name}{Column name in resulting \code{data} containing the interaction strenght. Defaults to "value".}
-
-\item{error_name}{Currently not used.}
-
-\item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
-
-\item{variable_name}{Column name in resulting \code{data} containing the variable names. Defaults to "variable".}
-
-\item{type_name}{Column name in the resulting \code{data} with the plot \code{type}.}
 }
 \value{
 An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
@@ -77,11 +62,6 @@ An object of class \code{light_importance}, \code{light} (and a list) with the f
 \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
 \item \code{by} Same as input \code{by}.
 \item \code{type} Same as input \code{type}. For information only.
-\item \code{value_name} Same as input \code{value_name}.
-\item \code{error_name} Same as input \code{error_name}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{variable_name} Same as input \code{variable_name}.
-\item \code{type_name} Same as input \code{type_name}.
 }
 }
 \description{
@@ -104,7 +84,7 @@ fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = i
 fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
 fl_additive <- flashlight(model = fit_additive, label = "additive")
 fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
-fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris, y = "Sepal.Length")
+fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris)
 plot(st <- light_interaction(fls), fill = "darkgreen")
 plot(light_interaction(fls, pairwise = TRUE), fill = "darkgreen")
 }

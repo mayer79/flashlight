@@ -22,9 +22,6 @@
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param center How should curves be centered? Default is "no". Choose "first", "middle", or "last" to 0-center at specific evaluation points. Choose "mean" to center all profiles at the within-group means. Choose "0" to mean-center curves at 0.
-#' @param value_name Column name in resulting \code{data} containing the profile value. Defaults to "value".
-#' @param label_name Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".
-#' @param id_name Column name in resulting \code{data} containing the row id of the profile. Defaults to "id_name".
 #' @param ... Further arguments passed to or from other methods.
 #' @return An object of class \code{light_ice}, \code{light} (and a list) with the following elements.
 #' \itemize{
@@ -32,15 +29,12 @@
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{center} How centering was done.
-#'   \item \code{value_name} Same as input \code{value_name}.
-#'   \item \code{label_name} Same as input \code{label_name}.
-#'   \item \code{id_name} Same as input \code{id_name}.
 #' }
 #' @export
 #' @references Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1 <doi.org/10.1080/10618600.2014.907095>.
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
-#' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+#' fl <- flashlight(model = fit, label = "lm", data = iris)
 #' light_ice(fl, v = "Species")
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_ice}}.
 light_ice <- function(x, ...) {
@@ -56,26 +50,40 @@ light_ice.default <- function(x, ...) {
 #' @describeIn light_ice ICE profiles for a flashlight object.
 #' @export
 light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
-                                 evaluate_at = NULL, breaks = NULL, grid = NULL,
-                                 n_bins = 27, cut_type = c("equal", "quantile"),
+                                 evaluate_at = NULL, breaks = NULL,
+                                 grid = NULL, n_bins = 27,
+                                 cut_type = c("equal", "quantile"),
                                  indices = NULL, n_max = 20,
                                  seed = NULL, use_linkinv = TRUE,
-                                 center = c("no", "first", "middle", "last", "mean", "0"),
-                                 value_name = "value",
-                                 label_name = "label", id_name = "id", ...) {
+                                 center = c("no", "first", "middle",
+                                            "last", "mean", "0"),
+                                 ...) {
   cut_type <- match.arg(cut_type)
   center <- match.arg(center)
 
-  stopifnot((n <- nrow(data)) >= 1L,
-            !is.null(grid) || !is.null(v),
-            !anyDuplicated(c(by, union(v, names(grid)),
-                             value_name, label_name, id_name)))
+  warning_on_names(c("value_name", "label_name", "id_name"), ...)
+
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+  id_name <- getOption("flashlight.id_name")
+
+  stopifnot(
+    "No data!" = is.data.frame(data) && nrow(data) >= 1L,
+    "'by' not in 'data'!" = by %in% colnames(data),
+    "'v' not in 'data'." = v %in% colnames(data),
+    "'v' or 'grid' misses." = !is.null(grid) || !is.null(v),
+    !anyDuplicated(c(by, union(v, names(grid)),
+                     value_name, label_name, id_name))
+  )
+
+  n <- nrow(data)
 
   # Complete/evaluate grid
   if (is.null(grid)) {
     if (is.null(evaluate_at)) {
       evaluate_at <- if (!is.null(breaks)) midpoints(breaks) else
-        auto_cut(data[[v]], n_bins = n_bins, cut_type = cut_type, ...)$bin_means
+        auto_cut(data[[v]], n_bins = n_bins,
+                 cut_type = cut_type, ...)$bin_means
     }
     grid <- setNames(data.frame(evaluate_at), v)
   } else {
@@ -84,7 +92,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
 
   # Pick ids
   if (is.null(indices)) {
-    if (n_max < n) {
+    if (n > n_max) {
       if (!is.null(seed)) {
         set.seed(seed)
       }
@@ -111,15 +119,25 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
 
   # c-ICE curves
   if (center == "0") {
-      data[[value_name]] <- grouped_center(data, x = value_name, by = id_name, na.rm = TRUE)
+      data[[value_name]] <- grouped_center(
+        data, x = value_name, by = id_name, na.rm = TRUE
+      )
   } else if (center == "mean") {
-    centered_values <- grouped_center(data, x = value_name, by = id_name, na.rm = TRUE)
+    centered_values <- grouped_center(
+      data, x = value_name, by = id_name, na.rm = TRUE
+    )
     if (is.null(by)) {
       data[[value_name]] <- centered_values +
-        weighted_mean(data[[value_name]], w = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE)
+        weighted_mean(
+          data[[value_name]],
+          w = if (!is.null(x$w)) data[[x$w]],
+          na.rm = TRUE
+        )
     } else {
-      group_means <- grouped_stats(data, x = value_name, w = x$w, by = by, counts = FALSE,
-                                   value_name = "global_mean", na.rm = TRUE)
+      group_means <- grouped_stats(
+        data, x = value_name, w = x$w, by = by, counts = FALSE,
+        value_name = "global_mean", na.rm = TRUE
+      )
       stopifnot(!("global_mean" %in% colnames(data)))
       data[[value_name]] <- centered_values +
         left_join(data, group_means, by = by)[["global_mean"]]
@@ -135,13 +153,8 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
 
   # Finalize output
   data[[label_name]] <- x$label
-
-  # Collect results
-  out <- list(data = data, by = by, v = colnames(grid),
-              center = center, value_name = value_name,
-              label_name = label_name, id_name = id_name)
-  class(out) <- c("light_ice", "light", "list")
-  out
+  out <- list(data = data, by = by, v = colnames(grid), center = center)
+  add_classes(out, c("light_ice", "light"))
 }
 
 #' @describeIn light_ice ICE profiles for a multiflashlight object.

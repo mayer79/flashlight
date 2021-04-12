@@ -27,7 +27,13 @@
 #' @seealso \code{\link{light_performance}}.
 plot.light_performance <- function(x, swap_dim = FALSE,
                                    geom = c("bar", "point"),
-                                   facet_scales = "free_y", rotate_x = FALSE, ...) {
+                                   facet_scales = "free_y",
+                                   rotate_x = FALSE, ...) {
+  # Initialization
+  metric_name <- getOption("flashlight.metric_name")
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+
   geom <- match.arg(geom)
   data <- x$data
   nby <- length(x$by)
@@ -40,32 +46,34 @@ plot.light_performance <- function(x, swap_dim = FALSE,
 
   # Differentiate some plot cases
    if (ndim <= 1L) {
-    p <- ggplot(data, aes_string(y = x$value_name, x = if (nby) x$by[1] else x$label_name))
+    p <- ggplot(data, aes_string(y = value_name, x = if (nby) x$by[1] else label_name))
     if (geom == "bar") {
       p <- p + geom_bar(stat = "identity", ...)
     } else if (geom == "point") {
       p <- p + geom_point(...)
     }
   } else {
-    second_dim <- if (multi) x$label_name else x$by[2]
+    second_dim <- if (multi) label_name else x$by[2]
     x_var <- if (!swap_dim) x$by[1] else second_dim
     dodge_var <- if (!swap_dim) second_dim else x$by[1]
 
-    p <- ggplot(data, aes_string(y = x$value_name, x = x_var))
+    p <- ggplot(data, aes_string(y = value_name, x = x_var))
     if (geom == "bar") {
       p <- p + geom_bar(aes_string(fill = dodge_var),
                         stat = "identity", position = "dodge", ...)
     } else if (geom == "point") {
-      p <- p + geom_point(aes_string(group = dodge_var, color = dodge_var), ...)
+      p <- p +
+        geom_point(aes_string(group = dodge_var, color = dodge_var), ...)
     }
   }
 
   # Multiple metrics always go into a facet due to different y scales
-  if (length(unique(data[[x$metric_name]])) >= 2L) {
-    p <- p + facet_wrap(reformulate(x$metric_name), scales = facet_scales)
+  if (length(unique(data[[metric_name]])) >= 2L) {
+    p <- p + facet_wrap(reformulate(metric_name), scales = facet_scales)
   }
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p
 }

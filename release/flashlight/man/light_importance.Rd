@@ -23,11 +23,6 @@ light_importance(x, ...)
   metric = x$metrics[1],
   lower_is_better = TRUE,
   use_linkinv = FALSE,
-  metric_name = "metric",
-  value_name = "value",
-  error_name = "error",
-  label_name = "label",
-  variable_name = "variable",
   ...
 )
 
@@ -57,16 +52,6 @@ light_importance(x, ...)
 \item{lower_is_better}{Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1. Not used for \code{type = "shap"}.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE. Not uses for \code{type = "shap"}.}
-
-\item{metric_name}{Name of the resulting column containing the name of the metric. Defaults to "metric". Irrelevant for \code{type = "shap"}.}
-
-\item{value_name}{Column name in resulting \code{data} containing the variable importance. Defaults to "value".}
-
-\item{error_name}{Column name in resulting \code{data} containing the standard error of permutation importance. Defaults to "error".}
-
-\item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
-
-\item{variable_name}{Column name in resulting \code{data} containing the variable names. Defaults to "variable".}
 }
 \value{
 An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
@@ -74,11 +59,6 @@ An object of class \code{light_importance}, \code{light} (and a list) with the f
 \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
 \item \code{by} Same as input \code{by}.
 \item \code{type} Same as input \code{type}. For information only.
-\item \code{metric_name} Column name representing the name of the metric. For information only.
-\item \code{value_name} Same as input \code{value_name}.
-\item \code{error_name} Same as input \code{error_name}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{variable_name} Same as input \code{variable_name}.
 }
 }
 \description{

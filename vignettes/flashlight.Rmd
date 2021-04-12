@@ -130,7 +130,7 @@ install.packages("flashlight")
 Latest version from github:
 ```
 library(devtools)
-install_github("mayer79/flashlight")
+install_github("mayer79/flashlight", subdir = "release/flashlight")
 ```
 
 ## Teaser
@@ -385,7 +385,7 @@ if (has_xgb) {
 
 ### Creating the flashlights
 
-Let's initialize one flashlight per model. Thanks to individual prediction functions, any model can be used in `flashlight`, even h2o and keras models.
+Let's initialize one flashlight per model. Thanks to individual prediction functions, any model can be used in `flashlight`, even keras models.
 
 ```{r}
 fl_mean <- flashlight(model = mean(train$log_price), label = "mean",
@@ -613,7 +613,7 @@ The biggest gaps occur at very rare conditions, so the model looks quite fine.
 Note: Due to retransformation from log scale, the response profile is slightly higher than the profile of predicted values. If we would evaluate on the modelled log scale, that gap would vanish.
 
 ```{r}
-eff <- light_effects(fl_lm, v = "condition", linkinv = I)
+eff <- light_effects(flashlight(fl_lm, linkinv = I), v = "condition")
 p <- plot(eff, use = "all") +
   scale_y_continuous(labels = format_y) +
   ggtitle("Effects plot on modelled log scale")

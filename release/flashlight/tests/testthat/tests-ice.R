@@ -65,3 +65,19 @@ test_that("weights have no impact on results", {
 
   expect_equal(ice$value, ice_weighted$value)
 })
+
+test_that("Options work", {
+  fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+  fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+
+  new_options = list(
+    flashlight.label_name = "ell",
+    flashlight.value_name = "val",
+    flashlight.id_name = "iii"
+  )
+  withr::with_options(new_options, {
+    ice <- light_ice(fl, v = "Species", indices = 1:3)
+    expect_true(all(c("ell", "val", "iii") %in% colnames(ice$data)))
+    expect_true(inherits(plot(ice), "ggplot"))
+  })
+})

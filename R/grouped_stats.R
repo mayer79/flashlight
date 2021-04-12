@@ -36,9 +36,12 @@ grouped_stats <- function(data, x, w = NULL, by = NULL,
   if (counts_weighted && is.null(w)) {
     counts_weighted <- FALSE
   }
-  stopifnot(c(x, w, by) %in% colnames(data),
-            !anyDuplicated(c(value_name, by, counts_name, q1_name, q3_name)),
-            nrow(data) >= 1L)
+  stopifnot(
+    is.data.frame(data),
+    c(x, w, by) %in% colnames(data),
+    !anyDuplicated(c(value_name, by, counts_name, q1_name, q3_name)),
+    nrow(data) >= 1L
+  )
 
   # Function that does the ungrouped calculation
   core_fun <- function(X) {
@@ -47,7 +50,9 @@ grouped_stats <- function(data, x, w = NULL, by = NULL,
     if (stats == "mean") {
       val <- setNames(data.frame(weighted_mean(xx, ww, ...)), value_name)
     } else if (stats == "quartiles") {
-      val <- t(weighted_quantile(xx, ww, probs = (1:3) / 4, names = FALSE, ...))
+      val <- t(
+        weighted_quantile(xx, ww, probs = (1:3) / 4, names = FALSE, ...)
+      )
       val <- setNames(data.frame(val), c(q1_name, value_name, q3_name))
     } else {
       val <- setNames(data.frame(weighted_var(xx, ww, ...)), value_name)

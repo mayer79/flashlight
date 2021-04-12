@@ -15,7 +15,8 @@
 #' n <- 100
 #' data <- data.frame(x = rnorm(n), w = runif(n), group = factor(sample(1:3, n, TRUE)))
 #' grouped_weighted_mean(data, x = "x", w = "w", by = "group")
-grouped_weighted_mean <- function(data, x, w = NULL, by = NULL, na.rm = TRUE, value_name = x) {
+grouped_weighted_mean <- function(data, x, w = NULL, by = NULL,
+                                  na.rm = TRUE, value_name = x) {
   if (is.null(by)) {
     if (is.null(w)) {
       out <- mean(data[[x]], na.rm = na.rm)

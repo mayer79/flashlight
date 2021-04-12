@@ -1,17 +1,17 @@
 Type: Package
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.7.5
-Date: 2021-02-13
+Version: 0.8.0
+Date: 2021-04-11
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
            role = c("aut", "cre", "cph"),
            email = "mayermichael79@gmail.com")
 Maintainer: Michael Mayer <mayermichael79@gmail.com>
-Description: Shed light on black box machine learning models by
-    the help of model performance, variable importance, global surrogate
-    models, ICE profiles, partial dependence (Friedman J. H. (2001)
+Description: Shed light on black box machine learning models by the help
+    of model performance, variable importance, global surrogate models,
+    ICE profiles, partial dependence (Friedman J. H. (2001)
     <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W.
     (2016) <arXiv:1612.08468>), further effects plots, scatter plots,
     interaction strength, and variable contribution breakdown (approximate
@@ -27,27 +27,27 @@ Depends:
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
-    stats,
-    utils,
-    tidyselect,
     dplyr (>= 1.0.0),
-    tidyr (>= 1.0.0),
+    cowplot,
+    ggplot2,
+    MetricsWeighted (>= 0.3.0),
     rpart,
     rpart.plot,
-    ggplot2,
-    cowplot,
-    MetricsWeighted (>= 0.3.0)
+    stats,
+    tidyr (>= 1.0.0),
+    tidyselect,
+    utils,
+    withr
 Suggests: 
     knitr,
-    rmarkdown,
-    testthat,
-    ranger,
-    xgboost,
-    moderndive,
     caret,
     mlr3,
-    mlr3learners
+    mlr3learners,
+    moderndive,
+    ranger,
+    rmarkdown,
+    testthat,
+    xgboost

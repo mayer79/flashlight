@@ -20,8 +20,6 @@ light_global_surrogate(x, ...)
   n_max = Inf,
   seed = NULL,
   keep_max_levels = 4,
-  label_name = "label",
-  tree_name = "tree",
   ...
 )
 
@@ -45,18 +43,12 @@ light_global_surrogate(x, ...)
 \item{seed}{An integer random seed used to select data rows if \code{n_max} is lower than the number of data rows.}
 
 \item{keep_max_levels}{Number of levels of categorical and factor variables to keep. Other levels are combined to a level "Other". This prevents \code{rpart} to take too long to split non-numeric variables with many levels.}
-
-\item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
-
-\item{tree_name}{Column name in resulting \code{data} containing the trees. Defaults to "tree".}
 }
 \value{
 An object of class \code{light_global_surrogate}, \code{light} (and a list) with the following elements.
 \itemize{
 \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
 \item \code{by} Same as input \code{by}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{tree_name} Name of column with tree objects.
 }
 }
 \description{

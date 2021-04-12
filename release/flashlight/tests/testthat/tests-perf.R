@@ -100,3 +100,19 @@ test_that("R-squared for weighted flashlight is the same as the one from summary
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
+test_that("Options work", {
+  fit <- lm(Sepal.Length ~ ., data = iris)
+  fl <- flashlight(model = fit, label = "lm", data = iris,
+                   y = "Sepal.Length", metrics = list(r2 = r_squared))
+  new_options = list(
+    flashlight.label_name = "ell",
+    flashlight.metric_name = "mm",
+    flashlight.value_name = "vv"
+  )
+  withr::with_options(new_options, {
+    perf <- light_performance(fl)
+    expect_true(all(c("ell", "mm", "vv") %in% colnames(perf$data)))
+    expect_true(inherits(plot(perf), "ggplot"))
+  })
+})
+

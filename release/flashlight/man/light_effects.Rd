@@ -21,12 +21,6 @@ light_effects(x, ...)
   n_bins = 11,
   cut_type = c("equal", "quantile"),
   use_linkinv = TRUE,
-  value_name = "value",
-  q1_name = "q1",
-  q3_name = "q3",
-  label_name = "label",
-  type_name = "type",
-  counts_name = "counts",
   counts_weighted = FALSE,
   v_labels = TRUE,
   pred = NULL,
@@ -68,18 +62,6 @@ light_effects(x, ...)
 
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
 
-\item{value_name}{Column name in resulting data objects containing the profile value. Defaults to "value".}
-
-\item{q1_name}{Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".}
-
-\item{q3_name}{Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".}
-
-\item{label_name}{Column name in resulting \code{data} containing the label of the flashlight. Defaults to "label".}
-
-\item{type_name}{Name of the column in \code{data} containing \code{type}.}
-
-\item{counts_name}{Name of the column containing counts.}
-
 \item{counts_weighted}{Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
 
 \item{v_labels}{If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.}
@@ -104,12 +86,6 @@ An object of classes \code{light_effects}, \code{light} (and a list) with the fo
 \item \code{by} Same as input \code{by}.
 \item \code{v} The variable(s) evaluated.
 \item \code{stats} Same as input \code{stats}.
-\item \code{value_name} Same as input \code{value_name}.
-\item \code{q1_name} Same as input \code{q1_name}.
-\item \code{q3_name} Same as input \code{q3_name}.
-\item \code{label_name} Same as input \code{label_name}.
-\item \code{type_name} Same as input \code{type}.
-\item \code{counts_name} Same as input \code{counts_name}.
 }
 }
 \description{

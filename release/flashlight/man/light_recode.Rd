@@ -17,7 +17,7 @@ light_recode(x, ...)
 
 \item{...}{Further arguments passed to \code{factor}.}
 
-\item{what}{Column identifier in \code{x} (not column name) to be recoded, e.g. "type_name", "label_name".}
+\item{what}{Column identifier to be recoded, e.g. "type". For backward compatibility, also the option identifier (e.g. "type_name") can be passed.}
 
 \item{levels}{Current levels/values of \code{type_name} column (in desired order).}
 

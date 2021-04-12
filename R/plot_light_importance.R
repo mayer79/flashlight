@@ -26,14 +26,20 @@
 #' plot(light_importance(mods), swap_dim = TRUE)
 #' @seealso \code{\link{light_importance}}.
 plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
-                                  facet_scales = "fixed", rotate_x = FALSE,
-                                  error_bars = TRUE, ...) {
+                                  facet_scales = "fixed",
+                                  rotate_x = FALSE, error_bars = TRUE, ...) {
+  # Initialization
+  value_name <- getOption("flashlight.value_name")
+  label_name <- getOption("flashlight.label_name")
+  variable_name <- getOption("flashlight.variable_name")
+  error_name <- getOption("flashlight.error_name")
+
   data <- x$data
   nby <- length(x$by)
   multi <- is.light_importance_multi(x)
   ndim <- nby + multi
   if (error_bars) {
-    if (all(is.na(data[[x$error_name]]))) {
+    if (all(is.na(data[[error_name]]))) {
       error_bars <- FALSE
     }
   }
@@ -43,49 +49,57 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   }
 
   # Subset and revert for plotting
-  most_important <- most_important(x, top_m = top_m)
-  data <- data[data[[x$variable_name]] %in% most_important, , drop = FALSE]
-  data[[x$variable_name]] <- factor(data[[x$variable_name]], levels = rev(most_important))
-  data[["low_"]] <- data[[x$value_name]] - data[[x$error_name]]
-  data[["high_"]] <- data[[x$value_name]] + data[[x$error_name]]
+  most_imp <- most_important(x, top_m = top_m)
+  data <- data[data[[variable_name]] %in% most_imp, , drop = FALSE]
+  data[[variable_name]] <- factor(data[[variable_name]],
+                                  levels = rev(most_imp))
+  data[["low_"]] <- data[[value_name]] - data[[error_name]]
+  data[["high_"]] <- data[[value_name]] + data[[error_name]]
 
   # Differentiate some plot cases
-  p <- ggplot(data, aes_string(y = x$value_name, x = x$variable_name))
+  p <- ggplot(data, aes_string(y = value_name, x = variable_name))
   if (ndim == 0L) {
     p <- p + geom_bar(stat = "identity", ...)
     if (error_bars) {
-      p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black")
+      p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"),
+                             width = 0, color = "black")
     }
   } else if (ndim == 1L) {
-    first_dim <- if (multi) x$label_name else x$by[1]
+    first_dim <- if (multi) label_name else x$by[1]
     if (swap_dim) {
       p <- p + geom_bar(aes_string(fill = first_dim),
                         stat = "identity", position = "dodge", ...)
       if (error_bars) {
-        p <- p + geom_errorbar(aes_string(group = first_dim, ymin = "low_", ymax = "high_"),
-                               width = 0, color = "black", position = position_dodge(0.9))
+        p <- p + geom_errorbar(
+          aes_string(group = first_dim, ymin = "low_", ymax = "high_"),
+          width = 0, color = "black", position = position_dodge(0.9)
+        )
       }
     } else {
       p <- p + geom_bar(stat = "identity", ...) +
         facet_wrap(reformulate(first_dim), scales = facet_scales)
       if (error_bars) {
-        p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black")
+        p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"),
+                               width = 0, color = "black")
       }
     }
   } else {
-    second_dim <- if (multi) x$label_name else x$by[2]
+    second_dim <- if (multi) label_name else x$by[2]
     wrap_var <- if (!swap_dim) x$by[1] else second_dim
     dodge_var <- if (!swap_dim) second_dim else x$by[1]
     p <- p + geom_bar(aes_string(fill = dodge_var),
                       stat = "identity", position = "dodge", ...) +
       facet_wrap(reformulate(wrap_var), scales = facet_scales)
     if (error_bars) {
-      p <- p + geom_errorbar(aes_string(group = dodge_var, ymin = "low_", ymax = "high_"),
-                             width = 0, color = "black", position = position_dodge(0.9))
+      p <- p + geom_errorbar(
+        aes_string(group = dodge_var, ymin = "low_", ymax = "high_"),
+        width = 0, color = "black", position = position_dodge(0.9)
+      )
     }
   }
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   # label
   type <- switch(x$type,

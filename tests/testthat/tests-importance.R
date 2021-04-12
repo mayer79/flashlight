@@ -84,4 +84,17 @@ test_that("multiflashlight works", {
   expect_true(inherits(plot(imp), "ggplot"))
 })
 
-
+test_that("Options work", {
+  new_options = list(
+    flashlight.metric_name = "mm",
+    flashlight.value_name = "val",
+    flashlight.label_name = "ell",
+    flashlight.variable_name = "var",
+    flashlight.error_name = "err"
+  )
+  withr::with_options(new_options, {
+    imp <- light_importance(fls, seed = 1, v = c("Petal.Width", "Species"))
+    expect_true(all(c("mm", "val", "ell", "var", "err") %in% colnames(imp$data)))
+    expect_true(inherits(plot(imp), "ggplot"))
+  })
+})

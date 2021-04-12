@@ -19,8 +19,11 @@
 #' mean(grouped_center(ir, "Sepal.Width", w = "w"))
 #' rowsum(grouped_center(ir, "Sepal.Width", by = "Species", w = "w"), ir$Species)
 grouped_center <- function(data, x, w = NULL, by = NULL, ...) {
-  stopifnot(!anyDuplicated(c(x, w, by)),
-            c(x, w, by) %in% colnames(data))
+  stopifnot(
+    is.data.frame(data),
+    !anyDuplicated(c(x, w, by)),
+    c(x, w, by) %in% colnames(data)
+  )
   if (is.null(by) && is.null(w)) {
     return(data[[x]] - mean(data[[x]], ...))
   }
@@ -28,7 +31,8 @@ grouped_center <- function(data, x, w = NULL, by = NULL, ...) {
     return(data[[x]] - weighted_mean(data[[x]], w = data[[w]], ...))
   }
   if (is.null(w)) {
-    return(ave(data[[x]], by = data[, by], FUN = function(z) z - mean(z, ...)))
+    return(ave(data[[x]], by = data[, by],
+               FUN = function(z) z - mean(z, ...)))
   }
   stopifnot(!"global_mean__" %in% colnames(data))
   M <- grouped_stats(data, x = x, w = w,

@@ -20,19 +20,27 @@
 #' @seealso \code{\link{light_importance}}.
 plot.light_breakdown <- function(x, facet_scales = "free",
                                  facet_ncol = 1, rotate_x = FALSE, ...) {
+
+  after_name <- getOption("flashlight.after_name")
+  before_name <- getOption("flashlight.before_name")
+  description_name <- getOption("flashlight.description_name")
+  label_name <- getOption("flashlight.label_name")
+  step_name <- getOption("flashlight.step_name")
+
   data <- x$data
   stopifnot(!(c("fill_", "xmin_", "xmax_", "y_") %in% colnames(data)))
-  data[["fill_"]] <- (data[[x$after_name]] - data[[x$before_name]]) > 0
-  data[["xmin_"]] <- data[[x$step_name]] - 0.5
-  data[["xmax_"]] <- data[[x$step_name]] + 0.5
-  data[["y_"]] <- pmin(data[[x$before_name]], data[[x$after_name]])
+  data[["fill_"]] <- (data[[after_name]] - data[[before_name]]) > 0
+  data[["xmin_"]] <- data[[step_name]] - 0.5
+  data[["xmax_"]] <- data[[step_name]] + 0.5
+  data[["y_"]] <- pmin(data[[before_name]], data[[after_name]])
 
-  p <- ggplot(data, aes_string(x = x$step_name, y = "y_",
-                               ymin = x$before_name, ymax = x$after_name,
+  p <- ggplot(data, aes_string(x = step_name, y = "y_",
+                               ymin = before_name, ymax = after_name,
                                xmin = "xmin_", xmax = "xmax_")) +
-    geom_rect(aes_string(fill = "fill_"), color = "black", show.legend = FALSE) +
+    geom_rect(aes_string(fill = "fill_"), color = "black",
+              show.legend = FALSE) +
     labs(x = element_blank(), y = "prediction") +
-    geom_label(aes_string(label = x$description_name), hjust = -0.05, ...) +
+    geom_label(aes_string(label = description_name), hjust = -0.05, ...) +
     scale_y_continuous(expand = expansion(mult = c(0, 0.67))) +
     scale_x_reverse() +
     coord_flip() +
@@ -43,10 +51,12 @@ plot.light_breakdown <- function(x, facet_scales = "free",
 
   if (is.light_breakdown_multi(x)) {
     p <- p +
-      facet_wrap(reformulate(x$label_name), scales = facet_scales, ncol = facet_ncol)
+      facet_wrap(reformulate(label_name), scales = facet_scales,
+                 ncol = facet_ncol)
   }
   if (rotate_x) {
-    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p
 }

@@ -17,14 +17,17 @@
 #' x <- flashlight(model = fit, label = "lm", data = iris)
 #' plot(light_global_surrogate(x))
 #' @seealso \code{\link{light_global_surrogate}}.
-plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE, mfrow = NULL, ...) {
+plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE,
+                                        mfrow = NULL, ...) {
+  label_name <- getOption("flashlight.label_name")
+  tree_name <- getOption("flashlight.tree_name")
   data <- x$data
   multi <- is.light_global_surrogate_multi(x)
   ndim <- length(x$by) + multi
   if (ndim == 0L) {
-    rpart.plot(data$tree[[1]], roundint = FALSE, type = type, ...)
+    rpart.plot(data[[tree_name]][[1]], roundint = FALSE, type = type, ...)
   } else if (ndim == 1) {
-    dim_col <- data[[if (multi) x$label_name else x$by[1]]]
+    dim_col <- data[[if (multi) label_name else x$by[1]]]
     m <- length(dim_col)
     if (is.null(mfrow)) {
       nr <- floor(sqrt(m))
