@@ -1,5 +1,9 @@
 # flashlight 0.8.0
 
+## New functionality
+
+- Added new explainer `light_profile2d` for 2D plots of partial dependence and other profiles (residuals, predictions, response, SHAP).
+
 ## Visible changes
 
 - All `zzz_names` arguments are deprecated and are set as `options(flashlight.zzz_names = ...)` instead.
