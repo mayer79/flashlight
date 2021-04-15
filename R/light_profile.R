@@ -12,7 +12,7 @@
 #' @param type Type of the profile: Either "partial dependence", "ale", "predicted", "response", "residual", or "shap".
 #' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.
 #' @param breaks Cut breaks for a numeric \code{v}.
-#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{pd_grid} nor \code{pd_evaluate_at} is specified.
+#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{breaks}, \code{pd_grid} nor \code{pd_evaluate_at} is specified.
 #' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for type "shap".
 #' @param counts Should counts be added?
@@ -27,9 +27,9 @@
 #' @param pd_center How should ICE curves be centered? Default is "no". Choose "first", "middle", or "last" to 0-center at specific evaluation points. Choose "mean" to center all profiles at the within-group means. Choose "0" to mean-center curves at 0. Only relevant for partial dependence.
 #' @param ale_two_sided If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence and ALE profiles.
-#' @return An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_profile} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
+#'   \item \code{data} A tibble containing results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Names of group by variable.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{type} Same as input \code{type}. For information only.

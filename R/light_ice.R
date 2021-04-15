@@ -23,9 +23,9 @@
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param center How should curves be centered? Default is "no". Choose "first", "middle", or "last" to 0-center at specific evaluation points. Choose "mean" to center all profiles at the within-group means. Choose "0" to mean-center curves at 0.
 #' @param ... Further arguments passed to or from other methods.
-#' @return An object of class \code{light_ice}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_ice} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
+#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{center} How centering was done.

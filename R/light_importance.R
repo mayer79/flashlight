@@ -20,7 +20,7 @@
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1. Not used for \code{type = "shap"}.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE. Not uses for \code{type = "shap"}.
 #' @param ... Further arguments passed to \code{light_performance}. Not used for \code{type = "shap"}.
-#' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_importance} with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.

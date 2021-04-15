@@ -22,9 +22,9 @@
 #' @param seed An integer random seed used for subsampling.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param ... Further arguments passed to or from other methods.
-#' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_importance} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
+#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{type} Same as input \code{type}. For information only.
 #' }

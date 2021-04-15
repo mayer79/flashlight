@@ -64,6 +64,9 @@ plot(light_ice(fl, v = "Petal.Width", by = "Species"))
 plot(light_profile(fl, v = "Petal.Width"))
 plot(light_profile(fl, v = "Petal.Width", by = "Species"))
 
+# 2D partial dependence
+plot(light_profile2d(fl, v = c("Petal.Width", "Petal.Length")))
+
 # Accumulated local effects (ALE) profiles for Petal.Width
 plot(light_profile(fl, v = "Petal.Width", type = "ale"))
 plot(light_profile(fl, v = "Petal.Width", by = "Species", type = "ale"))

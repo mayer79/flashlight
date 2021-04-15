@@ -12,7 +12,7 @@
 #' @param n_max Maximum number of data rows to select. Will be randomly picked from the relevant data.
 #' @param seed An integer random seed used for subsampling.
 #' @param ... Further arguments passed from or to other methods.
-#' @return An object of class \code{light_scatter}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_scatter} with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.

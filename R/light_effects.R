@@ -22,7 +22,7 @@
 #' @param pd_seed An integer random seed used to sample ICE profiles for partial dependence and ALE.
 #' @param ale_two_sided If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. This aligns the results better with the x labels. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable.
-#' @return An object of classes \code{light_effects}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_effects} with the following elements.
 #' \itemize{
 #'   \item \code{response} A tibble containing the response profiles.
 #'   \item \code{predicted} A tibble containing the prediction profiles.

@@ -13,7 +13,7 @@
 #' @param metrics An optional named list with metrics. Each metric takes at least four arguments: actual, predicted, case weights w and \code{...}.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param ... Arguments passed from or to other functions.
-#' @return An object of class \code{light_performance}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_performance} with the following elements.
 #' \itemize{
 #'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
 #'   \item \code{by} Same as input \code{by}.
