@@ -12,7 +12,7 @@
 #' @param type Type of the profile: Either "partial dependence", "ale", "predicted", "response", "residual", or "shap".
 #' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.
 #' @param breaks Cut breaks for a numeric \code{v}.
-#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{grid} nor \code{pd_evaluate_at} is specified.
+#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{pd_grid} nor \code{pd_evaluate_at} is specified.
 #' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for type "shap".
 #' @param counts Should counts be added?
@@ -204,7 +204,7 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
   }
 
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
-    breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
+    breaks <- common_breaks(x = x, v = v, data = data,
                             n_bins = n_bins, cut_type = cut_type)
   }
   all_profiles <- lapply(x, light_profile, v = v, data = data,

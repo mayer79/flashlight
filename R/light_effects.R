@@ -143,8 +143,8 @@ light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL,
     stop("'pred' not implemented for multiflashlight")
   }
   if (is.null(breaks)) {
-    breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
-                            n_bins = n_bins, cut_type = cut_type)
+    breaks <- common_breaks(x = x, v = v, data = data, n_bins = n_bins,
+                            cut_type = cut_type)
   }
   all_effects <- lapply(x, light_effects, v = v, data = data, breaks = breaks,
                         n_bins = n_bins, cut_type = cut_type, ...)
