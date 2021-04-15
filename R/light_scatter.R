@@ -58,6 +58,7 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
     if (!is.shap(x$shap)) {
       stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
     }
+    stopifnot(v %in% colnames(x$shap$data))
     variable_name <- getOption("flashlight.variable_name")
     data <- x$shap$data[x$shap$data[[variable_name]] == v, ]
   }
