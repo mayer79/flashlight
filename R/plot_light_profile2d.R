@@ -9,8 +9,9 @@
 #' @method plot light_profile2d
 #' @param x An object of class \code{light_profile}.
 #' @param swap_dim Swap the `facet_grid` dimensions.
-#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is \code{FALSE}.
+#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is \code{TRUE}.
 #' @param rotate_y Should y axis labels be rotated by 45 degrees? Default is \code{FALSE}.
+#' @param numeric_as_factor Should numeric x and y values be converted to factors first? Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".
 #' @param ... Further arguments passed to \code{facet_wrap or facet_grid}.
 #' @return An object of class \code{ggplot2}.
 #' @export
@@ -23,7 +24,8 @@
 #' plot(pr)
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 plot.light_profile2d <- function(x, swap_dim = FALSE,
-                               rotate_x = FALSE, rotate_y = FALSE, ...) {
+                               rotate_x = TRUE, rotate_y = FALSE,
+                               numeric_as_factor = FALSE, ...) {
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
   type_name <- getOption("flashlight.type_name")
@@ -34,9 +36,13 @@ plot.light_profile2d <- function(x, swap_dim = FALSE,
     stop("Plot method not defined for more than two by variables or
          multiflashlight with more than one by variable.")
   }
+  data <- x$data
+  if (isTRUE(numeric_as_factor)) {
+    data[x$v] <- lapply(data[x$v], as.factor)
+  }
 
   # Build plot
-  p <- ggplot(x$data, aes_string(x = x$v[1], y = x$v[2], fill = value_name)) +
+  p <- ggplot(data, aes_string(x = x$v[1], y = x$v[2], fill = value_name)) +
     geom_tile()
   if (ndim == 1L) {
     p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[1]), ...)
