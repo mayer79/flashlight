@@ -2,24 +2,25 @@
 #'
 #' Minimal visualization of an object of class \code{light_profile2d}. The object returned is of class \code{ggplot} and can be further customized.
 #'
-#' The main geometry is geom_tile. If there is a "by" variable or a multiflashlight, this first dimension is taken care by color (or if \code{swap_dim = TRUE} by facets). If there are two "by" variables or a multiflashlight with one "by" variable, the first "by" variable is visualized as color, the second one or the multiflashlight via facet (change with \code{swap_dim}).
+#' The main geometry is \code{geom_tile}. Additional dimensions ("by" variable(s) and/or multiflashlight) are represented by {facet_wrap/grid}.
 #'
 #' @import ggplot2
 #' @importFrom stats reformulate
 #' @method plot light_profile2d
 #' @param x An object of class \code{light_profile}.
 #' @param swap_dim Swap the `facet_grid` dimensions.
-#' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' @param rotate_y Should y axis labels be rotated by 45 degrees?
-#' @param ... Further arguments passed to \code{geom_tile}.
+#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is \code{FALSE}.
+#' @param rotate_y Should y axis labels be rotated by 45 degrees? Default is \code{FALSE}.
+#' @param ... Further arguments passed to \code{facet_wrap or facet_grid}.
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-#' grid <- expand_grid(Species = unique(iris$Species), Petal.Length = c(2:5))
-#' plot(light_profile2d(fl, pd_grid = grid))
-#' plot(light_profile2d(fl, pd_grid = grid, type = "response"))
+#' plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
+#' pr <- light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
+#'   type = "predicted", by = "Species", n_bins=c(2, 5), sep = ";")
+#' plot(pr)
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 plot.light_profile2d <- function(x, swap_dim = FALSE,
                                rotate_x = FALSE, rotate_y = FALSE, ...) {
@@ -36,15 +37,14 @@ plot.light_profile2d <- function(x, swap_dim = FALSE,
 
   # Build plot
   p <- ggplot(x$data, aes_string(x = x$v[1], y = x$v[2], fill = value_name)) +
-    geom_tile(...)
+    geom_tile()
   if (ndim == 1L) {
-    first_dim <- if (multi) label_name else x$by[1]
-    p <- p + facet_wrap(reformulate(first_dim))
+    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[1]), ...)
   } else if (ndim == 2L) {
     d1 <- if (multi) label_name else x$by[1]
     d2 <- if (multi) x$by[1] else x$by[2]
     form <- if (!swap_dim) reformulate(d1, d2) else reformulate(d2, d1)
-    p <- p + facet_grid(form)
+    p <- p + facet_grid(form, ...)
   }
   if (rotate_x || rotate_y) {
     ele <- element_text(angle = 45, hjust = 1, vjust = 1)

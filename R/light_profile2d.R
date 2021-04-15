@@ -38,13 +38,9 @@
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-#' grid <- expand_grid(Species = unique(iris$Species), Petal.Length = c(2:5))
-#' light_profile2d(fl, pd_grid = grid)
-#' light_profile2d(fl, pd_grid = grid, type = "residual")
-#' light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"))
+#' light_profile2d(fl, v = c("Petal.Length", "Species"))
 #' light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
 #'   type = "predicted", by = "Species", n_bins=c(2, 5), sep = ";")
-#' light_profile2d(fl, pd_grid = grid, type = "shap")
 #' @seealso \code{\link{light_effects}}, \code{\link{plot.light_profile}}.
 light_profile2d <- function(x, ...) {
   UseMethod("light_profile2d")
@@ -59,7 +55,7 @@ light_profile2d.default <- function(x, ...) {
 #' @describeIn light_profile Profiles for flashlight.
 #' @export
 light_profile2d.flashlight <- function(x, v = NULL,
-                                       data = NULL, by = x$by,
+                                       data = x$data, by = x$by,
                                        type = c("partial dependence",
                                                 "predicted", "response",
                                                 "residual", "shap"),
@@ -87,6 +83,7 @@ light_profile2d.flashlight <- function(x, v = NULL,
     if (!is.shap(x$shap)) {
       stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
     }
+    stopifnot(v %in% colnames(x$shap$data))
     variable_name <- getOption("flashlight.variable_name")
     data <- x$shap$data[x$shap$data[[variable_name]] %in% v, ]
   } else if (is.null(data)) {
