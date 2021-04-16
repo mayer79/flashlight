@@ -4,7 +4,7 @@
 #'
 #' @importFrom dplyr as_tibble
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
-#' @param v The variable to be shown on the x-axis.
+#' @param v The variable name to be shown on the x-axis.
 #' @param data An optional \code{data.frame}. Not relevant for \code{type = "shap"}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".

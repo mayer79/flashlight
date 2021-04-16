@@ -13,7 +13,7 @@
 #' @param new_obs One single new observation to calculate variable attribution for. Needs to be a \code{data.frame} of same structure as \code{data}.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to filter \code{data} for rows with equal values in "by" variables as \code{new_obs}.
-#' @param v Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".
+#' @param v Vector of variable names to assess contribution for. Defaults to all except those specified by "y", "w" and "by".
 #' @param visit_strategy In what sequence should variables be visited? By "importance", by \code{n_perm} "permutation" or as "v" (see Details).
 #' @param n_max Maximum number of rows in \code{data} to consider in the reference data. Set to lower value if \code{data} is large.
 #' @param n_perm Number of permutations of random visit sequences. Only used if \code{visit_strategy = "permutation"}.

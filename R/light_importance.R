@@ -12,7 +12,7 @@
 #' @param data An optional \code{data.frame}. Not used for \code{type = "shap"}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of importance: "permutation" (default) or "shap". "shap" is only available if a "shap" object is contained in \code{x}.
-#' @param v Vector of variables to assess importance for. Defaults to all variables in \code{data} except "by" and "y".
+#' @param v Vector of variable names to assess importance for. Defaults to all variables in \code{data} except "by" and "y".
 #' @param n_max Maximum number of rows to consider. Not used for \code{type = "shap"}.
 #' @param seed An integer random seed used to select and shuffle rows. Not used for \code{type = "shap"}.
 #' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance and allows the calculation of standard errors measuring the uncertainty from permuting. Not used for \code{type = "shap"}.
