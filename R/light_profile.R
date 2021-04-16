@@ -29,7 +29,7 @@
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence and ALE profiles.
 #' @return An object of class \code{light_profile} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing results. Can be used to build fully customized visualizations.
+#'   \item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Names of group by variable.
 #'   \item \code{v} The variable(s) evaluated.
 #'   \item \code{type} Same as input \code{type}. For information only.

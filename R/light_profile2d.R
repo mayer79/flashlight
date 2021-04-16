@@ -23,7 +23,7 @@
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variables. Not relevant for partial dependence profiles.
 #' @return An object of class \code{light_profile2d} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing results. Can be used to build fully customized visualizations.
+#'   \item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Names of group by variables.
 #'   \item \code{v} The two variable names evaluated.
 #'   \item \code{type} Same as input \code{type}. For information only.
@@ -166,21 +166,26 @@ light_profile2d.flashlight <- function(x, v = NULL,
 
 #' @describeIn light_profile Profiles for multiflashlight.
 #' @export
-light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
-                                          breaks = NULL, n_bins = 11,
-                                          cut_type = "equal",
-                                          pd_evaluate_at = NULL,
-                                          pd_grid = NULL, ...) {
-  cut_type <- match.arg(cut_type)
+light_profile2d.multiflashlight <- function(x, v = NULL, data = NULL,
+                                            breaks = NULL, n_bins = 11,
+                                            cut_type = "equal",
+                                            pd_evaluate_at = NULL,
+                                            pd_grid = NULL, ...) {
 
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
-    breaks <- common_breaks(x = x, v = v, data = data,
-                            n_bins = n_bins, cut_type = cut_type)
+    if (is.null(data)) {
+
+      breaks <- Map(common_breaks, x = list(x, x), v = v,
+                    n_bins = n_bins, cut_type = cut_type)
+    } else {
+      breaks <- Map(common_breaks, x = list(x, x), v = v, data = data,
+                    n_bins = n_bins, cut_type = cut_type)
+    }
   }
-  all_profiles <- lapply(x, light_profile, v = v, data = data,
+  all_profiles <- lapply(x, light_profile2d, v = v, data = data,
                          breaks = breaks, n_bins = n_bins,
                          cut_type = cut_type,
                          pd_evaluate_at = pd_evaluate_at,
                          pd_grid = pd_grid, ...)
-  light_combine(all_profiles, new_class = "light_profile_multi")
+  light_combine(all_profiles, new_class = "light_profile2d_multi")
 }

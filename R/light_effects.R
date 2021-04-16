@@ -24,7 +24,7 @@
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable.
 #' @return An object of class \code{light_effects} with the following elements.
 #' \itemize{
-#'   \item \code{response} A tibble containing the response profiles.
+#'   \item \code{response} A tibble containing the response profiles. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{predicted} A tibble containing the prediction profiles.
 #'   \item \code{pd} A tibble containing the partial dependence profiles.
 #'   \item \code{ale} A tibble containing the ALE profiles.

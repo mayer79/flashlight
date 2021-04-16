@@ -15,7 +15,7 @@
 #' @param ... Arguments passed from or to other functions.
 #' @return An object of class \code{light_performance} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
+#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Same as input \code{by}.
 #' }
 #' @export

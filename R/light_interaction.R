@@ -24,7 +24,7 @@
 #' @param ... Further arguments passed to or from other methods.
 #' @return An object of class \code{light_importance} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations.
+#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{type} Same as input \code{type}. For information only.
 #' }

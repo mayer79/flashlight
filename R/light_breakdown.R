@@ -24,7 +24,7 @@
 #' @param ... Further arguments passed to \code{prettyNum} to format numbers in description text.
 #' @return An object of class \code{light_breakdown} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+#'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Same as input \code{by}.
 #' }
 #' @export
