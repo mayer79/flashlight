@@ -91,7 +91,7 @@ is.light_profile2d <- function(x) {
   inherits(x, "light_profile2d")
 }
 
-#' @describeIn is.flashlightCheck for light_profile2d_multi object.
+#' @describeIn is.flashlight Check for light_profile2d_multi object.
 #' @export
 is.light_profile2d_multi <- function(x) {
   inherits(x, "light_profile2d_multi")

@@ -42,18 +42,18 @@
 #'   type = "predicted", by = "Species", n_bins=c(2, 5), sep = ";")
 #' light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
 #'   type = "predicted", n_bins=5, breaks = list(Petal.Length = c(1, 5, 9)))
-#' @seealso \code{\link{light_effects}}, \code{\link{plot.light_profile}}.
+#' @seealso \code{\link{light_profile}}, \code{\link{plot.light_profile2d}}.
 light_profile2d <- function(x, ...) {
   UseMethod("light_profile2d")
 }
 
-#' @describeIn light_profile Default method not implemented yet.
+#' @describeIn light_profile2d Default method not implemented yet.
 #' @export
 light_profile2d.default <- function(x, ...) {
   stop("No default method available yet.")
 }
 
-#' @describeIn light_profile Profiles for flashlight.
+#' @describeIn light_profile2d Profiles for flashlight.
 #' @export
 light_profile2d.flashlight <- function(x, v = NULL,
                                        data = NULL, by = x$by,
@@ -176,7 +176,7 @@ light_profile2d.flashlight <- function(x, v = NULL,
   add_classes(out, c("light_profile2d", "light"))
 }
 
-#' @describeIn light_profile Profiles for multiflashlight.
+#' @describeIn light_profile2d Profiles for multiflashlight.
 #' @export
 light_profile2d.multiflashlight <- function(x, v = NULL, data = NULL,
                                             type = c("partial dependence",

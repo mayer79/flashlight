@@ -99,7 +99,7 @@ if (TRUE) {
 }
 
 # Check
-check(pkg) #, manual = FALSE, vignettes = FALSE)
+check(pkg, vignettes = FALSE)
 
 # Create
 build(pkg)
