@@ -90,7 +90,8 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
     }
     grid <- setNames(data.frame(evaluate_at), v)
   } else {
-    v <- colnames(grid)
+    stopifnot("grid must be a data.frame" = is.data.frame(grid))
+    v <- names(grid)
   }
 
   # Pick ids
@@ -156,7 +157,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
 
   # Finalize output
   data[[label_name]] <- x$label
-  out <- list(data = data, by = by, v = colnames(grid), center = center)
+  out <- list(data = data, by = by, v = names(grid), center = center)
   add_classes(out, c("light_ice", "light"))
 }
 
