@@ -142,6 +142,8 @@ light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL,
   if ("pred" %in% names(list(...))) {
     stop("'pred' not implemented for multiflashlight")
   }
+
+  # align breaks for numeric v
   if (is.null(breaks)) {
     breaks <- common_breaks(x = x, v = v, data = data, n_bins = n_bins,
                             cut_type = cut_type)

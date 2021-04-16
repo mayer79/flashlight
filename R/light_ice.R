@@ -81,9 +81,12 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
   # Complete/evaluate grid
   if (is.null(grid)) {
     if (is.null(evaluate_at)) {
-      evaluate_at <- if (!is.null(breaks)) midpoints(breaks) else
-        auto_cut(data[[v]], n_bins = n_bins,
-                 cut_type = cut_type, ...)$bin_means
+      if (!is.null(breaks) && is.numeric(breaks)) {
+        evaluate_at <- midpoints(breaks)
+      } else {
+        evaluate_at <- auto_cut(data[[v]], n_bins = n_bins,
+                                cut_type = cut_type, ...)$bin_means
+      }
     }
     grid <- setNames(data.frame(evaluate_at), v)
   } else {

@@ -8,7 +8,7 @@
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}.
 #' @param cut_type Cut type
 #' @return A vector of breaks
-common_breaks <- function(x, v, data, n_bins, cut_type) {
+common_breaks <- function(x, v, data = NULL, n_bins, cut_type) {
   if (is.null(data)) {
     # Stack v from all data in flashlights
     stopifnot(

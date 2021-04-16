@@ -204,12 +204,14 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
     stop("'pred' not implemented for multiflashlight")
   }
 
+  # Align breaks for numeric v
   if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
     breaks <- common_breaks(x = x, v = v, data = data,
                             n_bins = n_bins, cut_type = cut_type)
   }
   all_profiles <- lapply(x, light_profile, v = v, data = data,
                          breaks = breaks, n_bins = n_bins, cut_type = cut_type,
-                         pd_evaluate_at = pd_evaluate_at, pd_grid = pd_grid, ...)
+                         pd_evaluate_at = pd_evaluate_at,
+                         pd_grid = pd_grid, ...)
   light_combine(all_profiles, new_class = "light_profile_multi")
 }
