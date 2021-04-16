@@ -15,7 +15,7 @@ common_breaks <- function(x, v, data = NULL, n_bins, cut_type) {
       all(vapply(x, function(z) nrow(z$data) >= 1L, FUN.VALUE = TRUE)),
       all(vapply(x, function(z) v %in% colnames(z$data), FUN.VALUE = TRUE))
     )
-    v_vec <- unlist(lapply(x, function(z) z$data[[v]]))
+    v_vec <- unlist(lapply(x, function(z) z$data[[v]]), use.names = FALSE)
   } else {
     stopifnot(nrow(data) >= 1L, v %in% colnames(data))
     v_vec <- data[[v]]

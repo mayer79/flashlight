@@ -20,7 +20,7 @@
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 #' plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
 #' pr <- light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
-#'   type = "predicted", by = "Species", n_bins=c(2, 5), sep = ";")
+#'   type = "predicted", by = "Species", n_bins=c(2, 3), sep = ";")
 #' plot(pr)
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
 plot.light_profile2d <- function(x, swap_dim = FALSE,
@@ -30,7 +30,7 @@ plot.light_profile2d <- function(x, swap_dim = FALSE,
   label_name <- getOption("flashlight.label_name")
   type_name <- getOption("flashlight.type_name")
 
-  multi <- is.light_profile_multi(x)
+  multi <- is.light_profile2d_multi(x)
   ndim <- length(x$by) + multi
   if (ndim > 2L) {
     stop("Plot method not defined for more than two by variables or

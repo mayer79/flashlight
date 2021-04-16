@@ -11,7 +11,7 @@
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param stats Statistic to calculate for the response profile: "mean" or "quartiles".
 #' @param breaks Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.
-#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.
+#' @param n_bins Maximum number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.
 #' @param cut_type Should a numeric \code{v} be cut into "equal" or "quantile" bins? Ignored if \code{v} is not numeric or if \code{breaks} is specified.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param counts_weighted Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
