@@ -194,23 +194,34 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
 #' @describeIn light_profile Profiles for multiflashlight.
 #' @export
 light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
+                                          type = c("partial dependence", "ale",
+                                                   "predicted", "response",
+                                                   "residual", "shap"),
                                           breaks = NULL, n_bins = 11,
                                           cut_type = c("equal", "quantile"),
                                           pd_evaluate_at = NULL,
                                           pd_grid = NULL, ...) {
+  type <- match.arg(type)
   cut_type <- match.arg(cut_type)
+
+  is_pd <- type == "partial dependence"
+  is_ale <- type == "ale"
 
   if ("pred" %in% names(list(...))) {
     stop("'pred' not implemented for multiflashlight")
   }
 
   # Align breaks for numeric v
-  if (is.null(breaks) && is.null(pd_evaluate_at) && is.null(pd_grid)) {
-    breaks <- common_breaks(x = x, v = v, data = data,
-                            n_bins = n_bins, cut_type = cut_type)
+  if (is.null(pd_grid) || !is_pd) {
+    stopifnot("Need exactly one 'v'." = length(v) == 1L)
+    if (is.null(breaks) && (is.null(pd_evaluate_at) || (!is_pd && !is_ale))) {
+      breaks <- common_breaks(x = x, v = v, data = data,
+                              n_bins = n_bins, cut_type = cut_type)
+    }
   }
   all_profiles <- lapply(x, light_profile, v = v, data = data,
-                         breaks = breaks, n_bins = n_bins, cut_type = cut_type,
+                         type = type, breaks = breaks,
+                         n_bins = n_bins, cut_type = cut_type,
                          pd_evaluate_at = pd_evaluate_at,
                          pd_grid = pd_grid, ...)
   light_combine(all_profiles, new_class = "light_profile_multi")
