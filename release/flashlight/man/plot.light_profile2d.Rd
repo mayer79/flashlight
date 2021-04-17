@@ -15,7 +15,7 @@
 
 \item{numeric_as_factor}{Should numeric x and y values be converted to factors first? Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".}
 
-\item{...}{Further arguments passed to \code{facet_wrap} or \code{facet_grid}.}
+\item{...}{Further arguments passed to \code{geom_tile}.}
 }
 \value{
 An object of class \code{ggplot2}.
