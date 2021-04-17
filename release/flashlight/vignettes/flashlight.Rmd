@@ -1,6 +1,5 @@
 ---
 title: "Using flashlight"
-author: "Michael Mayer"
 date: "`r Sys.Date()`"
 bibliography: "biblio.bib"
 link-citations: true
@@ -742,8 +741,6 @@ plot(light_profile(fls, v = "sqft_living"), swap_dim = TRUE)
 
 # Global surrogate
 plot(light_global_surrogate(fls$xgb, v = x, maxdepth = 3))
-
-# Etc.
 ```
 
 ## Working with case weights
@@ -767,8 +764,6 @@ plot(light_importance(fls, by = "Species"))
 # Partial dependence profiles for Petal.Width
 plot(light_profile(fls, v = "Petal.Width"))
 plot(light_profile(fls, v = "Petal.Width", by = "Species"))
-
-# etc.
 ```
 
 ## Binary classification
@@ -800,9 +795,6 @@ plot(light_importance(fl, v = c("Sepal.Length", "Petal.Width")),
 
 # ICE profiles for Petal.Width
 plot(light_ice(fl, v = "Petal.Width"), alpha = 0.4)
-
-# Etc.
-
 ```
 
 ## References

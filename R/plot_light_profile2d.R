@@ -2,17 +2,16 @@
 #'
 #' Minimal visualization of an object of class \code{light_profile2d}. The object returned is of class \code{ggplot} and can be further customized.
 #'
-#' The main geometry is \code{geom_tile}. Additional dimensions ("by" variable(s) and/or multiflashlight) are represented by {facet_wrap/grid}.
+#' The main geometry is \code{geom_tile}. Additional dimensions ("by" variable(s) and/or multiflashlight) are represented by \code{facet_wrap/grid}.
 #'
 #' @import ggplot2
 #' @importFrom stats reformulate
 #' @method plot light_profile2d
-#' @param x An object of class \code{light_profile}.
+#' @param x An object of class \code{light_profile2d}.
 #' @param swap_dim Swap the `facet_grid` dimensions.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is \code{TRUE}.
-#' @param rotate_y Should y axis labels be rotated by 45 degrees? Default is \code{FALSE}.
 #' @param numeric_as_factor Should numeric x and y values be converted to factors first? Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".
-#' @param ... Further arguments passed to \code{facet_wrap or facet_grid}.
+#' @param ... Further arguments passed to \code{facet_wrap} or \code{facet_grid}.
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
@@ -22,10 +21,9 @@
 #' pr <- light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
 #'   type = "predicted", by = "Species", n_bins=c(2, 3), sep = ";")
 #' plot(pr)
-#' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
-plot.light_profile2d <- function(x, swap_dim = FALSE,
-                               rotate_x = TRUE, rotate_y = FALSE,
-                               numeric_as_factor = FALSE, ...) {
+#' @seealso \code{\link{light_profile2d}}.
+plot.light_profile2d <- function(x, swap_dim = FALSE, rotate_x = TRUE,
+                                 numeric_as_factor = FALSE, ...) {
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
   type_name <- getOption("flashlight.type_name")
@@ -52,14 +50,9 @@ plot.light_profile2d <- function(x, swap_dim = FALSE,
     form <- if (!swap_dim) reformulate(d1, d2) else reformulate(d2, d1)
     p <- p + facet_grid(form, ...)
   }
-  if (rotate_x || rotate_y) {
-    ele <- element_text(angle = 45, hjust = 1, vjust = 1)
-    if (rotate_x) {
-      p <- p + theme(axis.text.x = ele)
-    }
-    if (rotate_y) {
-      p <- p + theme(axis.text.y = ele)
-    }
+  if (rotate_x) {
+    p <- p +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p
 }
