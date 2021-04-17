@@ -12,7 +12,7 @@
 #' @param type Type of the profile: Either "partial dependence", "ale", "predicted", "response", "residual", or "shap".
 #' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.
 #' @param breaks Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.
-#' @param n_bins Maximum number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.
+#' @param n_bins Approximate number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.
 #' @param cut_type Should a numeric \code{v} be cut into "equal" or "quantile" bins? Ignored if \code{v} is not numeric or if \code{breaks} is specified.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for type "shap".
 #' @param counts Should observation counts be added?

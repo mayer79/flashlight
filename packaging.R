@@ -115,6 +115,6 @@ library(flashlight)
 
 check_win_devel(pkg)
 
-check_rhub(pkg, env_vars=c(R_COMPILE_AND_INSTALL_PACKAGES = "always"))
+check_rhub(pkg, env_vars = c(R_COMPILE_AND_INSTALL_PACKAGES = "always"))
 
 devtools::release(pkg)

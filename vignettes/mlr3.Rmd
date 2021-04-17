@@ -1,6 +1,5 @@
 ---
 title: "Using flashlight with mlr3"
-author: "Michael Mayer"
 date: "`r Sys.Date()`"
 bibliography: "biblio.bib"
 link-citations: true

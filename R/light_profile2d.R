@@ -12,7 +12,7 @@
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "partial dependence", "predicted", "response", "residual", or "shap".
 #' @param breaks Named list of cut breaks specifying how to bin one or both numeric variables. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}. Ignored for non-numeric \code{v}.
-#' @param n_bins Maximum number of unique values to evaluate for numeric \code{v}. Can be an unnamed vector/list of length 2 to distinguish between v.
+#' @param n_bins Approximate number of unique values to evaluate for numeric \code{v}. Can be an unnamed vector/list of length 2 to distinguish between v.
 #' @param cut_type Should numeric \code{v} be cut into "equal" or "quantile" bins? Can be an unnamed vector/list of length 2 to distinguish between v.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for type "shap".
 #' @param counts Should observation counts be added?
@@ -37,13 +37,6 @@
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 #' light_profile2d(fl, v = c("Petal.Length", "Species"))
-#' light_profile2d(fl, v = c("Petal.Length", "Species"),
-#'   pd_evaluate_at = list(Species = "setosa"),
-#'   breaks = list(Petal.Length = c(1, 5, 9)))
-#' light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
-#'   type = "predicted", by = "Species", n_bins=c(2, 5), sep = ";")
-#' light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
-#'   type = "predicted", n_bins=5, breaks = list(Petal.Length = c(1, 5, 9)))
 #' @seealso \code{\link{light_profile}}, \code{\link{plot.light_profile2d}}.
 light_profile2d <- function(x, ...) {
   UseMethod("light_profile2d")
@@ -176,6 +169,7 @@ light_profile2d.flashlight <- function(x, v = NULL,
 
   # Finalize results
   agg[[label_name]] <- x$label
+  agg[[type_name]] <- type
 
   # Collect results
   out <- list(data = agg, by = by, v = v, type = type)
@@ -203,6 +197,8 @@ light_profile2d.multiflashlight <- function(x, v = NULL, data = NULL,
       v, n_bins = n_bins, cut_type = cut_type,
       breaks = breaks, pd_evaluate_at = pd_evaluate_at
     )
+
+    # Calculate common breaks for both variables independently
     for (vv in v) {
       st <- strategy[[vv]]
       if (is.null(st$breaks) && (is.null(st$pd_evaluate_at) || !is_pd)) {
@@ -214,6 +210,8 @@ light_profile2d.multiflashlight <- function(x, v = NULL, data = NULL,
     }
     breaks <- lapply(strategy, `[[`, "breaks")
   }
+
+  # Call light_profile2d for all flashlights
   all_profiles <- lapply(x, light_profile2d, v = v,
                          data = data, type = type,
                          breaks = breaks,
