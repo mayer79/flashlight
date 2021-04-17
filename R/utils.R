@@ -32,14 +32,14 @@ midpoints <- function(breaks) {
 fix_strategy <- function(v, n_bins, cut_type, breaks, pd_evaluate_at) {
   stopifnot(
     "Breaks must be NULL or a named list" = is.null(breaks) ||
-      (is.list(breaks) && length(breaks) <= 2L && names(breaks) %in% v),
+      (is.list(breaks) && length(breaks) <= 2L && all(names(breaks) %in% v)),
     "pd_evaluate_at must be NULL or a named list" = is.null(pd_evaluate_at) ||
       (is.list(pd_evaluate_at) && length(pd_evaluate_at) <= 2L &&
-         names(pd_evaluate_at) %in% v),
+         all(names(pd_evaluate_at) %in% v)),
     "n_bins should be a numeric vector of length <=2" =
       length(n_bins) %in% 1:2 && is.numeric(n_bins),
     "cut_type should be a character vector of length <=2" =
-      length(cut_type) %in% 1:2 && cut_type %in% c("equal", "quantile")
+      length(cut_type) %in% 1:2 && all(cut_type %in% c("equal", "quantile"))
   )
   strategy <- list()
   for (i in 1:2) {

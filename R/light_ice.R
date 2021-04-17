@@ -56,8 +56,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
                                  indices = NULL, n_max = 20,
                                  seed = NULL, use_linkinv = TRUE,
                                  center = c("no", "first", "middle",
-                                            "last", "mean", "0"),
-                                 ...) {
+                                            "last", "mean", "0"), ...) {
   cut_type <- match.arg(cut_type)
   center <- match.arg(center)
 

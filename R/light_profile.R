@@ -15,7 +15,7 @@
 #' @param n_bins Maximum number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.
 #' @param cut_type Should a numeric \code{v} be cut into "equal" or "quantile" bins? Ignored if \code{v} is not numeric or if \code{breaks} is specified.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for type "shap".
-#' @param counts Should counts be added?
+#' @param counts Should observation counts be added?
 #' @param counts_weighted If \code{counts} is TRUE: Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
 #' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant for types "response", "predicted" or "residual" and if \code{v} is being binned. In that case useful if e.g. different flashlights use different data sets and bin labels would not match.
 #' @param pred Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Only relevant for \code{type = "predicted"} and \code{type = "ale"}. Not implemented for multiflashlight.
