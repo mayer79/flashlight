@@ -11,7 +11,7 @@
 #' @param swap_dim Swap the `facet_grid` dimensions.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is \code{TRUE}.
 #' @param numeric_as_factor Should numeric x and y values be converted to factors first? Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".
-#' @param ... Further arguments passed to \code{facet_wrap} or \code{facet_grid}.
+#' @param ... Further arguments passed to \code{geom_tile}.
 #' @return An object of class \code{ggplot2}.
 #' @export
 #' @examples
@@ -41,14 +41,14 @@ plot.light_profile2d <- function(x, swap_dim = FALSE, rotate_x = TRUE,
 
   # Build plot
   p <- ggplot(data, aes_string(x = x$v[1], y = x$v[2], fill = value_name)) +
-    geom_tile()
+    geom_tile(...)
   if (ndim == 1L) {
-    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[1]), ...)
+    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[1]))
   } else if (ndim == 2L) {
     d1 <- if (multi) label_name else x$by[1]
     d2 <- if (multi) x$by[1] else x$by[2]
     form <- if (!swap_dim) reformulate(d1, d2) else reformulate(d2, d1)
-    p <- p + facet_grid(form, ...)
+    p <- p + facet_grid(form)
   }
   if (rotate_x) {
     p <- p +

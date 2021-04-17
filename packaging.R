@@ -81,6 +81,11 @@ files <- list.files("R", full.names = TRUE)
 file.copy(files, file.path(pkg, "R"), overwrite = TRUE)
 devtools::document(pkg)
 
+use_logo("logo.png")
+dir.create(file.path(pkg, "man", "figures"))
+file.copy(file.path("man", "figures", "logo.png"),
+          file.path(pkg, "man", "figures", "logo.png"))
+
 # Tests
 if (!dir.exists(file.path(pkg, "tests"))) {
   dir.create(file.path(pkg, "tests"))
