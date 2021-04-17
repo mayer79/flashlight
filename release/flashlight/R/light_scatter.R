@@ -4,7 +4,7 @@
 #'
 #' @importFrom dplyr as_tibble
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
-#' @param v The variable to be shown on the x-axis.
+#' @param v The variable name to be shown on the x-axis.
 #' @param data An optional \code{data.frame}. Not relevant for \code{type = "shap"}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".
@@ -12,9 +12,9 @@
 #' @param n_max Maximum number of data rows to select. Will be randomly picked from the relevant data.
 #' @param seed An integer random seed used for subsampling.
 #' @param ... Further arguments passed from or to other methods.
-#' @return An object of class \code{light_scatter}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_scatter} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+#'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable evaluated.
 #'   \item \code{type} Same as input \code{type}. For information only.
@@ -58,6 +58,7 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
     if (!is.shap(x$shap)) {
       stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
     }
+    stopifnot(v %in% colnames(x$shap$data))
     variable_name <- getOption("flashlight.variable_name")
     data <- x$shap$data[x$shap$data[[variable_name]] == v, ]
   }

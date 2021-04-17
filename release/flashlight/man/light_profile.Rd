@@ -40,6 +40,7 @@ light_profile(x, ...)
   x,
   v = NULL,
   data = NULL,
+  type = c("partial dependence", "ale", "predicted", "response", "residual", "shap"),
   breaks = NULL,
   n_bins = 11,
   cut_type = c("equal", "quantile"),
@@ -53,7 +54,7 @@ light_profile(x, ...)
 
 \item{...}{Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence and ALE profiles.}
 
-\item{v}{The variable to be profiled.}
+\item{v}{The variable name to be profiled.}
 
 \item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
 
@@ -63,15 +64,15 @@ light_profile(x, ...)
 
 \item{stats}{Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.}
 
-\item{breaks}{Cut breaks for a numeric \code{v}.}
+\item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
 
-\item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}. Only used if neither \code{grid} nor \code{pd_evaluate_at} is specified.}
+\item{n_bins}{Approximate number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.}
+\item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins? Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is TRUE. Not used for type "shap".}
 
-\item{counts}{Should counts be added?}
+\item{counts}{Should observation counts be added?}
 
 \item{counts_weighted}{If \code{counts} is TRUE: Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
 
@@ -94,9 +95,9 @@ light_profile(x, ...)
 \item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.}
 }
 \value{
-An object of classes \code{light_profile}, \code{light} (and a list) with the following elements.
+An object of class \code{light_profile} with the following elements.
 \itemize{
-\item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Its column names are specified by all other items in this list.
+\item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Names of group by variable.
 \item \code{v} The variable(s) evaluated.
 \item \code{type} Same as input \code{type}. For information only.
@@ -107,7 +108,7 @@ An object of classes \code{light_profile}, \code{light} (and a list) with the fo
 Calculates different types of profiles across covariable values. By default, partial dependence profiles are calculated (see Friedman). Other options are profiles of ALE (accumulated local effects, see Apley), response, predicted values ("M plots" or "marginal plots", see Apley), residuals, and shap. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in Apley, we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
 }
 \details{
-For numeric covariables \code{v} with more than \code{n_bins} disjoint values, its values are binned. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
+Numeric covariables \code{v} with more than \code{n_bins} disjoint values are binned into \code{n_bins} bins. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overwritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
 }
 \section{Methods (by class)}{
 \itemize{

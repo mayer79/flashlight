@@ -38,7 +38,7 @@ light_interaction(x, ...)
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{v}{Vector of variables to be assessed.}
+\item{v}{Vector of variable names to be assessed.}
 
 \item{pairwise}{Should overall interaction strength per variable be shown or pairwise interactions? Defaults to \code{FALSE}.}
 
@@ -57,18 +57,18 @@ light_interaction(x, ...)
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE.}
 }
 \value{
-An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
+An object of class \code{light_importance} with the following elements.
 \itemize{
-\item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
+\item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 \item \code{type} Same as input \code{type}. For information only.
 }
 }
 \description{
-This function provides Friedman's H statistic for overall interaction strength per covariable as well as its version for pairwise interactions, see reference below. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"}, the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of the variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
+This function provides Friedman's H statistic for overall interaction strength per covariable as well as its version for pairwise interactions, see the reference below. As a fast alterantive to assess overall interaction strength, with \code{type = "ice"}, the function offers a method based on centered ICE curves: The corresponding H* statistic measures how much of the variability of a c-ICE curve is unexplained by the main effect. As for Friedman's H statistic, it can be useful to consider unnormalized or squared values (see Details below).
 }
 \details{
-Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip this normalization step in order to have a more direct comparison of the interaction effects across variable (pairs). The values of such unnormalized H are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H. Note that in general, for each variable (pair) predictions are done on a data set with \code{grid_size * n_max}, so be cautious with increasing the defaults too much. Still, even with larger \code{grid_size} and \code{n_max}, there might be considerable variation across different runs, thus setting a seed might be required for reproducibility. The minimum required elements in the (multi-) flashlight are a "predict_function", "model", and "data".
+Friedman's H statistic relates the interaction strength of a variable (pair) to the total effect strength of that variable (pair) based on partial dependence curves. Due to this normalization step, even variables with low importance can have high values for H. The function \code{light_interaction} offers the option to skip normalization in order to have a more direct comparison of the interaction effects across variable (pairs). The values of such unnormalized H statistics are on the scale of the response variable. Use \code{take_sqrt = FALSE} to return squared values of H. Note that in general, for each variable (pair), predictions are done on a data set with \code{grid_size * n_max}, so be cautious with increasing the defaults too much. Still, even with larger \code{grid_size} and \code{n_max}, there might be considerable variation across different runs, thus setting a seed might be required for reproducibility. The minimum required elements in the (multi-) flashlight are a "predict_function", "model", and "data".
 }
 \section{Methods (by class)}{
 \itemize{

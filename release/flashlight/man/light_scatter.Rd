@@ -30,7 +30,7 @@ light_scatter(x, ...)
 
 \item{...}{Further arguments passed from or to other methods.}
 
-\item{v}{The variable to be shown on the x-axis.}
+\item{v}{The variable name to be shown on the x-axis.}
 
 \item{data}{An optional \code{data.frame}. Not relevant for \code{type = "shap"}.}
 
@@ -45,9 +45,9 @@ light_scatter(x, ...)
 \item{seed}{An integer random seed used for subsampling.}
 }
 \value{
-An object of class \code{light_scatter}, \code{light} (and a list) with the following elements.
+An object of class \code{light_scatter} with the following elements.
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 \item \code{v} The variable evaluated.
 \item \code{type} Same as input \code{type}. For information only.

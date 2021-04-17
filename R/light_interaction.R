@@ -12,7 +12,7 @@
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.
-#' @param v Vector of variables to be assessed.
+#' @param v Vector of variable names to be assessed.
 #' @param pairwise Should overall interaction strength per variable be shown or pairwise interactions? Defaults to \code{FALSE}.
 #' @param type Are measures based on Friedman's H statistic ("H") or on "ice" curves? Option "ice" is available only if \code{pairwise = FALSE}.
 #' @param normalize Should the variances explained be normalized? Default is \code{TRUE} in order to reproduce Friedman's H statistic.
@@ -22,9 +22,9 @@
 #' @param seed An integer random seed used for subsampling.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE.
 #' @param ... Further arguments passed to or from other methods.
-#' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_importance} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Its column names are specified by the items in this list (except for "method").
+#'   \item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{type} Same as input \code{type}. For information only.
 #' }

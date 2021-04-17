@@ -14,6 +14,8 @@
 \alias{is.light_ice_multi}
 \alias{is.light_profile}
 \alias{is.light_profile_multi}
+\alias{is.light_profile2d}
+\alias{is.light_profile2d_multi}
 \alias{is.light_effects}
 \alias{is.light_effects_multi}
 \alias{is.shap}
@@ -48,6 +50,10 @@ is.light_ice_multi(x)
 is.light_profile(x)
 
 is.light_profile_multi(x)
+
+is.light_profile2d(x)
+
+is.light_profile2d_multi(x)
 
 is.light_effects(x)
 
@@ -97,6 +103,10 @@ Checks if an object inherits specific class relevant for the flashlight package.
 \item \code{is.light_profile}: Check for light_profile object.
 
 \item \code{is.light_profile_multi}: Check for light_profile_multi object.
+
+\item \code{is.light_profile2d}: Check for light_profile2d object.
+
+\item \code{is.light_profile2d_multi}: Check for light_profile2d_multi object.
 
 \item \code{is.light_effects}: Check for light_effects object.
 

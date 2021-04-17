@@ -35,6 +35,9 @@ auto_cut <- function(x, breaks = NULL, n_bins = 27,
   cut_type <- match.arg(cut_type)
   bin_means <- if (is.factor(x)) levels(x) else sort(unique(x))
   if (!is.numeric(x) || (is.null(breaks) && length(bin_means) <= n_bins)) {
+      if (!is.numeric(x)) {
+        breaks <- NULL  # ignored for non-numeric
+      }
       data <- data.frame(x, x)
       if (anyNA(x)) {
         bin_means <- c(bin_means, NA)

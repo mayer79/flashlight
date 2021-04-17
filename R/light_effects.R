@@ -6,13 +6,13 @@
 #'
 #' @importFrom dplyr bind_rows
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
-#' @param v The variable to be profiled.
+#' @param v The variable name to be profiled.
 #' @param data An optional \code{data.frame}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param stats Statistic to calculate for the response profile: "mean" or "quartiles".
-#' @param breaks Cut breaks for a numeric \code{v}.
-#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}.
-#' @param cut_type For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins (recommended if interested in ALE).
+#' @param breaks Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.
+#' @param n_bins Approximate number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.
+#' @param cut_type Should a numeric \code{v} be cut into "equal" or "quantile" bins? Ignored if \code{v} is not numeric or if \code{breaks} is specified.
 #' @param use_linkinv Should retransformation function be applied? Default is TRUE.
 #' @param counts_weighted Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.
 #' @param v_labels If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.
@@ -22,9 +22,9 @@
 #' @param pd_seed An integer random seed used to sample ICE profiles for partial dependence and ALE.
 #' @param ale_two_sided If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. This aligns the results better with the x labels. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.
 #' @param ... Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable.
-#' @return An object of classes \code{light_effects}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_effects} with the following elements.
 #' \itemize{
-#'   \item \code{response} A tibble containing the response profiles.
+#'   \item \code{response} A tibble containing the response profiles. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{predicted} A tibble containing the prediction profiles.
 #'   \item \code{pd} A tibble containing the partial dependence profiles.
 #'   \item \code{ale} A tibble containing the ALE profiles.
@@ -142,9 +142,11 @@ light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL,
   if ("pred" %in% names(list(...))) {
     stop("'pred' not implemented for multiflashlight")
   }
+
+  # align breaks for numeric v
   if (is.null(breaks)) {
-    breaks <- common_breaks(x = x, v = v, data = data, breaks = breaks,
-                            n_bins = n_bins, cut_type = cut_type)
+    breaks <- common_breaks(x = x, v = v, data = data, n_bins = n_bins,
+                            cut_type = cut_type)
   }
   all_effects <- lapply(x, light_effects, v = v, data = data, breaks = breaks,
                         n_bins = n_bins, cut_type = cut_type, ...)

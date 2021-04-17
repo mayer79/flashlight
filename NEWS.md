@@ -1,12 +1,18 @@
 # flashlight 0.8.0
 
-## Visible changes
+## New functionality
+
+- Added new explainer `light_profile2d` for 2D plots of partial dependence and other profiles (residuals, predictions, response, SHAP).
+
+## Other changes
 
 - All `zzz_names` arguments are deprecated and are set as `options(flashlight.zzz_names = ...)` instead.
 
-- `light_ice` and `light_scatter` now use `ggplot`'s `override.aes` to suppress `alpha` in legend.
+- `light_ice` and `light_scatter` now use `override.aes` to suppress `alpha` in legend.
 
 - Greatly improved error messages.
+
+- Bug fixes.
 
 # flashlight 0.7.5
 

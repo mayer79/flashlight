@@ -1,6 +1,5 @@
 ---
 title: "Using flashlight with mlr3"
-author: "Michael Mayer"
 date: "`r Sys.Date()`"
 bibliography: "biblio.bib"
 link-citations: true
@@ -17,8 +16,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning = FALSE,
   message = FALSE,
-  fig.width = 7,
-  fig.height = 6
+  fig.width = 5.5,
+  fig.height = 4.5
 )
 ```
 

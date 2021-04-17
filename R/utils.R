@@ -28,5 +28,28 @@ midpoints <- function(breaks) {
   (breaks[-m] + breaks[-1]) / 2
 }
 
-
+# Organize binning strategy per variable for 2d partial dependence
+fix_strategy <- function(v, n_bins, cut_type, breaks, pd_evaluate_at) {
+  stopifnot(
+    "breaks must be NULL or a named list" =
+      is.null(breaks) || is.list(breaks),
+    "pd_evaluate_at must be NULL or a named list" =
+      is.null(pd_evaluate_at) || is.list(pd_evaluate_at),
+    "n_bins should be a numeric vector of length <=2" =
+      length(n_bins) <= 2L && is.numeric(n_bins),
+    "cut_type should be a character vector of length <=2" =
+      length(cut_type) <= 2L && all(cut_type %in% c("equal", "quantile"))
+  )
+  strategy <- list()
+  for (i in 1:2) {
+    vv <- v[i]
+    strategy[[vv]] <- list(
+      breaks = if (vv %in% names(breaks)) breaks[[vv]],
+      pd_evaluate_at = if (vv %in% names(pd_evaluate_at)) pd_evaluate_at[[vv]],
+      n_bins = n_bins[min(i, length(n_bins))],
+      cut_type = cut_type[min(i, length(cut_type))]
+    )
+  }
+  return(strategy)
+}
 

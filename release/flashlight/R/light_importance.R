@@ -12,7 +12,7 @@
 #' @param data An optional \code{data.frame}. Not used for \code{type = "shap"}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of importance: "permutation" (default) or "shap". "shap" is only available if a "shap" object is contained in \code{x}.
-#' @param v Vector of variables to assess importance for. Defaults to all variables in \code{data} except "by" and "y".
+#' @param v Vector of variable names to assess importance for. Defaults to all variables in \code{data} except "by" and "y".
 #' @param n_max Maximum number of rows to consider. Not used for \code{type = "shap"}.
 #' @param seed An integer random seed used to select and shuffle rows. Not used for \code{type = "shap"}.
 #' @param m_repetitions Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance and allows the calculation of standard errors measuring the uncertainty from permuting. Not used for \code{type = "shap"}.
@@ -20,9 +20,9 @@
 #' @param lower_is_better Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1. Not used for \code{type = "shap"}.
 #' @param use_linkinv Should retransformation function be applied? Default is FALSE. Not uses for \code{type = "shap"}.
 #' @param ... Further arguments passed to \code{light_performance}. Not used for \code{type = "shap"}.
-#' @return An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
+#' @return An object of class \code{light_importance} with the following elements.
 #' \itemize{
-#'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+#'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{type} Same as input \code{type}. For information only.
 #' }

@@ -4,7 +4,7 @@
 \alias{common_breaks}
 \title{Common Breaks for multiflashlight}
 \usage{
-common_breaks(x, v, data, breaks, n_bins, cut_type)
+common_breaks(x, v, data = NULL, n_bins, cut_type)
 }
 \arguments{
 \item{x}{An object of class \code{multiflashlight}.}
@@ -12,8 +12,6 @@ common_breaks(x, v, data, breaks, n_bins, cut_type)
 \item{v}{The variable to be profiled.}
 
 \item{data}{A \code{data.frame}.}
-
-\item{breaks}{Cut breaks for a numeric \code{v}.}
 
 \item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}.}
 

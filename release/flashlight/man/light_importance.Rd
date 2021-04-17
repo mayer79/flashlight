@@ -39,7 +39,7 @@ light_importance(x, ...)
 
 \item{type}{Type of importance: "permutation" (default) or "shap". "shap" is only available if a "shap" object is contained in \code{x}.}
 
-\item{v}{Vector of variables to assess importance for. Defaults to all variables in \code{data} except "by" and "y".}
+\item{v}{Vector of variable names to assess importance for. Defaults to all variables in \code{data} except "by" and "y".}
 
 \item{n_max}{Maximum number of rows to consider. Not used for \code{type = "shap"}.}
 
@@ -54,9 +54,9 @@ light_importance(x, ...)
 \item{use_linkinv}{Should retransformation function be applied? Default is FALSE. Not uses for \code{type = "shap"}.}
 }
 \value{
-An object of class \code{light_importance}, \code{light} (and a list) with the following elements.
+An object of class \code{light_importance} with the following elements.
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 \item \code{type} Same as input \code{type}. For information only.
 }

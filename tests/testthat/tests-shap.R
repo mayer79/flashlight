@@ -32,4 +32,10 @@ test_that("shap mode for light_profile works", {
   expect_true(inherits(plot(shap), "ggplot"))
 })
 
+test_that("shap mode for light_profile2d works", {
+  shap <- light_profile2d(fl, v = c("Petal.Width", "Species"),
+                          type = "shap", n_bins = 4)
+  expect_true(inherits(plot(shap), "ggplot"))
+})
+
 

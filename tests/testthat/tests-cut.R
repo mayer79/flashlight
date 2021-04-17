@@ -30,7 +30,7 @@ test_that("common_breaks give same results for split data as for combined data",
   fl2 <- flashlight(model = fit2, label = "single")
   fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
   expect_equal(common_breaks(fls, v = "Petal.Length", data = NULL,
-                             breaks = NULL, cut_type = "quantile", n_bins = 2),
+                             cut_type = "quantile", n_bins = 2),
                c(1.0, 4.3, 6.9))
 
   # Same result for multiflashlight with data distributed across flashlights
@@ -38,7 +38,7 @@ test_that("common_breaks give same results for split data as for combined data",
   fl2 <- flashlight(fls$single, data = iris[76:150, ])
   fls2 <- multiflashlight(list(fl1, fl2))
   expect_equal(common_breaks(fls, v = "Petal.Length", data = NULL,
-                             breaks = NULL, cut_type = "quantile", n_bins = 2),
+                             cut_type = "quantile", n_bins = 2),
                c(1.0, 4.3, 6.9))
 })
 

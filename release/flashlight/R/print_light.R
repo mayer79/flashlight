@@ -14,13 +14,13 @@
 #' light_performance(fl, v = "Species")
 #' light_effects(fl, v = "Sepal.Length")
 print.light <- function(x, ...) {
-  cat("\nI am an object with class(es)", paste(class(x), collapse = ", "), "\n")
+  cat("\nI am an object of class", class(x)[1L], "\n")
   x_cs <- x[vapply(x, FUN = is.data.frame, FUN.VALUE = TRUE)]
   if (length(x_cs)) {
-    cat("\ndata.frames (maximum 6 rows shown):\n")
+    cat("\ndata.frames:\n")
     for (nm in names(x_cs)) {
       cat("\n", nm, "\n")
-      print(head(x_cs[[nm]]))
+      print(x_cs[[nm]])
     }
   }
   invisible(x)

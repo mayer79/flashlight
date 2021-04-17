@@ -40,7 +40,7 @@ light_breakdown(x, ...)
 
 \item{by}{An optional vector of column names used to filter \code{data} for rows with equal values in "by" variables as \code{new_obs}.}
 
-\item{v}{Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".}
+\item{v}{Vector of variable names to assess contribution for. Defaults to all except those specified by "y", "w" and "by".}
 
 \item{visit_strategy}{In what sequence should variables be visited? By "importance", by \code{n_perm} "permutation" or as "v" (see Details).}
 
@@ -57,9 +57,9 @@ light_breakdown(x, ...)
 \item{digits}{Passed to \code{prettyNum} to format numbers in description text.}
 }
 \value{
-An object of class \code{light_breakdown}, \code{light} (and a list) with the following elements.
+An object of class \code{light_breakdown} with the following elements.
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 }
 }

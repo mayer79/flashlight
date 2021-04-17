@@ -50,7 +50,7 @@ test_that("light_profile works correctly for type residual", {
 })
 
 test_that("partial dependence is the same as ice", {
-  pr <- light_profile(fl, v = "Species", indices = 1)
+  pr <- light_profile(fl, v = "Species", pd_indices = 1)
   ice <- light_ice(fl, v = "Species", indices = 1)
   expect_equal(pr$data$value, unname(ice$data$value))
 })

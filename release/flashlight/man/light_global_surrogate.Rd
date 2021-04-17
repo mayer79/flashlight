@@ -45,9 +45,9 @@ light_global_surrogate(x, ...)
 \item{keep_max_levels}{Number of levels of categorical and factor variables to keep. Other levels are combined to a level "Other". This prevents \code{rpart} to take too long to split non-numeric variables with many levels.}
 }
 \value{
-An object of class \code{light_global_surrogate}, \code{light} (and a list) with the following elements.
+An object of class \code{light_global_surrogate} with the following elements.
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 }
 }
