@@ -6,6 +6,8 @@
 
 ## Other changes
 
+- Added logo
+
 - All `zzz_names` arguments are deprecated and are set as `options(flashlight.zzz_names = ...)` instead.
 
 - `light_ice` and `light_scatter` now use `override.aes` to suppress `alpha` in legend.

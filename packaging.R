@@ -117,6 +117,7 @@ install(pkg)
 # Load
 library(flashlight)
 
+
 # modify .Rbuildignore in build project to ignore the proj file.
 
 check_win_devel(pkg)

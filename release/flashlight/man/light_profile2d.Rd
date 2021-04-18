@@ -92,7 +92,8 @@ An object of class \code{light_profile2d} with the following elements.
 Calculates different types of 2D-profiles across two variables. By default, partial dependence profiles are calculated (see Friedman). Other options are response, predicted values, residuals, and shap. The results are aggregated by (weighted) means.
 }
 \details{
-Different binning options are available, see arguments below.
+Different binning options are available, see arguments below. For high resolution partial dependence plots, it might be necessary to specify \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in order to avoid empty parts in the plot. A high value of \code{n_bins} might not have the desired effect as it internally capped at the number of distinct values of a variable.
+
 For partial dependence and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles it is "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
 }
 \section{Methods (by class)}{

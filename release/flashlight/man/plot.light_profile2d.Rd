@@ -25,6 +25,9 @@ Minimal visualization of an object of class \code{light_profile2d}. The object r
 }
 \details{
 The main geometry is \code{geom_tile}. Additional dimensions ("by" variable(s) and/or multiflashlight) are represented by \code{facet_wrap/grid}.
+For all types of profiles except "partial dependence", it is natural to see empty parts in the plot. These are combinations of the \code{v} variables that do not appear in the data.
+Even for type "partial dependence", gaps can occur, e.g. for \code{cut_type = "quantile"} or if \code{n_bins} are larger than the number of distinct values of a \code{v} variable.
+Such gaps can be suppressed by setting \code{numeric_as_factor = TRUE} or by using the arguments \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in \code{light_profile2d()}.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
