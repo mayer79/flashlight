@@ -64,13 +64,12 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
   }
 
   # Checks
-  vars <- c(label_name, by, v, value_name)
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
-    "'v' not in 'data'!" = v %in% colnames(data),
-    !anyDuplicated(vars)
+    "'v' not in 'data'!" = v %in% colnames(data)
   )
+  check_unique(c(by, v), c(label_name, value_name))
   if (type %in% c("response", "residual") && is.null(x$y)) {
     stop("You need to specify 'y' in flashlight.")
   }
@@ -100,6 +99,7 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
 
   # Organize output
   data[[label_name]] <- x$label
+  vars <- c(label_name, by, v, value_name)
   add_classes(
     list(data = as_tibble(data[, vars]), by = by, v = v, type = type),
     c("light_scatter", "light")

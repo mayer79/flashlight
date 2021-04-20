@@ -98,3 +98,4 @@ test_that("Options work", {
     expect_true(inherits(plot(imp), "ggplot"))
   })
 })
+

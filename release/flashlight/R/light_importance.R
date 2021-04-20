@@ -81,9 +81,10 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
-    "Not all 'v' in 'data'" = v %in% colnames(data),
-    !anyDuplicated(c(key_vars, value_name, variable_name, error_name))
+    "Not all 'v' in 'data'" = v %in% colnames(data)
   )
+  check_unique(by, c(label_name, metric_name, value_name,
+                     variable_name, error_name))
   n <- nrow(data)
 
   if (!is.null(seed)) {

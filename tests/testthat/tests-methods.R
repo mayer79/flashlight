@@ -44,7 +44,7 @@ test_that("light_recode works", {
 test_that("selected 'is' functions work", {
   fit <- lm(Sepal.Length ~ Species + 0, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
-  fls <- multiflashlight(list(fl, fl))
+  fls <- multiflashlight(list(fl, flashlight(fl, label = "lm2")))
 
   expect_true(is.flashlight(fl))
   expect_false(is.flashlight(1))
@@ -101,7 +101,7 @@ test_that("selected 'is' functions work", {
 
 fit <- lm(Sepal.Length ~ Species + 0, data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
-fls <- multiflashlight(list(fl, fl))
+fls <- multiflashlight(list(fl, flashlight(fl, label = "lm2")))
 
 test_that("response method works for (multi-)flashlights", {
   expect_equal(response(fl), iris$Sepal.Length)

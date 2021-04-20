@@ -89,9 +89,11 @@ add_shap.flashlight <- function(x, v = NULL,
   }
   stopifnot(
     "No 'v' specified." = length(v) >= 1L,
-    "Not all 'v' in data." = v %in% colnames(data),
-    !anyDuplicated(c(x$by, x$w, v, key_vars))
+    "Not all 'v' in data." = v %in% colnames(data)
   )
+  check_unique(c(x$by, x$w, v),
+               c(variable_name, before_name, after_name),
+               temp_names = c("baseline_", "shap_"))
 
   core_func <- function(i) {
     shp <- light_breakdown(

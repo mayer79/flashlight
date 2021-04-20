@@ -107,11 +107,13 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "'v' not in 'data'." = v %in% colnames(data),
-    "'v' or 'pd_grid' misses." = !is.null(pd_grid) || !is.null(v),
-    !anyDuplicated(c(by, union(v, names(pd_grid)),
-      if (counts) counts_name,
-      if (stats == "quartiles") c(q1_name, q3_name),
-      value_name, label_name, type_name))
+    "'v' or 'pd_grid' misses." = !is.null(pd_grid) || !is.null(v)
+  )
+  check_unique(
+    c(by, union(v, names(pd_grid))),
+    opt_names = c(if (counts) counts_name,
+                  if (stats == "quartiles") c(q1_name, q3_name),
+                  value_name, label_name, type_name)
   )
   if (!is.null(pred) && type == "predicted" && length(pred) != nrow(data)) {
     stop("Wrong number of predicted values passed.")

@@ -75,9 +75,9 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "'v' not in 'data'." = v %in% colnames(data),
-    "'v' not specified." = !is.null(v),
-    !anyDuplicated(c(by, v))
+    "'v' not specified." = !is.null(v)
   )
+  check_unique(c(by, v))
 
   # Update flashlight and calculate predictions
   x <- flashlight(x, data = data, by = by,
