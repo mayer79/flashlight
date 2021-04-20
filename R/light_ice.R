@@ -70,10 +70,10 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "'v' not in 'data'." = v %in% colnames(data),
-    "'v' or 'grid' misses." = !is.null(grid) || !is.null(v),
-    !anyDuplicated(c(by, union(v, names(grid)),
-                     value_name, label_name, id_name))
+    "'v' or 'grid' misses." = !is.null(grid) || !is.null(v)
   )
+  check_unique(c(by, union(v, names(grid))),
+               c(value_name, label_name, id_name))
 
   n <- nrow(data)
 

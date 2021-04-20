@@ -101,9 +101,9 @@ light_profile2d.flashlight <- function(x, v = NULL,
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
-    "'v' not in 'data'." = v %in% colnames(data),
-    !anyDuplicated(c(by, v, value_name, label_name, type_name))
+    "'v' not in 'data'." = v %in% colnames(data)
   )
+  check_unique(c(by, v), c(value_name, label_name, type_name))
 
   # Update flashlight
   if (type != "shap") {

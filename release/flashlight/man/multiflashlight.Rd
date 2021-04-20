@@ -46,11 +46,6 @@ fit_glm <- glm(Sepal.Length ~ ., family = Gamma(link = log), data = iris)
 mod_lm <- flashlight(model = fit_lm, label = "lm")
 mod_glm <- flashlight(model = fit_glm, label = "glm")
 (mods <- multiflashlight(list(mod_lm, mod_glm)))
-
-mods <- multiflashlight(list(mod_lm, mod_glm),
-  data = iris, by = "Species", y = "Sepal.Length")
-mod_lm <- mods$lm
-mod_lm
 }
 \seealso{
 \code{\link{flashlight}}.

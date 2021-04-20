@@ -38,7 +38,7 @@ test_that("light_profile works correctly for type predicted", {
 test_that("light_profile uses pred", {
   pr <- light_profile(fl, v = "Species", type = "predicted", pred = rep(1:3, each = 50))
   expect_equal(pr$data$value, 1:3)
-  fls <- multiflashlight(list(fl, fl))
+  fls <- multiflashlight(list(fl, flashlight(fl, label = "lm2")))
   expect_error(light_profile(fls, v = "Species", type = "predicted",
                              pred = rep(1:3, each = 50)))
 })

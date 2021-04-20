@@ -71,10 +71,10 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
     "Not all 'v' in 'data'" = v %in% colnames(data),
     "'new_obs' has to consist of one row" = nrow(new_obs) == 1L,
     "'new_obs' not consistent with 'data'" =
-      sort(colnames(new_obs)) == sort(colnames(data)),
-    !anyDuplicated(c(after_name, before_name, label_name,
-                     variable_name, description_name))
+      sort(colnames(new_obs)) == sort(colnames(data))
   )
+  check_unique(opt_names = c(after_name, before_name, label_name,
+                             variable_name, description_name))
 
   if (!is.null(seed)) {
     set.seed(seed)

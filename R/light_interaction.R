@@ -72,10 +72,13 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "Not all 'v' in 'data'" = v %in% colnames(data),
-    !(c("id_", "id_curve", "w_") %in% colnames(data)),
-    !anyDuplicated(c(by, v, value_name, label_name, error_name,
-                     variable_name, "w_", "id_", "id_curve",
-                     "value_", "value_i", "value_j", "denom_"))
+    !(c("id_", "id_curve", "w_") %in% colnames(data))
+  )
+  check_unique(
+    c(by, v),
+    opt_names = c(value_name, label_name, error_name, variable_name),
+    temp_names = c("w_", "id_", "id_curve", "value_",
+                   "value_i", "value_j", "denom_")
   )
   if (type == "ice" && pairwise) {
     stop("Pairwise interactions are implemented only for type = 'H'.")

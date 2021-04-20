@@ -49,10 +49,10 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by,
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
-    !anyDuplicated(c(metric_name, value_name, label_name, "pred_", by)),
     "No metric!" = !is.null(metrics),
     "No 'y' defined in flashlight!" = !is.null(x$y)
   )
+  check_unique(by, c(metric_name, value_name, label_name), temp_names = "pred_")
 
   # Update flashlight
   x <- flashlight(x, data = data, by = by,
