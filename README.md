@@ -59,7 +59,10 @@ plot(light_performance(fl), fill = "darkred") +
 plot(light_performance(fl, by = "Species"), fill = "darkred") +
   ggtitle("Grouped by Species")
 ```
-<img src="tools/figs/perf.png" alt="Performance" width="40%"/><img src="tools/figs/perf_grouped.png" alt="Grouped" width="40%"/>
+<p>
+  <img src="tools/figs/perf.png" alt="Performance" width="40%" hspace="20"/>
+  <img src="tools/figs/perf_grouped.png" alt="Grouped" width="40% hspace="20""/>
+</p>
 
 ### Permutation importance
 
