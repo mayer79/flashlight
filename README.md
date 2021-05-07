@@ -21,12 +21,12 @@ Currently, models with numeric or binary response are supported.
 ## Installation
 
 From CRAN:
-```
+``` r
 install.packages("flashlight")
 ```
 
 Latest version from github:
-```
+``` r
 library(devtools)
 install_github("mayer79/flashlight", subdir = "release/flashlight")
 ```
@@ -34,6 +34,7 @@ install_github("mayer79/flashlight", subdir = "release/flashlight")
 ## Example Code
 
 ``` r
+library(ggplot2)
 library(MetricsWeighted)
 library(flashlight)
 
@@ -48,43 +49,86 @@ fl <- flashlight(
   label = "ols",               
   metrics = list(rmse = rmse, `R-squared` = r_squared)
 )
+```
 
-# Performance: rmse and R-squared
-plot(light_performance(fl), fill = "darkred")
-plot(light_performance(fl, by = "Species"), fill = "darkred")
+### Performance (overall and grouped by `Species`)
 
-# Variable importance by increase in rmse
+``` r
+plot(light_performance(fl), fill = "darkred") +
+  ggtitle("Overall")
+plot(light_performance(fl, by = "Species"), fill = "darkred") +
+  ggtitle("Grouped by Species")
+```
+<img src="tools/figs/perf.png" alt="Performance" width="40%"/>
+<img src="tools/figs/perf_grouped.png" alt="Grouped" width="40%"/>
+
+### Permutation importance
+
+``` r
 imp <- light_importance(fl, m_repetitions = 4)
 plot(imp, fill = "darkred")
-
-# ICE profiles for Petal.Width
-plot(light_ice(fl, v = "Petal.Width"))
-plot(light_ice(fl, v = "Petal.Width", center = "first"))
-
-# Partial dependence profiles for Petal.Width
-plot(light_profile(fl, v = "Petal.Width"))
-plot(light_profile(fl, v = "Petal.Width", by = "Species"))
-
-# 2D partial dependence
-plot(light_profile2d(fl, v = c("Petal.Width", "Petal.Length")))
-
-# Accumulated local effects (ALE) profiles for Petal.Width
-plot(light_profile(fl, v = "Petal.Width", type = "ale"))
-
-# Prediction, response and residual profiles, e.g.
-plot(light_profile(fl, v = "Petal.Width", type = "residual"))
-
-# All in one...
-plot(light_effects(fl, v = "Petal.Width"), use = "all")
-
-# Scatter plots
-plot(light_scatter(fl, v = "Petal.Width", type = "predicted"))
-
-# Variable contribution breakdown for single observation
-plot(light_breakdown(fl, new_obs = iris[2, ]))
-
-# Global surrogate
-plot(light_global_surrogate(fl))
-
 ```
+![](tools/figs/imp.png)
+
+### ICE curves for `Petal.Width`
+
+``` r
+plot(light_ice(fl, v = "Petal.Width"))
+```
+![](tools/figs/ice.png)
+
+### Partial dependence plot for Petal.Width
+
+```r
+plot(light_profile(fl, v = "Petal.Width")) +
+  ggtitle("Overall")
+plot(light_profile(fl, v = "Petal.Width", by = "Species")) +
+  ggtitle("Grouped by Species")
+```
+<img src="tools/figs/pd.png" alt="Partial Dependence" width="40%"/>
+<img src="tools/figs/pd_grouped.png" alt="Partial Dependence (grouped)" width="40%"/>
+
+### 2D partial dependence
+
+```r
+plot(light_profile2d(fl, v = c("Petal.Width", "Petal.Length")))
+```
+![](tools/figs/pd2d.png)
+
+### Accumulated local effects (ALE) profiles for Petal.Width
+
+``` r
+plot(light_profile(fl, v = "Petal.Width", type = "ale"))
+```
+![](tools/figs/ale.png)
+
+### Prediction, response and residual profiles, e.g.
+
+``` r
+plot(light_profile(fl, v = "Petal.Width", type = "residual", 
+                   stats = "quartile"))
+```
+![](tools/figs/residual.png)
+
+### Different profile plots in one...
+
+``` r
+plot(light_effects(fl, v = "Petal.Width"), use = "all")
+```
+![](tools/figs/effects.png)
+
+### Variable contribution breakdown for single observation
+
+``` r
+plot(light_breakdown(fl, new_obs = iris[2, ]))
+```
+![](tools/figs/breakdown.png)
+
+### Global surrogate
+
+``` r
+plot(light_global_surrogate(fl))
+```
+![](tools/figs/surrogate.png)
+
 Check out the vignette to see the full capabilities of the package.

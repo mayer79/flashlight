@@ -75,6 +75,12 @@ use_package("xgboost", "Suggests")
 # Copy readme etc.
 file.copy(c(".Rbuildignore", "NEWS.md", "README.md", "cran-comments.md", "DESCRIPTION"),
           pkg, overwrite = TRUE)
+if (!dir.exists(file.path(pkg, "tools"))) {
+  dir.create(file.path(pkg, "tools"))
+  dir.create(file.path(pkg, "tools", "figs"))
+}
+file.copy(list.files(file.path("tools", "figs"), full.names = TRUE),
+          file.path(pkg, "tools", "figs"))
 
 # Copy R scripts and document them
 files <- list.files("R", full.names = TRUE)
