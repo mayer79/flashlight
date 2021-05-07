@@ -59,8 +59,7 @@ plot(light_performance(fl), fill = "darkred") +
 plot(light_performance(fl, by = "Species"), fill = "darkred") +
   ggtitle("Grouped by Species")
 ```
-<img src="tools/figs/perf.png" alt="Performance" width="40%"/>
-<img src="tools/figs/perf_grouped.png" alt="Grouped" width="40%"/>
+<img src="tools/figs/perf.png" alt="Performance" width="40%"/><img src="tools/figs/perf_grouped.png" alt="Grouped" width="40%"/>
 
 ### Permutation importance
 
@@ -85,8 +84,7 @@ plot(light_profile(fl, v = "Petal.Width")) +
 plot(light_profile(fl, v = "Petal.Width", by = "Species")) +
   ggtitle("Grouped by Species")
 ```
-<img src="tools/figs/pd.png" alt="Partial Dependence" width="40%"/>
-<img src="tools/figs/pd_grouped.png" alt="Partial Dependence (grouped)" width="40%"/>
+<img src="tools/figs/pd.png" alt="Partial Dependence" width="40%"/><img src="tools/figs/pd_grouped.png" alt="Partial Dependence (grouped)" width="40%"/>
 
 ### 2D partial dependence
 
