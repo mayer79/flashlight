@@ -1,5 +1,3 @@
-context("light_profile2d2d")
-
 fit <- lm(Sepal.Length ~ Species, data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 

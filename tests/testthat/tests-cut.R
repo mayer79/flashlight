@@ -1,5 +1,3 @@
-context("cut utils")
-
 test_that("midpoints are working", {
   expect_equal(midpoints(1:2), 1.5)
   expect_error(midpoints(1))

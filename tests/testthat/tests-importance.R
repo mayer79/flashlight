@@ -1,5 +1,3 @@
-context("importance")
-
 fit1 <- lm(Sepal.Length ~ Petal.Width + Species + Sepal.Width, data = iris)
 fit2 <- lm(Sepal.Length ~ Petal.Width, data = iris)
 fl1 <- flashlight(model = fit1, label = "1", data = iris, y = "Sepal.Length")

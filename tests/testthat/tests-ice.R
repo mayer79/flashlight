@@ -1,5 +1,3 @@
-context("light_ice")
-
 test_that("basic functionality and n_max work", {
   fit <- lm(Sepal.Length ~ Species + 0, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")

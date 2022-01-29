@@ -1,5 +1,3 @@
-context("light_performance")
-
 test_that("basic functionality works", {
   fit <- lm(Sepal.Length ~ ., data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris,

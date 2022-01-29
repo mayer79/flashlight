@@ -1,5 +1,3 @@
-context("interaction")
-
 fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
 fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
 fl_additive <- flashlight(model = fit_additive, label = "additive")
