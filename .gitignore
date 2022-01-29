@@ -4,3 +4,6 @@
 .Ruserdata
 doc
 Meta
+inst/doc
+/doc/
+/Meta/

@@ -3,7 +3,7 @@ test_that("basic functionality works", {
   fl <- flashlight(model = fit, label = "lm", data = iris,
                    y = "Sepal.Length", metrics = list(r2 = r_squared))
   perf <- light_performance(fl)
-  expect_equal(perf$data$value, summary(fit)$r.squared, tolerance = 0.001)
+  expect_equal(perf$data$value, summary(fit)$r.squared, tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
@@ -12,21 +12,21 @@ fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 
 test_that("light_performance works for one flashlight with one metric and no by", {
   perf <- light_performance(fl)
-  expect_equal(perf$data$value, 0.301, tolerance = 0.001)
+  expect_equal(perf$data$value, 0.301, tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
 test_that("light_performance works for one flashlight with multiple metrics and no by", {
   perf <- light_performance(fl, metrics = list(rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(2, 3))
-  expect_equal(perf$data$value, c(0.301, 0.867), tolerance = 0.001)
+  expect_equal(perf$data$value, c(0.301, 0.867), tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
 test_that("light_performance works for one flashlight with one metric and a by variable", {
   perf <- light_performance(fl, by = "Species")
   expect_equal(dim(perf$data), c(3, 4))
-  expect_equal(perf$data$value[1], 0.254, tolerance = 0.001)
+  expect_equal(perf$data$value[1], 0.254, tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
@@ -34,7 +34,7 @@ test_that("light_performance works for one flashlight with multiple metrics and 
   perf <- light_performance(fl, by = "Species",
                             metrics = list(rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(6, 4))
-  expect_equal(perf$data$value[1], 0.254, tolerance = 0.001)
+  expect_equal(perf$data$value[1], 0.254, tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
@@ -42,7 +42,7 @@ test_that("light_performance works for weighted flashlight with one metric and a
   fl_weighted <- flashlight(fl, w = "Petal.Length")
   perf_weighted <- light_performance(fl_weighted, by = "Species")
   expect_equal(dim(perf_weighted$data), c(3, 4))
-  expect_equal(perf_weighted$data$value[2], 0.3358, tolerance = 0.001)
+  expect_equal(perf_weighted$data$value[2], 0.3358, tolerance = 0.01)
   expect_true(inherits(plot(perf_weighted), "ggplot"))
 })
 
@@ -54,7 +54,7 @@ fls <- multiflashlight(list(fl1, fl2), data = iris, y = "Sepal.Length")
 
 test_that("light_performance works for multi-flashlight with one metric and no by", {
   perf <- light_performance(fls)
-  expect_equal(perf$data$value, c(0.3006270, 0.4043516), tolerance = 0.001)
+  expect_equal(perf$data$value, c(0.3006270, 0.4043516), tolerance = 0.01)
   expect_equal(as.character(perf$data$label), c("full", "single"))
   expect_true(inherits(plot(perf), "ggplot"))
 })
@@ -62,14 +62,14 @@ test_that("light_performance works for multi-flashlight with one metric and no b
 test_that("light_performance works for multi-flashlight with multiple metrics and no by", {
   perf <- light_performance(fls, metrics = list(rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(4, 3))
-  expect_equal(perf$data$value[1:2], c(0.301, 0.867), tolerance = 0.001)
+  expect_equal(perf$data$value[1:2], c(0.301, 0.867), tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
 test_that("light_performance works for multi-flashlight with one metric and a by variable", {
   perf <- light_performance(fls, by = "Species")
   expect_equal(dim(perf$data), c(6, 4))
-  expect_equal(perf$data$value[1], 0.254, tolerance = 0.001)
+  expect_equal(perf$data$value[1], 0.254, tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
@@ -77,7 +77,7 @@ test_that("light_performance works for multi-flashlight with multiple metrics an
   perf <- light_performance(fls, by = "Species",
                             metrics = list(rmse = rmse, r2 = r_squared))
   expect_equal(dim(perf$data), c(12, 4))
-  expect_equal(perf$data$value[1], 0.254, tolerance = 0.001)
+  expect_equal(perf$data$value[1], 0.254, tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 
@@ -85,7 +85,7 @@ test_that("light_performance works for weighted multi-flashlight with one metric
   fls_weighted <- multiflashlight(fls, w = "Petal.Length")
   perf_weighted <- light_performance(fls_weighted, by = "Species")
   expect_equal(dim(perf_weighted$data), c(6, 4))
-  expect_equal(perf_weighted$data$value[2], 0.3358, tolerance = 0.001)
+  expect_equal(perf_weighted$data$value[2], 0.3358, tolerance = 0.01)
   expect_true(inherits(plot(perf_weighted), "ggplot"))
 })
 
@@ -94,7 +94,7 @@ test_that("R-squared for weighted flashlight is the same as the one from summary
   fl <- flashlight(model = fit, label = "lm", data = iris, w = "Sepal.Width",
                    y = "Sepal.Length", metrics = list(r2 = r_squared))
   perf <- light_performance(fl)
-  expect_equal(perf$data$value, summary(fit)$r.squared, tolerance = 0.001)
+  expect_equal(perf$data$value, summary(fit)$r.squared, tolerance = 0.01)
   expect_true(inherits(plot(perf), "ggplot"))
 })
 

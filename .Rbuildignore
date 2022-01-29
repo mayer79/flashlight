@@ -1,0 +1,11 @@
+^LICENSE\.md$
+^packaging.R$
+[.]Rproj$
+^backlog$
+^cran-comments.md$
+^logo.png$
+^.*\.Rproj$
+^\.Rproj\.user$
+^cran-comments\.md$
+^doc$
+^Meta$
