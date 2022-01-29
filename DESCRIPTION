@@ -1,8 +1,8 @@
 Type: Package
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.8.0
-Date: 2021-04-20
+Version: 0.8.1
+Date: 2022-01-29
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
@@ -19,16 +19,14 @@ Description: Shed light on black box machine learning models by the help
     <arxiv:1903.11420>). All tools are implemented to work with case
     weights and allow for stratified analysis. Furthermore, multiple
     flashlights can be combined and analyzed together.
-License: GPL(>= 2)
-URL: https://github.com/mayer79/flashlight
-BugReports: https://github.com/mayer79/flashlight/issues
+License: GPL (>= 2)
 Depends: 
     R (>= 3.2.0)
-VignetteBuilder: 
-    knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+URL: https://github.com/mayer79/flashlight
+BugReports: https://github.com/mayer79/flashlight/issues
 Imports: 
     dplyr (>= 1.0.0),
     cowplot,
@@ -42,12 +40,14 @@ Imports:
     utils,
     withr
 Suggests: 
-    knitr,
-    caret,
     mlr3,
+    caret,
     mlr3learners,
     moderndive,
     ranger,
+    xgboost,
+    knitr,
     rmarkdown,
-    testthat,
-    xgboost
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3

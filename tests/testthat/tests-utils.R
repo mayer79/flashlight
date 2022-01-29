@@ -1,5 +1,3 @@
-context("utils")
-
 ir <- iris
 ir$pred_ <- 1
 fit <- lm(Sepal.Length ~ Petal.Length, data = ir)

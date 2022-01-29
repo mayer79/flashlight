@@ -28,7 +28,7 @@ install.packages("flashlight")
 Latest version from github:
 ``` r
 library(devtools)
-install_github("mayer79/flashlight", subdir = "release/flashlight")
+install_github("mayer79/flashlight")
 ```
 
 ## Example Code

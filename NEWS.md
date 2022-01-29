@@ -1,3 +1,11 @@
+# flashlight 0.8.1
+
+Maintenance update,
+
+- switching to testthat 3,
+- rearranging vignettes, and
+- improving package generation/update
+
 # flashlight 0.8.0
 
 ## New functionality
@@ -18,17 +26,17 @@
 
 # flashlight 0.7.5
 
-Another maintainance release to remove dependency on ggpubr.
+Another maintenance release to remove dependency on ggpubr.
 
 # flashlight 0.7.4
 
-This is a maintainance release to deal with an issue with XGBoost.
+This is a maintenance release to deal with an issue with XGBoost.
 
 # flashlight 0.7.3
 
 This is a documentation and maintainance release.
 
-## Maintainance
+## Maintenance
 
 - Switched to dplyr 1.0.0.
 

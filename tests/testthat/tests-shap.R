@@ -1,5 +1,3 @@
-context("shap")
-
 fit <- lm(Sepal.Length ~ Petal.Width, data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 fl <- add_shap(fl, n_shap = 10, seed = 1, verbose = FALSE)

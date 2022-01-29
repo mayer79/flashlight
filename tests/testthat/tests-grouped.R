@@ -1,5 +1,3 @@
-context("grouped operations")
-
 test_that("grouped_counts works", {
   expect_equal(grouped_counts(iris), data.frame(n = 150))
   expect_equal(grouped_counts(iris, by = "Species")$n, c(50, 50, 50))

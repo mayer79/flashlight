@@ -1,5 +1,3 @@
-context("light_global_surrogate")
-
 fit <- lm(Sepal.Length ~ ., data = iris)
 x <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 
