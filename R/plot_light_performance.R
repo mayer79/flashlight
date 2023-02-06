@@ -5,7 +5,7 @@
 #' The plot is organized as a bar plot as follows: For flashlights without "by" variable specified, a single bar is drawn. Otherwise, the "by" variable (or the flashlight label if there is no "by" variable) is represented by the "x" aesthetic. The flashlight label (in case of one "by" variable) is represented by dodged bars. This strategy makes sure that performance of different flashlights can be compared easiest. Set "swap_dim = TRUE" to revert the role of dodging and x aesthetic. Different metrics are always represented by facets.
 #'
 #' @import ggplot2
-#' @importFrom stats reformulate
+#' @importFrom rlang .data
 #' @method plot light_performance
 #' @param x An object of class \code{light_performance}.
 #' @param swap_dim Should representation of dimensions (either two "by" variables or one "by" variable and multiflashlight) of x aesthetic and dodge fill aesthetic be swapped? Default is FALSE.
@@ -45,8 +45,11 @@ plot.light_performance <- function(x, swap_dim = FALSE,
   }
 
   # Differentiate some plot cases
-   if (ndim <= 1L) {
-    p <- ggplot(data, aes_string(y = value_name, x = if (nby) x$by[1] else label_name))
+  if (ndim <= 1L) {
+    p <- ggplot(
+      data,
+      aes(y = .data[[value_name]], x = .data[[if (nby) x$by[1L] else label_name]])
+    )
     if (geom == "bar") {
       p <- p + geom_bar(stat = "identity", ...)
     } else if (geom == "point") {
@@ -57,19 +60,19 @@ plot.light_performance <- function(x, swap_dim = FALSE,
     x_var <- if (!swap_dim) x$by[1] else second_dim
     dodge_var <- if (!swap_dim) second_dim else x$by[1]
 
-    p <- ggplot(data, aes_string(y = value_name, x = x_var))
+    p <- ggplot(data, aes(y = .data[[value_name]], x = .data[[x_var]]))
     if (geom == "bar") {
-      p <- p + geom_bar(aes_string(fill = dodge_var),
+      p <- p + geom_bar(aes(fill = .data[[dodge_var]]),
                         stat = "identity", position = "dodge", ...)
     } else if (geom == "point") {
       p <- p +
-        geom_point(aes_string(group = dodge_var, color = dodge_var), ...)
+        geom_point(aes(group = .data[[dodge_var]], color = .data[[dodge_var]]), ...)
     }
   }
 
   # Multiple metrics always go into a facet due to different y scales
   if (length(unique(data[[metric_name]])) >= 2L) {
-    p <- p + facet_wrap(reformulate(metric_name), scales = facet_scales)
+    p <- p + facet_wrap(metric_name, scales = facet_scales)
   }
   if (rotate_x) {
     p <- p +

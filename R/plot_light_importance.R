@@ -5,7 +5,7 @@
 #' The plot is organized as a bar plot with variable names as x-aesthetic. Up to two additional dimensions (multiflashlight and one "by" variable or single flashlight with two "by" variables) can be visualized by facetting and dodge/fill. Set \code{swap_dim = FALSE} to revert the role of these two dimensions. One single additional dimension is visualized by a facet wrap, or - if \code{swap_dim = FALSE} - by dodge/fill.
 #'
 #' @import ggplot2
-#' @importFrom stats reformulate
+#' @importFrom rlang .data
 #' @method plot light_importance
 #' @param x An object of class \code{light_importance}.
 #' @param top_m Maximum number of important variables to be returned.
@@ -57,42 +57,44 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   data[["high_"]] <- data[[value_name]] + data[[error_name]]
 
   # Differentiate some plot cases
-  p <- ggplot(data, aes_string(y = value_name, x = variable_name))
+  p <- ggplot(data, aes(y = .data[[value_name]], x = .data[[variable_name]]))
   if (ndim == 0L) {
     p <- p + geom_bar(stat = "identity", ...)
     if (error_bars) {
-      p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"),
-                             width = 0, color = "black")
+      p <- p + geom_errorbar(aes(ymin = low_, ymax = high_), width = 0, color = "black")
     }
   } else if (ndim == 1L) {
     first_dim <- if (multi) label_name else x$by[1]
     if (swap_dim) {
-      p <- p + geom_bar(aes_string(fill = first_dim),
+      p <- p + geom_bar(aes(fill = .data[[first_dim]]),
                         stat = "identity", position = "dodge", ...)
       if (error_bars) {
         p <- p + geom_errorbar(
-          aes_string(group = first_dim, ymin = "low_", ymax = "high_"),
-          width = 0, color = "black", position = position_dodge(0.9)
+          aes(group = .data[[first_dim]], ymin = low_, ymax = high_),
+          width = 0,
+          color = "black",
+          position = position_dodge(0.9)
         )
       }
     } else {
       p <- p + geom_bar(stat = "identity", ...) +
-        facet_wrap(reformulate(first_dim), scales = facet_scales)
+        facet_wrap(first_dim, scales = facet_scales)
       if (error_bars) {
-        p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"),
-                               width = 0, color = "black")
+        p <- p +
+          geom_errorbar(aes(ymin = low_, ymax = high_), width = 0, color = "black")
       }
     }
   } else {
     second_dim <- if (multi) label_name else x$by[2]
     wrap_var <- if (!swap_dim) x$by[1] else second_dim
     dodge_var <- if (!swap_dim) second_dim else x$by[1]
-    p <- p + geom_bar(aes_string(fill = dodge_var),
-                      stat = "identity", position = "dodge", ...) +
-      facet_wrap(reformulate(wrap_var), scales = facet_scales)
+    p <- p + geom_bar(
+      aes(fill = .data[[dodge_var]]), stat = "identity", position = "dodge", ...
+    ) +
+      facet_wrap(wrap_var, scales = facet_scales)
     if (error_bars) {
       p <- p + geom_errorbar(
-        aes_string(group = dodge_var, ymin = "low_", ymax = "high_"),
+        aes(group = .data[[dodge_var]], ymin = low_, ymax = high_),
         width = 0, color = "black", position = position_dodge(0.9)
       )
     }

@@ -3,7 +3,7 @@
 #' Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
 #'
 #' @import ggplot2
-#' @importFrom stats reformulate
+#' @importFrom rlang .data
 #' @importFrom dplyr semi_join bind_rows
 #' @method plot light_effects
 #' @param x An object of class \code{light_effects}.
@@ -57,7 +57,7 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   crossbar_required <- x$stats == "quartiles" && "response" %in% use
   if (crossbar_required) {
     crossbar <- geom_crossbar(
-      data = x$response, aes_string(ymin = q1_name, ymax = q3_name),
+      data = x$response, aes(ymin = .data[[q1_name]], ymax = .data[[q3_name]]),
       width = 0.3, fill = "darkblue", colour = "black", alpha = 0.1, ...
     )
   }
@@ -65,30 +65,29 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   # Put together the plot
   if (n) {
     tp <- type_name
-    p <- ggplot(data, aes_string(y = value_name, x = x$v)) +
-      geom_line(aes_string(color = tp, group = tp),
+    p <- ggplot(data, aes(y = .data[[value_name]], x = .data[[x$v]])) +
+      geom_line(aes(color = .data[[tp]], group = .data[[tp]]),
                 size = size_factor / 3, ...)
     if (show_points) {
-      p <- p + geom_point(aes_string(color = tp, group = tp),
+      p <- p + geom_point(aes(color = .data[[tp]], group = .data[[tp]]),
                           size = size_factor, ...)
     }
     if (crossbar_required) {
       p <- p + crossbar
     }
   } else {
-    p <- ggplot(x$response, aes_string(y = value_name, x = x$v)) +
+    p <- ggplot(x$response, aes(y = .data[[value_name]], x = .data[[x$v]])) +
       crossbar
   }
   if (multi || nby) {
-    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[1]),
+    p <- p + facet_wrap(if (multi) label_name else x$by[1],
                         scales = facet_scales, nrow = facet_nrow)
   }
   p <- p +
     theme_bw() +
     theme(legend.position = "bottom", legend.title = element_blank())
   if (rotate_x) {
-    p <- p +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p
 }

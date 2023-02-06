@@ -5,6 +5,7 @@
 #' The waterfall plot is to be read from top to bottom. The first line describes the (weighted) average prediction in the query data used to start with. Then, each additional line shows how the prediction changes due to the impact of the corresponding variable. The last line finally shows the original prediction of the selected observation. Multiple flashlights are shown in different facets. Positive and negative impacts are visualized with different colors.
 #'
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @method plot light_breakdown
 #' @param x An object of class \code{light_breakdown}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
@@ -34,13 +35,12 @@ plot.light_breakdown <- function(x, facet_scales = "free",
   data[["xmax_"]] <- data[[step_name]] + 0.5
   data[["y_"]] <- pmin(data[[before_name]], data[[after_name]])
 
-  p <- ggplot(data, aes_string(x = step_name, y = "y_",
-                               ymin = before_name, ymax = after_name,
-                               xmin = "xmin_", xmax = "xmax_")) +
-    geom_rect(aes_string(fill = "fill_"), color = "black",
-              show.legend = FALSE) +
+  p <- ggplot(data, aes(x = .data[[step_name]], y = y_,
+                        ymin = .data[[before_name]], ymax = .data[[after_name]],
+                        xmin = xmin_, xmax = xmax_)) +
+    geom_rect(aes(fill = fill_), color = "black", show.legend = FALSE) +
     labs(x = element_blank(), y = "prediction") +
-    geom_label(aes_string(label = description_name), hjust = -0.05, ...) +
+    geom_label(aes(label = .data[[description_name]]), hjust = -0.05, ...) +
     scale_y_continuous(expand = expansion(mult = c(0, 0.67))) +
     scale_x_reverse() +
     coord_flip() +
@@ -50,13 +50,10 @@ plot.light_breakdown <- function(x, facet_scales = "free",
           axis.ticks.y = element_blank())
 
   if (is.light_breakdown_multi(x)) {
-    p <- p +
-      facet_wrap(reformulate(label_name), scales = facet_scales,
-                 ncol = facet_ncol)
+    p <- p + facet_wrap(label_name, scales = facet_scales, ncol = facet_ncol)
   }
   if (rotate_x) {
-    p <- p +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p + theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   }
   p
 }

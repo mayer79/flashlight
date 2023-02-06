@@ -96,13 +96,13 @@ Note that ALE profiles are being calibrated by (weighted) average predictions. T
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method.
+\item \code{light_effects(default)}: Default method.
 
-\item \code{flashlight}: Profiles for a flashlight object.
+\item \code{light_effects(flashlight)}: Profiles for a flashlight object.
 
-\item \code{multiflashlight}: Effect profiles for a multiflashlight object.
+\item \code{light_effects(multiflashlight)}: Effect profiles for a multiflashlight object.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")

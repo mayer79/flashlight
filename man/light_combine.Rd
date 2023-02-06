@@ -30,13 +30,13 @@ Combines a list of similar objects each of class \code{light} by row binding \co
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_combine(default)}: Default method not implemented yet.
 
-\item \code{light}: Since there is nothing to combine, the input is returned except for additional classes.
+\item \code{light_combine(light)}: Since there is nothing to combine, the input is returned except for additional classes.
 
-\item \code{list}: Combine a list of similar light objects.
+\item \code{light_combine(list)}: Combine a list of similar light objects.
+
 }}
-
 \examples{
 fit_lm <- lm(Sepal.Length ~ ., data = iris)
 fit_glm <- glm(Sepal.Length ~ ., family = Gamma(link = "log"), data = iris)

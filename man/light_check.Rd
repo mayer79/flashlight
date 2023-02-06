@@ -28,13 +28,13 @@ Checks if an object of class \code{flashlight} or \code{multiflashlight} is cons
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default check method not implemented yet.
+\item \code{light_check(default)}: Default check method not implemented yet.
 
-\item \code{flashlight}: Checks if a flashlight object is consistently defined.
+\item \code{light_check(flashlight)}: Checks if a flashlight object is consistently defined.
 
-\item \code{multiflashlight}: Checks if a multiflashlight object is consistently defined.
+\item \code{light_check(multiflashlight)}: Checks if a multiflashlight object is consistently defined.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fit_log <- lm(log(Sepal.Length) ~ ., data = iris)

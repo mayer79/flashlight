@@ -5,7 +5,7 @@
 #' Either lines and points are plotted (if stats = "mean") or quartile boxes. If there is a "by" variable or a multiflashlight, this first dimension is taken care by color (or if \code{swap_dim = TRUE} by facets). If there are two "by" variables or a multiflashlight with one "by" variable, the first "by" variable is visualized as color, the second one or the multiflashlight via facet (change with \code{swap_dim}).
 #'
 #' @import ggplot2
-#' @importFrom stats reformulate
+#' @importFrom rlang .data
 #' @method plot light_profile
 #' @param x An object of class \code{light_profile}.
 #' @param swap_dim If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of dodge/fill variable and facet variable. If multiflashlight or one "by" variable, use facets instead of colors.
@@ -44,10 +44,10 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
   }
   # Distinguish some cases
   if (x$stats == "quartiles") {
-    p <- ggplot(x$data, aes_string(y = value_name, x = x$v,
-                                   ymin = q1_name, ymax = q3_name))
+    p <- ggplot(x$data, aes(y = .data[[value_name]], x = .data[[x$v]],
+                                   ymin = .data[[q1_name]], ymax = .data[[q3_name]]))
   } else {
-    p <- ggplot(x$data, aes_string(y = value_name, x = x$v))
+    p <- ggplot(x$data, aes(y = .data[[value_name]], x = .data[[x$v]]))
   }
   if (ndim == 0L) {
     if (x$stats == "quartiles") {
@@ -64,17 +64,16 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
     if (!swap_dim) {
       if (x$stats == "quartiles") {
         p <- p +
-          geom_crossbar(aes_string(color = first_dim), position = "dodge", ...)
+          geom_crossbar(aes(color = .data[[first_dim]]), position = "dodge", ...)
       } else {
         p <- p +
-          geom_line(aes_string(color = first_dim, group = first_dim), ...)
+          geom_line(aes(color = .data[[first_dim]], group = .data[[first_dim]]), ...)
         if (show_points) {
-          p <- p + geom_point(aes_string(color = first_dim), ...)
+          p <- p + geom_point(aes(color = .data[[first_dim]]), ...)
         }
       }
     } else {
-      p <- p +
-        facet_wrap(reformulate(first_dim), scales = facet_scales)
+      p <- p + facet_wrap(first_dim, scales = facet_scales)
       if (x$stats == "quartiles") {
         p <- p + geom_crossbar(...)
       } else {
@@ -91,11 +90,11 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
 
     if (x$stats == "quartiles") {
       p <- p +
-        geom_crossbar(aes_string(color = col_var), position = "dodge", ...)
+        geom_crossbar(aes(color = .data[[col_var]]), position = "dodge", ...)
     } else {
-      p <- p + geom_line(aes_string(color = col_var, group = col_var), ...)
+      p <- p + geom_line(aes(color = .data[[col_var]], group = .data[[col_var]]), ...)
       if (show_points) {
-        p <- p + geom_point(aes_string(color = col_var), ...)
+        p <- p + geom_point(aes(color = .data[[col_var]]), ...)
       }
     }
     p <- p + facet_wrap(wrap_var, scales = facet_scales)

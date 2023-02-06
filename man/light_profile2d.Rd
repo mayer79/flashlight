@@ -98,13 +98,13 @@ For partial dependence and prediction profiles, "model", "predict_function", lin
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_profile2d(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: 2D profiles for flashlight.
+\item \code{light_profile2d(flashlight)}: 2D profiles for flashlight.
 
-\item \code{multiflashlight}: 2D profiles for multiflashlight.
+\item \code{light_profile2d(multiflashlight)}: 2D profiles for multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")

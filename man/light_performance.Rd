@@ -50,13 +50,13 @@ The minimal required elements in the (multi-) flashlight are "y", "predict_funct
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_performance(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Model performance of flashlight object.
+\item \code{light_performance(flashlight)}: Model performance of flashlight object.
 
-\item \code{multiflashlight}: Model performance of multiflashlight object.
+\item \code{light_performance(multiflashlight)}: Model performance of multiflashlight object.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")

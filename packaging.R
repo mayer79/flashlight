@@ -7,6 +7,7 @@
 # 2) Increase package number in "use_description" below.
 # 3) Go through this script and carefully answer "no" if a "use_*" function
 #    asks to overwrite the existing files. Don't skip that function call.
+# devtools::load_all()
 
 library(usethis)
 
@@ -14,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
-    Version = "0.8.1.9000",
+    Version = "0.8.2",
     Description = "Shed light on black box machine learning models by the help of model performance, variable importance, global surrogate models, ICE profiles, partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>), further effects plots, scatter plots, interaction strength, and variable contribution breakdown (approximate SHAP) for single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>). All tools are implemented to work with case weights and allow for stratified analysis. Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
     Depends = "R (>= 3.2.0)",
@@ -28,6 +29,7 @@ use_package("cowplot", "Imports")
 use_package("dplyr", "Imports", min_version = "1.0.0")
 use_package("ggplot2", "Imports")
 use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
+use_package("rlang", "imports", min_version = "0.3.0")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("stats", "Imports")

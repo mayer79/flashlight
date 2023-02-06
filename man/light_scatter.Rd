@@ -58,13 +58,13 @@ This function prepares values for drawing a scatter plot of predicted values, re
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_scatter(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Variable profile for a flashlight.
+\item \code{light_scatter(flashlight)}: Variable profile for a flashlight.
 
-\item \code{multiflashlight}: light_scatter for a multiflashlight.
+\item \code{light_scatter(multiflashlight)}: light_scatter for a multiflashlight.
+
 }}
-
 \examples{
 fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
 fit_b <- lm(Sepal.Length ~ ., data = iris)

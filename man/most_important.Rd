@@ -25,11 +25,11 @@ Returns the most important variable names sorted descendingly.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{most_important(default)}: Default method not implemented yet.
 
-\item \code{light_importance}: Extracts most important variables from an object of class \code{light_importance}.
+\item \code{most_important(light_importance)}: Extracts most important variables from an object of class \code{light_importance}.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")

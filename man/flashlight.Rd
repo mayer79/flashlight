@@ -60,11 +60,11 @@ Creates or updates a \code{flashlight} object. If a flashlight is to be created,
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Used to create a flashlight object. No \code{x} has to be passed in this case.
+\item \code{flashlight(default)}: Used to create a flashlight object. No \code{x} has to be passed in this case.
 
-\item \code{flashlight}: Used to update an existing flashlight object.
+\item \code{flashlight(flashlight)}: Used to update an existing flashlight object.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 (fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols"))

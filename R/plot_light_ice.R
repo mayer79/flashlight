@@ -5,7 +5,7 @@
 #' Each observation is visualized by a line. The first "by" variable is represented by the color, a second "by" variable or a multiflashlight by facets.
 #'
 #' @import ggplot2
-#' @importFrom stats reformulate
+#' @importFrom rlang .data
 #' @method plot light_ice
 #' @param x An object of class \code{light_ice}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
@@ -45,18 +45,20 @@ plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
 
   # Distinguish cases
   if (nby == 0L) {
-    p <- ggplot(data, aes_string(y = value_name, x = x$v, group = id_name)) +
+    p <- ggplot(
+      data,
+      aes(y = .data[[value_name]], x = .data[[x$v]], group = .data[[id_name]])
+    ) +
       geom_line(...)
   } else {
     stopifnot(!("temp_" %in% colnames(data)))
     data[["temp_"]] <- interaction(data[[id_name]], data[[x$by[1]]])
-    p <- ggplot(data, aes_string(y = value_name, x = x$v, group = "temp_")) +
-      geom_line(aes_string(color = x$by[1]), ...) +
+    p <- ggplot(data, aes(y = .data[[value_name]], x = .data[[x$v]], group = temp_)) +
+      geom_line(aes(color = .data[[x$by[1]]]), ...) +
       guides(color = guide_legend(override.aes = list(alpha = 1)))
   }
   if (nby > 1L || multi) {
-    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[2]),
-                        scales = facet_scales)
+    p <- p + facet_wrap(if (multi) label_name else x$by[2], scales = facet_scales)
   }
   if (rotate_x) {
     p <- p +

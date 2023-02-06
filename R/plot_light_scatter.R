@@ -3,7 +3,7 @@
 #' Values are plotted against a variable. The object returned is of class \code{ggplot} and can be further customized. To avoid overplotting, pass e.g. \code{alpha = 0.2} or \code{position = "jitter"}.
 #'
 #' @import ggplot2
-#' @importFrom stats reformulate
+#' @importFrom rlang .data
 #' @method plot light_scatter
 #' @param x An object of class \code{light_scatter}.
 #' @param swap_dim If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of color variable and facet variable. If multiflashlight or one "by" variable, use colors instead of facets.
@@ -36,23 +36,23 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
          multiflashlight with more than one by variable.")
   }
   # Distinguish some cases
-  p <- ggplot(x$data, aes_string(y = value_name, x = x$v))
+  p <- ggplot(x$data, aes(y = .data[[value_name]], x = .data[[x$v]]))
   if (ndim == 0L) {
     p <- p + geom_point(...)
   } else if (ndim == 1L) {
     first_dim <- if (multi) label_name else x$by[1]
     if (swap_dim) {
-      p <- p + geom_point(aes_string(color = first_dim), ...) +
+      p <- p + geom_point(aes(color = .data[[first_dim]]), ...) +
         guides(color = guide_legend(override.aes = list(alpha = 1)))
     } else {
       p <- p + geom_point(...) +
-        facet_wrap(reformulate(first_dim), scales = facet_scales)
+        facet_wrap(first_dim, scales = facet_scales)
      }
   } else {
     second_dim <- if (multi) label_name else x$by[2]
     wrap_var <- if (swap_dim) x$by[1] else second_dim
     col_var <- if (swap_dim) second_dim else x$by[1]
-    p <- p + geom_point(aes_string(color = col_var), ...) +
+    p <- p + geom_point(aes(color = .data[[col_var]]), ...) +
       facet_wrap(wrap_var, scales = facet_scales) +
       guides(color = guide_legend(override.aes = list(alpha = 1)))
   }

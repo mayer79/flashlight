@@ -5,6 +5,7 @@
 #' Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
 #'
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @importFrom cowplot plot_grid
 #' @importFrom dplyr right_join
 #' @param p The result of \code{plot.light_effects}.
@@ -39,8 +40,7 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
 
   # Deal with zero counts
   key <- c(x$by, x$v, label_name)
-  x$response <- right_join(x$response, unique(p$data[, key, drop = FALSE]),
-                           by = key)
+  x$response <- right_join(x$response, unique(p$data[, key, drop = FALSE]), by = key)
   if (any((bad <- is.na(x$response[[counts_name]])))) {
     x$response[[counts_name]][bad] <- 0
   }
@@ -52,17 +52,18 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
       big.mark = big.mark, scientific = scientific
     )
   }
-  ct <- ggplot(x$response, aes_string(x = x$v, y = counts_name)) +
+  ct <- ggplot(x$response, aes(x = .data[[x$v]], y = .data[[counts_name]])) +
     geom_bar(stat = "identity", ...) +
     theme_void() +
     theme(strip.text.x = element_blank(), panel.grid = element_blank())
   if (show_labels) {
-    ct <- ct + geom_text(aes_string(y = 0, label = "lab_"),
+    ct <- ct + geom_text(aes(y = 0, label = lab_),
                          angle = 90, hjust = -0.1, size = text_size)
   }
   if (multi || length(x$by)) {
-    ct <- ct + facet_wrap(reformulate(if (multi) label_name else x$by[1]),
-                          scales = facet_scales, nrow = 1L)
+    ct <- ct + facet_wrap(
+      if (multi) label_name else x$by[1], scales = facet_scales, nrow = 1L
+    )
   }
   # Arrange
   plot_grid(ct, p, rel_heights = c(0.2, 1), ncol = 1, nrow = 2, align = "v")

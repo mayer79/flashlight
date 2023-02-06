@@ -59,13 +59,13 @@ The size of the tree can be modified by passing \code{...} arguments to \code{rp
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_global_surrogate(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Surrogate model for a flashlight.
+\item \code{light_global_surrogate(flashlight)}: Surrogate model for a flashlight.
 
-\item \code{multiflashlight}: Surrogate model for a multiflashlight.
+\item \code{light_global_surrogate(multiflashlight)}: Surrogate model for a multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 x <- flashlight(model = fit, label = "lm", data = iris)

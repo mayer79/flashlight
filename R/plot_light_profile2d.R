@@ -8,7 +8,7 @@
 #' Such gaps can be suppressed by setting \code{numeric_as_factor = TRUE} or by using the arguments \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in \code{light_profile2d()}.
 #'
 #' @import ggplot2
-#' @importFrom stats reformulate
+#' @importFrom rlang .data
 #' @method plot light_profile2d
 #' @param x An object of class \code{light_profile2d}.
 #' @param swap_dim Swap the `facet_grid` dimensions.
@@ -43,14 +43,17 @@ plot.light_profile2d <- function(x, swap_dim = FALSE, rotate_x = TRUE,
   }
 
   # Build plot
-  p <- ggplot(data, aes_string(x = x$v[1], y = x$v[2], fill = value_name)) +
+  p <- ggplot(
+    data,
+    aes(x = .data[[x$v[1]]], y = .data[[x$v[2]]], fill = .data[[value_name]])
+  ) +
     geom_tile(...)
   if (ndim == 1L) {
-    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[1]))
+    p <- p + facet_wrap(if (multi) label_name else x$by[1])
   } else if (ndim == 2L) {
     d1 <- if (multi) label_name else x$by[1]
     d2 <- if (multi) x$by[1] else x$by[2]
-    form <- if (!swap_dim) reformulate(d1, d2) else reformulate(d2, d1)
+    form <- if (!swap_dim) stats::reformulate(d1, d2) else stats::reformulate(d2, d1)
     p <- p + facet_grid(form)
   }
   if (rotate_x) {

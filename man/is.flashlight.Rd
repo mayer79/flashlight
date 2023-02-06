@@ -80,49 +80,49 @@ Checks if an object inherits specific class relevant for the flashlight package.
 }
 \section{Functions}{
 \itemize{
-\item \code{is.multiflashlight}: Check for multiflashlight object.
+\item \code{is.multiflashlight()}: Check for multiflashlight object.
 
-\item \code{is.light}: Check for light object.
+\item \code{is.light()}: Check for light object.
 
-\item \code{is.light_performance}: Check for light_performance object.
+\item \code{is.light_performance()}: Check for light_performance object.
 
-\item \code{is.light_performance_multi}: Check for light_performance_multi object.
+\item \code{is.light_performance_multi()}: Check for light_performance_multi object.
 
-\item \code{is.light_importance}: Check for light_importance object.
+\item \code{is.light_importance()}: Check for light_importance object.
 
-\item \code{is.light_importance_multi}: Check for light_importance_multi object.
+\item \code{is.light_importance_multi()}: Check for light_importance_multi object.
 
-\item \code{is.light_breakdown}: Check for light_breakdown object.
+\item \code{is.light_breakdown()}: Check for light_breakdown object.
 
-\item \code{is.light_breakdown_multi}: Check for light_breakdown_multi object.
+\item \code{is.light_breakdown_multi()}: Check for light_breakdown_multi object.
 
-\item \code{is.light_ice}: Check for light_ice object.
+\item \code{is.light_ice()}: Check for light_ice object.
 
-\item \code{is.light_ice_multi}: Check for light_ice_multi object.
+\item \code{is.light_ice_multi()}: Check for light_ice_multi object.
 
-\item \code{is.light_profile}: Check for light_profile object.
+\item \code{is.light_profile()}: Check for light_profile object.
 
-\item \code{is.light_profile_multi}: Check for light_profile_multi object.
+\item \code{is.light_profile_multi()}: Check for light_profile_multi object.
 
-\item \code{is.light_profile2d}: Check for light_profile2d object.
+\item \code{is.light_profile2d()}: Check for light_profile2d object.
 
-\item \code{is.light_profile2d_multi}: Check for light_profile2d_multi object.
+\item \code{is.light_profile2d_multi()}: Check for light_profile2d_multi object.
 
-\item \code{is.light_effects}: Check for light_effects object.
+\item \code{is.light_effects()}: Check for light_effects object.
 
-\item \code{is.light_effects_multi}: Check for light_effects_multi object.
+\item \code{is.light_effects_multi()}: Check for light_effects_multi object.
 
-\item \code{is.shap}: Check for shap object.
+\item \code{is.shap()}: Check for shap object.
 
-\item \code{is.light_scatter}: Check for light_scatter object.
+\item \code{is.light_scatter()}: Check for light_scatter object.
 
-\item \code{is.light_scatter_multi}: Check for light_scatter_multi object.
+\item \code{is.light_scatter_multi()}: Check for light_scatter_multi object.
 
-\item \code{is.light_global_surrogate}: Check for light_global_surrogate object.
+\item \code{is.light_global_surrogate()}: Check for light_global_surrogate object.
 
-\item \code{is.light_global_surrogate_multi}: Check for light_global_surrogate_multi object.
+\item \code{is.light_global_surrogate_multi()}: Check for light_global_surrogate_multi object.
+
 }}
-
 \examples{
 a <- flashlight(label = "a")
 is.flashlight(a)
