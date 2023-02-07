@@ -4,8 +4,6 @@
 #'
 #' The waterfall plot is to be read from top to bottom. The first line describes the (weighted) average prediction in the query data used to start with. Then, each additional line shows how the prediction changes due to the impact of the corresponding variable. The last line finally shows the original prediction of the selected observation. Multiple flashlights are shown in different facets. Positive and negative impacts are visualized with different colors.
 #'
-#' @import ggplot2
-#' @importFrom rlang .data
 #' @method plot light_breakdown
 #' @param x An object of class \code{light_breakdown}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.

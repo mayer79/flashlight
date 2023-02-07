@@ -7,8 +7,6 @@
 #' Even for type "partial dependence", gaps can occur, e.g. for \code{cut_type = "quantile"} or if \code{n_bins} are larger than the number of distinct values of a \code{v} variable.
 #' Such gaps can be suppressed by setting \code{numeric_as_factor = TRUE} or by using the arguments \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in \code{light_profile2d()}.
 #'
-#' @import ggplot2
-#' @importFrom rlang .data
 #' @method plot light_profile2d
 #' @param x An object of class \code{light_profile2d}.
 #' @param swap_dim Swap the `facet_grid` dimensions.

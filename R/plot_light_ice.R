@@ -4,8 +4,6 @@
 #'
 #' Each observation is visualized by a line. The first "by" variable is represented by the color, a second "by" variable or a multiflashlight by facets.
 #'
-#' @import ggplot2
-#' @importFrom rlang .data
 #' @method plot light_ice
 #' @param x An object of class \code{light_ice}.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.

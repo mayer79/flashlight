@@ -4,8 +4,6 @@
 #'
 #' The plot is organized as a bar plot with variable names as x-aesthetic. Up to two additional dimensions (multiflashlight and one "by" variable or single flashlight with two "by" variables) can be visualized by facetting and dodge/fill. Set \code{swap_dim = FALSE} to revert the role of these two dimensions. One single additional dimension is visualized by a facet wrap, or - if \code{swap_dim = FALSE} - by dodge/fill.
 #'
-#' @import ggplot2
-#' @importFrom rlang .data
 #' @method plot light_importance
 #' @param x An object of class \code{light_importance}.
 #' @param top_m Maximum number of important variables to be returned.

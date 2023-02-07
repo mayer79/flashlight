@@ -2,8 +2,6 @@
 #'
 #' Values are plotted against a variable. The object returned is of class \code{ggplot} and can be further customized. To avoid overplotting, pass e.g. \code{alpha = 0.2} or \code{position = "jitter"}.
 #'
-#' @import ggplot2
-#' @importFrom rlang .data
 #' @method plot light_scatter
 #' @param x An object of class \code{light_scatter}.
 #' @param swap_dim If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of color variable and facet variable. If multiflashlight or one "by" variable, use colors instead of facets.

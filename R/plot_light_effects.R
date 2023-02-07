@@ -2,8 +2,6 @@
 #'
 #' Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
 #'
-#' @import ggplot2
-#' @importFrom rlang .data
 #' @importFrom dplyr semi_join bind_rows
 #' @method plot light_effects
 #' @param x An object of class \code{light_effects}.

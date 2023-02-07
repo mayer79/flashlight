@@ -4,8 +4,6 @@
 #'
 #' Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
 #'
-#' @import ggplot2
-#' @importFrom rlang .data
 #' @importFrom cowplot plot_grid
 #' @importFrom dplyr right_join
 #' @param p The result of \code{plot.light_effects}.

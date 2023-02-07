@@ -1,3 +1,9 @@
+# Frequent imports
+#' @import ggplot2
+#' @importFrom rlang .data
+NULL
+
+# On load function sets some options
 .onLoad <- function(libname, pkgname) {
   op <- options()
   op.flashlight <- list(
