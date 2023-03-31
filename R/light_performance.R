@@ -68,11 +68,10 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by,
                 metrics = metrics, key = metric_name, value = value_name, ...)
   }
   data[[label_name]] <- x$label
-  data <- group_by(data, across(all_of(c(label_name, by))))
-  agg <- summarize(data, core_fun(cur_data()), .groups = "drop")
+  agg <- Reframe(data, FUN = core_fun, BY = c(label_name, by))
 
   # Organize output
-  add_classes(list(data = agg, by = by),
+  add_classes(list(data = tibble::as_tibble(agg), by = by),
               classes = c("light_performance", "light"))
 }
 

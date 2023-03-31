@@ -2,7 +2,6 @@
 #'
 #' This function prepares values for drawing a scatter plot of predicted values, responses, residuals, or SHAP values against a selected variable.
 #'
-#' @importFrom dplyr as_tibble
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable name to be shown on the x-axis.
 #' @param data An optional \code{data.frame}. Not relevant for \code{type = "shap"}.
@@ -101,7 +100,7 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
   data[[label_name]] <- x$label
   vars <- c(label_name, by, v, value_name)
   add_classes(
-    list(data = as_tibble(data[, vars]), by = by, v = v, type = type),
+    list(data = tibble::as_tibble(data[, vars]), by = by, v = v, type = type),
     c("light_scatter", "light")
   )
 }

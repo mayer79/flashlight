@@ -26,13 +26,14 @@ use_description(
 
 # Imports
 use_package("cowplot", "Imports")
-use_package("dplyr", "Imports", min_version = "1.0.0")
+use_package("dplyr", "Imports", min_version = "1.1.0")
 use_package("ggplot2", "Imports")
 use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 use_package("rlang", "Imports", min_version = "0.3.0")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("stats", "Imports")
+use_package("tibble", "Imports")
 use_package("tidyr", "Imports", min_version = "1.0.0")
 use_package("tidyselect", "Imports")
 use_package("utils", "Imports")

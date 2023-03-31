@@ -2,7 +2,6 @@
 #'
 #' Predict method for an object of class \code{multiflashlight}. Pass additional elements to update the flashlight, typically \code{data}.
 #'
-#' @importFrom stats predict
 #' @param object An object of class \code{multiflashlight}.
 #' @param ... Arguments used to update the multiflashlight.
 #' @return A named list of prediction vectors.
@@ -16,5 +15,5 @@
 #' mods <- multiflashlight(list(mod_full, mod_part), data = iris, y = "Sepal.Length")
 #' predict(mods, data = iris[1:5, ])
 predict.multiflashlight <- function(object, ...) {
-  lapply(object, predict, ...)
+  lapply(object, stats::predict, ...)
 }

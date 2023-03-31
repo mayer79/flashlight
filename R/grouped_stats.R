@@ -2,8 +2,6 @@
 #'
 #' Calculates weighted means, quartiles, or variances (and counts) of a variable grouped by optional columns. By default, counts are not weighted, even if there is a weighting variable.
 #'
-#' @importFrom dplyr group_by summarize across cur_data
-#' @importFrom tidyselect all_of
 #' @importFrom stats setNames
 #' @importFrom MetricsWeighted weighted_mean weighted_quantile weighted_var
 #' @param data A \code{data.frame}.
@@ -65,10 +63,5 @@ grouped_stats <- function(data, x, w = NULL, by = NULL,
     cbind(cnt, val)
   }
 
-  # Apply core_fun
-  if (!length(by)) {
-    return(core_fun(data))
-  }
-  summarize(group_by(data, across(all_of(by))),
-            core_fun(cur_data()), .groups = "drop")
+  Reframe(data, FUN = core_fun, BY = by)
 }

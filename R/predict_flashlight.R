@@ -2,7 +2,6 @@
 #'
 #' Predict method for an object of class \code{flashlight}. Pass additional elements to update the flashlight, typically \code{data}.
 #'
-#' @importFrom stats predict
 #' @param object An object of class \code{flashlight}.
 #' @param ... Arguments used to update the flashlight.
 #' @return A vector with predictions.

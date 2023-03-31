@@ -4,7 +4,6 @@
 #'
 #' Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles.
 #'
-#' @importFrom dplyr bind_rows
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable name to be profiled.
 #' @param data An optional \code{data.frame}.

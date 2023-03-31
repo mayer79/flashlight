@@ -5,9 +5,6 @@
 #' The size of the tree can be modified by passing \code{...} arguments to \code{rpart}.
 #'
 #' @importFrom rpart rpart rpart.control
-#' @importFrom stats setNames
-#' @importFrom dplyr as_tibble group_by summarize across cur_data
-#' @importFrom tidyselect all_of
 #' @importFrom MetricsWeighted r_squared
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param data An optional \code{data.frame}.
@@ -89,21 +86,21 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
   }
 
   # Fit tree within by group
-  core_func <- function(X) {
-    fit <- rpart(reformulate(v, "pred_"), data = X,
+  core_fun <- function(X) {
+    fit <- rpart(stats::reformulate(v, "pred_"), data = X,
                  weights = if (!is.null(x$w)) X[[x$w]],
                  model = FALSE, y = FALSE, xval = 0, ...)
     r2 <- r_squared(X[["pred_"]], predict(fit, X))
-    setNames(data.frame(r2, I(list(fit))), c("r_squared", tree_name))
+    stats::setNames(data.frame(r2, I(list(fit))), c("r_squared", tree_name))
   }
-  res <- if (is.null(by)) as_tibble(core_func(data)) else
-    summarize(group_by(data, across(all_of(by))),
-              core_func(cur_data()), .groups = "drop")
+  res <- Reframe(data, FUN = core_fun, BY = by)
 
   # Organize output
   res[[label_name]] <- x$label
-  out <- list(data = res[, c(label_name, by, "r_squared", tree_name)],
-              by = by)
+  out <- list(
+    data = tibble::as_tibble(res[, c(label_name, by, "r_squared", tree_name)]),
+    by = by
+  )
   add_classes(out, c("light_global_surrogate", "light"))
 }
 

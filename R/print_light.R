@@ -2,7 +2,6 @@
 #'
 #' Print method for an object of class \code{light}.
 #'
-#' @importFrom utils head
 #' @param x A on object of class \code{light}.
 #' @param ... Further arguments passed from other methods.
 #' @return Invisibly, the input is returned.

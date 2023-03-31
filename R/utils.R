@@ -89,3 +89,9 @@ check_unique <- function(var_names = NULL, opt_names = NULL, temp_names = NULL) 
        "as flashlight option or as variable name. Please avoid this name.")
 }
 
+Reframe <- function(X, FUN, BY = NULL) {
+  if (is.null(BY)) {
+    return(FUN(X))
+  }
+  dplyr::reframe(X, FUN(dplyr::pick(dplyr::everything())), .by = dplyr::all_of(BY))
+}

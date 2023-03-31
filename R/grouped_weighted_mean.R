@@ -2,7 +2,6 @@
 #'
 #' Fast version of grouped_stats(..., counts = FALSE). Works if there is at most one "by" variable.
 #'
-#' @importFrom stats weighted.mean setNames
 #' @param data A \code{data.frame}.
 #' @param x Variable name in \code{data} to summarize.
 #' @param w Optional name of the column in \code{data} with case weights.
@@ -21,9 +20,9 @@ grouped_weighted_mean <- function(data, x, w = NULL, by = NULL,
     if (is.null(w)) {
       out <- mean(data[[x]], na.rm = na.rm)
     } else {
-      out <- weighted.mean(data[[x]], w = data[[w]], na.rm = na.rm)
+      out <- stats::weighted.mean(data[[x]], w = data[[w]], na.rm = na.rm)
     }
-    return(setNames(as.data.frame(out), value_name))
+    return(stats::setNames(as.data.frame(out), value_name))
   }
   if (length(by) > 1L) {
     stop("At most one 'by' variable is supported.")
@@ -54,5 +53,5 @@ grouped_weighted_mean <- function(data, x, w = NULL, by = NULL,
   if (num || fac) {
     rn <- if (fac) factor(rn, levels = lev) else if (num) as.numeric(rn)
   }
-  setNames(data.frame(rn, out, row.names = NULL), c(by, value_name))
+  stats::setNames(data.frame(rn, out, row.names = NULL), c(by, value_name))
 }

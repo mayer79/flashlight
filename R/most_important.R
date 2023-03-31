@@ -2,7 +2,6 @@
 #'
 #' Returns the most important variable names sorted descendingly.
 #'
-#' @importFrom utils head
 #' @importFrom dplyr group_by summarize arrange desc across
 #' @importFrom tidyselect all_of
 #' @param x An object of class \code{light_importance}.
@@ -39,5 +38,5 @@ most_important.light_importance <- function(x, top_m = Inf) {
   )
   total_importance <- arrange(total_importance,
                               across(all_of(value_name), desc))
-  head(total_importance[[variable_name]], top_m)
+  utils::head(total_importance[[variable_name]], top_m)
 }

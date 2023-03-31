@@ -2,7 +2,6 @@
 #'
 #' Residuals method for an object of class \code{flashlight}. Pass additional elements to update the flashlight before calculation of residuals.
 #'
-#' @importFrom stats residuals
 #' @method residuals flashlight
 #' @param object An object of class \code{flashlight}.
 #' @param ... Arguments used to update the flashlight before calculating the residuals.
