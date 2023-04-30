@@ -74,13 +74,13 @@ Note that the minimum required elements in the (multi-) flashlight are a "predic
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_breakdown(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Variable attribution to single observation for a flashlight.
+\item \code{light_breakdown(flashlight)}: Variable attribution to single observation for a flashlight.
 
-\item \code{multiflashlight}: Variable attribution to single observation for a multiflashlight.
+\item \code{light_breakdown(multiflashlight)}: Variable attribution to single observation for a multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")

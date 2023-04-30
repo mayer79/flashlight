@@ -7,22 +7,25 @@
 \method{plot}{light_ice}(x, facet_scales = "fixed", rotate_x = FALSE, ...)
 }
 \arguments{
-\item{x}{An object of class \code{light_ice}.}
+\item{x}{An object of class "light_ice".}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?
+Default is \code{FALSE}.}
 
-\item{...}{Further arguments passed to \code{geom_line}.}
+\item{...}{Further arguments passed to \code{ggplot2::geom_line()}.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_ice} as \code{geom_line}. The object returned is of class \code{ggplot} and can be further customized.
+Minimal visualization of an object of class "light_ice" as \code{ggplot2::geom_line()}.
+The object returned is of class "ggplot" and can be further customized.
 }
 \details{
-Each observation is visualized by a line. The first "by" variable is represented by the color, a second "by" variable or a multiflashlight by facets.
+Each observation is visualized by a line. The first "by" variable is represented
+by the color, a second "by" variable or a multiflashlight by facets.
 }
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)

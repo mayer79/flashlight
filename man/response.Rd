@@ -28,13 +28,13 @@ Extracts response from object of class \code{flashlight}.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{response(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Extract response from flashlight object.
+\item \code{response(flashlight)}: Extract response from flashlight object.
 
-\item \code{multiflashlight}: Extract responses from multiflashlight object.
+\item \code{response(multiflashlight)}: Extract responses from multiflashlight object.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 (fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols"))

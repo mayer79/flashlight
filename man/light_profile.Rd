@@ -112,13 +112,13 @@ Numeric covariables \code{v} with more than \code{n_bins} disjoint values are bi
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_profile(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Profiles for flashlight.
+\item \code{light_profile(flashlight)}: Profiles for flashlight.
 
-\item \code{multiflashlight}: Profiles for multiflashlight.
+\item \code{light_profile(multiflashlight)}: Profiles for multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")

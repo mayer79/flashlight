@@ -31,11 +31,11 @@ Recodes factor levels of columns in data slots of an object of class \code{light
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_recode(default)}: Default method not implemented yet.
 
-\item \code{light}: Recoding factors in data slots of \code{light} object.
+\item \code{light_recode(light)}: Recoding factors in data slots of \code{light} object.
+
 }}
-
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)

@@ -7,7 +7,7 @@
 \method{predict}{multiflashlight}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{multiflashlight}.}
+\item{object}{An object of class "multiflashlight".}
 
 \item{...}{Arguments used to update the multiflashlight.}
 }
@@ -15,7 +15,8 @@
 A named list of prediction vectors.
 }
 \description{
-Predict method for an object of class \code{multiflashlight}. Pass additional elements to update the flashlight, typically \code{data}.
+Predict method for an object of class "multiflashlight".
+Pass additional elements to update the flashlight, typically \code{data}.
 }
 \examples{
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)

@@ -7,7 +7,7 @@
 \method{print}{light}(x, ...)
 }
 \arguments{
-\item{x}{A on object of class \code{light}.}
+\item{x}{A on object of class "light".}
 
 \item{...}{Further arguments passed from other methods.}
 }
@@ -15,11 +15,10 @@
 Invisibly, the input is returned.
 }
 \description{
-Print method for an object of class \code{light}.
+Print method for an object of class "light".
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "lm", y = "Sepal.Length", data = iris)
 light_performance(fl, v = "Species")
-light_effects(fl, v = "Sepal.Length")
 }

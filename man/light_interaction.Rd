@@ -72,13 +72,13 @@ Friedman's H statistic relates the interaction strength of a variable (pair) to 
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_interaction(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Interaction strengths for a flashlight object.
+\item \code{light_interaction(flashlight)}: Interaction strengths for a flashlight object.
 
-\item \code{multiflashlight}: for a multiflashlight object.
+\item \code{light_interaction(multiflashlight)}: for a multiflashlight object.
+
 }}
-
 \examples{
 fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
 fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)

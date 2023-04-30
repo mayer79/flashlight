@@ -79,13 +79,13 @@ There are two ways to specify the variable(s) to be profiled. The first option i
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_ice(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: ICE profiles for a flashlight object.
+\item \code{light_ice(flashlight)}: ICE profiles for a flashlight object.
 
-\item \code{multiflashlight}: ICE profiles for a multiflashlight object.
+\item \code{light_ice(multiflashlight)}: ICE profiles for a multiflashlight object.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris)

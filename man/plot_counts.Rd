@@ -17,32 +17,37 @@ plot_counts(
 )
 }
 \arguments{
-\item{p}{The result of \code{plot.light_effects}.}
+\item{p}{The result of \code{plot.light_effects()}.}
 
-\item{x}{An object of class \code{light_effects}.}
+\item{x}{An object of class "light_effects".}
 
 \item{text_size}{Size of count labels.}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}
 
 \item{show_labels}{Should count labels be added as text?}
 
 \item{big.mark}{Parameter passed to \code{format} the labels. Default is "'".}
 
-\item{scientific}{Parameter passed to \code{format} the labels. Default is FALSE.}
+\item{scientific}{Parameter passed to \code{format} the labels.
+Default is \code{FALSE}.}
 
 \item{digits}{Used to round the labels. Default is 0.}
 
-\item{...}{Further arguments passed to \code{geom_bar}.}
+\item{...}{Further arguments passed to \code{ggplot2::geom_bar()}.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
 Add counts as labelled bar plot on top of light_effects plot.
 }
 \details{
-Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
+Experimental. Uses package \code{ggpubr} to rearrange the figure.
+Thus, the resulting plot cannot be easily modified.
+Furthermore, adding counts only works if the legend in \code{plot.light_effects()}
+is not placed on the left or right side of the plot.
+It has to be placed inside or at the bottom.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)

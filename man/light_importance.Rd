@@ -70,13 +70,13 @@ Note: The values of the permutation algorithm (a) are on the scale of the select
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_importance(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Variable importance for a flashlight.
+\item \code{light_importance(flashlight)}: Variable importance for a flashlight.
 
-\item \code{multiflashlight}: Variable importance for a multiflashlight.
+\item \code{light_importance(multiflashlight)}: Variable importance for a multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ Petal.Length, data = iris)
 fl <- flashlight(model = fit, label = "full", data = iris, y = "Sepal.Length")

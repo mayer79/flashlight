@@ -7,7 +7,7 @@
 \method{predict}{flashlight}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{flashlight}.}
+\item{object}{An object of class "flashlight".}
 
 \item{...}{Arguments used to update the flashlight.}
 }
@@ -15,12 +15,12 @@
 A vector with predictions.
 }
 \description{
-Predict method for an object of class \code{flashlight}. Pass additional elements to update the flashlight, typically \code{data}.
+Predict method for an object of class "flashlight".
+Pass additional elements to update the flashlight, typically \code{data}.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
-(fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols"))
+fl <- flashlight(model = fit, data = iris, y = "Sepal.Length", label = "ols")
 predict(fl)[1:5]
 predict(fl, data = iris[1:5, ])
-predict(fl, data = iris[1:5, ], linkinv = exp)
 }

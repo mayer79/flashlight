@@ -55,13 +55,13 @@ The function calls \code{light_breakdown} for \code{n_shap} observations and add
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{add_shap(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Variable attribution to single observation for a flashlight.
+\item \code{add_shap(flashlight)}: Variable attribution to single observation for a flashlight.
 
-\item \code{multiflashlight}: Add SHAP to multiflashlight.
+\item \code{add_shap(multiflashlight)}: Add SHAP to multiflashlight.
+
 }}
-
 \examples{
 \dontrun{
 fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)

@@ -100,7 +100,6 @@ library(devtools)
 
 document()
 test()
-build_vignettes()
 check(manual = TRUE, cran = TRUE)
 build()
 # build(binary = TRUE)
