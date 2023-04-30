@@ -1,6 +1,6 @@
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.8.1.9000
+Version: 0.8.2
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",

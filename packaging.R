@@ -14,8 +14,16 @@ library(usethis)
 use_description(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
-    Version = "0.8.1.9000",
-    Description = "Shed light on black box machine learning models by the help of model performance, variable importance, global surrogate models, ICE profiles, partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>), further effects plots, scatter plots, interaction strength, and variable contribution breakdown (approximate SHAP) for single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>). All tools are implemented to work with case weights and allow for stratified analysis. Furthermore, multiple flashlights can be combined and analyzed together.",
+    Version = "0.8.2",
+    Description = "Shed light on black box machine learning models by the help of model
+    performance, variable importance, global surrogate models, ICE profiles,
+    partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>),
+    accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>),
+    further effects plots, scatter plots, interaction strength,
+    and variable contribution breakdown (approximate SHAP) for
+    single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>).
+    All tools are implemented to work with case weights and allow for stratified analysis.
+    Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
     Depends = "R (>= 3.2.0)",
     LazyData = NULL
@@ -79,6 +87,10 @@ use_logo("logo.png")
 # If package goes to CRAN: infos (check results etc.) for CRAN
 use_cran_comments()
 
+# Github actions
+use_github_action("check-standard")
+use_github_action("test-coverage")
+use_github_action("pkgdown")
 
 #=============================================================================
 # Finish package building (can use fresh session)

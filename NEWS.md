@@ -1,3 +1,9 @@
+# flashlight 0.8.2
+
+## Maintenance
+
+- Github actions
+
 # flashlight 0.8.1
 
 Maintenance update,
