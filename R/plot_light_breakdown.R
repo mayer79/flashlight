@@ -11,6 +11,7 @@
 #' Multiple flashlights are shown in different facets.
 #' Positive and negative impacts are visualized with different colors.
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_breakdown".
 #' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
 #' @param facet_ncol \code{ncol} argument passed to \code{ggplot2::facet_wrap()}.
@@ -42,20 +43,21 @@ plot.light_breakdown <- function(x, facet_scales = "free",
 
   p <- ggplot2::ggplot(
     data,
-    ggplot2::aes_string(
-      x = step_name,
-      y = "y_",
-      ymin = before_name,
-      ymax = after_name,
-      xmin = "xmin_",
-      xmax = "xmax_")
-    ) +
+    ggplot2::aes(
+      x = .data[[step_name]],
+      y = y_,
+      ymin = .data[[before_name]],
+      ymax = .data[[after_name]],
+      xmin = xmin_,
+      xmax = xmax_
+    )
+  ) +
     ggplot2::geom_rect(
-      ggplot2::aes_string(fill = "fill_"), color = "black", show.legend = FALSE
+      ggplot2::aes(fill = fill_), color = "black", show.legend = FALSE
     ) +
     ggplot2::labs(x = ggplot2::element_blank(), y = "prediction") +
     ggplot2::geom_label(
-      ggplot2::aes_string(label = description_name), hjust = -0.05, ...
+      ggplot2::aes(label = .data[[description_name]]), hjust = -0.05, ...
     ) +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.67))) +
     ggplot2::scale_x_reverse() +

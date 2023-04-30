@@ -7,6 +7,7 @@
 # 2) Increase package number in "use_description" below.
 # 3) Go through this script and carefully answer "no" if a "use_*" function
 #    asks to overwrite the existing files. Don't skip that function call.
+# devtools::load_all()
 
 library(usethis)
 
@@ -36,6 +37,7 @@ use_package("cowplot", "Imports")
 use_package("dplyr", "Imports", min_version = "1.0.0")
 use_package("ggplot2", "Imports")
 use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
+use_package("rlang", "Imports", min_version = "0.3.0")
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("stats", "Imports")
@@ -101,7 +103,7 @@ library(devtools)
 document()
 test()
 check(manual = TRUE, cran = TRUE)
-build()
+build(vignettes = FALSE)
 # build(binary = TRUE)
 install()
 

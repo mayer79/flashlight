@@ -4,6 +4,7 @@
 #' and can be further customized. To avoid overplotting, try \code{alpha = 0.2} or
 #' \code{position = "jitter"}.
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_scatter".
 #' @param swap_dim If multiflashlight and one "by" variable, or single flashlight
 #' with two "by" variables, swap the role of color variable and facet variable.
@@ -18,8 +19,8 @@
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
-#' fl <- flashlight(model = fit, label = "ols")
-#' plot(light_scatter(fl, v = "Petal.Length"), alpha = 0.2)
+#' fl <- flashlight(model = fit, label = "ols", data = iris)
+#' plot(light_scatter(fl, v = "Petal.Length", by = "Species"), alpha = 0.2)
 #' @seealso \code{\link{light_scatter}}.
 plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                               rotate_x = FALSE, ...) {
@@ -35,14 +36,16 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
          multiflashlight with more than one by variable.")
   }
   # Distinguish some cases
-  p <- ggplot2::ggplot(x$data, ggplot2::aes_string(y = value_name, x = x$v))
+  p <- ggplot2::ggplot(
+    x$data, ggplot2::aes(x = .data[[x$v]], y = .data[[value_name]])
+  )
   if (ndim == 0L) {
     p <- p + ggplot2::geom_point(...)
   } else if (ndim == 1L) {
     first_dim <- if (multi) label_name else x$by[1L]
     if (swap_dim) {
       p <- p +
-        ggplot2::geom_point(ggplot2::aes_string(color = first_dim), ...) +
+        ggplot2::geom_point(ggplot2::aes(color = .data[[first_dim]]), ...) +
         ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(alpha = 1)))
     } else {
       p <- p +
@@ -54,7 +57,7 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
     wrap_var <- if (swap_dim) x$by[1L] else second_dim
     col_var <- if (swap_dim) second_dim else x$by[1L]
     p <- p +
-      ggplot2::geom_point(ggplot2::aes_string(color = col_var), ...) +
+      ggplot2::geom_point(ggplot2::aes(color = .data[[col_var]]), ...) +
       ggplot2::facet_wrap(wrap_var, scales = facet_scales) +
       ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(alpha = 1)))
   }

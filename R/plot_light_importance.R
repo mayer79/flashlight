@@ -12,6 +12,7 @@
 #' One single additional dimension is visualized by a facet wrap,
 #' or - if \code{swap_dim = FALSE} - by dodge/fill.
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_importance".
 #' @param top_m Maximum number of important variables to be returned.
 #' @param swap_dim If multiflashlight and one "by" variable or single flashlight with
@@ -65,24 +66,26 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   data[["high_"]] <- data[[value_name]] + data[[error_name]]
 
   # Differentiate some plot cases
-  p <- ggplot2::ggplot(data, ggplot2::aes_string(y = value_name, x = variable_name))
+  p <- ggplot2::ggplot(
+    data, ggplot2::aes(y = .data[[value_name]], x = .data[[variable_name]])
+  )
   if (ndim == 0L) {
     p <- p + ggplot2::geom_bar(stat = "identity", ...)
     if (error_bars) {
       p <- p + ggplot2::geom_errorbar(
-        ggplot2::aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black"
+        ggplot2::aes(ymin = low_, ymax = high_), width = 0, color = "black"
       )
     }
   } else if (ndim == 1L) {
     first_dim <- if (multi) label_name else x$by[1L]
     if (swap_dim) {
       p <- p + ggplot2::geom_bar(
-        ggplot2::aes_string(fill = first_dim), stat = "identity", position = "dodge",
+        ggplot2::aes(fill = .data[[first_dim]]), stat = "identity", position = "dodge",
         ...
       )
       if (error_bars) {
         p <- p + ggplot2::geom_errorbar(
-          ggplot2::aes_string(group = first_dim, ymin = "low_", ymax = "high_"),
+          ggplot2::aes(group = .data[[first_dim]], ymin = low_, ymax = high_),
           width = 0,
           color = "black",
           position = ggplot2::position_dodge(0.9)
@@ -94,7 +97,7 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
         ggplot2::facet_wrap(first_dim, scales = facet_scales)
       if (error_bars) {
         p <- p + ggplot2::geom_errorbar(
-          ggplot2::aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black"
+          ggplot2::aes(ymin = low_, ymax = high_), width = 0, color = "black"
         )
       }
     }
@@ -103,12 +106,15 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
     wrap_var <- if (!swap_dim) x$by[1L] else second_dim
     dodge_var <- if (!swap_dim) second_dim else x$by[1L]
     p <- p + ggplot2::geom_bar(
-      ggplot2::aes_string(fill = dodge_var), stat = "identity", position = "dodge", ...
+      ggplot2::aes(fill = .data[[dodge_var]]),
+      stat = "identity",
+      position = "dodge",
+      ...
     ) +
       ggplot2::facet_wrap(wrap_var, scales = facet_scales)
     if (error_bars) {
       p <- p + ggplot2::geom_errorbar(
-        ggplot2::aes_string(group = dodge_var, ymin = "low_", ymax = "high_"),
+        ggplot2::aes(group = .data[[dodge_var]], ymin = low_, ymax = high_),
         width = 0,
         color = "black",
         position = ggplot2::position_dodge(0.9)

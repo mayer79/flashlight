@@ -49,8 +49,8 @@ aesthetic. Different metrics are always represented by facets.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit_full, label = "ols", data = iris, y = "Sepal.Length")
-plot(light_performance(mods), fill = "darkred")
+fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
+plot(light_performance(fl, by = "Species"), fill = "darkred")
 }
 \seealso{
 \code{\link{light_performance}}.

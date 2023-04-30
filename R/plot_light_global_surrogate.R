@@ -1,6 +1,7 @@
 #' Plot Global Surrogate Trees
 #'
-#' Visualize trees fitted by \code{light_global_surrogate()} via \code{rpart.plot::rpart.plot()}.
+#' Visualize trees fitted by \code{light_global_surrogate()} via
+#' \code{rpart.plot::rpart.plot()}.
 #'
 #' @param x An object of class "light_global_surrogate".
 #' @param type Plot type, see help of \code{rpart.plot::rpart.plot()}. Default is 5.
@@ -23,7 +24,7 @@ plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE,
   multi <- is.light_global_surrogate_multi(x)
   ndim <- length(x$by) + multi
   if (ndim == 0L) {
-    rpart.plot(data[[tree_name]][[1L]], roundint = FALSE, type = type, ...)
+    rpart.plot::rpart.plot(data[[tree_name]][[1L]], roundint = FALSE, type = type, ...)
   } else if (ndim == 1) {
     dim_col <- data[[if (multi) label_name else x$by[1L]]]
     m <- length(dim_col)

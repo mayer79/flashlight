@@ -8,6 +8,7 @@
 #' is not placed on the left or right side of the plot.
 #' It has to be placed inside or at the bottom.
 #'
+#' @importFrom rlang .data
 #' @param p The result of \code{plot.light_effects()}.
 #' @param x An object of class "light_effects".
 #' @param text_size Size of count labels.
@@ -32,7 +33,7 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
                         scientific = FALSE, digits = 0, ...) {
   # Checks
   stopifnot(
-    is.ggplot(p),
+    ggplot2::is.ggplot(p),
     is.light_effects(x),
     !("lab_" %in% colnames(x$response))
   )
@@ -58,7 +59,9 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
       big.mark = big.mark, scientific = scientific
     )
   }
-  ct <- ggplot2::ggplot(x$response, ggplot2::aes_string(x = x$v, y = counts_name)) +
+  ct <- ggplot2::ggplot(
+    x$response, ggplot2::aes(x = .data[[x$v]], y = .data[[counts_name]])
+  ) +
     ggplot2::geom_bar(stat = "identity", ...) +
     ggplot2::theme_void() +
     ggplot2::theme(
@@ -67,7 +70,7 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
   if (show_labels) {
     ct <- ct +
       ggplot2::geom_text(
-        ggplot2::aes_string(y = 0, label = "lab_"),
+        ggplot2::aes(y = 0, label = lab_),
         angle = 90,
         hjust = -0.1,
         size = text_size

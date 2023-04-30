@@ -10,6 +10,7 @@
 #' the first "by" variable is visualized as color, while the second one
 #' or the multiflashlight is shown via facet (change with \code{swap_dim}).
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_profile".
 #' @param swap_dim If multiflashlight and one "by" variable or
 #' single flashlight with two "by" variables, swap the role of dodge/fill variable
@@ -54,10 +55,17 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
   if (x$stats == "quartiles") {
     p <- ggplot2::ggplot(
       x$data,
-      ggplot2::aes_string(y = value_name, x = x$v, ymin = q1_name, ymax = q3_name)
+      ggplot2::aes(
+        y = .data[[value_name]],
+        x = .data[[x$v]],
+        ymin = .data[[q1_name]],
+        ymax = .data[[q3_name]]
+      )
     )
   } else {
-    p <- ggplot2::ggplot(x$data, aes_string(y = value_name, x = x$v))
+    p <- ggplot2::ggplot(
+      x$data, ggplot2::aes(y = .data[[value_name]], x = .data[[x$v]])
+    )
   }
   if (ndim == 0L) {
     if (x$stats == "quartiles") {
@@ -74,14 +82,14 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
     if (!swap_dim) {
       if (x$stats == "quartiles") {
         p <- p + ggplot2::geom_crossbar(
-          ggplot2::aes_string(color = first_dim), position = "dodge", ...
+          ggplot2::aes(color = .data[[first_dim]]), position = "dodge", ...
         )
       } else {
         p <- p + ggplot2::geom_line(
-          ggplot2::aes_string(color = first_dim, group = first_dim), ...
+          ggplot2::aes(color = .data[[first_dim]], group = .data[[first_dim]]), ...
         )
         if (show_points) {
-          p <- p + ggplot2::geom_point(ggplot2::aes_string(color = first_dim), ...)
+          p <- p + ggplot2::geom_point(ggplot2::aes(color = .data[[first_dim]]), ...)
         }
       }
     } else {
@@ -102,14 +110,14 @@ plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
 
     if (x$stats == "quartiles") {
       p <- p + ggplot2::geom_crossbar(
-        ggplot2::aes_string(color = col_var), position = "dodge", ...
+        ggplot2::aes(color = .data[[col_var]]), position = "dodge", ...
       )
     } else {
       p <- p + ggplot2::geom_line(
-        ggplot2::aes_string(color = col_var, group = col_var), ...
+        ggplot2::aes(color = .data[[col_var]], group = .data[[col_var]]), ...
       )
       if (show_points) {
-        p <- p + ggplot2::geom_point(ggplot2::aes_string(color = col_var), ...)
+        p <- p + ggplot2::geom_point(ggplot2::aes(color = .data[[col_var]]), ...)
       }
     }
     p <- p + ggplot2::facet_wrap(wrap_var, scales = facet_scales)

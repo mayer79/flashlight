@@ -5,12 +5,13 @@
 #' Different flashlights or a single flashlight with one "by" variable are separated
 #' by a facet wrap.
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_effects".
 #' @param use A vector of elements to show.
 #' Any subset of ("response", "predicted", "pd", "ale") or "all".
 #' Defaults to all except "ale"
 #' @param zero_counts Logical flag if 0 count levels should be shown on the x axis.
-#' @param size_factor Factor used to enlarge default \code{size} in
+#' @param size_factor Factor used to enlarge default \code{size/linewidth} in
 #' \code{ggplot2::geom_point()} and \code{ggplot2::geom_line()}.
 #' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
 #' @param facet_nrow Number of rows in \code{ggplot2::facet_wrap()}.
@@ -61,7 +62,7 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   if (crossbar_required) {
     crossbar <- ggplot2::geom_crossbar(
       data = x$response,
-      ggplot2::aes_string(ymin = q1_name, ymax = q3_name),
+      ggplot2::aes(ymin = .data[[q1_name]], ymax = .data[[q3_name]]),
       width = 0.3,
       fill = "darkblue",
       colour = "black",
@@ -73,19 +74,25 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   # Put together the plot
   if (n) {
     tp <- type_name
-    p <- ggplot2::ggplot(data, ggplot2::aes_string(y = value_name, x = x$v)) +
+    p <- ggplot2::ggplot(
+      data, ggplot2::aes(y = .data[[value_name]], x = .data[[x$v]])
+    ) +
       ggplot2::geom_line(
-        ggplot2::aes_string(color = tp, group = tp), size = size_factor / 3, ...
+        ggplot2::aes(color = .data[[tp]], group = .data[[tp]]),
+        linewidth = size_factor / 3,
+        ...
       )
     if (show_points) {
       p <- p + ggplot2::geom_point(
-        ggplot2::aes_string(color = tp, group = tp), size = size_factor, ...)
+        ggplot2::aes(color = .data[[tp]], group = .data[[tp]]), size = size_factor, ...)
     }
     if (crossbar_required) {
       p <- p + crossbar
     }
   } else {
-    p <- ggplot2::ggplot(x$response, ggplot2::aes_string(y = value_name, x = x$v)) +
+    p <- ggplot2::ggplot(
+      x$response, ggplot2::aes(y = .data[[value_name]], x = .data[[x$v]])
+    ) +
       crossbar
   }
   if (multi || nby) {

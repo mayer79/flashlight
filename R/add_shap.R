@@ -2,8 +2,6 @@
 #'
 #' The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as static element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm (see reference) is used with importance based visit order. Use the default \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
 #'
-#' @importFrom dplyr bind_rows
-#' @importFrom utils setTxtProgressBar txtProgressBar
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".
 #' @param visit_strategy In what sequence should variables be visited? By \code{n_perm} "permutation" (slow), by "importance" (fast), or as "v" (not recommended).
@@ -116,19 +114,19 @@ add_shap.flashlight <- function(x, v = NULL,
   # Call light_breakdown for each row in new_obs
   if (verbose) {
     cat("\nCrunching SHAP values for flashlight '", x$label, "'\n", sep = "")
-    pb <- txtProgressBar(1, n_shap, style = 3)
+    pb <- utils::txtProgressBar(1, n_shap, style = 3)
   }
   out <- vector(mode = "list", length = n_shap)
   for (i in seq_len(n_shap)) {
     out[[i]] <- core_func(i)
     if (verbose) {
-      setTxtProgressBar(pb, i)
+      utils::setTxtProgressBar(pb, i)
     }
   }
 
   # Organize output
   shap <- c(x[c("by", "w", "linkinv")],
-            list(data = bind_rows(out), v = v, use_linkinv = use_linkinv))
+            list(data = dplyr::bind_rows(out), v = v, use_linkinv = use_linkinv))
   class(shap) <- "shap"
   flashlight(x, shap = shap)
 }

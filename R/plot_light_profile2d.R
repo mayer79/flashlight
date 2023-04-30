@@ -14,6 +14,7 @@
 #' or by using the arguments \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in
 #' \code{light_profile2d()}.
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_profile2d".
 #' @param swap_dim Swap the \code{ggplot2::facet_grid()} dimensions.
 #' @param rotate_x Should the x axis labels be rotated by 45 degrees?
@@ -47,7 +48,8 @@ plot.light_profile2d <- function(x, swap_dim = FALSE, rotate_x = TRUE,
 
   # Build plot
   p <- ggplot2::ggplot(
-    data, ggplot2::aes_string(x = x$v[1L], y = x$v[2L], fill = value_name)
+    data,
+    ggplot2::aes(x = .data[[x$v[1L]]], y = .data[[x$v[2L]]], fill = .data[[value_name]])
   ) +
     ggplot2::geom_tile(...)
   if (ndim == 1L) {

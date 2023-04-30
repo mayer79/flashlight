@@ -33,7 +33,8 @@ Imports:
     tidyr (>= 1.0.0),
     tidyselect,
     utils,
-    withr
+    withr,
+    rlang (>= 0.3.0)
 Suggests: 
     mlr3,
     caret,

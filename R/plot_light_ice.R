@@ -6,6 +6,7 @@
 #' Each observation is visualized by a line. The first "by" variable is represented
 #' by the color, a second "by" variable or a multiflashlight by facets.
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_ice".
 #' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
@@ -46,16 +47,17 @@ plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
   # Distinguish cases
   if (nby == 0L) {
     p <- ggplot2::ggplot(
-      data, ggplot2::aes_string(y = value_name, x = x$v, group = id_name)
+      data,
+      ggplot2::aes(y = .data[[value_name]], x = .data[[x$v]], group = .data[[id_name]])
     ) +
       ggplot2::geom_line(...)
   } else {
     stopifnot(!("temp_" %in% colnames(data)))
     data[["temp_"]] <- interaction(data[[id_name]], data[[x$by[1L]]])
     p <- ggplot2::ggplot(
-      data, ggplot2::aes_string(y = value_name, x = x$v, group = "temp_")
+      data, ggplot2::aes(y = .data[[value_name]], x = .data[[x$v]], group = temp_)
     ) +
-      ggplot2::geom_line(ggplot2::aes_string(color = x$by[1L]), ...) +
+      ggplot2::geom_line(ggplot2::aes(color = .data[[x$by[1L]]]), ...) +
       ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(alpha = 1)))
   }
   if (nby > 1L || multi) {

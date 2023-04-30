@@ -22,7 +22,8 @@ what value of \code{mfrow} to use in \code{graphics::par()}?}
 An object of class "ggplot".
 }
 \description{
-Visualize trees fitted by \code{light_global_surrogate()} via \code{rpart.plot::rpart.plot()}.
+Visualize trees fitted by \code{light_global_surrogate()} via
+\code{rpart.plot::rpart.plot()}.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)

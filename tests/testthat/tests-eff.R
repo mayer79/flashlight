@@ -220,4 +220,3 @@ test_that("Options work for light_profile", {
     expect_true(inherits(plot(pd), "ggplot"))
   })
 })
-

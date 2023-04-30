@@ -25,7 +25,7 @@ Defaults to all except "ale"}
 
 \item{zero_counts}{Logical flag if 0 count levels should be shown on the x axis.}
 
-\item{size_factor}{Factor used to enlarge default \code{size} in
+\item{size_factor}{Factor used to enlarge default \code{size/linewidth} in
 \code{ggplot2::geom_point()} and \code{ggplot2::geom_line()}.}
 
 \item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}

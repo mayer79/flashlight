@@ -13,6 +13,7 @@
 #' be compared easiest. Set "swap_dim = TRUE" to revert the role of dodging and x
 #' aesthetic. Different metrics are always represented by facets.
 #'
+#' @importFrom rlang .data
 #' @param x An object of class "light_performance".
 #' @param swap_dim Should representation of dimensions
 #' (either two "by" variables or one "by" variable and multiflashlight)
@@ -26,8 +27,8 @@
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
-#' fl <- flashlight(model = fit_full, label = "ols", data = iris, y = "Sepal.Length")
-#' plot(light_performance(mods), fill = "darkred")
+#' fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
+#' plot(light_performance(fl, by = "Species"), fill = "darkred")
 #' @seealso \code{\link{light_performance}}.
 plot.light_performance <- function(x, swap_dim = FALSE, geom = c("bar", "point"),
                                    facet_scales = "free_y", rotate_x = FALSE, ...) {
@@ -49,7 +50,10 @@ plot.light_performance <- function(x, swap_dim = FALSE, geom = c("bar", "point")
   # Differentiate some plot cases
    if (ndim <= 1L) {
     p <- ggplot2::ggplot(
-      data, ggplot2::aes_string(y = value_name, x = if (nby) x$by[1] else label_name)
+      data,
+      ggplot2::aes(
+        y = .data[[value_name]], x = .data[[if (nby) x$by[1L] else label_name]]
+      )
     )
     if (geom == "bar") {
       p <- p + ggplot2::geom_bar(stat = "identity", ...)
@@ -61,15 +65,17 @@ plot.light_performance <- function(x, swap_dim = FALSE, geom = c("bar", "point")
     x_var <- if (!swap_dim) x$by[1L] else second_dim
     dodge_var <- if (!swap_dim) second_dim else x$by[1L]
 
-    p <- ggplot2::ggplot(data, ggplot2::aes_string(y = value_name, x = x_var))
+    p <- ggplot2::ggplot(
+      data, ggplot2::aes(y = .data[[value_name]], x = .data[[x_var]])
+    )
     if (geom == "bar") {
       p <- p + ggplot2::geom_bar(
-        ggplot2::aes_string(fill = dodge_var), stat = "identity", position = "dodge",
+        ggplot2::aes(fill = .data[[dodge_var]]), stat = "identity", position = "dodge",
         ...
       )
     } else if (geom == "point") {
       p <- p + ggplot2::geom_point(
-        ggplot2::aes_string(group = dodge_var, color = dodge_var), ...
+        ggplot2::aes(group = .data[[dodge_var]], color = .data[[dodge_var]]), ...
       )
     }
   }

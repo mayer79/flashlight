@@ -32,8 +32,8 @@ and can be further customized. To avoid overplotting, try \code{alpha = 0.2} or
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "ols")
-plot(light_scatter(fl, v = "Petal.Length"), alpha = 0.2)
+fl <- flashlight(model = fit, label = "ols", data = iris)
+plot(light_scatter(fl, v = "Petal.Length", by = "Species"), alpha = 0.2)
 }
 \seealso{
 \code{\link{light_scatter}}.
