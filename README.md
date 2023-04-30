@@ -1,37 +1,41 @@
-# The flashlight package <a href='https://github.com/mayer79/flashlight'><img src='man/figures/logo.png' align="right" height="138.5" /></a>
+# {flashlight} <a href='https://github.com/mayer79/flashlight'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
-[![CRAN version](http://www.r-pkg.org/badges/version/flashlight)](https://cran.r-project.org/package=flashlight) [![](https://cranlogs.r-pkg.org/badges/flashlight)](https://cran.r-project.org/package=flashlight) [![](https://cranlogs.r-pkg.org/badges/grand-total/flashlight?color=orange)](https://cran.r-project.org/package=flashlight)
+<!-- badges: start -->
+
+[![CRAN status](http://www.r-pkg.org/badges/version/flashlight)](https://cran.r-project.org/package=flashlight)
+[![R-CMD-check](https://github.com/mayer79/flashlight/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mayer79/flashlight/actions)
+[![Codecov test coverage](https://codecov.io/gh/mayer79/flashlight/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mayer79/flashlight?branch=main)
+
+[![](https://cranlogs.r-pkg.org/badges/flashlight)](https://cran.r-project.org/package=flashlight) 
+[![](https://cranlogs.r-pkg.org/badges/grand-total/flashlight?color=orange)](https://cran.r-project.org/package=flashlight)
+
+<!-- badges: end -->
+
+## Overview
 
 The goal of this package is shed light on black box machine learning models.
 
-The main props of `flashlight`:
+The main props of {flashlight}:
 
 1. It is simple, yet flexible.
-
 2. It offers model agnostic tools like model performance, variable importance, global surrogate models, ICE profiles, partial dependence, ALE, and further effects plots, scatter plots, interaction strength, and variable contribution breakdown/SHAP for single observations.
-
 3. It allows to assess multiple models in parallel.
-
 4. It supports "group by" operations.
-
 5. It works with case weights.
 
 Currently, models with numeric or binary response are supported.
 
 ## Installation
 
-From CRAN:
-``` r
+```r
+# From CRAN
 install.packages("flashlight")
+
+# Development version
+devtools::install_github("mayer79/flashlight")
 ```
 
-Latest version from github:
-``` r
-library(devtools)
-install_github("mayer79/flashlight")
-```
-
-## Example Code
+## Usage
 
 ``` r
 library(ggplot2)
