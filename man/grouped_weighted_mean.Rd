@@ -30,7 +30,8 @@ grouped_weighted_mean(
 A \code{data.frame} with grouped weighted means.
 }
 \description{
-Fast version of grouped_stats(..., counts = FALSE). Works if there is at most one "by" variable.
+Fast version of grouped_stats(..., counts = FALSE).
+Works if there is at most one "by" variable.
 }
 \examples{
 n <- 100

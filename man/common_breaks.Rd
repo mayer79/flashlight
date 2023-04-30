@@ -7,7 +7,7 @@
 common_breaks(x, v, data = NULL, n_bins, cut_type)
 }
 \arguments{
-\item{x}{An object of class \code{multiflashlight}.}
+\item{x}{An object of class "multiflashlight".}
 
 \item{v}{The variable to be profiled.}
 

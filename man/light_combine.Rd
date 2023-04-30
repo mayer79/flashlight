@@ -20,19 +20,23 @@ light_combine(x, ...)
 
 \item{...}{Further arguments passed from or to other methods.}
 
-\item{new_class}{An optional vector with additional class names to be added to the output.}
+\item{new_class}{An optional vector with additional class names to be added to
+the output.}
 }
 \value{
-If \code{x} is a list, an object like each element but with unioned rows in data slots.
+If \code{x} is a list, an object like each element but with unioned rows
+in data slots.
 }
 \description{
-Combines a list of similar objects each of class \code{light} by row binding \code{data.frame} slots and retaining the other slots from the first list element.
+Combines a list of similar objects each of class "light" by row binding
+\code{data.frame} slots and retaining the other slots from the first list element.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{light_combine(default)}: Default method not implemented yet.
 
-\item \code{light_combine(light)}: Since there is nothing to combine, the input is returned except for additional classes.
+\item \code{light_combine(light)}: Since there is nothing to combine, the input is returned
+except for additional classes.
 
 \item \code{light_combine(list)}: Combine a list of similar light objects.
 

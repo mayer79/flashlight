@@ -19,25 +19,29 @@ multiflashlight(x, ...)
 \method{multiflashlight}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{multiflashlight}, \code{flashlight} or a list of flashlights.}
+\item{x}{An object of class "multiflashlight", "flashlight" or a list of flashlights.}
 
 \item{...}{Optional arguments in the flashlights to update, see examples.}
 }
 \value{
-An object of class \code{multiflashlight}. This is a named list of flashlight objects.
+An object of class "multiflashlight" (a named list of flashlight objects).
 }
 \description{
-Combines a list of flashlights to an object of class \code{multiflashlight} and/or updates a multiflashlight.
+Combines a list of flashlights to an object of class "multiflashlight"
+and/or updates a multiflashlight.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{multiflashlight(default)}: Used to create a flashlight object. No \code{x} has to be passed in this case.
+\item \code{multiflashlight(default)}: Used to create a flashlight object.
+No \code{x} has to be passed in this case.
 
-\item \code{multiflashlight(flashlight)}: Updates an existing flashlight object and turns into a multiflashlight.
+\item \code{multiflashlight(flashlight)}: Updates an existing flashlight object and turns
+into a multiflashlight.
 
-\item \code{multiflashlight(list)}: Creates (and updates) a multiflashlight from a list of flashlights.
+\item \code{multiflashlight(list)}: Creates (and updates) a multiflashlight from a list
+of flashlights.
 
-\item \code{multiflashlight(multiflashlight)}: Updates an object of class \code{multiflashlight}.
+\item \code{multiflashlight(multiflashlight)}: Updates an object of class "multiflashlight".
 
 }}
 \examples{

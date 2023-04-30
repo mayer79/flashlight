@@ -16,7 +16,7 @@ light_check(x, ...)
 \method{light_check}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
 \item{...}{Further arguments passed from or to other methods.}
 }
@@ -24,7 +24,8 @@ light_check(x, ...)
 The input \code{x} or an error message.
 }
 \description{
-Checks if an object of class \code{flashlight} or \code{multiflashlight} is consistently defined.
+Checks if an object of class "flashlight" or "multiflashlight"
+is consistently defined.
 }
 \section{Methods (by class)}{
 \itemize{

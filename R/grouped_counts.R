@@ -2,9 +2,6 @@
 #'
 #' Calculates weighted counts grouped by optional columns.
 #'
-#' @importFrom dplyr group_by summarize across cur_data
-#' @importFrom tidyselect all_of
-#' @importFrom stats setNames
 #' @param data A \code{data.frame}.
 #' @param by An optional vector of column names in \code{data} used to group the results.
 #' @param w Optional name of the column in \code{data} with case weights.
@@ -28,13 +25,16 @@ grouped_counts <- function(data, by = NULL, w = NULL, value_name = "n", ...) {
   # Function that does the ungrouped calculation
   core_fun <- function(X) {
     val <- if (!is.null(w)) sum(X[[w]], ...) else nrow(X)
-    setNames(data.frame(val), value_name)
+    stats::setNames(data.frame(val), value_name)
   }
 
   # Apply core_fun
   if (!length(by)) {
     return(core_fun(data))
   }
-  summarize(group_by(data, across(all_of(by))),
-    core_fun(cur_data()), .groups = "drop")
+  dplyr::summarize(
+    dplyr::group_by(data, dplyr::across(tidyselect::all_of(by))),
+    core_fun(dplyr::cur_data()),
+    .groups = "drop"
+  )
 }

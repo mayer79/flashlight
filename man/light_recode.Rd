@@ -13,11 +13,13 @@ light_recode(x, ...)
 \method{light_recode}{light}(x, what, levels, labels, ...)
 }
 \arguments{
-\item{x}{An object of class \code{light}.}
+\item{x}{An object of class "light".}
 
 \item{...}{Further arguments passed to \code{factor}.}
 
-\item{what}{Column identifier to be recoded, e.g. "type". For backward compatibility, also the option identifier (e.g. "type_name") can be passed.}
+\item{what}{Column identifier to be recoded, e.g., "type".
+For backward compatibility, also the option identifier (e.g. "type_name")
+can be passed.}
 
 \item{levels}{Current levels/values of \code{type_name} column (in desired order).}
 
@@ -27,13 +29,13 @@ light_recode(x, ...)
 \code{x} with new factor levels of \code{type_name} column.
 }
 \description{
-Recodes factor levels of columns in data slots of an object of class \code{light}.
+Recodes factor levels of columns in data slots of an object of class "light".
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{light_recode(default)}: Default method not implemented yet.
 
-\item \code{light_recode(light)}: Recoding factors in data slots of \code{light} object.
+\item \code{light_recode(light)}: Recoding factors in data slots of "light" object.
 
 }}
 \examples{

@@ -34,7 +34,8 @@ Imports:
     tidyselect,
     utils,
     withr,
-    rlang (>= 0.3.0)
+    rlang (>= 0.3.0),
+    tibble
 Suggests: 
     mlr3,
     caret,

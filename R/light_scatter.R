@@ -1,20 +1,24 @@
 #' Scatter
 #'
-#' This function prepares values for drawing a scatter plot of predicted values, responses, residuals, or SHAP values against a selected variable.
+#' This function prepares values for drawing a scatter plot of predicted values,
+#' responses, residuals, or SHAP values against a selected variable.
 #'
-#' @importFrom dplyr as_tibble
-#' @param x An object of class \code{flashlight} or \code{multiflashlight}.
+#' @param x An object of class "flashlight" or "multiflashlight".
 #' @param v The variable name to be shown on the x-axis.
 #' @param data An optional \code{data.frame}. Not relevant for \code{type = "shap"}.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".
-#' @param use_linkinv Should retransformation function be applied? Default is TRUE. Not used for \code{type = "shap"}.
-#' @param n_max Maximum number of data rows to select. Will be randomly picked from the relevant data.
+#' @param use_linkinv Should retransformation function be applied? Default is \code{TRUE}.
+#' Not used for \code{type = "shap"}.
+#' @param n_max Maximum number of data rows to select.
+#' Will be randomly picked from the relevant data.
 #' @param seed An integer random seed used for subsampling.
 #' @param ... Further arguments passed from or to other methods.
-#' @return An object of class \code{light_scatter} with the following elements.
+#' @return An object of class "light_scatter" with the following elements:
 #' \itemize{
-#'   \item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+#'   \item \code{data} A tibble with results. Can be used to build fully customized
+#'   visualizations. Column names can be controlled by
+#'   \code{options(flashlight.column_name)}.
 #'   \item \code{by} Same as input \code{by}.
 #'   \item \code{v} The variable evaluated.
 #'   \item \code{type} Same as input \code{type}. For information only.
@@ -85,12 +89,14 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
 
   # Update flashlight
   if (type != "shap") {
-    x <- flashlight(x, data = data, by = by,
-                    linkinv = if (use_linkinv) x$linkinv else function(z) z)
+    x <- flashlight(
+      x, data = data, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z
+    )
   }
 
   # Calculate values
-  data[[value_name]] <- switch(type,
+  data[[value_name]] <- switch(
+    type,
     response = response(x),
     predicted = predict(x),
     residual = residuals(x),
@@ -101,7 +107,7 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
   data[[label_name]] <- x$label
   vars <- c(label_name, by, v, value_name)
   add_classes(
-    list(data = as_tibble(data[, vars]), by = by, v = v, type = type),
+    list(data = tibble::as_tibble(data[, vars]), by = by, v = v, type = type),
     c("light_scatter", "light")
   )
 }
@@ -109,6 +115,5 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
 #' @describeIn light_scatter light_scatter for a multiflashlight.
 #' @export
 light_scatter.multiflashlight <- function(x, ...) {
-  light_combine(lapply(x, light_scatter, ...),
-                new_class = "light_scatter_multi")
+  light_combine(lapply(x, light_scatter, ...), new_class = "light_scatter_multi")
 }

@@ -2,7 +2,7 @@
 #'
 #' Internal function used to find common breaks from different flashlights.
 #'
-#' @param x An object of class \code{multiflashlight}.
+#' @param x An object of class "multiflashlight".
 #' @param v The variable to be profiled.
 #' @param data A \code{data.frame}.
 #' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}.
@@ -22,4 +22,3 @@ common_breaks <- function(x, v, data = NULL, n_bins, cut_type) {
   }
   auto_cut(v_vec, n_bins = n_bins, cut_type = cut_type)$breaks
 }
-

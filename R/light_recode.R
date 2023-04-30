@@ -1,9 +1,11 @@
 #' Recode Factor Columns
 #'
-#' Recodes factor levels of columns in data slots of an object of class \code{light}.
+#' Recodes factor levels of columns in data slots of an object of class "light".
 #'
-#' @param x An object of class \code{light}.
-#' @param what Column identifier to be recoded, e.g. "type". For backward compatibility, also the option identifier (e.g. "type_name") can be passed.
+#' @param x An object of class "light".
+#' @param what Column identifier to be recoded, e.g., "type".
+#' For backward compatibility, also the option identifier (e.g. "type_name")
+#' can be passed.
 #' @param levels Current levels/values of \code{type_name} column (in desired order).
 #' @param labels New levels of \code{type_name} column in same order as \code{levels}.
 #' @param ... Further arguments passed to \code{factor}.
@@ -31,7 +33,7 @@ light_recode.default <- function(x, ...) {
   stop("No default method available yet.")
 }
 
-#' @describeIn light_recode Recoding factors in data slots of \code{light} object.
+#' @describeIn light_recode Recoding factors in data slots of "light" object.
 #' @export
 light_recode.light <- function(x, what, levels, labels, ...) {
   if (!is.null(wt <- getOption(paste("flashlight", what, sep = ".")))) {
@@ -40,8 +42,7 @@ light_recode.light <- function(x, what, levels, labels, ...) {
   data_slots <- names(x)[vapply(x, FUN = is.data.frame, FUN.VALUE = TRUE)]
   for (z in data_slots) {
     if (what %in% colnames(x[[z]])) {
-      x[[z]][[what]] <- factor(x[[z]][[what]], levels = levels,
-                               labels = labels, ...)
+      x[[z]][[what]] <- factor(x[[z]][[what]], levels = levels, labels = labels, ...)
     }
   }
   x

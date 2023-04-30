@@ -17,7 +17,7 @@ flashlight(x, ...)
   linkinv = function(z) z,
   w = NULL,
   by = NULL,
-  metrics = list(rmse = rmse),
+  metrics = list(rmse = MetricsWeighted::rmse),
   label = NULL,
   shap = NULL,
   ...
@@ -26,41 +26,53 @@ flashlight(x, ...)
 \method{flashlight}{flashlight}(x, check = TRUE, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight}. If not provided, a new flashlight is created based on further input. Otherwise, \code{x} is updated based on further input.}
+\item{x}{An object of class "flashlight". If not provided, a new flashlight is
+created based on further input. Otherwise, \code{x} is updated based on further input.}
 
 \item{...}{Arguments passed from or to other functions.}
 
-\item{model}{A fitted model of any type. Most models require a customized \code{predict_function}.}
+\item{model}{A fitted model of any type. Most models require a customized
+\code{predict_function}.}
 
 \item{data}{A \code{data.frame} or \code{tibble} used as basis for calculations.}
 
 \item{y}{Variable name of response.}
 
-\item{predict_function}{A real valued function with two arguments: A model and a data of the same structure as \code{data}. Only the order of the two arguments matter, not their names.}
+\item{predict_function}{A real valued function with two arguments:
+A model and a data of the same structure as \code{data}.
+Only the order of the two arguments matter, not their names.}
 
-\item{linkinv}{An inverse transformation function applied after \code{predict_function}.}
+\item{linkinv}{An inverse transformation function applied after
+\code{predict_function}.}
 
 \item{w}{A variable name of case weights.}
 
 \item{by}{A character vector with names of grouping variables.}
 
-\item{metrics}{A named list of metrics. Here, a metric is a function with exactly four arguments: actual, predicted, w (case weights) and \code{...} like those in package \code{MetricsWeighted}.}
+\item{metrics}{A named list of metrics. Here, a metric is a function with exactly
+four arguments: actual, predicted, w (case weights) and \code{...}
+like those in package {MetricsWeighted}.}
 
 \item{label}{Name of the flashlight. Required.}
 
 \item{shap}{An optional shap object. Typically added by calling \code{add_shap}.}
 
-\item{check}{When updating the flashlight: Should internal checks be performed? Default is \code{TRUE}.}
+\item{check}{When updating the flashlight: Should internal checks be performed?
+Default is \code{TRUE}.}
 }
 \value{
-An object of class \code{flashlight} (and \code{list}) containing each input (except \code{x}) as element.
+An object of class \code{flashlight} (and \code{list}) containing each
+input (except \code{x}) as element.
 }
 \description{
-Creates or updates a \code{flashlight} object. If a flashlight is to be created, all arguments are optional except \code{label}. If a flashlight is to be updated, all arguments are optional up to \code{x} (the flashlight to be updated).
+Creates or updates a \code{flashlight} object. If a flashlight is to be created,
+all arguments are optional except \code{label}. If a flashlight is to be updated,
+all arguments are optional up to \code{x} (the flashlight to be updated).
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{flashlight(default)}: Used to create a flashlight object. No \code{x} has to be passed in this case.
+\item \code{flashlight(default)}: Used to create a flashlight object.
+No \code{x} has to be passed in this case.
 
 \item \code{flashlight(flashlight)}: Used to update an existing flashlight object.
 

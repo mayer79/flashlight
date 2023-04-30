@@ -4,7 +4,6 @@
 #'
 #' Numeric covariables \code{v} with more than \code{n_bins} disjoint values are binned into \code{n_bins} bins. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overwritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
 #'
-#' @importFrom withr with_options
 #' @param x An object of class \code{flashlight} or \code{multiflashlight}.
 #' @param v The variable name to be profiled.
 #' @param data An optional \code{data.frame}. Not used for \code{type = "shap"}.

@@ -23,33 +23,43 @@ ale_profile(
 )
 }
 \arguments{
-\item{x}{An object of class \code{flashlight}.}
+\item{x}{An object of class "flashlight".}
 
 \item{v}{The variable to be profiled.}
 
-\item{breaks}{Cut breaks for a numeric \code{v}. Only used if no \code{evaluate_at} is specified.}
+\item{breaks}{Cut breaks for a numeric \code{v}. Only used if no \code{evaluate_at}
+is specified.}
 
-\item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}. Only used if no \code{evaluate_at} is specified.}
+\item{n_bins}{Maxmium number of unique values to evaluate for numeric \code{v}.
+Only used if no \code{evaluate_at} is specified.}
 
-\item{cut_type}{For the default "equal", bins of equal width are created for \code{v} by \code{pretty}. Choose "quantile" to create quantile bins.}
+\item{cut_type}{For the default "equal", bins of equal width are created for \code{v}
+by \code{pretty}. Choose "quantile" to create quantile bins.}
 
 \item{counts}{Should counts be added?}
 
-\item{counts_weighted}{If \code{counts} is TRUE: Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
+\item{counts_weighted}{If \code{counts} is \code{TRUE}: Should counts be weighted by the
+case weights? If \code{TRUE}, the sum of \code{w} is returned by group.}
 
 \item{pred}{Optional vector with predictions.}
 
-\item{evaluate_at}{Vector with values of \code{v} used to evaluate the profile. Only relevant for type = "partial dependence".}
+\item{evaluate_at}{Vector with values of \code{v} used to evaluate the profile.
+Only relevant for type = "partial dependence".}
 
 \item{indices}{A vector of row numbers to consider.}
 
 \item{n_max}{Maximum number of ICE profiles to calculate within interval (not within data).}
 
-\item{seed}{Integer random seed passed to \code{light_ice}.}
+\item{seed}{Integer random seed passed to \code{light_ice()}.}
 
-\item{two_sided}{Standard ALE profiles are calculated via left derivatives. Set to TRUE if two-sided derivatives should be calculated. Only works for continuous \code{v}. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.}
+\item{two_sided}{Standard ALE profiles are calculated via left derivatives.
+Set to \code{TRUE} if two-sided derivatives should be calculated.
+Only works for continuous \code{v}. More specifically: Usually, local effects at
+value x are calculated using points in \eqn{[x-e, x]}. Set \code{ale_two_sided = TRUE}
+to use points in \eqn{[x-e/2, x+e/2]} instead.}
 
-\item{calibrate}{Should values be calibrated based on average preditions? Default is TRUE.}
+\item{calibrate}{Should values be calibrated based on average preditions?
+Default is \code{TRUE}.}
 
 \item{...}{Other arguments passed to this function (currently unused).}
 }
@@ -57,5 +67,5 @@ ale_profile(
 A tibble containing results.
 }
 \description{
-Internal function used by \code{light_profile} to calculate ALE profiles.
+Internal function used by \code{light_profile()} to calculate ALE profiles.
 }

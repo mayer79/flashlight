@@ -1,8 +1,9 @@
 #' Check flashlight
 #'
-#' Checks if an object of class \code{flashlight} or \code{multiflashlight} is consistently defined.
+#' Checks if an object of class "flashlight" or "multiflashlight"
+#' is consistently defined.
 #'
-#' @param x An object of class \code{flashlight} or \code{multiflashlight}.
+#' @param x An object of class "flashlight" or "multiflashlight".
 #' @param ... Further arguments passed from or to other methods.
 #' @return The input \code{x} or an error message.
 #' @export
