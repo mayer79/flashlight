@@ -100,35 +100,41 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="the-flashlight-package-">The flashlight package <a href="https://github.com/mayer79/flashlight" class="external-link"><img src="reference/figures/logo.png" align="right" height="138.5"></a>
-<a class="anchor" aria-label="anchor" href="#the-flashlight-package-"></a>
+<div class="page-header"><h1 id="flashlight-">{flashlight} <a href="https://github.com/mayer79/flashlight" class="external-link"><img src="reference/figures/logo.png" align="right" height="139"></a>
+<a class="anchor" aria-label="anchor" href="#flashlight-"></a>
 </h1></div>
-<p><a href="https://cran.r-project.org/package=flashlight" class="external-link"><img src="http://www.r-pkg.org/badges/version/flashlight" alt="CRAN version"></a> <a href="https://cran.r-project.org/package=flashlight" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/flashlight"></a> <a href="https://cran.r-project.org/package=flashlight" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/flashlight?color=orange"></a></p>
+<!-- badges: start -->
+
+
+<!-- badges: end -->
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>The goal of this package is shed light on black box machine learning models.</p>
-<p>The main props of <code>flashlight</code>:</p>
+<p>The main props of {flashlight}:</p>
 <ol style="list-style-type: decimal">
-<li><p>It is simple, yet flexible.</p></li>
-<li><p>It offers model agnostic tools like model performance, variable importance, global surrogate models, ICE profiles, partial dependence, ALE, and further effects plots, scatter plots, interaction strength, and variable contribution breakdown/SHAP for single observations.</p></li>
-<li><p>It allows to assess multiple models in parallel.</p></li>
-<li><p>It supports “group by” operations.</p></li>
-<li><p>It works with case weights.</p></li>
+<li>It is simple, yet flexible.</li>
+<li>It offers model agnostic tools like model performance, variable importance, global surrogate models, ICE profiles, partial dependence, ALE, and further effects plots, scatter plots, interaction strength, and variable contribution breakdown/SHAP for single observations.</li>
+<li>It allows to assess multiple models in parallel.</li>
+<li>It supports “group by” operations.</li>
+<li>It works with case weights.</li>
 </ol>
 <p>Currently, models with numeric or binary response are supported.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>From CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"flashlight"</span><span class="op">)</span></span></code></pre></div>
-<p>Latest version from github:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mayer79/flashlight"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># From CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"flashlight"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Development version</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mayer79/flashlight"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example-code">Example Code<a class="anchor" aria-label="anchor" href="#example-code"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mayer79/MetricsWeighted" class="external-link">MetricsWeighted</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mayer79/flashlight" class="external-link">flashlight</a></span><span class="op">)</span></span>
@@ -147,7 +153,7 @@
 <div class="section level3">
 <h3 id="performance-overall-and-grouped-by-species">Performance (overall and grouped by <code>Species</code>)<a class="anchor" aria-label="anchor" href="#performance-overall-and-grouped-by-species"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_performance.html">light_performance</a></span><span class="op">(</span><span class="va">fl</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Overall"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_performance.html">light_performance</a></span><span class="op">(</span><span class="va">fl</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -159,7 +165,7 @@
 <div class="section level3">
 <h3 id="permutation-importance">Permutation importance<a class="anchor" aria-label="anchor" href="#permutation-importance"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/light_importance.html">light_importance</a></span><span class="op">(</span><span class="va">fl</span>, m_repetitions <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">imp</span>, fill <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/imp.png"></p>
@@ -168,14 +174,14 @@
 <h3 id="ice-curves-for-petalwidth">ICE curves for <code>Petal.Width</code>
 <a class="anchor" aria-label="anchor" href="#ice-curves-for-petalwidth"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_ice.html">light_ice</a></span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/ice.png"></p>
 </div>
 <div class="section level3">
 <h3 id="partial-dependence-plot-for-petalwidth">Partial dependence plot for Petal.Width<a class="anchor" aria-label="anchor" href="#partial-dependence-plot-for-petalwidth"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_profile.html">light_profile</a></span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Overall"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_profile.html">light_profile</a></span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="st">"Petal.Width"</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -186,21 +192,21 @@
 <div class="section level3">
 <h3 id="id_2d-partial-dependence">2D partial dependence<a class="anchor" aria-label="anchor" href="#id_2d-partial-dependence"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_profile2d.html">light_profile2d</a></span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Petal.Width"</span>, <span class="st">"Petal.Length"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/pd2d.png"></p>
 </div>
 <div class="section level3">
 <h3 id="accumulated-local-effects-ale-profiles-for-petalwidth">Accumulated local effects (ALE) profiles for Petal.Width<a class="anchor" aria-label="anchor" href="#accumulated-local-effects-ale-profiles-for-petalwidth"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_profile.html">light_profile</a></span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="st">"Petal.Width"</span>, type <span class="op">=</span> <span class="st">"ale"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/ale.png"></p>
 </div>
 <div class="section level3">
 <h3 id="prediction-response-and-residual-profiles-eg">Prediction, response and residual profiles, e.g.<a class="anchor" aria-label="anchor" href="#prediction-response-and-residual-profiles-eg"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_profile.html">light_profile</a></span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="st">"Petal.Width"</span>, type <span class="op">=</span> <span class="st">"residual"</span>, </span>
 <span>                   stats <span class="op">=</span> <span class="st">"quartile"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/residual.png"></p>
@@ -208,21 +214,21 @@
 <div class="section level3">
 <h3 id="different-profile-plots-in-one">Different profile plots in one…<a class="anchor" aria-label="anchor" href="#different-profile-plots-in-one"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_effects.html">light_effects</a></span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="st">"Petal.Width"</span><span class="op">)</span>, use <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/effects.png"></p>
 </div>
 <div class="section level3">
 <h3 id="variable-contribution-breakdown-for-single-observation">Variable contribution breakdown for single observation<a class="anchor" aria-label="anchor" href="#variable-contribution-breakdown-for-single-observation"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_breakdown.html">light_breakdown</a></span><span class="op">(</span><span class="va">fl</span>, new_obs <span class="op">=</span> <span class="va">iris</span><span class="op">[</span><span class="fl">2</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/breakdown.png"></p>
 </div>
 <div class="section level3">
 <h3 id="global-surrogate">Global surrogate<a class="anchor" aria-label="anchor" href="#global-surrogate"></a>
 </h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="reference/light_global_surrogate.html">light_global_surrogate</a></span><span class="op">(</span><span class="va">fl</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="tools/figs/surrogate.png"></p>
 <p>Check out the vignette to see the full capabilities of the package.</p>
@@ -264,7 +270,16 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=flashlight" class="external-link"><img src="http://www.r-pkg.org/badges/version/flashlight" alt="CRAN status"></a></li>
+<li><a href="https://github.com/mayer79/flashlight/actions" class="external-link"><img src="https://github.com/mayer79/flashlight/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/mayer79/flashlight?branch=main" class="external-link"><img src="https://codecov.io/gh/mayer79/flashlight/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://cran.r-project.org/package=flashlight" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/flashlight"></a></li>
+<li><a href="https://cran.r-project.org/package=flashlight" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/flashlight?color=orange"></a></li>
+</ul>
+</div>
 
   </div>
 </div>
