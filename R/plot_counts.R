@@ -2,21 +2,23 @@
 #'
 #' Add counts as labelled bar plot on top of light_effects plot.
 #'
-#' Experimental. Uses package \code{ggpubr} to rearrange the figure. Thus, the resulting plot cannot be easily modified. Furthermore, adding counts only works if the legend in \code{plot.light_effects} is not placed on the left or right side of the plot. It has to be placed inside or at the bottom.
+#' Experimental. Uses package \code{ggpubr} to rearrange the figure.
+#' Thus, the resulting plot cannot be easily modified.
+#' Furthermore, adding counts only works if the legend in \code{plot.light_effects()}
+#' is not placed on the left or right side of the plot.
+#' It has to be placed inside or at the bottom.
 #'
-#' @import ggplot2
-#' @importFrom cowplot plot_grid
-#' @importFrom dplyr right_join
-#' @param p The result of \code{plot.light_effects}.
-#' @param x An object of class \code{light_effects}.
+#' @param p The result of \code{plot.light_effects()}.
+#' @param x An object of class "light_effects".
 #' @param text_size Size of count labels.
-#' @param facet_scales Scales argument passed to \code{facet_wrap}.
+#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
 #' @param show_labels Should count labels be added as text?
 #' @param big.mark Parameter passed to \code{format} the labels. Default is "'".
-#' @param scientific Parameter passed to \code{format} the labels. Default is FALSE.
+#' @param scientific Parameter passed to \code{format} the labels.
+#' Default is \code{FALSE}.
 #' @param digits Used to round the labels. Default is 0.
-#' @param ... Further arguments passed to \code{geom_bar}.
-#' @return An object of class \code{ggplot2}.
+#' @param ... Further arguments passed to \code{ggplot2::geom_bar()}.
+#' @return An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
@@ -29,8 +31,11 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
                         show_labels = TRUE, big.mark = "'",
                         scientific = FALSE, digits = 0, ...) {
   # Checks
-  stopifnot(is.ggplot(p), is.light_effects(x),
-            !("lab_" %in% colnames(x$response)))
+  stopifnot(
+    is.ggplot(p),
+    is.light_effects(x),
+    !("lab_" %in% colnames(x$response))
+  )
 
   label_name <- getOption("flashlight.label_name")
   counts_name <- getOption("flashlight.counts_name")
@@ -39,8 +44,9 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
 
   # Deal with zero counts
   key <- c(x$by, x$v, label_name)
-  x$response <- right_join(x$response, unique(p$data[, key, drop = FALSE]),
-                           by = key)
+  x$response <- dplyr::right_join(
+    x$response, unique(p$data[, key, drop = FALSE]), by = key
+  )
   if (any((bad <- is.na(x$response[[counts_name]])))) {
     x$response[[counts_name]][bad] <- 0
   }
@@ -52,18 +58,26 @@ plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
       big.mark = big.mark, scientific = scientific
     )
   }
-  ct <- ggplot(x$response, aes_string(x = x$v, y = counts_name)) +
-    geom_bar(stat = "identity", ...) +
-    theme_void() +
-    theme(strip.text.x = element_blank(), panel.grid = element_blank())
+  ct <- ggplot2::ggplot(x$response, ggplot2::aes_string(x = x$v, y = counts_name)) +
+    ggplot2::geom_bar(stat = "identity", ...) +
+    ggplot2::theme_void() +
+    ggplot2::theme(
+      strip.text.x = ggplot2::element_blank(), panel.grid = ggplot2::element_blank()
+    )
   if (show_labels) {
-    ct <- ct + geom_text(aes_string(y = 0, label = "lab_"),
-                         angle = 90, hjust = -0.1, size = text_size)
+    ct <- ct +
+      ggplot2::geom_text(
+        ggplot2::aes_string(y = 0, label = "lab_"),
+        angle = 90,
+        hjust = -0.1,
+        size = text_size
+      )
   }
   if (multi || length(x$by)) {
-    ct <- ct + facet_wrap(reformulate(if (multi) label_name else x$by[1]),
-                          scales = facet_scales, nrow = 1L)
+    ct <- ct + ggplot2::facet_wrap(
+      if (multi) label_name else x$by[1L], scales = facet_scales, nrow = 1L
+    )
   }
   # Arrange
-  plot_grid(ct, p, rel_heights = c(0.2, 1), ncol = 1, nrow = 2, align = "v")
+  cowplot::plot_grid(ct, p, rel_heights = c(0.2, 1), ncol = 1, nrow = 2, align = "v")
 }

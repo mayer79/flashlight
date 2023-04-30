@@ -1,11 +1,10 @@
 #' Prints a multiflashlight
 #'
-#' Print method for an object of class \code{multiflashlight}.
+#' Print method for an object of class "multiflashlight".
 #'
-#' @param x An object of class \code{multiflashlight}.
-#' @param ... Further arguments passed to \code{print.flashlight}.
+#' @param x An object of class "multiflashlight".
+#' @param ... Further arguments passed to \code{print.flashlight()}.
 #' @return Invisibly, the input is returned.
-#' @method print multiflashlight
 #' @export
 #' @examples
 #' fit_lm <- lm(Sepal.Length ~ ., data = iris)

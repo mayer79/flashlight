@@ -1,20 +1,29 @@
 #' Visualize Variable Importance
 #'
-#' Minimal visualization of an object of class \code{light_importance} as \code{geom_bar}. If available, standard errors are added as \code{geom_errorbar}. The object returned is of class \code{ggplot} and can be further customized.
+#' Minimal visualization of an object of class "light_importance" via
+#' \code{ggplot2::geom_bar()}.
+#' If available, standard errors are added by \code{ggplot2::geom_errorbar()}.
+#' The object returned is of class "ggplot" and can be further customized.
 #'
-#' The plot is organized as a bar plot with variable names as x-aesthetic. Up to two additional dimensions (multiflashlight and one "by" variable or single flashlight with two "by" variables) can be visualized by facetting and dodge/fill. Set \code{swap_dim = FALSE} to revert the role of these two dimensions. One single additional dimension is visualized by a facet wrap, or - if \code{swap_dim = FALSE} - by dodge/fill.
+#' The plot is organized as a bar plot with variable names as x-aesthetic.
+#' Up to two additional dimensions (multiflashlight and one "by" variable or single
+#' flashlight with two "by" variables) can be visualized by facetting and dodge/fill.
+#' Set \code{swap_dim = FALSE} to revert the role of these two dimensions.
+#' One single additional dimension is visualized by a facet wrap,
+#' or - if \code{swap_dim = FALSE} - by dodge/fill.
 #'
-#' @import ggplot2
-#' @importFrom stats reformulate
-#' @method plot light_importance
-#' @param x An object of class \code{light_importance}.
+#' @param x An object of class "light_importance".
 #' @param top_m Maximum number of important variables to be returned.
-#' @param swap_dim If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of dodge/fill variable and facet variable. If multiflashlight or one "by" variable, use facets instead of colors.
+#' @param swap_dim If multiflashlight and one "by" variable or single flashlight with
+#' two "by" variables, swap the role of dodge/fill variable and facet variable.
+#' If multiflashlight or one "by" variable, use facets instead of colors.
 #' @param facet_scales Scales argument passed to \code{facet_wrap}.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is FALSE.
-#' @param error_bars Should error bars be added? Defaults to TRUE. Only available if \code{light_importance} was run with multiple permutations, i.e. by setting \code{m_repetitions} > 1.
-#' @param ... Further arguments passed to \code{geom_bar}.
-#' @return An object of class \code{ggplot2}.
+#' @param error_bars Should error bars be added? Defaults to \code{TRUE}.
+#' Only available if \code{light_importance()} was run with multiple permutations
+#' by setting \code{m_repetitions} > 1.
+#' @param ... Further arguments passed to \code{ggplot2::geom_bar()}.
+#' @return An object of class "ggplot".
 #' @export
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
@@ -51,63 +60,76 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   # Subset and revert for plotting
   most_imp <- most_important(x, top_m = top_m)
   data <- data[data[[variable_name]] %in% most_imp, , drop = FALSE]
-  data[[variable_name]] <- factor(data[[variable_name]],
-                                  levels = rev(most_imp))
+  data[[variable_name]] <- factor(data[[variable_name]], levels = rev(most_imp))
   data[["low_"]] <- data[[value_name]] - data[[error_name]]
   data[["high_"]] <- data[[value_name]] + data[[error_name]]
 
   # Differentiate some plot cases
-  p <- ggplot(data, aes_string(y = value_name, x = variable_name))
+  p <- ggplot2::ggplot(data, ggplot2::aes_string(y = value_name, x = variable_name))
   if (ndim == 0L) {
-    p <- p + geom_bar(stat = "identity", ...)
+    p <- p + ggplot2::geom_bar(stat = "identity", ...)
     if (error_bars) {
-      p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"),
-                             width = 0, color = "black")
+      p <- p + ggplot2::geom_errorbar(
+        ggplot2::aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black"
+      )
     }
   } else if (ndim == 1L) {
-    first_dim <- if (multi) label_name else x$by[1]
+    first_dim <- if (multi) label_name else x$by[1L]
     if (swap_dim) {
-      p <- p + geom_bar(aes_string(fill = first_dim),
-                        stat = "identity", position = "dodge", ...)
+      p <- p + ggplot2::geom_bar(
+        ggplot2::aes_string(fill = first_dim), stat = "identity", position = "dodge",
+        ...
+      )
       if (error_bars) {
-        p <- p + geom_errorbar(
-          aes_string(group = first_dim, ymin = "low_", ymax = "high_"),
-          width = 0, color = "black", position = position_dodge(0.9)
+        p <- p + ggplot2::geom_errorbar(
+          ggplot2::aes_string(group = first_dim, ymin = "low_", ymax = "high_"),
+          width = 0,
+          color = "black",
+          position = ggplot2::position_dodge(0.9)
         )
       }
     } else {
-      p <- p + geom_bar(stat = "identity", ...) +
-        facet_wrap(reformulate(first_dim), scales = facet_scales)
+      p <- p +
+        ggplot2::geom_bar(stat = "identity", ...) +
+        ggplot2::facet_wrap(first_dim, scales = facet_scales)
       if (error_bars) {
-        p <- p + geom_errorbar(aes_string(ymin = "low_", ymax = "high_"),
-                               width = 0, color = "black")
+        p <- p + ggplot2::geom_errorbar(
+          ggplot2::aes_string(ymin = "low_", ymax = "high_"), width = 0, color = "black"
+        )
       }
     }
   } else {
-    second_dim <- if (multi) label_name else x$by[2]
-    wrap_var <- if (!swap_dim) x$by[1] else second_dim
-    dodge_var <- if (!swap_dim) second_dim else x$by[1]
-    p <- p + geom_bar(aes_string(fill = dodge_var),
-                      stat = "identity", position = "dodge", ...) +
-      facet_wrap(reformulate(wrap_var), scales = facet_scales)
+    second_dim <- if (multi) label_name else x$by[2L]
+    wrap_var <- if (!swap_dim) x$by[1L] else second_dim
+    dodge_var <- if (!swap_dim) second_dim else x$by[1L]
+    p <- p + ggplot2::geom_bar(
+      ggplot2::aes_string(fill = dodge_var), stat = "identity", position = "dodge", ...
+    ) +
+      ggplot2::facet_wrap(wrap_var, scales = facet_scales)
     if (error_bars) {
-      p <- p + geom_errorbar(
-        aes_string(group = dodge_var, ymin = "low_", ymax = "high_"),
-        width = 0, color = "black", position = position_dodge(0.9)
+      p <- p + ggplot2::geom_errorbar(
+        ggplot2::aes_string(group = dodge_var, ymin = "low_", ymax = "high_"),
+        width = 0,
+        color = "black",
+        position = ggplot2::position_dodge(0.9)
       )
     }
   }
   if (rotate_x) {
-    p <- p +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p + ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
+    )
   }
   # label
-  type <- switch(x$type,
-                 permutation = "Drop in performance",
-                 shap = "mean(|SHAP|)",
-                 H = "Friedman's H",
-                 ice = "ICE based interaction strength")
-  p + coord_flip() +
-    labs(x = element_blank(), y = type)
+  type <- switch(
+    x$type,
+    permutation = "Drop in performance",
+    shap = "mean(|SHAP|)",
+    H = "Friedman's H",
+    ice = "ICE based interaction strength"
+  )
+  p +
+    ggplot2::coord_flip() +
+    ggplot2::labs(x = ggplot2::element_blank(), y = type)
 }
 

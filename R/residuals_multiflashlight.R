@@ -1,10 +1,9 @@
 #' Residuals for multiflashlight
 #'
-#' Residuals method for an object of class \code{multiflashlight}. Pass additional elements to update the multiflashlight before calculation of residuals.
+#' Residuals method for an object of class "multiflashlight".
+#' Pass additional elements to update the multiflashlight before calculation of residuals.
 #'
-#' @importFrom stats residuals
-#' @method residuals multiflashlight
-#' @param object An object of class \code{multiflashlight}.
+#' @param object An object of class "multiflashlight".
 #' @param ... Arguments used to update the multiflashlight before calculating the residuals.
 #' @return A named list with residuals per flashlight.
 #' @export
@@ -16,5 +15,5 @@
 #' mods <- multiflashlight(list(mod_full, mod_part), data = iris, y = "Sepal.Length")
 #' residuals(mods, data = head(iris))
 residuals.multiflashlight <- function(object, ...) {
-  lapply(object, residuals, ...)
+  lapply(object, stats::residuals, ...)
 }

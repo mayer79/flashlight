@@ -2,7 +2,6 @@
 #'
 #' Creates or updates a \code{flashlight} object. If a flashlight is to be created, all arguments are optional except \code{label}. If a flashlight is to be updated, all arguments are optional up to \code{x} (the flashlight to be updated).
 #'
-#' @importFrom stats predict
 #' @importFrom MetricsWeighted rmse
 #' @param x An object of class \code{flashlight}. If not provided, a new flashlight is created based on further input. Otherwise, \code{x} is updated based on further input.
 #' @param model A fitted model of any type. Most models require a customized \code{predict_function}.
@@ -31,7 +30,7 @@ flashlight <- function(x, ...) {
 #' @describeIn flashlight Used to create a flashlight object. No \code{x} has to be passed in this case.
 #' @export
 flashlight.default <- function(x, model = NULL, data = NULL, y = NULL,
-                               predict_function = predict,
+                               predict_function = stats::predict,
                                linkinv = function(z) z,
                                w = NULL, by = NULL,
                                metrics = list(rmse = rmse),

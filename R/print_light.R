@@ -1,9 +1,8 @@
 #' Prints light Object
 #'
-#' Print method for an object of class \code{light}.
+#' Print method for an object of class "light".
 #'
-#' @importFrom utils head
-#' @param x A on object of class \code{light}.
+#' @param x A on object of class "light".
 #' @param ... Further arguments passed from other methods.
 #' @return Invisibly, the input is returned.
 #' @method print light
@@ -12,7 +11,6 @@
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "lm", y = "Sepal.Length", data = iris)
 #' light_performance(fl, v = "Species")
-#' light_effects(fl, v = "Sepal.Length")
 print.light <- function(x, ...) {
   cat("\nI am an object of class", class(x)[1L], "\n")
   x_cs <- x[vapply(x, FUN = is.data.frame, FUN.VALUE = TRUE)]
