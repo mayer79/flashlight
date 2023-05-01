@@ -7,7 +7,6 @@
 #' The resulting level might be quite different from the one of the partial
 #' dependence profiles.
 #'
-#' @importFrom dplyr bind_rows
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param v The variable name to be profiled.
 #' @param data An optional `data.frame`.

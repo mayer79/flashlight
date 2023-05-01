@@ -7,9 +7,6 @@
 #' "model", "data" and "metrics". The latter two can also directly be passed to
 #' [light_performance()]. Note that by default, no retransformation function is applied.
 #'
-#' @importFrom MetricsWeighted performance
-#' @importFrom dplyr group_by summarize across cur_data
-#' @importFrom tidyselect all_of
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param data An optional `data.frame`.
 #' @param by An optional vector of column names used to additionally group the results.
