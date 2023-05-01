@@ -39,7 +39,7 @@
 #' Default is `FALSE`. Not uses for `type = "shap"`.
 #' @param ... Further arguments passed to [light_performance()].
 #' Not used for `type = "shap"`.
-#' @return An object of class "light_importance" with the following elements.
+#' @return An object of class "light_importance" with the following elements:
 #'
 #' - `data` A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by `options(flashlight.column_name)`.
 #' - `by` Same as input `by`.

@@ -67,7 +67,7 @@ Not used for \code{type = "shap"}.}
 Default is \code{FALSE}. Not uses for \code{type = "shap"}.}
 }
 \value{
-An object of class "light_importance" with the following elements.
+An object of class "light_importance" with the following elements:
 \itemize{
 \item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
