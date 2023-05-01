@@ -7,7 +7,8 @@
 #' @param v The variable name to be shown on the x-axis.
 #' @param data An optional `data.frame`. Not relevant for `type = "shap"`.
 #' @param by An optional vector of column names used to additionally group the results.
-#' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".
+#' @param type Type of the profile: Either "predicted", "response", "residual",
+#' or "shap".
 #' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
 #' Not used for `type = "shap"`.
 #' @param n_max Maximum number of data rows to select.
@@ -22,6 +23,7 @@
 #' - `by`: Same as input `by`.
 #' - `v`: The variable evaluated.
 #' - `type`: Same as input `type`. For information only.
+#'
 #' @export
 #' @examples
 #' fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)

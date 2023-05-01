@@ -72,7 +72,7 @@ Choose "mean" to center all profiles at the within-group means.
 Choose "0" to mean-center curves at 0.}
 }
 \value{
-An object of class "light_ice" with the following elements.
+An object of class "light_ice" with the following elements:
 \itemize{
 \item \code{data} A tibble containing the results. Can be used to build fully customized
 visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.

@@ -51,12 +51,13 @@
 #' @param digits Passed to [prettyNum()] to format numbers in description text.
 #' @param ... Further arguments passed to [prettyNum()] to format numbers
 #' in description text.
-#' @return An object of class "light_breakdown" with the following elements.
+#' @return An object of class "light_breakdown" with the following elements:
 #'
 #' - `data` A tibble with results. Can be used to build fully customized
 #'   visualizations. Column names can be controlled by
 #'   `options(flashlight.column_name)`.
 #' - `by` Same as input `by`.
+#'
 #' @export
 #' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
 #' @examples

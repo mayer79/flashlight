@@ -47,7 +47,7 @@
 #' Choose "mean" to center all profiles at the within-group means.
 #' Choose "0" to mean-center curves at 0.
 #' @param ... Further arguments passed to or from other methods.
-#' @return An object of class "light_ice" with the following elements.
+#' @return An object of class "light_ice" with the following elements:
 #'
 #' - `data` A tibble containing the results. Can be used to build fully customized
 #' visualizations. Column names can be controlled by `options(flashlight.column_name)`.

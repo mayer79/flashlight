@@ -66,7 +66,7 @@ Default is \code{FALSE}.}
 \item{digits}{Passed to \code{\link[=prettyNum]{prettyNum()}} to format numbers in description text.}
 }
 \value{
-An object of class "light_breakdown" with the following elements.
+An object of class "light_breakdown" with the following elements:
 \itemize{
 \item \code{data} A tibble with results. Can be used to build fully customized
 visualizations. Column names can be controlled by

@@ -46,13 +46,14 @@
 #' Only used for type = "partial dependence".
 #' @param ... Further arguments passed to [cut3()] in forming
 #' the cut breaks of the `v` variables. Not relevant for partial dependence profiles.
-#' @return An object of class "light_profile2d" with the following elements.
+#' @return An object of class "light_profile2d" with the following elements:
 #'
 #' - `data` A tibble containing results. Can be used to build fully customized
 #'    visualizations. Column names can be controlled by `options(flashlight.column_name)`.
 #' - `by` Names of group by variables.
 #' - `v` The two variable names evaluated.
 #' - `type` Same as input `type`. For information only.
+#'
 #' @export
 #' @references
 #' Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.

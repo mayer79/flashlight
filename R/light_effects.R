@@ -44,7 +44,7 @@
 #' Set `ale_two_sided = TRUE` to use points in \eqn{[x-e/2, x+e/2]}.
 #' @param ... Further arguments passed to [cut3()] in forming the cut breaks of the `v`
 #' variable.
-#' @return An object of class "light_effects" with the following elements.
+#' @return An object of class "light_effects" with the following elements:
 #'
 #' - `response`: A tibble containing the response profiles.
 #'    Column names can be controlled by `options(flashlight.column_name)`.
@@ -54,6 +54,7 @@
 #' - `by`: Same as input `by`.
 #' - `v`: The variable(s) evaluated.
 #' - `stats`: Same as input `stats`.
+#'
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
@@ -85,8 +86,10 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
 
-  warning_on_names(c("value_name", "label_name", "q1_name",
-                     "q3_name", "type_name", "counts_name"), ...)
+  warning_on_names(
+    c("value_name", "label_name", "q1_name", "q3_name", "type_name", "counts_name"),
+    ...
+  )
 
   if (is.null(data)) {
     data <- x$data

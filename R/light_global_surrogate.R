@@ -20,10 +20,12 @@
 #' Other levels are combined to a level "Other". This prevents [rpart::rpart()] to
 #' take too long to split non-numeric variables with many levels.
 #' @param ... Arguments passed to [rpart::rpart()], such as `maxdepth`.
-#' @return An object of class "light_global_surrogate" with the following elements.
+#' @return An object of class "light_global_surrogate" with the following elements:
 #'
-#' - `data` A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by `options(flashlight.column_name)`.
+#' - `data` A tibble with results. Can be used to build fully customized visualizations.
+#'    Column names can be controlled by `options(flashlight.column_name)`.
 #' - `by` Same as input `by`.
+#'
 #' @export
 #' @references Molnar C. (2019). Interpretable Machine Learning.
 #' @examples

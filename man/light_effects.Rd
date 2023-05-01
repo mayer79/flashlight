@@ -96,7 +96,7 @@ Usually, local effects at value x are calculated using points in \eqn{[x-e, x]}.
 Set \code{ale_two_sided = TRUE} to use points in \eqn{[x-e/2, x+e/2]}.}
 }
 \value{
-An object of class "light_effects" with the following elements.
+An object of class "light_effects" with the following elements:
 \itemize{
 \item \code{response}: A tibble containing the response profiles.
 Column names can be controlled by \code{options(flashlight.column_name)}.

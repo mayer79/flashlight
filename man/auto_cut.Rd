@@ -7,7 +7,7 @@
 auto_cut(
   x,
   breaks = NULL,
-  n_bins = 27,
+  n_bins = 27L,
   cut_type = c("equal", "quantile"),
   x_name = "value",
   level_name = "level",

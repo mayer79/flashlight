@@ -23,30 +23,37 @@ light_performance(x, ...)
 \method{light_performance}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
 \item{...}{Arguments passed from or to other functions.}
 
 \item{data}{An optional \code{data.frame}.}
 
-\item{by}{An optional vector of column names used to additionally group the results. Will overwrite \code{x$by}.}
+\item{by}{An optional vector of column names used to additionally group the results.
+Will overwrite \code{x$by}.}
 
-\item{metrics}{An optional named list with metrics. Each metric takes at least four arguments: actual, predicted, case weights w and \code{...}.}
+\item{metrics}{An optional named list with metrics. Each metric takes at least
+four arguments: actual, predicted, case weights w and \code{...}.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is FALSE.}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{FALSE}.}
 }
 \value{
-An object of class \code{light_performance} with the following elements.
+An object of class "light_performance" with the following elements:
 \itemize{
-\item \code{data} A tibble containing the results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data}: A tibble containing the results. Can be used to build fully customized
+visualizations. Column names can be controlled by
+\code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 }
 }
 \description{
-Calculates performance of a flashlight with respect to one or more performance measure.
+Calculates performance of a flashlight with respect to one or more
+performance measure.
 }
 \details{
-The minimal required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". The latter two can also directly be passed to \code{light_performance}. Note that by default, no retransformation function is applied.
+The minimal required elements in the (multi-) flashlight are "y", "predict_function",
+"model", "data" and "metrics". The latter two can also directly be passed to
+\code{\link[=light_performance]{light_performance()}}. Note that by default, no retransformation function is applied.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -64,5 +71,5 @@ light_performance(fl)
 light_performance(fl, by = "Species")
 }
 \seealso{
-\code{\link{plot.light_performance}}.
+\code{\link[=plot.light_performance]{plot.light_performance()}}
 }

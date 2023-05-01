@@ -36,7 +36,8 @@ light_scatter(x, ...)
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{type}{Type of the profile: Either "predicted", "response", "residual", or "shap".}
+\item{type}{Type of the profile: Either "predicted", "response", "residual",
+or "shap".}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
 Not used for \code{type = "shap"}.}

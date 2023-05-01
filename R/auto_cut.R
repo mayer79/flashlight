@@ -25,6 +25,7 @@
 #'   `breaks` in the output, factor levels or distinct values of `x`.
 #' - `bin_labels`: Break labels of the form "(low, high]" if there are `breaks`
 #'    in the output, otherwise the same as `bin_means`. Same order as `bin_means`.
+#'
 #' @export
 #' @examples
 #' auto_cut(1:10, n_bins = 3)
@@ -35,7 +36,7 @@
 #' auto_cut(factor(LETTERS[1:4], LETTERS[4:1]), n_bins = 2)
 #' auto_cut(990:1100, n_bins = 3, big.mark = "'", format = "fg")
 #' auto_cut(c(0.0001, 0.0002, 0.0003, 0.005), n_bins = 3, format = "fg")
-auto_cut <- function(x, breaks = NULL, n_bins = 27,
+auto_cut <- function(x, breaks = NULL, n_bins = 27L,
                      cut_type = c("equal", "quantile"),
                      x_name = "value", level_name = "level", ...) {
   cut_type <- match.arg(cut_type)

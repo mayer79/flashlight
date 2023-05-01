@@ -94,7 +94,7 @@ dependence profiles. Only used for type = "partial dependence".}
 Only used for type = "partial dependence".}
 }
 \value{
-An object of class "light_profile2d" with the following elements.
+An object of class "light_profile2d" with the following elements:
 \itemize{
 \item \code{data} A tibble containing results. Can be used to build fully customized
 visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
