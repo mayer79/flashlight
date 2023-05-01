@@ -59,12 +59,12 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by,
                   linkinv = if (use_linkinv) x$linkinv else function(z) z)
 
   # Calculate predictions
-  data[["pred_"]] <- predict(x)
+  data[["pred_"]] <- stats::predict(x)
   data[[x$y]] <- response(x)
 
   # Aggregate the result within by groups
   core_fun <- function(X) {
-    performance(X, actual = x$y, predicted = "pred_", w = x$w,
+    MetricsWeighted::performance(X, actual = x$y, predicted = "pred_", w = x$w,
                 metrics = metrics, key = metric_name, value = value_name, ...)
   }
   data[[label_name]] <- x$label

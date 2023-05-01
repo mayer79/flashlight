@@ -13,12 +13,12 @@
 with two "by" variables, swap the role of color variable and facet variable.
 If multiflashlight or one "by" variable, use colors instead of facets.}
 
-\item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees?
 Default is \code{FALSE}.}
 
-\item{...}{Further arguments passed to \code{ggplot2::geom_point()}.
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.
 Typical arguments would be \code{alpha = 0.2} or \code{position = "jitter"}
 to avoid overplotting.}
 }
@@ -36,5 +36,5 @@ fl <- flashlight(model = fit, label = "ols", data = iris)
 plot(light_scatter(fl, v = "Petal.Length", by = "Species"), alpha = 0.2)
 }
 \seealso{
-\code{\link{light_scatter}}.
+\code{\link[=light_scatter]{light_scatter()}}
 }

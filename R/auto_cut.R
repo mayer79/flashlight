@@ -1,34 +1,30 @@
 #' Discretizes a Vector
 #'
-#' This function takes a vector \code{x} and returns a list with information on
-#' disretized version of \code{x}, see \code{return} for details on the resulting object.
-#'
-#' The construction of level names can be controlled by passing ...
-#' arguments to \code{formatC}.
+#' This function takes a vector `x` and returns a list with information on
+#' disretized version of `x`. The construction of level names can be controlled
+#' by passing `...` arguments to `formatC()`.
 #'
 #' @param x A vector.
-#' @param breaks An optional vector of breaks. Only relevant for numeric \code{x}.
-#' @param n_bins If \code{x} is numeric and no breaks are provided,
+#' @param breaks An optional vector of breaks. Only relevant for numeric `x`.
+#' @param n_bins If `x` is numeric and no breaks are provided,
 #' this is the maximum number of bins allowed or to be created (approximately).
 #' @param cut_type For the default type "equal", bins of equal width are created
-#' by \code{pretty}. Choose "quantile" to create quantile bins.
-#' @param x_name Column name with the values of \code{x} in the output.
-#' @param level_name Column name with the bin labels of \code{x} in the output.
-#' @param ... Further arguments passed to \code{cut3()}.
+#' by `pretty()`. Choose "quantile" to create quantile bins.
+#' @param x_name Column name with the values of `x` in the output.
+#' @param level_name Column name with the bin labels of `x` in the output.
+#' @param ... Further arguments passed to `cut3()`.
 #' @return A list with the following elements:
-#' \itemize{
-#'   \item \code{data} A \code{data.frame} with colums \code{x_name} and
-#'   \code{level_name} each with the same length as \code{x}.
-#'   The column \code{x_name} has values in output \code{bin_means}
-#'   while the column \code{level_name} has values in \code{bin_labels}.
-#'   \item \code{breaks} A vector of increasing and unique breaks used to cut a
-#'   numeric \code{x} with too many distinct levels. \code{NULL} otherwise.
-#'   \item \code{bin_means} The midpoints of subsequent breaks, or if there are no
-#'   \code{breaks} in the output, factor levels or distinct values of \code{x}.
-#'   \item \code{bin_labels} Break labels of the form "(low, high]"
-#'   if there are \code{breaks} in the output, otherwise the same as \code{bin_means}.
-#'   Same order as \code{bin_means}.
-#' }
+#'
+#' - `data`: A `data.frame` with colums `x_name` and
+#'   `level_name` each with the same length as `x`.
+#'   The column `x_name` has values in output `bin_means`
+#'   while the column `level_name` has values in `bin_labels`.
+#' - `breaks`: A vector of increasing and unique breaks used to cut a
+#'   numeric `x` with too many distinct levels. `NULL` otherwise.
+#' - `bin_means`: The midpoints of subsequent breaks, or if there are no
+#'   `breaks` in the output, factor levels or distinct values of `x`.
+#' - `bin_labels`: Break labels of the form "(low, high]" if there are `breaks`
+#'    in the output, otherwise the same as `bin_means`. Same order as `bin_means`.
 #' @export
 #' @examples
 #' auto_cut(1:10, n_bins = 3)

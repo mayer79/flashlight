@@ -23,23 +23,23 @@
 two "by" variables, swap the role of dodge/fill variable and facet variable.
 If multiflashlight or one "by" variable, use facets instead of colors.}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \link[ggplot2:facet_wrap]{ggplot2::facet_wrap}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is \code{FALSE}.}
 
 \item{error_bars}{Should error bars be added? Defaults to \code{TRUE}.
-Only available if \code{light_importance()} was run with multiple permutations
+Only available if \code{\link[=light_importance]{light_importance()}} was run with multiple permutations
 by setting \code{m_repetitions} > 1.}
 
-\item{...}{Further arguments passed to \code{ggplot2::geom_bar()}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.}
 }
 \value{
 An object of class "ggplot".
 }
 \description{
 Minimal visualization of an object of class "light_importance" via
-\code{ggplot2::geom_bar()}.
-If available, standard errors are added by \code{ggplot2::geom_errorbar()}.
+\code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.
+If available, standard errors are added by \code{\link[ggplot2:geom_linerange]{ggplot2::geom_errorbar()}}.
 The object returned is of class "ggplot" and can be further customized.
 }
 \details{
@@ -60,5 +60,5 @@ plot(light_importance(mod_part, m_repetitions = 4), fill = "darkred")
 plot(light_importance(mods), swap_dim = TRUE)
 }
 \seealso{
-\code{\link{light_importance}}.
+\code{\link[=light_importance]{light_importance()}}
 }

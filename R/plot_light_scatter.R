@@ -1,19 +1,19 @@
 #' Scatter Plot
 #'
 #' Values are plotted against a variable. The object returned is of class "ggplot"
-#' and can be further customized. To avoid overplotting, try \code{alpha = 0.2} or
-#' \code{position = "jitter"}.
+#' and can be further customized. To avoid overplotting, try `alpha = 0.2` or
+#' `position = "jitter"`.
 #'
 #' @importFrom rlang .data
 #' @param x An object of class "light_scatter".
 #' @param swap_dim If multiflashlight and one "by" variable, or single flashlight
 #' with two "by" variables, swap the role of color variable and facet variable.
 #' If multiflashlight or one "by" variable, use colors instead of facets.
-#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' Default is \code{FALSE}.
-#' @param ... Further arguments passed to \code{ggplot2::geom_point()}.
-#' Typical arguments would be \code{alpha = 0.2} or \code{position = "jitter"}
+#' Default is `FALSE`.
+#' @param ... Further arguments passed to [ggplot2::geom_point()].
+#' Typical arguments would be `alpha = 0.2` or `position = "jitter"`
 #' to avoid overplotting.
 #' @return An object of class "ggplot".
 #' @export
@@ -21,7 +21,7 @@
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "ols", data = iris)
 #' plot(light_scatter(fl, v = "Petal.Length", by = "Species"), alpha = 0.2)
-#' @seealso \code{\link{light_scatter}}.
+#' @seealso [light_scatter()]
 plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                               rotate_x = FALSE, ...) {
   value_name <- getOption("flashlight.value_name")
@@ -69,4 +69,3 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
   }
   p + ggplot2::ylab(x$type)
 }
-

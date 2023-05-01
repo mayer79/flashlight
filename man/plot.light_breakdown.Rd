@@ -9,14 +9,14 @@
 \arguments{
 \item{x}{An object of class "light_breakdown".}
 
-\item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{facet_ncol}{\code{ncol} argument passed to \code{ggplot2::facet_wrap()}.}
+\item{facet_ncol}{\code{ncol} argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees?
 Default is \code{FALSE}.}
 
-\item{...}{Further arguments passed to \code{ggplot2::geom_label()}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_text]{ggplot2::geom_label()}}.}
 }
 \value{
 An object of class "ggplot".
@@ -40,5 +40,5 @@ fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 plot(light_breakdown(fl, new_obs = iris[1, ]))
 }
 \seealso{
-\code{\link{light_importance}}.
+\code{\link[=light_breakdown]{light_breakdown()}}
 }

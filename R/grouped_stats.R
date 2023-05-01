@@ -4,26 +4,24 @@
 #' variable grouped by optional columns. By default, counts are not weighted,
 #' even if there is a weighting variable.
 #'
-#' @param data A \code{data.frame}.
-#' @param x Variable name in \code{data} to summarize.
-#' @param w Optional name of the column in \code{data} with case weights.
-#' @param by An optional vector of column names in \code{data} used to group the results.
+#' @param data A `data.frame`.
+#' @param x Variable name in `data` to summarize.
+#' @param w Optional name of the column in `data` with case weights.
+#' @param by An optional vector of column names in `data` used to group the results.
 #' @param stats Statistic to calculate: "mean", "quartiles", or "variance".
 #' @param counts Should group counts be added?
 #' @param counts_weighted Should counts be weighted by the case weights?
-#' If \code{TRUE}, the sum of \code{w} is returned by group.
-#' @param counts_name Name of column in the resulting \code{data.frame}
+#' If `TRUE`, the sum of `w` is returned by group.
+#' @param counts_name Name of column in the resulting `data.frame`
 #' containing the counts.
 #' @param value_name Name of the resulting column with mean, median, or variance.
 #' @param q1_name Name of the resulting column with first quartile values.
-#' Only relevant for \code{stats} "quartiles".
+#' Only relevant if `stats = "quartiles"`.
 #' @param q3_name Name of the resulting column with third quartile values.
-#' Only relevant for \code{stats} "quartiles".
-#' @param ... Additional arguments passed to \code{MetricsWeighted::weighted_mean()},
-#' \code{MetricsWeighted::weighted_quartiles()}, or
-#' \code{MetricsWeighted::weighted_var()}.
-#' @return A \code{data.frame} with columns \code{by}, \code{x},
-#' and optionally \code{counts_name}.
+#' Only relevant if `stats = "quartiles"`.
+#' @param ... Additional arguments passed to corresponding `weighted_*()` functions in
+#' {MetricsWeighted}.
+#' @return A `data.frame` with columns `by`, `x`, and optionally `counts_name`.
 #' @export
 #' @examples
 #' grouped_stats(iris, "Sepal.Width")
@@ -76,13 +74,6 @@ grouped_stats <- function(data, x, w = NULL, by = NULL,
     cbind(cnt, val)
   }
 
-  # Apply core_fun
-  if (!length(by)) {
-    return(core_fun(data))
-  }
-  dplyr::summarize(
-    dplyr::group_by(data, dplyr::across(tidyselect::all_of(by))),
-    core_fun(dplyr::cur_data()),
-    .groups = "drop"
-  )
+  # Apply core_fun (currently, not tibble)
+  Reframe(data, FUN = core_fun, BY = by)
 }

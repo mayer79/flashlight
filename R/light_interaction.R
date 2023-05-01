@@ -123,7 +123,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     X[, z] <- NULL
     X[["id_curve"]] <- seq_len(nrow(X))
     X <- expand_grid(X, grid)
-    X[[vn]] <- predict(x, data = X[, cols, drop = FALSE])
+    X[[vn]] <- stats::predict(x, data = X[, cols, drop = FALSE])
     if (!agg) {
       X[[vn]] <- grouped_center(X, x = vn, by = "id_curve", na.rm = TRUE)
       return(X)
@@ -140,7 +140,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   # Get predictions on grid in the same order as through call_pd
   call_f <- function(X, vn = "value_", gid) {
     out <- X[gid, ]
-    out[[vn]] <- predict(x, data = out[, cols, drop = FALSE])
+    out[[vn]] <- stats::predict(x, data = out[, cols, drop = FALSE])
     out[[vn]] <- grouped_center(out, x = vn, w = w)
     out[["id_"]] <- gid
     out[order(out[["id_"]]), c("id_", vn, w)]
@@ -174,11 +174,11 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
       stop("Only type H or ice implemented.")
     }
     # Aggregate & normalize
-    num <- weighted_mean(dat[[value_name]],
+    num <- MetricsWeighted::weighted_mean(dat[[value_name]],
                          w = if (has_w) dat[[w]], na.rm = TRUE)
     if (normalize) {
       num <- .zap_small(num) /
-        weighted_mean(dat[["value_"]]^2,
+        MetricsWeighted::weighted_mean(dat[["value_"]]^2,
                       w = if (has_w) dat[[w]], na.rm = TRUE)
     }
     setNames(data.frame(.zap_small(if (take_sqrt) sqrt(num) else num)),

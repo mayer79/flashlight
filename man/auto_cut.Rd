@@ -23,7 +23,7 @@ auto_cut(
 this is the maximum number of bins allowed or to be created (approximately).}
 
 \item{cut_type}{For the default type "equal", bins of equal width are created
-by \code{pretty}. Choose "quantile" to create quantile bins.}
+by \code{pretty()}. Choose "quantile" to create quantile bins.}
 
 \item{x_name}{Column name with the values of \code{x} in the output.}
 
@@ -34,26 +34,22 @@ by \code{pretty}. Choose "quantile" to create quantile bins.}
 \value{
 A list with the following elements:
 \itemize{
-\item \code{data} A \code{data.frame} with colums \code{x_name} and
+\item \code{data}: A \code{data.frame} with colums \code{x_name} and
 \code{level_name} each with the same length as \code{x}.
 The column \code{x_name} has values in output \code{bin_means}
 while the column \code{level_name} has values in \code{bin_labels}.
-\item \code{breaks} A vector of increasing and unique breaks used to cut a
+\item \code{breaks}: A vector of increasing and unique breaks used to cut a
 numeric \code{x} with too many distinct levels. \code{NULL} otherwise.
-\item \code{bin_means} The midpoints of subsequent breaks, or if there are no
+\item \code{bin_means}: The midpoints of subsequent breaks, or if there are no
 \code{breaks} in the output, factor levels or distinct values of \code{x}.
-\item \code{bin_labels} Break labels of the form "(low, high]"
-if there are \code{breaks} in the output, otherwise the same as \code{bin_means}.
-Same order as \code{bin_means}.
+\item \code{bin_labels}: Break labels of the form "(low, high]" if there are \code{breaks}
+in the output, otherwise the same as \code{bin_means}. Same order as \code{bin_means}.
 }
 }
 \description{
 This function takes a vector \code{x} and returns a list with information on
-disretized version of \code{x}, see \code{return} for details on the resulting object.
-}
-\details{
-The construction of level names can be controlled by passing ...
-arguments to \code{formatC}.
+disretized version of \code{x}. The construction of level names can be controlled
+by passing \code{...} arguments to \code{formatC()}.
 }
 \examples{
 auto_cut(1:10, n_bins = 3)

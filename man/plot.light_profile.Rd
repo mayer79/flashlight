@@ -21,15 +21,15 @@ single flashlight with two "by" variables, swap the role of dodge/fill variable
 and facet variable. If multiflashlight or one "by" variable,
 use facets instead of colors.}
 
-\item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees?
 \code{TRUE}, except for type "partial dependence".}
 
 \item{show_points}{Should points be added to the line (default is \code{TRUE}).}
 
-\item{...}{Further arguments passed to \code{ggplot2::geom_point()} and
-\code{ggplot2::geom_line()}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} and
+\code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}.}
 }
 \value{
 An object of class "ggplot".
@@ -54,5 +54,5 @@ plot(light_profile(fl, v = "Petal.Width", by = "Species", evaluate_at = 2:4))
 plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
 }
 \seealso{
-\code{\link{light_profile}}, \code{\link{plot.light_effects}}.
+[light_profile(), \code{\link[=plot.light_effects]{plot.light_effects()}}
 }

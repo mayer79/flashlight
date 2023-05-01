@@ -49,12 +49,12 @@ Will be randomly picked from the relevant data.}
 \value{
 An object of class "light_scatter" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized
+\item \code{data}: A tibble with results. Can be used to build fully customized
 visualizations. Column names can be controlled by
 \code{options(flashlight.column_name)}.
-\item \code{by} Same as input \code{by}.
-\item \code{v} The variable evaluated.
-\item \code{type} Same as input \code{type}. For information only.
+\item \code{by}: Same as input \code{by}.
+\item \code{v}: The variable evaluated.
+\item \code{type}: Same as input \code{type}. For information only.
 }
 }
 \description{
@@ -77,8 +77,11 @@ fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
 fl_b <- flashlight(model = fit_b, label = "all")
 fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
 pr <- light_scatter(fls, v = "Petal.Length")
-plot(light_scatter(fls, "Petal.Length", by = "Species", type = "residual"), alpha = 0.2)
+plot(
+  light_scatter(fls, "Petal.Length", by = "Species", type = "residual"),
+  alpha = 0.2
+)
 }
 \seealso{
-\code{\link{plot.light_scatter}}.
+\code{\link[=plot.light_scatter]{plot.light_scatter()}}
 }

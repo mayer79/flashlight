@@ -41,18 +41,16 @@ containing the counts.}
 \item{value_name}{Name of the resulting column with mean, median, or variance.}
 
 \item{q1_name}{Name of the resulting column with first quartile values.
-Only relevant for \code{stats} "quartiles".}
+Only relevant if \code{stats = "quartiles"}.}
 
 \item{q3_name}{Name of the resulting column with third quartile values.
-Only relevant for \code{stats} "quartiles".}
+Only relevant if \code{stats = "quartiles"}.}
 
-\item{...}{Additional arguments passed to \code{MetricsWeighted::weighted_mean()},
-\code{MetricsWeighted::weighted_quartiles()}, or
-\code{MetricsWeighted::weighted_var()}.}
+\item{...}{Additional arguments passed to corresponding \verb{weighted_*()} functions in
+{MetricsWeighted}.}
 }
 \value{
-A \code{data.frame} with columns \code{by}, \code{x},
-and optionally \code{counts_name}.
+A \code{data.frame} with columns \code{by}, \code{x}, and optionally \code{counts_name}.
 }
 \description{
 Calculates weighted means, quartiles, or variances (and counts) of a

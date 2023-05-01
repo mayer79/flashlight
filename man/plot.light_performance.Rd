@@ -22,19 +22,18 @@ of x aesthetic and dodge fill aesthetic be swapped? Default is \code{FALSE}.}
 
 \item{geom}{Geometry of plot (either "bar" or "point")}
 
-\item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is \code{FALSE.}}
 
-\item{...}{Further arguments passed to \code{ggplot2::geom_bar()} or
-\code{ggplot2::geom_point()}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}} or \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
 }
 \value{
 An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_performance} as
-\code{geom_bar}. The object returned has class "ggplot",
+Minimal visualization of an object of class "light_performance" as
+\code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}. The object returned has class "ggplot",
 and can be further customized.
 }
 \details{
@@ -53,5 +52,5 @@ fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
 plot(light_performance(fl, by = "Species"), fill = "darkred")
 }
 \seealso{
-\code{\link{light_performance}}.
+\code{\link[=light_performance]{light_performance()}}
 }

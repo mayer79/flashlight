@@ -13,18 +13,18 @@
 #'
 #' @importFrom rlang .data
 #' @param x An object of class "light_breakdown".
-#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
-#' @param facet_ncol \code{ncol} argument passed to \code{ggplot2::facet_wrap()}.
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
+#' @param facet_ncol `ncol` argument passed to [ggplot2::facet_wrap()].
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' Default is \code{FALSE}.
-#' @param ... Further arguments passed to \code{ggplot2::geom_label()}.
+#' Default is `FALSE`.
+#' @param ... Further arguments passed to [ggplot2::geom_label()].
 #' @return An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 #' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 #' plot(light_breakdown(fl, new_obs = iris[1, ]))
-#' @seealso \code{\link{light_importance}}.
+#' @seealso [light_breakdown()]
 plot.light_breakdown <- function(x, facet_scales = "free",
                                  facet_ncol = 1, rotate_x = FALSE, ...) {
 

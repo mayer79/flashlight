@@ -3,7 +3,7 @@
 #' Print method for an object of class "multiflashlight".
 #'
 #' @param x An object of class "multiflashlight".
-#' @param ... Further arguments passed to \code{print.flashlight()}.
+#' @param ... Further arguments passed to [print.flashlight()].
 #' @return Invisibly, the input is returned.
 #' @export
 #' @examples

@@ -2,23 +2,22 @@
 #'
 #' Add counts as labelled bar plot on top of light_effects plot.
 #'
-#' Experimental. Uses package \code{ggpubr} to rearrange the figure.
+#' Experimental. Uses package {ggpubr} to rearrange the figure.
 #' Thus, the resulting plot cannot be easily modified.
-#' Furthermore, adding counts only works if the legend in \code{plot.light_effects()}
+#' Furthermore, adding counts only works if the legend in [plot.light_effects()]
 #' is not placed on the left or right side of the plot.
 #' It has to be placed inside or at the bottom.
 #'
 #' @importFrom rlang .data
-#' @param p The result of \code{plot.light_effects()}.
+#' @param p The result of [plot.light_effects()].
 #' @param x An object of class "light_effects".
 #' @param text_size Size of count labels.
-#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param show_labels Should count labels be added as text?
-#' @param big.mark Parameter passed to \code{format} the labels. Default is "'".
-#' @param scientific Parameter passed to \code{format} the labels.
-#' Default is \code{FALSE}.
+#' @param big.mark Parameter passed to [format()] the labels. Default is "'".
+#' @param scientific Parameter passed to [format()] the labels. Default is `FALSE`.
 #' @param digits Used to round the labels. Default is 0.
-#' @param ... Further arguments passed to \code{ggplot2::geom_bar()}.
+#' @param ... Further arguments passed to [ggplot2::geom_bar()].
 #' @return An object of class "ggplot".
 #' @export
 #' @examples
@@ -26,7 +25,7 @@
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 #' x <- light_effects(fl, v = "Species")
 #' plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
-#' @seealso \code{\link{plot.light_effects}}.
+#' @seealso [plot.light_effects()]
 #' @export
 plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
                         show_labels = TRUE, big.mark = "'",

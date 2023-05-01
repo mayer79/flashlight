@@ -1,13 +1,13 @@
 #' Combine Objects
 #'
 #' Combines a list of similar objects each of class "light" by row binding
-#'  \code{data.frame} slots and retaining the other slots from the first list element.
+#' `data.frame` slots and retaining the other slots from the first list element.
 #'
 #' @param x A list of objects of the same class.
 #' @param new_class An optional vector with additional class names to be added to
 #' the output.
 #' @param ... Further arguments passed from or to other methods.
-#' @return If \code{x} is a list, an object like each element but with unioned rows
+#' @return If `x` is a list, an object like each element but with unioned rows
 #' in data slots.
 #' @export
 #' @examples

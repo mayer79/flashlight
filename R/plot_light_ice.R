@@ -1,6 +1,6 @@
 #' Visualize ICE profiles
 #'
-#' Minimal visualization of an object of class "light_ice" as \code{ggplot2::geom_line()}.
+#' Minimal visualization of an object of class "light_ice" as [ggplot2::geom_line()].
 #' The object returned is of class "ggplot" and can be further customized.
 #'
 #' Each observation is visualized by a line. The first "by" variable is represented
@@ -8,10 +8,10 @@
 #'
 #' @importFrom rlang .data
 #' @param x An object of class "light_ice".
-#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' Default is \code{FALSE}.
-#' @param ... Further arguments passed to \code{ggplot2::geom_line()}.
+#' Default is `FALSE`.
+#' @param ... Further arguments passed to [ggplot2::geom_line()].
 #' @return An object of class "ggplot".
 #' @export
 #' @examples
@@ -25,7 +25,7 @@
 #' plot(light_ice(mods, v = "Species", indices = indices))
 #' plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
 #' plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
-#' @seealso \code{\link{light_ice}}.
+#' @seealso [light_ice()]
 plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")

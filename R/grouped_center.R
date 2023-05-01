@@ -3,12 +3,12 @@
 #' Centers a numeric variable within optional groups and optional weights.
 #' The order of values is unchanged.
 #'
-#' @param data A \code{data.frame}.
-#' @param x Variable name in \code{data} to center.
-#' @param w Optional name of the column in \code{data} with case weights.
-#' @param by An optional vector of column names in \code{data} used to group the results.
-#' @param ... Additional arguments passed to mean calculation (e.g. \code{na.rm = TRUE}).
-#' @return A numeric vector with centered values in column \code{x}.
+#' @param data A `data.frame`.
+#' @param x Variable name in `data` to center.
+#' @param w Optional name of the column in `data` with case weights.
+#' @param by An optional vector of column names in `data` used to group the results.
+#' @param ... Additional arguments passed to mean calculation (e.g. `na.rm = TRUE`).
+#' @return A numeric vector with centered values in column `x`.
 #' @export
 #' @examples
 #' ir <- data.frame(iris, w = 1)

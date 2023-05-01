@@ -26,12 +26,12 @@ Defaults to all except "ale"}
 \item{zero_counts}{Logical flag if 0 count levels should be shown on the x axis.}
 
 \item{size_factor}{Factor used to enlarge default \code{size/linewidth} in
-\code{ggplot2::geom_point()} and \code{ggplot2::geom_line()}.}
+\code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} and \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}.}
 
-\item{facet_scales}{Scales argument passed to \code{ggplot2::facet_wrap()}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{facet_nrow}{Number of rows in \code{ggplot2::facet_wrap()}.
-Must be 1 if \code{plot_counts()} should be used.}
+\item{facet_nrow}{Number of rows in \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.
+Must be 1 if \code{\link[=plot_counts]{plot_counts()}} should be used.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
@@ -54,5 +54,5 @@ fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 plot(light_effects(fl, v = "Species"))
 }
 \seealso{
-\code{\link{light_effects}}, \code{\link{plot_counts}}.
+\code{\link[=light_effects]{light_effects()}}, \code{\link[=plot_counts]{plot_counts()}}
 }

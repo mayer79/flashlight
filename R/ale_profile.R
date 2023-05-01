@@ -1,38 +1,40 @@
 #' ALE profile
 #'
-#' Internal function used by \code{light_profile()} to calculate ALE profiles.
+#' Internal function used by [light_profile()] to calculate ALE profiles.
 #'
+#' @noRd
 #' @param x An object of class "flashlight".
 #' @param v The variable to be profiled.
-#' @param breaks Cut breaks for a numeric \code{v}. Only used if no \code{evaluate_at}
+#' @param breaks Cut breaks for a numeric `v`. Only used if no `evaluate_at`
 #' is specified.
-#' @param n_bins Maxmium number of unique values to evaluate for numeric \code{v}.
-#' Only used if no \code{evaluate_at} is specified.
-#' @param cut_type For the default "equal", bins of equal width are created for \code{v}
-#' by \code{pretty}. Choose "quantile" to create quantile bins.
+#' @param n_bins Maxmium number of unique values to evaluate for numeric `v`.
+#' Only used if no `evaluate_at` is specified.
+#' @param cut_type For the default "equal", bins of equal width are created for `v`
+#' by [pretty()]. Choose "quantile" to create quantile bins.
 #' @param counts Should counts be added?
-#' @param counts_weighted If \code{counts} is \code{TRUE}: Should counts be weighted by the
-#' case weights? If \code{TRUE}, the sum of \code{w} is returned by group.
+#' @param counts_weighted If `counts = TRUE`: Should counts be weighted by the
+#' case weights? If `TRUE`, the sum of `w` is returned by group.
 #' @param pred Optional vector with predictions.
-#' @param evaluate_at Vector with values of \code{v} used to evaluate the profile.
+#' @param evaluate_at Vector with values of `v` used to evaluate the profile.
 #' Only relevant for type = "partial dependence".
 #' @param indices A vector of row numbers to consider.
-#' @param n_max Maximum number of ICE profiles to calculate within interval (not within data).
-#' @param seed Integer random seed passed to \code{light_ice()}.
+#' @param n_max Maximum number of ICE profiles to calculate within interval
+#' (not within data).
+#' @param seed Integer random seed passed to [light_ice()].
 #' @param two_sided Standard ALE profiles are calculated via left derivatives.
-#' Set to \code{TRUE} if two-sided derivatives should be calculated.
-#' Only works for continuous \code{v}. More specifically: Usually, local effects at
-#' value x are calculated using points in \eqn{[x-e, x]}. Set \code{ale_two_sided = TRUE}
+#' Set to `TRUE` if two-sided derivatives should be calculated.
+#' Only works for continuous `v`. More specifically: Usually, local effects at
+#' value x are calculated using points in \eqn{[x-e, x]}. Set `ale_two_sided = TRUE`
 #' to use points in \eqn{[x-e/2, x+e/2]} instead.
 #' @param calibrate Should values be calibrated based on average preditions?
-#' Default is \code{TRUE}.
+#' Default is `TRUE`.
 #' @param ... Other arguments passed to this function (currently unused).
 #' @return A tibble containing results.
-ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
+ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
                         cut_type = c("equal", "quantile"),
                         counts = TRUE, counts_weighted = FALSE,
                         pred = NULL, evaluate_at = NULL,
-                        indices = NULL, n_max = 1000, seed = NULL,
+                        indices = NULL, n_max = 1000L, seed = NULL,
                         two_sided = FALSE, calibrate = TRUE, ...) {
   cut_type <- match.arg(cut_type)
 
@@ -150,7 +152,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11,
 
   # Calibrate effects
   if (calibrate) {
-    preds <- if (is.null(pred)) predict(x) else pred
+    preds <- if (is.null(pred)) stats::predict(x) else pred
     if (is.null(x$by)) {
       pred_mean <- MetricsWeighted::weighted_mean(
         preds, if (!is.null(x$w)) data[[x$w]], na.rm = TRUE

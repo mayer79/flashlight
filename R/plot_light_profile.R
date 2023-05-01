@@ -5,10 +5,10 @@
 #'
 #' Either lines and points are plotted (if stats = "mean") or quartile boxes.
 #' If there is a "by" variable or a multiflashlight, this first dimension
-#' is represented by color (or if \code{swap_dim = TRUE} by facets).
+#' is represented by color (or if `swap_dim = TRUE` by facets).
 #' If there are two "by" variables or a multiflashlight with one "by" variable,
 #' the first "by" variable is visualized as color, while the second one
-#' or the multiflashlight is shown via facet (change with \code{swap_dim}).
+#' or the multiflashlight is shown via facet (change with `swap_dim`).
 #'
 #' @importFrom rlang .data
 #' @param x An object of class "light_profile".
@@ -16,12 +16,12 @@
 #' single flashlight with two "by" variables, swap the role of dodge/fill variable
 #' and facet variable. If multiflashlight or one "by" variable,
 #' use facets instead of colors.
-#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' \code{TRUE}, except for type "partial dependence".
-#' @param show_points Should points be added to the line (default is \code{TRUE}).
-#' @param ... Further arguments passed to \code{ggplot2::geom_point()} and
-#' \code{ggplot2::geom_line()}.
+#' `TRUE`, except for type "partial dependence".
+#' @param show_points Should points be added to the line (default is `TRUE`).
+#' @param ... Further arguments passed to [ggplot2::geom_point()] and
+#' [ggplot2::geom_line()].
 #' @return An object of class "ggplot".
 #' @export
 #' @examples
@@ -30,7 +30,7 @@
 #' plot(light_profile(fl, v = "Species"))
 #' plot(light_profile(fl, v = "Petal.Width", by = "Species", evaluate_at = 2:4))
 #' plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
-#' @seealso \code{\link{light_profile}}, \code{\link{plot.light_effects}}.
+#' @seealso [light_profile(), [plot.light_effects()]
 plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                                rotate_x = x$type != "partial dependence",
                                show_points = TRUE, ...) {

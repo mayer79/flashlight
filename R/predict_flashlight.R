@@ -1,7 +1,7 @@
 #' Predictions for flashlight
 #'
 #' Predict method for an object of class "flashlight".
-#' Pass additional elements to update the flashlight, typically \code{data}.
+#' Pass additional elements to update the flashlight, typically `data`.
 #'
 #' @param object An object of class "flashlight".
 #' @param ... Arguments used to update the flashlight.

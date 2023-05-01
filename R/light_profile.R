@@ -156,8 +156,8 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     # Add predictions/response to data
     data[[value_name]] <- switch(type,
       response = response(x),
-      predicted = if (is.null(pred)) predict(x) else pred,
-      residual = residuals(x),
+      predicted = if (is.null(pred)) stats::predict(x) else pred,
+      residual = stats::residuals(x),
       shap = data[["shap_"]]
     )
 

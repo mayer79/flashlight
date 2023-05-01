@@ -27,31 +27,46 @@ add_shap(x, ...)
 \method{add_shap}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
 \item{...}{Further arguments passed from or to other methods.}
 
-\item{v}{Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".}
+\item{v}{Vector of variables to assess contribution for.
+Defaults to all except those specified by "y", "w" and "by".}
 
-\item{visit_strategy}{In what sequence should variables be visited? By \code{n_perm} "permutation" (slow), by "importance" (fast), or as "v" (not recommended).}
+\item{visit_strategy}{In what sequence should variables be visited?
+By \code{n_perm} "permutation" (slow), by "importance" (fast), or as "v"
+(not recommended).}
 
 \item{n_shap}{Number of SHAP decompositions to calculate.}
 
-\item{n_max}{Maximum number of rows in \code{data} to consider in the reference data. Set to lower value if \code{data} is large.}
+\item{n_max}{Maximum number of rows in \code{data} to consider in the reference data.
+Set to lower value if \code{data} is large.}
 
-\item{n_perm}{Number of permutations of random visit sequences. Only used if \code{visit_strategy = "permutation"}.}
+\item{n_perm}{Number of permutations of random visit sequences.
+Only used if \code{visit_strategy = "permutation"}.}
 
 \item{seed}{An integer random seed.}
 
-\item{use_linkinv}{Should retransformation function be applied? We suggest to keep the default (\code{FALSE}) as the values can be retransformed later.}
+\item{use_linkinv}{Should retransformation function be applied?
+We suggest to keep the default (\code{FALSE}) as the values can be retransformed later.}
 
 \item{verbose}{Should progress bar be shown? Default is \code{TRUE}.}
 }
 \value{
-An object of class \code{flashlight} or \code{multiflashlight} with additional element "shap" of class "shap" (and "list").
+An object of class "flashlight" or "multiflashlight"
+with additional element "shap" of class "shap" (and "list").
 }
 \description{
-The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as static element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm (see reference) is used with importance based visit order. Use the default \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
+The function calls \code{\link[=light_breakdown]{light_breakdown()}} for \code{n_shap} observations and adds the
+resulting (approximate) SHAP decompositions as static element "shap" to the
+(multi)-flashlight for further analyses.
+We offer two approximations to SHAP: For \code{visit_strategy = "importance"},
+the breakdown algorithm (see reference) is used with importance based visit order.
+Use the default \code{visit_strategy = "permutation"} to run breakdown for
+multiple random permutations, averaging the results.
+This approximation will be closer to exact SHAP values, but very slow.
+Most available arguments can be chosen to reduce computation time.
 }
 \section{Methods (by class)}{
 \itemize{

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{print.flashlight()}.}
+\item{...}{Further arguments passed to \code{\link[=print.flashlight]{print.flashlight()}}.}
 }
 \value{
 Invisibly, the input is returned.

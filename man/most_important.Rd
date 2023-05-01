@@ -40,5 +40,5 @@ most_important(imp)
 most_important(imp, 2)
 }
 \seealso{
-\code{\link{light_importance}}.
+\code{\link[=light_importance]{light_importance()}}
 }

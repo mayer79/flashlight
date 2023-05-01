@@ -4,7 +4,7 @@
 #'
 #' @param x An object of class "light_importance".
 #' @param top_m Maximum number of important variables to be returned.
-#' Defaults to \code{Inf}, i.e., return all variables in descending order of importance.
+#' Defaults to `Inf`, i.e., return all variables in descending order of importance.
 #' @return A character vector of variable names sorted in descending order by importance.
 #' @export
 #' @examples
@@ -13,7 +13,7 @@
 #' (imp <- light_importance(fl, seed = 4))
 #' most_important(imp)
 #' most_important(imp, 2)
-#' @seealso \code{\link{light_importance}}.
+#' @seealso [light_importance()]
 most_important <- function(x, top_m = Inf) {
   UseMethod("most_important")
 }

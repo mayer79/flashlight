@@ -23,3 +23,7 @@
   }
   invisible()
 }
+
+utils::globalVariables(
+  c("fill_", "high_", "lab_", "low_", "temp_", "xmax_", "xmin_", "y_"))
+

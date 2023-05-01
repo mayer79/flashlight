@@ -1,7 +1,7 @@
 #' Visualize Multiple Types of Profiles Together
 #'
 #' Visualizes response-, prediction-, partial dependence, and/or ALE profiles
-#' of a (multi-)flashlight with respect to a covariable \code{v}.
+#' of a (multi-)flashlight with respect to a covariable `v`.
 #' Different flashlights or a single flashlight with one "by" variable are separated
 #' by a facet wrap.
 #'
@@ -11,13 +11,13 @@
 #' Any subset of ("response", "predicted", "pd", "ale") or "all".
 #' Defaults to all except "ale"
 #' @param zero_counts Logical flag if 0 count levels should be shown on the x axis.
-#' @param size_factor Factor used to enlarge default \code{size/linewidth} in
-#' \code{ggplot2::geom_point()} and \code{ggplot2::geom_line()}.
-#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
-#' @param facet_nrow Number of rows in \code{ggplot2::facet_wrap()}.
-#' Must be 1 if \code{plot_counts()} should be used.
+#' @param size_factor Factor used to enlarge default `size/linewidth` in
+#' [ggplot2::geom_point()] and [ggplot2::geom_line()].
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
+#' @param facet_nrow Number of rows in [ggplot2::facet_wrap()].
+#' Must be 1 if [plot_counts()] should be used.
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' @param show_points Should points be added to the line (default is \code{TRUE}).
+#' @param show_points Should points be added to the line (default is `TRUE`).
 #' @param ... Further arguments passed to geoms.
 #' @return An object of class "ggplot".
 #' @export
@@ -25,7 +25,7 @@
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 #' plot(light_effects(fl, v = "Species"))
-#' @seealso \code{\link{light_effects}}, \code{\link{plot_counts}}.
+#' @seealso [light_effects()], [plot_counts()]
 plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
                                zero_counts = TRUE, size_factor = 1,
                                facet_scales = "free_x", facet_nrow = 1L,

@@ -15,7 +15,7 @@ grouped_counts(data, by = NULL, w = NULL, value_name = "n", ...)
 
 \item{value_name}{Name of the resulting column with counts.}
 
-\item{...}{Arguments passed to \code{sum} (only if weights are provided).}
+\item{...}{Arguments passed to \code{\link[=sum]{sum()}} (only if weights are provided).}
 }
 \value{
 A \code{data.frame} with columns \code{by} and \code{value_name}.

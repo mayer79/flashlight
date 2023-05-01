@@ -32,7 +32,7 @@ light_breakdown(x, ...)
 \arguments{
 \item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{prettyNum} to format numbers
+\item{...}{Further arguments passed to \code{\link[=prettyNum]{prettyNum()}} to format numbers
 in description text.}
 
 \item{new_obs}{One single new observation to calculate variable attribution for.
@@ -63,10 +63,10 @@ Default is \code{FALSE}.}
 
 \item{description}{Should descriptions be added? Default is \code{TRUE}.}
 
-\item{digits}{Passed to \code{prettyNum} to format numbers in description text.}
+\item{digits}{Passed to \code{\link[=prettyNum]{prettyNum()}} to format numbers in description text.}
 }
 \value{
-An object of class \code{light_breakdown} with the following elements.
+An object of class "light_breakdown" with the following elements.
 \itemize{
 \item \code{data} A tibble with results. Can be used to build fully customized
 visualizations. Column names can be controlled by
@@ -80,10 +80,10 @@ the prediction of a single observation, see Gosiewska and Biecek (see reference)
 and the details below.
 }
 \details{
-The breakdown algorithm works as follows: First, the visit order \eqn{(x_1, ..., x_m)}
-of the variables \code{v} is specified. Then, in the query \code{data}, the column
-\eqn{x_1} is set to the value of \eqn{x_1} of the single observation \code{new_obs}
-to be explained.
+The breakdown algorithm works as follows: First, the visit order
+\eqn{(x_1, ..., x_m)} of the variables \code{v} is specified.
+Then, in the query \code{data}, the column \eqn{x_1} is set to the value of \eqn{x_1}
+of the single observation \code{new_obs} to be explained.
 The change in the (weighted) average prediction on \code{data} measures the
 contribution of \eqn{x_1} on the prediction of \code{new_obs}.
 This procedure is iterated over all \eqn{x_i} until eventually, all rows
@@ -102,16 +102,18 @@ The second strategy "permutation" averages contributions from a small number of
 random permutations of \code{v}.
 Note that the minimum required elements in the (multi-)flashlight are a
 "predict_function", "model", and "data".
-The latter can also directly be passed to \code{light_breakdown()}.
+The latter can also directly be passed to \code{\link[=light_breakdown]{light_breakdown()}}.
 Note that by default, no retransformation function is applied.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{light_breakdown(default)}: Default method not implemented yet.
 
-\item \code{light_breakdown(flashlight)}: Variable attribution to single observation for a flashlight.
+\item \code{light_breakdown(flashlight)}: Variable attribution to single observation
+for a flashlight.
 
-\item \code{light_breakdown(multiflashlight)}: Variable attribution to single observation for a multiflashlight.
+\item \code{light_breakdown(multiflashlight)}: Variable attribution to single observation
+for a multiflashlight.
 
 }}
 \examples{
@@ -123,5 +125,5 @@ light_breakdown(fl, new_obs = iris[1, ])
 A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
 }
 \seealso{
-\code{\link{plot.light_breakdown}}.
+\code{\link[=plot.light_breakdown]{plot.light_breakdown()}}
 }

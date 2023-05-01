@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "light_profile2d".}
 
-\item{swap_dim}{Swap the \code{ggplot2::facet_grid()} dimensions.}
+\item{swap_dim}{Swap the \code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}} dimensions.}
 
 \item{rotate_x}{Should the x axis labels be rotated by 45 degrees?
 Default is \code{TRUE}.}
@@ -17,17 +17,17 @@ Default is \code{TRUE}.}
 \item{numeric_as_factor}{Should numeric x and y values be converted to factors first?
 Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".}
 
-\item{...}{Further arguments passed to \code{ggplot2::geom_tile()}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_tile]{ggplot2::geom_tile()}}.}
 }
 \value{
 An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_profile2d}.
+Minimal visualization of an object of class "light_profile2d".
 The object returned is of class "ggplot" and can be further customized.
 }
 \details{
-The main geometry is \code{ggplot2::geom_tile()}. Additional dimensions
+The main geometry is \code{\link[ggplot2:geom_tile]{ggplot2::geom_tile()}}. Additional dimensions
 ("by" variable(s) and/or multiflashlight) are represented by \code{facet_wrap/grid}.
 For all types of profiles except "partial dependence", it is natural to see
 empty parts in the plot. These are combinations of the \code{v} variables that
@@ -36,7 +36,7 @@ e.g. for \code{cut_type = "quantile"} or if \code{n_bins} are larger than the nu
 of distinct values of a \code{v} variable.
 Such gaps can be suppressed by setting \code{numeric_as_factor = TRUE}
 or by using the arguments \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in
-\code{light_profile2d()}.
+\code{\link[=light_profile2d]{light_profile2d()}}.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
@@ -44,5 +44,5 @@ fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
 }
 \seealso{
-\code{\link{light_profile2d}}.
+\code{\link[=light_profile2d]{light_profile2d()}}
 }

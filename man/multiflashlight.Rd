@@ -52,5 +52,5 @@ mod_glm <- flashlight(model = fit_glm, label = "glm")
 (mods <- multiflashlight(list(mod_lm, mod_glm)))
 }
 \seealso{
-\code{\link{flashlight}}.
+\code{\link[=flashlight]{flashlight()}}
 }

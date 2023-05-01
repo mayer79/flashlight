@@ -9,21 +9,22 @@
 \arguments{
 \item{x}{An object of class "light_global_surrogate".}
 
-\item{type}{Plot type, see help of \code{rpart.plot::rpart.plot()}. Default is 5.}
+\item{type}{Plot type, see help of \code{\link[rpart.plot:rpart.plot]{rpart.plot::rpart.plot()}}. Default is 5.}
 
-\item{auto_main}{Automatic plot titles (only if multiple trees are shown in the same figure).}
+\item{auto_main}{Automatic plot titles (only if multiple trees are shown
+in the same figure).}
 
 \item{mfrow}{If multiple trees are shown in the same figure:
-what value of \code{mfrow} to use in \code{graphics::par()}?}
+what value of \code{mfrow} to use in \code{\link[graphics:par]{graphics::par()}}?}
 
-\item{...}{Further arguments passed to \code{rpart.plot::rpart.plot()}.}
+\item{...}{Further arguments passed to \code{\link[rpart.plot:rpart.plot]{rpart.plot::rpart.plot()}}.}
 }
 \value{
 An object of class "ggplot".
 }
 \description{
-Visualize trees fitted by \code{light_global_surrogate()} via
-\code{rpart.plot::rpart.plot()}.
+Use \code{\link[rpart.plot:rpart.plot]{rpart.plot::rpart.plot()}} to visualize trees fitted by
+\code{\link[=light_global_surrogate]{light_global_surrogate()}}.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
@@ -31,5 +32,5 @@ x <- flashlight(model = fit, label = "lm", data = iris)
 plot(light_global_surrogate(x))
 }
 \seealso{
-\code{\link{light_global_surrogate}}.
+\code{\link[=light_global_surrogate]{light_global_surrogate()}}
 }

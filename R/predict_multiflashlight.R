@@ -1,7 +1,7 @@
 #' Predictions for multiflashlight
 #'
 #' Predict method for an object of class "multiflashlight".
-#' Pass additional elements to update the flashlight, typically \code{data}.
+#' Pass additional elements to update the flashlight, typically `data`.
 #'
 #' @param object An object of class "multiflashlight".
 #' @param ... Arguments used to update the multiflashlight.

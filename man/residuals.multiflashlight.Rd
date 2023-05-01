@@ -9,7 +9,8 @@
 \arguments{
 \item{object}{An object of class "multiflashlight".}
 
-\item{...}{Arguments used to update the multiflashlight before calculating the residuals.}
+\item{...}{Arguments used to update the multiflashlight before
+calculating the residuals.}
 }
 \value{
 A named list with residuals per flashlight.

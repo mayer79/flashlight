@@ -1,18 +1,33 @@
 #' Add SHAP values to (multi-)flashlight
 #'
-#' The function calls \code{light_breakdown} for \code{n_shap} observations and adds the resulting (approximate) SHAP decompositions as static element "shap" to the (multi)-flashlight for further analyses. We offer two approximations to SHAP: For \code{visit_strategy = "importance"}, the breakdown algorithm (see reference) is used with importance based visit order. Use the default \code{visit_strategy = "permutation"} to run breakdown for multiple random permutations, averaging the results. This approximation will be closer to exact SHAP values, but very slow. Most available arguments can be chosen to reduce computation time.
+#' The function calls [light_breakdown()] for `n_shap` observations and adds the
+#' resulting (approximate) SHAP decompositions as static element "shap" to the
+#' (multi)-flashlight for further analyses.
+#' We offer two approximations to SHAP: For `visit_strategy = "importance"`,
+#' the breakdown algorithm (see reference) is used with importance based visit order.
+#' Use the default `visit_strategy = "permutation"` to run breakdown for
+#' multiple random permutations, averaging the results.
+#' This approximation will be closer to exact SHAP values, but very slow.
+#' Most available arguments can be chosen to reduce computation time.
 #'
-#' @param x An object of class \code{flashlight} or \code{multiflashlight}.
-#' @param v Vector of variables to assess contribution for. Defaults to all except those specified by "y", "w" and "by".
-#' @param visit_strategy In what sequence should variables be visited? By \code{n_perm} "permutation" (slow), by "importance" (fast), or as "v" (not recommended).
+#' @param x An object of class "flashlight" or "multiflashlight".
+#' @param v Vector of variables to assess contribution for.
+#' Defaults to all except those specified by "y", "w" and "by".
+#' @param visit_strategy In what sequence should variables be visited?
+#' By `n_perm` "permutation" (slow), by "importance" (fast), or as "v"
+#' (not recommended).
 #' @param n_shap Number of SHAP decompositions to calculate.
-#' @param n_max Maximum number of rows in \code{data} to consider in the reference data. Set to lower value if \code{data} is large.
-#' @param n_perm Number of permutations of random visit sequences. Only used if \code{visit_strategy = "permutation"}.
+#' @param n_max Maximum number of rows in `data` to consider in the reference data.
+#' Set to lower value if `data` is large.
+#' @param n_perm Number of permutations of random visit sequences.
+#' Only used if `visit_strategy = "permutation"`.
 #' @param seed An integer random seed.
-#' @param use_linkinv Should retransformation function be applied? We suggest to keep the default (\code{FALSE}) as the values can be retransformed later.
-#' @param verbose Should progress bar be shown? Default is \code{TRUE}.
+#' @param use_linkinv Should retransformation function be applied?
+#' We suggest to keep the default (`FALSE`) as the values can be retransformed later.
+#' @param verbose Should progress bar be shown? Default is `TRUE`.
 #' @param ... Further arguments passed from or to other methods.
-#' @return An object of class \code{flashlight} or \code{multiflashlight} with additional element "shap" of class "shap" (and "list").
+#' @return An object of class "flashlight" or "multiflashlight"
+#' with additional element "shap" of class "shap" (and "list").
 #' @export
 #' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
 #' @examples
@@ -38,8 +53,7 @@ add_shap.default <- function(x, ...) {
 #' @describeIn add_shap Variable attribution to single observation for a flashlight.
 #' @export
 add_shap.flashlight <- function(x, v = NULL,
-                                visit_strategy = c("permutation",
-                                                   "importance", "v"),
+                                visit_strategy = c("permutation", "importance", "v"),
                                 n_shap = 200, n_max = Inf, n_perm = 12,
                                 seed = NULL, use_linkinv = FALSE,
                                 verbose = TRUE, ...) {
@@ -89,26 +103,32 @@ add_shap.flashlight <- function(x, v = NULL,
     "No 'v' specified." = length(v) >= 1L,
     "Not all 'v' in data." = v %in% colnames(data)
   )
-  check_unique(c(x$by, x$w, v),
-               c(variable_name, before_name, after_name),
-               temp_names = c("baseline_", "shap_"))
+  check_unique(
+    c(x$by, x$w, v),
+    c(variable_name, before_name, after_name),
+    temp_names = c("baseline_", "shap_")
+  )
 
   core_func <- function(i) {
     shp <- light_breakdown(
-      xx, new_obs = new_obs[i, ], v = v,
+      xx,
+      new_obs = new_obs[i, ],
+      v = v,
       visit_strategy = visit_strategy,
-      n_max = Inf, n_perm = n_perm,
-      use_linkinv = use_linkinv, description = FALSE
+      n_max = Inf,
+      n_perm = n_perm,
+      use_linkinv = use_linkinv,
+      description = FALSE
     )$data
 
     # Move baseline to column
-    bs <- shp[[before_name]][1]
+    bs <- shp[[before_name]][1L]
     shp <- shp[shp[[variable_name]] %in% v, ]
     shp[["shap_"]] <- shp[[after_name]] - shp[[before_name]]
     shp[["baseline_"]] <- bs
 
     # Full
-    expand_grid(shp[, key_vars], new_obs[i, ])
+    tidyr::expand_grid(shp[, key_vars], new_obs[i, ])
   }
 
   # Call light_breakdown for each row in new_obs
@@ -125,8 +145,10 @@ add_shap.flashlight <- function(x, v = NULL,
   }
 
   # Organize output
-  shap <- c(x[c("by", "w", "linkinv")],
-            list(data = dplyr::bind_rows(out), v = v, use_linkinv = use_linkinv))
+  shap <- c(
+    x[c("by", "w", "linkinv")],
+    list(data = dplyr::bind_rows(out), v = v, use_linkinv = use_linkinv)
+  )
   class(shap) <- "shap"
   flashlight(x, shap = shap)
 }

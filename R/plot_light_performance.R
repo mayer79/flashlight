@@ -1,7 +1,7 @@
 #' Visualize Model Performance
 #'
-#' Minimal visualization of an object of class \code{light_performance} as
-#' \code{geom_bar}. The object returned has class "ggplot",
+#' Minimal visualization of an object of class "light_performance" as
+#' [ggplot2::geom_bar()]. The object returned has class "ggplot",
 #' and can be further customized.
 #'
 #' The plot is organized as a bar plot as follows:
@@ -17,19 +17,18 @@
 #' @param x An object of class "light_performance".
 #' @param swap_dim Should representation of dimensions
 #' (either two "by" variables or one "by" variable and multiflashlight)
-#' of x aesthetic and dodge fill aesthetic be swapped? Default is \code{FALSE}.
+#' of x aesthetic and dodge fill aesthetic be swapped? Default is `FALSE`.
 #' @param geom Geometry of plot (either "bar" or "point")
-#' @param facet_scales Scales argument passed to \code{ggplot2::facet_wrap()}.
-#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is \code{FALSE.}
-#' @param ... Further arguments passed to \code{ggplot2::geom_bar()} or
-#' \code{ggplot2::geom_point()}.
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
+#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is `FALSE.`
+#' @param ... Further arguments passed to [ggplot2::geom_bar()] or [ggplot2::geom_point()].
 #' @return An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
 #' plot(light_performance(fl, by = "Species"), fill = "darkred")
-#' @seealso \code{\link{light_performance}}.
+#' @seealso [light_performance()]
 plot.light_performance <- function(x, swap_dim = FALSE, geom = c("bar", "point"),
                                    facet_scales = "free_y", rotate_x = FALSE, ...) {
   # Initialization

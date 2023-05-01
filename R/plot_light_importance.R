@@ -1,16 +1,16 @@
 #' Visualize Variable Importance
 #'
 #' Minimal visualization of an object of class "light_importance" via
-#' \code{ggplot2::geom_bar()}.
-#' If available, standard errors are added by \code{ggplot2::geom_errorbar()}.
+#' [ggplot2::geom_bar()].
+#' If available, standard errors are added by [ggplot2::geom_errorbar()].
 #' The object returned is of class "ggplot" and can be further customized.
 #'
 #' The plot is organized as a bar plot with variable names as x-aesthetic.
 #' Up to two additional dimensions (multiflashlight and one "by" variable or single
 #' flashlight with two "by" variables) can be visualized by facetting and dodge/fill.
-#' Set \code{swap_dim = FALSE} to revert the role of these two dimensions.
+#' Set `swap_dim = FALSE` to revert the role of these two dimensions.
 #' One single additional dimension is visualized by a facet wrap,
-#' or - if \code{swap_dim = FALSE} - by dodge/fill.
+#' or - if `swap_dim = FALSE` - by dodge/fill.
 #'
 #' @importFrom rlang .data
 #' @param x An object of class "light_importance".
@@ -18,12 +18,12 @@
 #' @param swap_dim If multiflashlight and one "by" variable or single flashlight with
 #' two "by" variables, swap the role of dodge/fill variable and facet variable.
 #' If multiflashlight or one "by" variable, use facets instead of colors.
-#' @param facet_scales Scales argument passed to \code{facet_wrap}.
-#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is FALSE.
-#' @param error_bars Should error bars be added? Defaults to \code{TRUE}.
-#' Only available if \code{light_importance()} was run with multiple permutations
-#' by setting \code{m_repetitions} > 1.
-#' @param ... Further arguments passed to \code{ggplot2::geom_bar()}.
+#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap].
+#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is `FALSE`.
+#' @param error_bars Should error bars be added? Defaults to `TRUE`.
+#' Only available if [light_importance()] was run with multiple permutations
+#' by setting `m_repetitions` > 1.
+#' @param ... Further arguments passed to [ggplot2::geom_bar()].
 #' @return An object of class "ggplot".
 #' @export
 #' @examples
@@ -34,7 +34,7 @@
 #' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 #' plot(light_importance(mod_part, m_repetitions = 4), fill = "darkred")
 #' plot(light_importance(mods), swap_dim = TRUE)
-#' @seealso \code{\link{light_importance}}.
+#' @seealso [light_importance()]
 plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
                                   facet_scales = "fixed",
                                   rotate_x = FALSE, error_bars = TRUE, ...) {

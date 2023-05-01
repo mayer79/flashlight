@@ -1,21 +1,22 @@
 #' Plot Global Surrogate Trees
 #'
-#' Visualize trees fitted by \code{light_global_surrogate()} via
-#' \code{rpart.plot::rpart.plot()}.
+#' Use [rpart.plot::rpart.plot()] to visualize trees fitted by
+#' [light_global_surrogate()].
 #'
 #' @param x An object of class "light_global_surrogate".
-#' @param type Plot type, see help of \code{rpart.plot::rpart.plot()}. Default is 5.
-#' @param auto_main Automatic plot titles (only if multiple trees are shown in the same figure).
+#' @param type Plot type, see help of [rpart.plot::rpart.plot()]. Default is 5.
+#' @param auto_main Automatic plot titles (only if multiple trees are shown
+#' in the same figure).
 #' @param mfrow If multiple trees are shown in the same figure:
-#' what value of \code{mfrow} to use in \code{graphics::par()}?
-#' @param ... Further arguments passed to \code{rpart.plot::rpart.plot()}.
+#' what value of `mfrow` to use in [graphics::par()]?
+#' @param ... Further arguments passed to [rpart.plot::rpart.plot()].
 #' @return An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' x <- flashlight(model = fit, label = "lm", data = iris)
 #' plot(light_global_surrogate(x))
-#' @seealso \code{\link{light_global_surrogate}}.
+#' @seealso [light_global_surrogate()]
 plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE,
                                         mfrow = NULL, ...) {
   label_name <- getOption("flashlight.label_name")
@@ -33,7 +34,7 @@ plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE,
       mfrow <- c(nr, ceiling(m / nr))
     }
     old_params <- graphics::par(mfrow = mfrow)
-    on.exit(par(old_params))
+    on.exit(graphics::par(old_params))
 
     for (i in seq_len(m)) {
       rpart.plot::rpart.plot(

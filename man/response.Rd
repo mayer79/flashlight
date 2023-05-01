@@ -16,7 +16,7 @@ response(object, ...)
 \method{response}{multiflashlight}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{flashlight}.}
+\item{object}{An object of class "flashlight".}
 
 \item{...}{Arguments used to update the flashlight before extracting the response.}
 }
@@ -24,7 +24,7 @@ response(object, ...)
 A numeric vector of responses.
 }
 \description{
-Extracts response from object of class \code{flashlight}.
+Extracts response from object of class "flashlight".
 }
 \section{Methods (by class)}{
 \itemize{

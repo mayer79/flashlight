@@ -4,7 +4,8 @@
 #' Pass additional elements to update the multiflashlight before calculation of residuals.
 #'
 #' @param object An object of class "multiflashlight".
-#' @param ... Arguments used to update the multiflashlight before calculating the residuals.
+#' @param ... Arguments used to update the multiflashlight before
+#' calculating the residuals.
 #' @return A named list with residuals per flashlight.
 #' @export
 #' @examples

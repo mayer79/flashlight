@@ -1,8 +1,8 @@
 #' Response of multi/-flashlight
 #'
-#' Extracts response from object of class \code{flashlight}.
+#' Extracts response from object of class "flashlight".
 #'
-#' @param object An object of class \code{flashlight}.
+#' @param object An object of class "flashlight".
 #' @param ... Arguments used to update the flashlight before extracting the response.
 #' @return A numeric vector of responses.
 #' @export
@@ -36,4 +36,3 @@ response.flashlight <- function(object, ...) {
 response.multiflashlight <- function(object, ...) {
   lapply(object, response, ...)
 }
-

@@ -42,8 +42,7 @@ created based on further input. Otherwise, \code{x} is updated based on further 
 A model and a data of the same structure as \code{data}.
 Only the order of the two arguments matter, not their names.}
 
-\item{linkinv}{An inverse transformation function applied after
-\code{predict_function}.}
+\item{linkinv}{An inverse transformation function applied after \code{predict_function}.}
 
 \item{w}{A variable name of case weights.}
 
@@ -55,17 +54,17 @@ like those in package {MetricsWeighted}.}
 
 \item{label}{Name of the flashlight. Required.}
 
-\item{shap}{An optional shap object. Typically added by calling \code{add_shap}.}
+\item{shap}{An optional shap object. Typically added by calling \code{\link[=add_shap]{add_shap()}}.}
 
 \item{check}{When updating the flashlight: Should internal checks be performed?
 Default is \code{TRUE}.}
 }
 \value{
-An object of class \code{flashlight} (and \code{list}) containing each
+An object of class "flashlight" (and \code{list}) containing each
 input (except \code{x}) as element.
 }
 \description{
-Creates or updates a \code{flashlight} object. If a flashlight is to be created,
+Creates or updates a "flashlight" object. If a flashlight is to be created,
 all arguments are optional except \code{label}. If a flashlight is to be updated,
 all arguments are optional up to \code{x} (the flashlight to be updated).
 }
@@ -83,5 +82,5 @@ fit <- lm(Sepal.Length ~ ., data = iris)
 (fl_updated <- flashlight(fl, linkinv = exp))
 }
 \seealso{
-\code{\link{multiflashlight}}.
+\code{\link[=multiflashlight]{multiflashlight()}}
 }
