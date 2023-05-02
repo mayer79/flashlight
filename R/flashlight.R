@@ -5,27 +5,27 @@
 #' all arguments are optional up to `x` (the flashlight to be updated).
 #'
 #' @param x An object of class "flashlight". If not provided, a new flashlight is
-#' created based on further input. Otherwise, `x` is updated based on further input.
+#'   created based on further input. Otherwise, `x` is updated based on further input.
 #' @param model A fitted model of any type. Most models require a customized
-#' `predict_function`.
+#'   `predict_function`.
 #' @param data A `data.frame` or `tibble` used as basis for calculations.
 #' @param y Variable name of response.
 #' @param predict_function A real valued function with two arguments:
-#' A model and a data of the same structure as `data`.
-#' Only the order of the two arguments matter, not their names.
+#'   A model and a data of the same structure as `data`.
+#'   Only the order of the two arguments matter, not their names.
 #' @param linkinv An inverse transformation function applied after `predict_function`.
 #' @param w A variable name of case weights.
 #' @param by A character vector with names of grouping variables.
 #' @param metrics A named list of metrics. Here, a metric is a function with exactly
-#' four arguments: actual, predicted, w (case weights) and `...`
-#' like those in package {MetricsWeighted}.
+#'   four arguments: actual, predicted, w (case weights) and `...`
+#'   like those in package {MetricsWeighted}.
 #' @param label Name of the flashlight. Required.
 #' @param shap An optional shap object. Typically added by calling [add_shap()].
 #' @param check When updating the flashlight: Should internal checks be performed?
-#' Default is `TRUE`.
+#'   Default is `TRUE`.
 #' @param ... Arguments passed from or to other functions.
-#' @return An object of class "flashlight" (and `list`) containing each
-#' input (except `x`) as element.
+#' @returns An object of class "flashlight" (and `list`) containing each
+#'   input (except `x`) as element.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

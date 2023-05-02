@@ -11,8 +11,7 @@
 
 \item{type}{Plot type, see help of \code{\link[rpart.plot:rpart.plot]{rpart.plot::rpart.plot()}}. Default is 5.}
 
-\item{auto_main}{Automatic plot titles (only if multiple trees are shown
-in the same figure).}
+\item{auto_main}{Automatic plot titles (only if multiple trees are shown).}
 
 \item{mfrow}{If multiple trees are shown in the same figure:
 what value of \code{mfrow} to use in \code{\link[graphics:par]{graphics::par()}}?}
@@ -23,8 +22,7 @@ what value of \code{mfrow} to use in \code{\link[graphics:par]{graphics::par()}}
 An object of class "ggplot".
 }
 \description{
-Use \code{\link[rpart.plot:rpart.plot]{rpart.plot::rpart.plot()}} to visualize trees fitted by
-\code{\link[=light_global_surrogate]{light_global_surrogate()}}.
+Use \code{\link[rpart.plot:rpart.plot]{rpart.plot::rpart.plot()}} to visualize trees fitted by \code{\link[=light_global_surrogate]{light_global_surrogate()}}.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)

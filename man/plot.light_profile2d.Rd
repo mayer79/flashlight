@@ -11,8 +11,7 @@
 
 \item{swap_dim}{Swap the \code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}} dimensions.}
 
-\item{rotate_x}{Should the x axis labels be rotated by 45 degrees?
-Default is \code{TRUE}.}
+\item{rotate_x}{Should the x axis labels be rotated by 45 degrees? Default is \code{TRUE}.}
 
 \item{numeric_as_factor}{Should numeric x and y values be converted to factors first?
 Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".}

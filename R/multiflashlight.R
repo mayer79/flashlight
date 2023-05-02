@@ -5,7 +5,7 @@
 #'
 #' @param x An object of class "multiflashlight", "flashlight" or a list of flashlights.
 #' @param ... Optional arguments in the flashlights to update, see examples.
-#' @return An object of class "multiflashlight" (a named list of flashlight objects).
+#' @returns An object of class "multiflashlight" (a named list of flashlight objects).
 #' @export
 #' @examples
 #' fit_lm <- lm(Sepal.Length ~ ., data = iris)

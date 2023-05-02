@@ -110,10 +110,13 @@ picked from \code{data}). Only used for type = "partial dependence" and "ale".}
 \item{pd_seed}{Integer random seed used to select ICE profiles.
 Only used for type = "partial dependence" and "ale".}
 
-\item{pd_center}{How should ICE curves be centered? Default is "no".
-Choose "first", "middle", or "last" to 0-center at specific evaluation points.
-Choose "mean" to center all profiles at the within-group means.
-Choose "0" to mean-center curves at 0. Only relevant for partial dependence.}
+\item{pd_center}{How should ICE curves be centered?
+\itemize{
+\item Default is "no".
+\item Choose "first", "middle", or "last" to 0-center at specific evaluation points.
+\item Choose "mean" to center all profiles at the within-group means.
+\item Choose "0" to mean-center curves at 0. Only relevant for partial dependence.
+}}
 
 \item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks}
 are passed or being calculated, then two-sided derivatives are calculated
@@ -138,9 +141,11 @@ By default, partial dependence profiles are calculated (see Friedman).
 Other options are profiles of ALE (accumulated local effects, see Apley),
 response, predicted values ("M plots" or "marginal plots", see Apley),
 residuals, and shap. The results are aggregated either by (weighted) means or by
-(weighted) quartiles. Note that ALE profiles are calibrated by (weighted)
-average predictions. In contrast to the suggestions in Apley,
-we calculate ALE profiles of factors in the same order as the factor levels.
+(weighted) quartiles.
+
+Note that ALE profiles are calibrated by (weighted) average predictions.
+In contrast to the suggestions in Apley, we calculate ALE profiles of factors
+in the same order as the factor levels.
 They are not being reordered based on similiarity of other variables.
 }
 \details{
@@ -150,10 +155,11 @@ to specify the binning. For partial dependence profiles
 (and partly also ALE profiles), this behaviour can be overwritten either
 by providing a vector of evaluation points (\code{pd_evaluate_at}) or an
 evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s)
-with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction
-profiles, "model", "predict_function", linkinv" and "data" are required.
-For response profiles its "y", "linkinv" and "data" and for shap profiles
-it is just "shap". "data" can be passed on the fly.
+with a (multi-)variate evaluation grid.
+
+For partial dependence, ALE, and prediction profiles, "model", "predict_function",
+"linkinv" and "data" are required. For response profiles its "y", "linkinv" and
+"data", and for shap profiles it is just "shap". "data" can be passed on the fly.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -171,9 +177,10 @@ light_profile(fl, v = "Species")
 light_profile(fl, v = "Petal.Width", type = "residual")
 }
 \references{
-Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
-
-Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
+\itemize{
+\item Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+\item Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
+}
 }
 \seealso{
 \code{\link[=light_effects]{light_effects()}}, \code{\link[=plot.light_profile]{plot.light_profile()}}

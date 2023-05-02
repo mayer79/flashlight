@@ -9,30 +9,28 @@
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param data An optional `data.frame`.
 #' @param by An optional vector of column names used to additionally group the results.
-#' For each group, a separate tree is grown.
+#'   For each group, a separate tree is grown.
 #' @param v Vector of variables used in the surrogate model.
-#' Defaults to all variables in `data` except "by", "w" and "y".
+#'   Defaults to all variables in `data` except "by", "w" and "y".
 #' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
 #' @param n_max Maximum number of data rows to consider to build the tree.
 #' @param seed An integer random seed used to select data rows if `n_max` is lower than
-#' the number of data rows.
+#'   the number of data rows.
 #' @param keep_max_levels Number of levels of categorical and factor variables to keep.
-#' Other levels are combined to a level "Other". This prevents [rpart::rpart()] to
-#' take too long to split non-numeric variables with many levels.
+#'   Other levels are combined to a level "Other". This prevents [rpart::rpart()] to
+#'   take too long to split non-numeric variables with many levels.
 #' @param ... Arguments passed to [rpart::rpart()], such as `maxdepth`.
-#' @return An object of class "light_global_surrogate" with the following elements:
-#'
-#' - `data` A tibble with results. Can be used to build fully customized visualizations.
-#'    Column names can be controlled by `options(flashlight.column_name)`.
-#' - `by` Same as input `by`.
-#'
+#' @returns
+#'   An object of class "light_global_surrogate" with the following elements:
+#'   - `data` A tibble with results. Can be used to build fully customized visualizations.
+#'     Column names can be controlled by `options(flashlight.column_name)`.
+#'   - `by` Same as input `by`.
 #' @export
 #' @references Molnar C. (2019). Interpretable Machine Learning.
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' x <- flashlight(model = fit, label = "lm", data = iris)
 #' light_global_surrogate(x)
-#'
 #' @seealso [plot.light_global_surrogate()]
 light_global_surrogate <- function(x, ...) {
   UseMethod("light_global_surrogate")

@@ -5,31 +5,29 @@
 #' @noRd
 #' @param x An object of class "flashlight".
 #' @param v The variable to be profiled.
-#' @param breaks Cut breaks for a numeric `v`. Only used if no `evaluate_at`
-#' is specified.
+#' @param breaks Cut breaks for a numeric `v`. Only used if no `evaluate_at` is specified.
 #' @param n_bins Maxmium number of unique values to evaluate for numeric `v`.
-#' Only used if no `evaluate_at` is specified.
+#'   Only used if no `evaluate_at` is specified.
 #' @param cut_type For the default "equal", bins of equal width are created for `v`
-#' by [pretty()]. Choose "quantile" to create quantile bins.
+#'   by [pretty()]. Choose "quantile" to create quantile bins.
 #' @param counts Should counts be added?
 #' @param counts_weighted If `counts = TRUE`: Should counts be weighted by the
-#' case weights? If `TRUE`, the sum of `w` is returned by group.
+#'   case weights? If `TRUE`, the sum of `w` is returned by group.
 #' @param pred Optional vector with predictions.
 #' @param evaluate_at Vector with values of `v` used to evaluate the profile.
-#' Only relevant for type = "partial dependence".
+#'   Only relevant for type = "partial dependence".
 #' @param indices A vector of row numbers to consider.
-#' @param n_max Maximum number of ICE profiles to calculate within interval
-#' (not within data).
+#' @param n_max Maximum number of ICE profiles to calculate within interval (not within data).
 #' @param seed Integer random seed passed to [light_ice()].
 #' @param two_sided Standard ALE profiles are calculated via left derivatives.
-#' Set to `TRUE` if two-sided derivatives should be calculated.
-#' Only works for continuous `v`. More specifically: Usually, local effects at
-#' value x are calculated using points in \eqn{[x-e, x]}. Set `ale_two_sided = TRUE`
-#' to use points in \eqn{[x-e/2, x+e/2]} instead.
+#'   Set to `TRUE` if two-sided derivatives should be calculated.
+#'   Only works for continuous `v`. More specifically: Usually, local effects at
+#'   value x are calculated using points in \eqn{[x-e, x]}. Set `ale_two_sided = TRUE`
+#'   to use points in \eqn{[x-e/2, x+e/2]} instead.
 #' @param calibrate Should values be calibrated based on average preditions?
-#' Default is `TRUE`.
+#'   Default is `TRUE`.
 #' @param ... Other arguments passed to this function (currently unused).
-#' @return A tibble containing results.
+#' @returns A tibble containing results.
 ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
                         cut_type = c("equal", "quantile"),
                         counts = TRUE, counts_weighted = FALSE,

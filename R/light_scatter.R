@@ -7,23 +7,21 @@
 #' @param v The variable name to be shown on the x-axis.
 #' @param data An optional `data.frame`. Not relevant for `type = "shap"`.
 #' @param by An optional vector of column names used to additionally group the results.
-#' @param type Type of the profile: Either "predicted", "response", "residual",
-#' or "shap".
+#' @param type Type of the profile: Either "predicted", "response", "residual", or "shap".
 #' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
-#' Not used for `type = "shap"`.
-#' @param n_max Maximum number of data rows to select.
-#' Will be randomly picked from the relevant data.
+#'   Not used for `type = "shap"`.
+#' @param n_max Maximum number of data rows to select. Will be randomly picked from the
+#'   relevant data.
 #' @param seed An integer random seed used for subsampling.
 #' @param ... Further arguments passed from or to other methods.
-#' @return An object of class "light_scatter" with the following elements:
-#'
-#' - `data`: A tibble with results. Can be used to build fully customized
-#'   visualizations. Column names can be controlled by
-#'   `options(flashlight.column_name)`.
-#' - `by`: Same as input `by`.
-#' - `v`: The variable evaluated.
-#' - `type`: Same as input `type`. For information only.
-#'
+#' @returns
+#'   An object of class "light_scatter" with the following elements:
+#'   - `data`: A tibble with results. Can be used to build fully customized
+#'     visualizations. Column names can be controlled by
+#'     `options(flashlight.column_name)`.
+#'   - `by`: Same as input `by`.
+#'   - `v`: The variable evaluated.
+#'   - `type`: Same as input `type`. For information only.
 #' @export
 #' @examples
 #' fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)

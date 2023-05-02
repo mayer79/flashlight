@@ -8,7 +8,7 @@
 #' @param w Optional name of the column in `data` with case weights.
 #' @param by An optional vector of column names in `data` used to group the results.
 #' @param ... Additional arguments passed to mean calculation (e.g. `na.rm = TRUE`).
-#' @return A numeric vector with centered values in column `x`.
+#' @returns A numeric vector with centered values in column `x`.
 #' @export
 #' @examples
 #' ir <- data.frame(iris, w = 1)

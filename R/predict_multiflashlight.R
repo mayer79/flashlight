@@ -5,7 +5,7 @@
 #'
 #' @param object An object of class "multiflashlight".
 #' @param ... Arguments used to update the multiflashlight.
-#' @return A named list of prediction vectors.
+#' @returns A named list of prediction vectors.
 #' @export
 #' @examples
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)

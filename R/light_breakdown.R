@@ -4,6 +4,7 @@
 #' the prediction of a single observation, see Gosiewska and Biecek (see reference)
 #' and the details below.
 #'
+#' @details
 #' The breakdown algorithm works as follows: First, the visit order
 #' \eqn{(x_1, ..., x_m)} of the variables `v` is specified.
 #' Then, in the query `data`, the column \eqn{x_1} is set to the value of \eqn{x_1}
@@ -12,52 +13,51 @@
 #' contribution of \eqn{x_1} on the prediction of `new_obs`.
 #' This procedure is iterated over all \eqn{x_i} until eventually, all rows
 #' in `data` are identical to `new_obs`.
+#'
 #' A complication with this approach is that the visit order is relevant,
 #' at least for non-additive models. Ideally, the algorithm could be repeated
 #' for all possible permutations of `v` and its results averaged per variable.
 #' This is basically what SHAP values do, see the reference below for an explanation.
 #' Unfortunately, there is no efficient way to do this in a model agnostic way.
-#' We offer two visit strategies to approximate SHAP. The first one uses
-#' the short-cut described in the reference below: The variables are sorted by the
-#' size of their contribution in the same way as the breakdown algorithm but without
-#' iteration, i.e., starting from the original query data for each variable \eqn{x_i}.
-#' We call this visit strategy "importance".
-#' The second strategy "permutation" averages contributions from a small number of
-#' random permutations of `v`.
+#'
+#' We offer two visit strategies to approximate SHAP.
+#' 1. "importance": Using the short-cut described in the reference below:
+#' The variables are sorted by the size of their contribution in the same way as the
+#' breakdown algorithm but without iteration, i.e., starting from the original query
+#' data for each variable \eqn{x_i}.
+#' 2. "permutation": Averages contributions from a small number of random permutations
+#' of `v`.
+#'
 #' Note that the minimum required elements in the (multi-)flashlight are a
-#' "predict_function", "model", and "data".
-#' The latter can also directly be passed to [light_breakdown()].
-#' Note that by default, no retransformation function is applied.
+#' "predict_function", "model", and "data". The latter can also directly be passed to
+#' [light_breakdown()]. Note that by default, no retransformation function is applied.
 #'
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param new_obs One single new observation to calculate variable attribution for.
-#' Needs to be a `data.frame` of same structure as `data`.
+#'   Needs to be a `data.frame` of same structure as `data`.
 #' @param data An optional `data.frame`.
 #' @param by An optional vector of column names used to filter `data`
-#' for rows with equal values in "by" variables as `new_obs`.
+#'   for rows with equal values in "by" variables as `new_obs`.
 #' @param v Vector of variable names to assess contribution for.
-#' Defaults to all except those specified by "y", "w" and "by".
+#'   Defaults to all except those specified by "y", "w" and "by".
 #' @param visit_strategy In what sequence should variables be visited?
-#' By "importance", by `n_perm` "permutation" or as "v" (see Details).
+#'   By "importance", by `n_perm` "permutation" or as "v" (see Details).
 #' @param n_max Maximum number of rows in `data` to consider in the reference data.
-#' Set to lower value if `data` is large.
+#'   Set to lower value if `data` is large.
 #' @param n_perm Number of permutations of random visit sequences.
-#' Only used if `visit_strategy = "permutation"`.
+#'   Only used if `visit_strategy = "permutation"`.
 #' @param seed An integer random seed used to shuffle rows if `n_max`
-#' is smaller than the number of rows in `data`.
-#' @param use_linkinv Should retransformation function be applied?
-#' Default is `FALSE`.
+#'   is smaller than the number of rows in `data`.
+#' @param use_linkinv Should retransformation function be applied? Default is `FALSE`.
 #' @param description Should descriptions be added? Default is `TRUE`.
 #' @param digits Passed to [prettyNum()] to format numbers in description text.
 #' @param ... Further arguments passed to [prettyNum()] to format numbers
 #' in description text.
-#' @return An object of class "light_breakdown" with the following elements:
-#'
-#' - `data` A tibble with results. Can be used to build fully customized
-#'   visualizations. Column names can be controlled by
-#'   `options(flashlight.column_name)`.
-#' - `by` Same as input `by`.
-#'
+#' @returns
+#'   An object of class "light_breakdown" with the following elements:
+#'   - `data` A tibble with results. Can be used to build fully customized
+#'     visualizations. Column names can be controlled by `options(flashlight.column_name)`.
+#'   - `by` Same as input `by`.
 #' @export
 #' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
 #' @examples

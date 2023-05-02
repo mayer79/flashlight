@@ -4,7 +4,7 @@
 #'
 #' @param x An object of class "multiflashlight".
 #' @param ... Further arguments passed to [print.flashlight()].
-#' @return Invisibly, the input is returned.
+#' @returns Invisibly, the input is returned.
 #' @export
 #' @examples
 #' fit_lm <- lm(Sepal.Length ~ ., data = iris)

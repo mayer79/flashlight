@@ -6,7 +6,7 @@
 #' @param x A nested list of objects.
 #' @param fun Function used to extract information of each element of `x`.
 #' @param ... Further arguments passed to `fun()`.
-#' @return A logical vector of length one.
+#' @returns A logical vector of length one.
 #' @export
 #' @examples
 #' x <- list(a = 1, b = 2)

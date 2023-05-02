@@ -4,11 +4,11 @@
 #'
 #' @param x An object of class "light".
 #' @param what Column identifier to be recoded, e.g., "type". For backward
-#' compatibility, also the option identifier (e.g. "type_name") can be passed.
+#'   compatibility, also the option identifier (e.g. "type_name") can be passed.
 #' @param levels Current levels/values of `type_name` column (in desired order).
 #' @param labels New levels of `type_name` column in same order as `levels`.
 #' @param ... Further arguments passed to `factor`.
-#' @return `x` with new factor levels of `type_name` column.
+#' @returns `x` with new factor levels of `type_name` column.
 #' @export
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)

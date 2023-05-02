@@ -69,25 +69,31 @@ Default is \code{FALSE}. Not uses for \code{type = "shap"}.}
 \value{
 An object of class "light_importance" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 \item \code{type} Same as input \code{type}. For information only.
 }
 }
 \description{
 Two algorithms to calculate variable importance are available:
-(a) Permutation importance and (b) SHAP importance.
-Algorithm (a) measures importance of variable v as the drop in performance
+\enumerate{
+\item Permutation importance, and
+\item SHAP importance
+}
+
+Algorithm 1 measures importance of variable v as the drop in performance
 by permuting the values of v, see Fisher et al. 2018 (reference below).
-Algorithm (b) measures variable importance by averaging absolute SHAP values.
+Algorithm 2 measures variable importance by averaging absolute SHAP values.
 }
 \details{
-For algorithm (a), the minimum required elements in the
+For Algorithm 1, the minimum required elements in the
 (multi-)flashlight are "y", "predict_function", "model", "data" and "metrics".
-For algorithm (b), the only required element is "shap".
-Call \code{\link[=add_shap]{add_shap()}} once to add such object.
-Note: The values of the permutation algorithm (a) are on the scale
-of the selected metric. For shap algorithm (b), the values are on the scale
+For Algorithm 2, the only required element is "shap". Call \code{\link[=add_shap]{add_shap()}} once to
+add such object.
+
+Note: The values of the permutation Algorithm 1. are on the scale
+of the selected metric. For SHAP Algorithm 2, the values are on the scale
 of absolute values of the predictions.
 }
 \section{Methods (by class)}{

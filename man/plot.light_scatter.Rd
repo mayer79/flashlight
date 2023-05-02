@@ -18,9 +18,8 @@ If multiflashlight or one "by" variable, use colors instead of facets.}
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees?
 Default is \code{FALSE}.}
 
-\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.
-Typical arguments would be \code{alpha = 0.2} or \code{position = "jitter"}
-to avoid overplotting.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}. Typical arguments
+would be \code{alpha = 0.2} or \code{position = "jitter"} to avoid overplotting.}
 }
 \value{
 An object of class "ggplot".

@@ -6,7 +6,7 @@
 #' @param object An object of class "multiflashlight".
 #' @param ... Arguments used to update the multiflashlight before
 #' calculating the residuals.
-#' @return A named list with residuals per flashlight.
+#' @returns A named list with residuals per flashlight.
 #' @export
 #' @examples
 #' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)

@@ -76,13 +76,14 @@ visualizations. Column names can be controlled by
 \description{
 This function provides Friedman's H statistic for overall interaction strength per
 covariable as well as its version for pairwise interactions, see the reference below.
-As a fast alterantive to assess overall interaction strength,
-with \code{type = "ice"}, the function offers a method based on centered ICE curves:
+}
+\details{
+As a fast alternative to assess overall interaction strength, with \code{type = "ice"},
+the function offers a method based on centered ICE curves:
 The corresponding H* statistic measures how much of the variability of a c-ICE curve
 is unexplained by the main effect. As for Friedman's H statistic, it can be useful
 to consider unnormalized or squared values (see Details below).
-}
-\details{
+
 Friedman's H statistic relates the interaction strength of a variable (pair)
 to the total effect strength of that variable (pair) based on partial dependence
 curves. Due to this normalization step, even variables with low importance can

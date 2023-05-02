@@ -9,10 +9,9 @@
 #' @importFrom rlang .data
 #' @param x An object of class "light_ice".
 #' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
-#' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' Default is `FALSE`.
+#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is `FALSE`.
 #' @param ... Further arguments passed to [ggplot2::geom_line()].
-#' @return An object of class "ggplot".
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)

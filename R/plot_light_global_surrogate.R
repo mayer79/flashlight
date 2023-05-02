@@ -1,16 +1,14 @@
 #' Plot Global Surrogate Trees
 #'
-#' Use [rpart.plot::rpart.plot()] to visualize trees fitted by
-#' [light_global_surrogate()].
+#' Use [rpart.plot::rpart.plot()] to visualize trees fitted by [light_global_surrogate()].
 #'
 #' @param x An object of class "light_global_surrogate".
 #' @param type Plot type, see help of [rpart.plot::rpart.plot()]. Default is 5.
-#' @param auto_main Automatic plot titles (only if multiple trees are shown
-#' in the same figure).
+#' @param auto_main Automatic plot titles (only if multiple trees are shown).
 #' @param mfrow If multiple trees are shown in the same figure:
-#' what value of `mfrow` to use in [graphics::par()]?
+#'   what value of `mfrow` to use in [graphics::par()]?
 #' @param ... Further arguments passed to [rpart.plot::rpart.plot()].
-#' @return An object of class "ggplot".
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

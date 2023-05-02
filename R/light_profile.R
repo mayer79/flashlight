@@ -1,90 +1,93 @@
 #' Partial Dependence and other Profiles
 #'
+#' @description
 #' Calculates different types of profiles across covariable values.
 #' By default, partial dependence profiles are calculated (see Friedman).
 #' Other options are profiles of ALE (accumulated local effects, see Apley),
 #' response, predicted values ("M plots" or "marginal plots", see Apley),
 #' residuals, and shap. The results are aggregated either by (weighted) means or by
-#' (weighted) quartiles. Note that ALE profiles are calibrated by (weighted)
-#' average predictions. In contrast to the suggestions in Apley,
-#' we calculate ALE profiles of factors in the same order as the factor levels.
+#' (weighted) quartiles.
+#'
+#' Note that ALE profiles are calibrated by (weighted) average predictions.
+#' In contrast to the suggestions in Apley, we calculate ALE profiles of factors
+#' in the same order as the factor levels.
 #' They are not being reordered based on similiarity of other variables.
 #'
+#' @details
 #' Numeric covariables `v` with more than `n_bins` disjoint values
 #' are binned into `n_bins` bins. Alternatively, `breaks` can be provided
 #' to specify the binning. For partial dependence profiles
 #' (and partly also ALE profiles), this behaviour can be overwritten either
 #' by providing a vector of evaluation points (`pd_evaluate_at`) or an
 #' evaluation `pd_grid`. By the latter we mean a data frame with column name(s)
-#' with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction
-#' profiles, "model", "predict_function", linkinv" and "data" are required.
-#' For response profiles its "y", "linkinv" and "data" and for shap profiles
-#' it is just "shap". "data" can be passed on the fly.
+#' with a (multi-)variate evaluation grid.
+#'
+#' For partial dependence, ALE, and prediction profiles, "model", "predict_function",
+#' "linkinv" and "data" are required. For response profiles its "y", "linkinv" and
+#' "data", and for shap profiles it is just "shap". "data" can be passed on the fly.
 #'
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param v The variable name to be profiled.
 #' @param data An optional `data.frame`. Not used for `type = "shap"`.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "partial dependence", "ale", "predicted",
-#' "response", "residual", or "shap".
+#'   "response", "residual", or "shap".
 #' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles,
-#' only "mean" makes sense.
+#'   only "mean" makes sense.
 #' @param breaks Cut breaks for a numeric `v`. Used to overwrite automatic binning via
-#' `n_bins` and `cut_type`. Ignored if `v` is not numeric.
+#'   `n_bins` and `cut_type`. Ignored if `v` is not numeric.
 #' @param n_bins Approximate number of unique values to evaluate for numeric `v`.
-#' Ignored if `v` is not numeric or if `breaks` is specified.
+#'   Ignored if `v` is not numeric or if `breaks` is specified.
 #' @param cut_type Should a numeric `v` be cut into "equal" or "quantile" bins?
-#' Ignored if `v` is not numeric or if `breaks` is specified.
+#'   Ignored if `v` is not numeric or if `breaks` is specified.
 #' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
-#' Not used for type "shap".
+#'   Not used for type "shap".
 #' @param counts Should observation counts be added?
 #' @param counts_weighted If `counts = TRUE`: Should counts be weighted by the
-#' case weights? If `TRUE`, the sum of `w` is returned by group.
+#'   case weights? If `TRUE`, the sum of `w` is returned by group.
 #' @param v_labels If `FALSE`, return group centers of `v` instead of labels.
-#' Only relevant for types "response", "predicted" or "residual" and if `v`
-#' is being binned. In that case useful, for instance, if different flashlights
-#' use different data sets and bin labels would not match.
+#'   Only relevant for types "response", "predicted" or "residual" and if `v`
+#'   is being binned. In that case useful, for instance, if different flashlights
+#'   use different data sets and bin labels would not match.
 #' @param pred Optional vector with predictions (after application of inverse link).
-#' Can be used to avoid recalculation of predictions over and over if the functions
-#' is to be repeatedly called for different `v` and predictions are computationally
-#' expensive to make. Only relevant for `type = "predicted"` and `type = "ale"`.
-#' Not implemented for multiflashlight.
+#'   Can be used to avoid recalculation of predictions over and over if the functions
+#'   is to be repeatedly called for different `v` and predictions are computationally
+#'   expensive to make. Only relevant for `type = "predicted"` and `type = "ale"`.
+#'   Not implemented for multiflashlight.
 #' @param pd_evaluate_at Vector with values of `v` used to evaluate the profile.
-#' Only relevant for type = "partial dependence" and "ale".
+#'   Only relevant for type = "partial dependence" and "ale".
 #' @param pd_grid A `data.frame` with grid values, e.g. generated by [expand.grid()].
-#' Only used for type = "partial dependence".
+#'   Only used for type = "partial dependence".
 #' @param pd_indices A vector of row numbers to consider in calculating
-#' partial dependence profiles. Only used for type = "partial dependence" and "ale".
+#'   partial dependence profiles. Only used for type = "partial dependence" and "ale".
 #' @param pd_n_max Maximum number of ICE profiles to calculate (will be randomly
-#' picked from `data`). Only used for type = "partial dependence" and "ale".
+#'   picked from `data`). Only used for type = "partial dependence" and "ale".
 #' @param pd_seed Integer random seed used to select ICE profiles.
-#' Only used for type = "partial dependence" and "ale".
-#' @param pd_center How should ICE curves be centered? Default is "no".
-#' Choose "first", "middle", or "last" to 0-center at specific evaluation points.
-#' Choose "mean" to center all profiles at the within-group means.
-#' Choose "0" to mean-center curves at 0. Only relevant for partial dependence.
+#'   Only used for type = "partial dependence" and "ale".
+#' @param pd_center How should ICE curves be centered?
+#'   - Default is "no".
+#'   - Choose "first", "middle", or "last" to 0-center at specific evaluation points.
+#'   - Choose "mean" to center all profiles at the within-group means.
+#'   - Choose "0" to mean-center curves at 0. Only relevant for partial dependence.
 #' @param ale_two_sided If `TRUE`, `v` is continuous and `breaks`
-#' are passed or being calculated, then two-sided derivatives are calculated
-#' for ALE instead of left derivatives. More specifically: Usually, local effects
-#' at value x are calculated using points in \eqn{[x-e, x]}.
-#' Set `ale_two_sided = TRUE` to use points in \eqn{[x-e/2, x+e/2]}.
+#'   are passed or being calculated, then two-sided derivatives are calculated
+#'   for ALE instead of left derivatives. More specifically: Usually, local effects
+#'   at value x are calculated using points in \eqn{[x-e, x]}.
+#'   Set `ale_two_sided = TRUE` to use points in \eqn{[x-e/2, x+e/2]}.
 #' @param ... Further arguments passed to [cut3()] in forming the
-#' cut breaks of the `v` variable. Not relevant for partial dependence and ALE profiles.
-#' @return An object of class "light_profile" with the following elements:
-#'
-#' - `data` A tibble containing results. Can be used to build fully customized
-#'   visualizations. Column names can be controlled by `options(flashlight.column_name)`.
-#' - `by` Names of group by variable.
-#' - `v` The variable(s) evaluated.
-#' - `type` Same as input `type`. For information only.
-#' - `stats` Same as input `stats`.
-#'
+#'   cut breaks of the `v` variable. Not relevant for partial dependence and ALE profiles.
+#' @returns
+#'   An object of class "light_profile" with the following elements:
+#'   - `data` A tibble containing results. Can be used to build fully customized
+#'     visualizations. Column names can be controlled by `options(flashlight.column_name)`.
+#'   - `by` Names of group by variable.
+#'   - `v` The variable(s) evaluated.
+#'   - `type` Same as input `type`. For information only.
+#'   - `stats` Same as input `stats`.
 #' @export
 #' @references
-#' Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
-#'
-#' Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
-#'
+#' - Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+#' - Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")

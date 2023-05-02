@@ -4,7 +4,7 @@
 #'
 #' @param x A on object of class "light".
 #' @param ... Further arguments passed from other methods.
-#' @return Invisibly, the input is returned.
+#' @returns Invisibly, the input is returned.
 #' @method print light
 #' @export
 #' @examples

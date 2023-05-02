@@ -34,9 +34,8 @@ add_shap(x, ...)
 \item{v}{Vector of variables to assess contribution for.
 Defaults to all except those specified by "y", "w" and "by".}
 
-\item{visit_strategy}{In what sequence should variables be visited?
-By \code{n_perm} "permutation" (slow), by "importance" (fast), or as "v"
-(not recommended).}
+\item{visit_strategy}{In what sequence should variables be visited? By \code{n_perm}
+"permutation" (slow), by "importance" (fast), or as "v" (not recommended).}
 
 \item{n_shap}{Number of SHAP decompositions to calculate.}
 

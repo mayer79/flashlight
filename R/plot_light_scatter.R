@@ -7,15 +7,14 @@
 #' @importFrom rlang .data
 #' @param x An object of class "light_scatter".
 #' @param swap_dim If multiflashlight and one "by" variable, or single flashlight
-#' with two "by" variables, swap the role of color variable and facet variable.
-#' If multiflashlight or one "by" variable, use colors instead of facets.
+#'   with two "by" variables, swap the role of color variable and facet variable.
+#'   If multiflashlight or one "by" variable, use colors instead of facets.
 #' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' Default is `FALSE`.
-#' @param ... Further arguments passed to [ggplot2::geom_point()].
-#' Typical arguments would be `alpha = 0.2` or `position = "jitter"`
-#' to avoid overplotting.
-#' @return An object of class "ggplot".
+#'   Default is `FALSE`.
+#' @param ... Further arguments passed to [ggplot2::geom_point()]. Typical arguments
+#'   would be `alpha = 0.2` or `position = "jitter"` to avoid overplotting.
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

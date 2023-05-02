@@ -28,7 +28,7 @@ use facets instead of colors.}
 
 \item{show_points}{Should points be added to the line (default is \code{TRUE}).}
 
-\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} and
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} or
 \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}.}
 }
 \value{
@@ -54,5 +54,5 @@ plot(light_profile(fl, v = "Petal.Width", by = "Species", evaluate_at = 2:4))
 plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
 }
 \seealso{
-[light_profile(), \code{\link[=plot.light_effects]{plot.light_effects()}}
+\code{\link[=light_profile]{light_profile()}}, \code{\link[=plot.light_effects]{plot.light_effects()}}
 }

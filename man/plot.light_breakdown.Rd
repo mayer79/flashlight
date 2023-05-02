@@ -13,8 +13,7 @@
 
 \item{facet_ncol}{\code{ncol} argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees?
-Default is \code{FALSE}.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is \code{FALSE}.}
 
 \item{...}{Further arguments passed to \code{\link[ggplot2:geom_text]{ggplot2::geom_label()}}.}
 }

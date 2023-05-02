@@ -11,17 +11,16 @@
 #' @param stats Statistic to calculate: "mean", "quartiles", or "variance".
 #' @param counts Should group counts be added?
 #' @param counts_weighted Should counts be weighted by the case weights?
-#' If `TRUE`, the sum of `w` is returned by group.
-#' @param counts_name Name of column in the resulting `data.frame`
-#' containing the counts.
+#'   If `TRUE`, the sum of `w` is returned by group.
+#' @param counts_name Name of column in the resulting `data.frame` containing the counts.
 #' @param value_name Name of the resulting column with mean, median, or variance.
 #' @param q1_name Name of the resulting column with first quartile values.
-#' Only relevant if `stats = "quartiles"`.
+#'   Only relevant if `stats = "quartiles"`.
 #' @param q3_name Name of the resulting column with third quartile values.
-#' Only relevant if `stats = "quartiles"`.
+#'   Only relevant if `stats = "quartiles"`.
 #' @param ... Additional arguments passed to corresponding `weighted_*()` functions in
-#' {MetricsWeighted}.
-#' @return A `data.frame` with columns `by`, `x`, and optionally `counts_name`.
+#'   {MetricsWeighted}.
+#' @returns A `data.frame` with columns `by`, `x`, and optionally `counts_name`.
 #' @export
 #' @examples
 #' grouped_stats(iris, "Sepal.Width")

@@ -15,10 +15,9 @@
 #' @param x An object of class "light_breakdown".
 #' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param facet_ncol `ncol` argument passed to [ggplot2::facet_wrap()].
-#' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' Default is `FALSE`.
+#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is `FALSE`.
 #' @param ... Further arguments passed to [ggplot2::geom_label()].
-#' @return An object of class "ggplot".
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
@@ -64,9 +63,9 @@ plot.light_breakdown <- function(x, facet_scales = "free",
     ggplot2::coord_flip() +
     ggplot2::theme(
       panel.grid.major.y = ggplot2::element_blank(),
-          panel.grid.minor.y = ggplot2::element_blank(),
-          axis.text.y = ggplot2::element_blank(),
-          axis.ticks.y = ggplot2::element_blank()
+      panel.grid.minor.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank()
     )
 
   if (is.light_breakdown_multi(x)) {

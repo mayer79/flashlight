@@ -13,16 +13,16 @@
 #' @importFrom rlang .data
 #' @param x An object of class "light_profile".
 #' @param swap_dim If multiflashlight and one "by" variable or
-#' single flashlight with two "by" variables, swap the role of dodge/fill variable
-#' and facet variable. If multiflashlight or one "by" variable,
-#' use facets instead of colors.
+#'   single flashlight with two "by" variables, swap the role of dodge/fill variable
+#'   and facet variable. If multiflashlight or one "by" variable,
+#'   use facets instead of colors.
 #' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#' `TRUE`, except for type "partial dependence".
+#'   `TRUE`, except for type "partial dependence".
 #' @param show_points Should points be added to the line (default is `TRUE`).
-#' @param ... Further arguments passed to [ggplot2::geom_point()] and
-#' [ggplot2::geom_line()].
-#' @return An object of class "ggplot".
+#' @param ... Further arguments passed to [ggplot2::geom_point()] or
+#'   [ggplot2::geom_line()].
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
@@ -30,7 +30,7 @@
 #' plot(light_profile(fl, v = "Species"))
 #' plot(light_profile(fl, v = "Petal.Width", by = "Species", evaluate_at = 2:4))
 #' plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
-#' @seealso [light_profile(), [plot.light_effects()]
+#' @seealso [light_profile()], [plot.light_effects()]
 plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                                rotate_x = x$type != "partial dependence",
                                show_points = TRUE, ...) {

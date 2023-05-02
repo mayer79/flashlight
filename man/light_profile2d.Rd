@@ -97,7 +97,8 @@ Only used for type = "partial dependence".}
 An object of class "light_profile2d" with the following elements:
 \itemize{
 \item \code{data} A tibble containing results. Can be used to build fully customized
-visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+visualizations. Column names can be controlled by
+\code{options(flashlight.column_name)}.
 \item \code{by} Names of group by variables.
 \item \code{v} The two variable names evaluated.
 \item \code{type} Same as input \code{type}. For information only.

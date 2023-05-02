@@ -10,18 +10,17 @@
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param data An optional `data.frame`.
 #' @param by An optional vector of column names used to additionally group the results.
-#' Will overwrite `x$by`.
+#'   Will overwrite `x$by`.
 #' @param metrics An optional named list with metrics. Each metric takes at least
-#' four arguments: actual, predicted, case weights w and `...`.
+#'   four arguments: actual, predicted, case weights w and `...`.
 #' @param use_linkinv Should retransformation function be applied? Default is `FALSE`.
 #' @param ... Arguments passed from or to other functions.
-#' @return An object of class "light_performance" with the following elements:
-#'
-#' - `data`: A tibble containing the results. Can be used to build fully customized
-#'   visualizations. Column names can be controlled by
-#'   `options(flashlight.column_name)`.
-#' - `by` Same as input `by`.
-#'
+#' @returns
+#'   An object of class "light_performance" with the following elements:
+#'   - `data`: A tibble containing the results. Can be used to build fully customized
+#'     visualizations. Column names can be controlled by
+#'     `options(flashlight.column_name)`.
+#'   - `by` Same as input `by`.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

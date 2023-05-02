@@ -12,22 +12,21 @@
 #'
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param v Vector of variables to assess contribution for.
-#' Defaults to all except those specified by "y", "w" and "by".
-#' @param visit_strategy In what sequence should variables be visited?
-#' By `n_perm` "permutation" (slow), by "importance" (fast), or as "v"
-#' (not recommended).
+#'   Defaults to all except those specified by "y", "w" and "by".
+#' @param visit_strategy In what sequence should variables be visited? By `n_perm`
+#'   "permutation" (slow), by "importance" (fast), or as "v" (not recommended).
 #' @param n_shap Number of SHAP decompositions to calculate.
 #' @param n_max Maximum number of rows in `data` to consider in the reference data.
-#' Set to lower value if `data` is large.
+#'   Set to lower value if `data` is large.
 #' @param n_perm Number of permutations of random visit sequences.
-#' Only used if `visit_strategy = "permutation"`.
+#'   Only used if `visit_strategy = "permutation"`.
 #' @param seed An integer random seed.
 #' @param use_linkinv Should retransformation function be applied?
-#' We suggest to keep the default (`FALSE`) as the values can be retransformed later.
+#'   We suggest to keep the default (`FALSE`) as the values can be retransformed later.
 #' @param verbose Should progress bar be shown? Default is `TRUE`.
 #' @param ... Further arguments passed from or to other methods.
-#' @return An object of class "flashlight" or "multiflashlight"
-#' with additional element "shap" of class "shap" (and "list").
+#' @returns An object of class "flashlight" or "multiflashlight"
+#'   with additional element "shap" of class "shap" (and "list").
 #' @export
 #' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
 #' @examples

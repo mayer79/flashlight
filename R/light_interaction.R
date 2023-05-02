@@ -2,8 +2,9 @@
 #'
 #' This function provides Friedman's H statistic for overall interaction strength per
 #' covariable as well as its version for pairwise interactions, see the reference below.
-#' As a fast alterantive to assess overall interaction strength,
-#' with `type = "ice"`, the function offers a method based on centered ICE curves:
+#'
+#' As a fast alternative to assess overall interaction strength, with `type = "ice"`,
+#' the function offers a method based on centered ICE curves:
 #' The corresponding H* statistic measures how much of the variability of a c-ICE curve
 #' is unexplained by the main effect. As for Friedman's H statistic, it can be useful
 #' to consider unnormalized or squared values (see Details below).
@@ -29,29 +30,28 @@
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param v Vector of variable names to be assessed.
 #' @param pairwise Should overall interaction strength per variable be shown or
-#' pairwise interactions? Defaults to `FALSE`.
+#'   pairwise interactions? Defaults to `FALSE`.
 #' @param type Are measures based on Friedman's H statistic ("H") or on "ice" curves?
-#' Option "ice" is available only if `pairwise = FALSE`.
+#'   Option "ice" is available only if `pairwise = FALSE`.
 #' @param normalize Should the variances explained be normalized?
-#' Default is `TRUE` in order to reproduce Friedman's H statistic.
+#'   Default is `TRUE` in order to reproduce Friedman's H statistic.
 #' @param take_sqrt In order to reproduce Friedman's H statistic,
-#' resulting values are root transformed. Set to `FALSE` if squared values
-#' should be returned.
+#'   resulting values are root transformed. Set to `FALSE` if squared values
+#'   should be returned.
 #' @param grid_size Grid size used to form the outer product. Will be randomly
-#' picked from data (after limiting to `n_max`).
+#'   picked from data (after limiting to `n_max`).
 #' @param n_max Maximum number of data rows to consider. Will be randomly picked
-#' from `data` if necessary.
+#'   from `data` if necessary.
 #' @param seed An integer random seed used for subsampling.
 #' @param use_linkinv Should retransformation function be applied? Default is `FALSE`.
 #' @param ... Further arguments passed to or from other methods.
-#' @return An object of class "light_importance" with the following elements:
-#'
-#' - `data` A tibble containing the results. Can be used to build fully customized
-#'   visualizations. Column names can be controlled by
-#'   `options(flashlight.column_name)`.
-#' - `by` Same as input `by`.
-#' - `type` Same as input `type`. For information only.
-#'
+#' @returns
+#'   An object of class "light_importance" with the following elements:
+#'   - `data` A tibble containing the results. Can be used to build fully customized
+#'     visualizations. Column names can be controlled by
+#'     `options(flashlight.column_name)`.
+#'   - `by` Same as input `by`.
+#'   - `type` Same as input `type`. For information only.
 #' @export
 #' @references Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.
 #' @examples

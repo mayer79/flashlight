@@ -4,7 +4,7 @@
 #'
 #' @param object An object of class "flashlight".
 #' @param ... Arguments used to update the flashlight before extracting the response.
-#' @return A numeric vector of responses.
+#' @returns A numeric vector of responses.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

@@ -7,25 +7,24 @@
 #' @param x A vector.
 #' @param breaks An optional vector of breaks. Only relevant for numeric `x`.
 #' @param n_bins If `x` is numeric and no breaks are provided,
-#' this is the maximum number of bins allowed or to be created (approximately).
+#'   this is the maximum number of bins allowed or to be created (approximately).
 #' @param cut_type For the default type "equal", bins of equal width are created
-#' by `pretty()`. Choose "quantile" to create quantile bins.
+#'   by `pretty()`. Choose "quantile" to create quantile bins.
 #' @param x_name Column name with the values of `x` in the output.
 #' @param level_name Column name with the bin labels of `x` in the output.
 #' @param ... Further arguments passed to `cut3()`.
-#' @return A list with the following elements:
-#'
-#' - `data`: A `data.frame` with colums `x_name` and
-#'   `level_name` each with the same length as `x`.
-#'   The column `x_name` has values in output `bin_means`
-#'   while the column `level_name` has values in `bin_labels`.
-#' - `breaks`: A vector of increasing and unique breaks used to cut a
-#'   numeric `x` with too many distinct levels. `NULL` otherwise.
-#' - `bin_means`: The midpoints of subsequent breaks, or if there are no
-#'   `breaks` in the output, factor levels or distinct values of `x`.
-#' - `bin_labels`: Break labels of the form "(low, high]" if there are `breaks`
-#'    in the output, otherwise the same as `bin_means`. Same order as `bin_means`.
-#'
+#' @returns
+#'   A list with the following elements:
+#'   - `data`: A `data.frame` with colums `x_name` and
+#'     `level_name` each with the same length as `x`.
+#'     The column `x_name` has values in output `bin_means`
+#'     while the column `level_name` has values in `bin_labels`.
+#'   - `breaks`: A vector of increasing and unique breaks used to cut a
+#'     numeric `x` with too many distinct levels. `NULL` otherwise.
+#'   - `bin_means`: The midpoints of subsequent breaks, or if there are no
+#'     `breaks` in the output, factor levels or distinct values of `x`.
+#'   - `bin_labels`: Break labels of the form "(low, high]" if there are `breaks`
+#'     in the output, otherwise the same as `bin_means`. Same order as `bin_means`.
 #' @export
 #' @examples
 #' auto_cut(1:10, n_bins = 3)

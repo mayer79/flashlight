@@ -4,7 +4,7 @@
 #'
 #' @param x A on object of class "flashlight".
 #' @param ... Further arguments passed from other methods.
-#' @return Invisibly, the input is returned.
+#' @returns Invisibly, the input is returned.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

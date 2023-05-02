@@ -18,7 +18,7 @@
 #' @param scientific Parameter passed to [format()] the labels. Default is `FALSE`.
 #' @param digits Used to round the labels. Default is 0.
 #' @param ... Further arguments passed to [ggplot2::geom_bar()].
-#' @return An object of class "ggplot".
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

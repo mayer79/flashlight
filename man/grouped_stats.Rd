@@ -35,8 +35,7 @@ grouped_stats(
 \item{counts_weighted}{Should counts be weighted by the case weights?
 If \code{TRUE}, the sum of \code{w} is returned by group.}
 
-\item{counts_name}{Name of column in the resulting \code{data.frame}
-containing the counts.}
+\item{counts_name}{Name of column in the resulting \code{data.frame} containing the counts.}
 
 \item{value_name}{Name of the resulting column with mean, median, or variance.}
 

@@ -17,12 +17,11 @@
 #' @importFrom rlang .data
 #' @param x An object of class "light_profile2d".
 #' @param swap_dim Swap the [ggplot2::facet_grid()] dimensions.
-#' @param rotate_x Should the x axis labels be rotated by 45 degrees?
-#' Default is `TRUE`.
+#' @param rotate_x Should the x axis labels be rotated by 45 degrees? Default is `TRUE`.
 #' @param numeric_as_factor Should numeric x and y values be converted to factors first?
-#' Default is `FALSE`. Useful if `cut_type` was not set to "equal".
+#'   Default is `FALSE`. Useful if `cut_type` was not set to "equal".
 #' @param ... Further arguments passed to [ggplot2::geom_tile()].
-#' @return An object of class "ggplot".
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

@@ -7,7 +7,7 @@
 #' @param w Optional name of the column in `data` with case weights.
 #' @param value_name Name of the resulting column with counts.
 #' @param ... Arguments passed to [sum()] (only if weights are provided).
-#' @return A `data.frame` with columns `by` and `value_name`.
+#' @returns A `data.frame` with columns `by` and `value_name`.
 #' @export
 #' @examples
 #' grouped_counts(iris)

@@ -5,7 +5,7 @@
 #'
 #' @param object An object of class "flashlight".
 #' @param ... Arguments used to update the flashlight.
-#' @return A vector with predictions.
+#' @returns A vector with predictions.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

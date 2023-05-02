@@ -7,16 +7,16 @@
 #'
 #' @param x Numeric vector.
 #' @param breaks Numeric vector of cut points or a single number
-#' specifying the number of intervals desired.
+#'   specifying the number of intervals desired.
 #' @param labels Labels for the levels of the final categories.
 #' @param include.lowest Flag if minimum value should be added to intervals
-#' of type "(,]" (or maximum for "[,)").
+#'   of type "(,]" (or maximum for "[,)").
 #' @param right Flag if intervals should be closed to the right or left.
 #' @param dig.lab Number of significant digits passed to [formatC()].
 #' @param ordered_result Flag if resulting output vector should be ordered.
 #' @param sep Separater between from-to labels.
 #' @param ... Arguments passed to [formatC()].
-#' @return Vector of the same length as x.
+#' @returns Vector of the same length as x.
 #' @export
 #' @examples
 #' x <- 998:1001

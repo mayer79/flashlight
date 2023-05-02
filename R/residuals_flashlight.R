@@ -5,7 +5,7 @@
 #'
 #' @param object An object of class "flashlight".
 #' @param ... Arguments used to update the flashlight before calculating the residuals.
-#' @return A numeric vector with residuals.
+#' @returns A numeric vector with residuals.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

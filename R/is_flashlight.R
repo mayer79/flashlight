@@ -3,7 +3,7 @@
 #' Checks if an object inherits specific class relevant for the flashlight package.
 #'
 #' @param x Any object.
-#' @return A logical vector of length one.
+#' @returns A logical vector of length one.
 #' @export
 #' @examples
 #' a <- flashlight(label = "a")

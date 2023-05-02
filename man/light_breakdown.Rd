@@ -58,8 +58,7 @@ Only used if \code{visit_strategy = "permutation"}.}
 \item{seed}{An integer random seed used to shuffle rows if \code{n_max}
 is smaller than the number of rows in \code{data}.}
 
-\item{use_linkinv}{Should retransformation function be applied?
-Default is \code{FALSE}.}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{FALSE}.}
 
 \item{description}{Should descriptions be added? Default is \code{TRUE}.}
 
@@ -69,8 +68,7 @@ Default is \code{FALSE}.}
 An object of class "light_breakdown" with the following elements:
 \itemize{
 \item \code{data} A tibble with results. Can be used to build fully customized
-visualizations. Column names can be controlled by
-\code{options(flashlight.column_name)}.
+visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 }
 }
@@ -88,22 +86,26 @@ The change in the (weighted) average prediction on \code{data} measures the
 contribution of \eqn{x_1} on the prediction of \code{new_obs}.
 This procedure is iterated over all \eqn{x_i} until eventually, all rows
 in \code{data} are identical to \code{new_obs}.
+
 A complication with this approach is that the visit order is relevant,
 at least for non-additive models. Ideally, the algorithm could be repeated
 for all possible permutations of \code{v} and its results averaged per variable.
 This is basically what SHAP values do, see the reference below for an explanation.
 Unfortunately, there is no efficient way to do this in a model agnostic way.
-We offer two visit strategies to approximate SHAP. The first one uses
-the short-cut described in the reference below: The variables are sorted by the
-size of their contribution in the same way as the breakdown algorithm but without
-iteration, i.e., starting from the original query data for each variable \eqn{x_i}.
-We call this visit strategy "importance".
-The second strategy "permutation" averages contributions from a small number of
-random permutations of \code{v}.
+
+We offer two visit strategies to approximate SHAP.
+\enumerate{
+\item "importance": Using the short-cut described in the reference below:
+The variables are sorted by the size of their contribution in the same way as the
+breakdown algorithm but without iteration, i.e., starting from the original query
+data for each variable \eqn{x_i}.
+\item "permutation": Averages contributions from a small number of random permutations
+of \code{v}.
+}
+
 Note that the minimum required elements in the (multi-)flashlight are a
-"predict_function", "model", and "data".
-The latter can also directly be passed to \code{\link[=light_breakdown]{light_breakdown()}}.
-Note that by default, no retransformation function is applied.
+"predict_function", "model", and "data". The latter can also directly be passed to
+\code{\link[=light_breakdown]{light_breakdown()}}. Note that by default, no retransformation function is applied.
 }
 \section{Methods (by class)}{
 \itemize{

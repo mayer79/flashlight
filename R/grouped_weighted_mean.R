@@ -9,7 +9,7 @@
 #' @param by An optional vector of column names in `data` used to group the results.
 #' @param na.rm Should missing values in `x` be removed?
 #' @param value_name Name of the resulting column with means.
-#' @return A `data.frame` with grouped weighted means.
+#' @returns A `data.frame` with grouped weighted means.
 #' @export
 #' @examples
 #' n <- 100

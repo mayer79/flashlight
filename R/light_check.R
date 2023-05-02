@@ -1,11 +1,10 @@
 #' Check flashlight
 #'
-#' Checks if an object of class "flashlight" or "multiflashlight"
-#' is consistently defined.
+#' Checks if an object of class "flashlight" or "multiflashlight" is consistently defined.
 #'
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param ... Further arguments passed from or to other methods.
-#' @return The input \code{x} or an error message.
+#' @returns The input \code{x} or an error message.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)

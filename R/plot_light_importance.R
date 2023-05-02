@@ -16,15 +16,15 @@
 #' @param x An object of class "light_importance".
 #' @param top_m Maximum number of important variables to be returned.
 #' @param swap_dim If multiflashlight and one "by" variable or single flashlight with
-#' two "by" variables, swap the role of dodge/fill variable and facet variable.
-#' If multiflashlight or one "by" variable, use facets instead of colors.
+#'   two "by" variables, swap the role of dodge/fill variable and facet variable.
+#'   If multiflashlight or one "by" variable, use facets instead of colors.
 #' @param facet_scales Scales argument passed to [ggplot2::facet_wrap].
 #' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is `FALSE`.
 #' @param error_bars Should error bars be added? Defaults to `TRUE`.
-#' Only available if [light_importance()] was run with multiple permutations
-#' by setting `m_repetitions` > 1.
+#'   Only available if [light_importance()] was run with multiple permutations
+#'   by setting `m_repetitions` > 1.
 #' @param ... Further arguments passed to [ggplot2::geom_bar()].
-#' @return An object of class "ggplot".
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)

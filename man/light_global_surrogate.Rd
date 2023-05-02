@@ -77,7 +77,6 @@ by passing \code{...} arguments to \code{\link[rpart:rpart]{rpart::rpart()}}.
 fit <- lm(Sepal.Length ~ ., data = iris)
 x <- flashlight(model = fit, label = "lm", data = iris)
 light_global_surrogate(x)
-
 }
 \references{
 Molnar C. (2019). Interpretable Machine Learning.
