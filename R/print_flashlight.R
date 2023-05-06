@@ -10,7 +10,7 @@
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' x <- flashlight(model = fit, label = "lm", y = "Sepal.Length", data = iris)
 #' x
-#' @seealso \code{\link{flashlight}}.
+#' @seealso [flashlight()]
 print.flashlight <- function(x, ...) {
   cat("\nFlashlight", x$label, "\n")
   cat("\nModel:\t\t\t", .yn(x$model, "Yes"))

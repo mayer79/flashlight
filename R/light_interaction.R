@@ -53,7 +53,9 @@
 #'   - `by` Same as input `by`.
 #'   - `type` Same as input `type`. For information only.
 #' @export
-#' @references Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.
+#' @references
+#'   Friedman, J. H. and Popescu, B. E. (2008). "Predictive learning via rule
+#'     ensembles." The Annals of Applied Statistics. JSTOR, 916–54.
 #' @examples
 #' fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
 #' fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
@@ -170,7 +172,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   # Functions that calculates the test statistic
   statistic <- function(z, dat, grid_id) {
     if (nrow(dat) <= 2) {
-      return(setNames(data.frame(0), value_name))
+      return(stats::setNames(data.frame(0), value_name))
     }
     if (type == "H") {
       z_i <- z[1L]
@@ -182,7 +184,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
       }
       pd_i <- call_pd(dat, z = z_i, vn = "value_i", gid = grid_id, only_values = TRUE)
       pd_j <- call_pd(dat, z = z_j, vn = "value_j", gid = grid_id, only_values = TRUE)
-      dat <- bind_cols(pd_f, pd_i, pd_j)
+      dat <- dplyr::bind_cols(pd_f, pd_i, pd_j)
       dat[[value_name]] <- (dat[["value_"]] - dat[["value_i"]] - dat[["value_j"]])^2
     }
     else if (type == "ice") {
@@ -223,7 +225,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     # Calculate Friedman's H statistic for each variable (pair)
     out <- lapply(v, statistic, dat = X, grid_id = grid_id)
     names(out) <- if (pairwise) lapply(v, paste, collapse = ":") else v
-    bind_rows(out, .id = variable_name)
+    dplyr::bind_rows(out, .id = variable_name)
   }
 
   # Call core function for each "by" group

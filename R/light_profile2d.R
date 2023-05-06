@@ -56,7 +56,8 @@
 #'   - `type` Same as input `type`. For information only.
 #' @export
 #' @references
-#' Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+#'   Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
+#'     The Annals of Statistics, 29:1189–1232.
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")

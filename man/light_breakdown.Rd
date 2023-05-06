@@ -93,7 +93,7 @@ for all possible permutations of \code{v} and its results averaged per variable.
 This is basically what SHAP values do, see the reference below for an explanation.
 Unfortunately, there is no efficient way to do this in a model agnostic way.
 
-We offer two visit strategies to approximate SHAP.
+We offer two visit strategies to approximate SHAP:
 \enumerate{
 \item "importance": Using the short-cut described in the reference below:
 The variables are sorted by the size of their contribution in the same way as the
@@ -124,7 +124,8 @@ fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 light_breakdown(fl, new_obs = iris[1, ])
 }
 \references{
-A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
+A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations
+for non-additive predictive models. ArXiv.
 }
 \seealso{
 \code{\link[=plot.light_breakdown]{plot.light_breakdown()}}

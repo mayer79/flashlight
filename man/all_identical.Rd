@@ -18,7 +18,8 @@ A logical vector of length one.
 }
 \description{
 Checks if an aspect is identical for all elements in a nested list.
-The aspect is specified by \code{fun}, e.g., \code{[[}, followed by the element name to compare.
+The aspect is specified by \code{fun}, e.g., \code{[[}, followed by the element
+name to compare.
 }
 \examples{
 x <- list(a = 1, b = 2)

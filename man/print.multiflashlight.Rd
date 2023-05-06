@@ -25,5 +25,5 @@ fl_glm <- flashlight(model = fit_glm, label = "glm")
 multiflashlight(list(fl_lm, fl_glm), data = iris)
 }
 \seealso{
-\code{\link{multiflashlight}}.
+\code{\link[=multiflashlight]{multiflashlight()}}
 }

@@ -119,7 +119,8 @@ plot(st <- light_interaction(fls), fill = "darkgreen")
 plot(light_interaction(fls, pairwise = TRUE), fill = "darkgreen")
 }
 \references{
-Friedman, J. H. and Popescu, B. E. (2008). “Predictive learning via rule ensembles.” The Annals of Applied Statistics. JSTOR, 916–54.
+Friedman, J. H. and Popescu, B. E. (2008). "Predictive learning via rule
+ensembles." The Annals of Applied Statistics. JSTOR, 916–54.
 }
 \seealso{
 \code{\link[=light_ice]{light_ice()}}

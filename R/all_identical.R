@@ -1,7 +1,8 @@
 #' all_identical
 #'
 #' Checks if an aspect is identical for all elements in a nested list.
-#' The aspect is specified by `fun`, e.g., `[[`, followed by the element name to compare.
+#' The aspect is specified by `fun`, e.g., `[[`, followed by the element
+#' name to compare.
 #'
 #' @param x A nested list of objects.
 #' @param fun Function used to extract information of each element of `x`.

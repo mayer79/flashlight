@@ -51,7 +51,10 @@
 #'   - `by` Same as input `by`.
 #'   - `type` Same as input `type`. For information only.
 #' @export
-#' @references Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.
+#' @references
+#'   Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful:
+#'     Variable Importance for Black-Box, Proprietary, or Misspecified Prediction
+#'     Models, using Model Class Reliance. Arxiv.
 #' @examples
 #' fit <- lm(Sepal.Length ~ Petal.Length, data = iris)
 #' fl <- flashlight(model = fit, label = "full", data = iris, y = "Sepal.Length")
@@ -185,7 +188,7 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
       imp <- dplyr::summarize(imp, mean_error(dplyr::cur_data()), .groups = "drop")
     } else {
       imp <- stats::setNames(lapply(v, core_func, S = data), v)
-      imp <- bind_rows(imp, .id = variable_name)
+      imp <- dplyr::bind_rows(imp, .id = variable_name)
       imp[[error_name]] <- NA
     }
     imp <- dplyr::left_join(imp, metric_full, by = key_vars)

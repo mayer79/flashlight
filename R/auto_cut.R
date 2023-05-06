@@ -2,17 +2,17 @@
 #'
 #' This function takes a vector `x` and returns a list with information on
 #' disretized version of `x`. The construction of level names can be controlled
-#' by passing `...` arguments to `formatC()`.
+#' by passing `...` arguments to [formatC()].
 #'
 #' @param x A vector.
 #' @param breaks An optional vector of breaks. Only relevant for numeric `x`.
 #' @param n_bins If `x` is numeric and no breaks are provided,
 #'   this is the maximum number of bins allowed or to be created (approximately).
 #' @param cut_type For the default type "equal", bins of equal width are created
-#'   by `pretty()`. Choose "quantile" to create quantile bins.
+#'   by [pretty()]. Choose "quantile" to create quantile bins.
 #' @param x_name Column name with the values of `x` in the output.
 #' @param level_name Column name with the bin labels of `x` in the output.
-#' @param ... Further arguments passed to `cut3()`.
+#' @param ... Further arguments passed to [cut3()].
 #' @returns
 #'   A list with the following elements:
 #'   - `data`: A `data.frame` with colums `x_name` and

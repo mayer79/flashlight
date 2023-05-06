@@ -20,10 +20,12 @@ light_combine(x, ...)
 
 \item{...}{Further arguments passed from or to other methods.}
 
-\item{new_class}{An optional vector with additional class names to be added to the output.}
+\item{new_class}{An optional vector with additional class names to be added
+to the output.}
 }
 \value{
-If \code{x} is a list, an object like each element but with unioned rows in data slots.
+If \code{x} is a list, an object like each element but with unioned rows
+in data slots.
 }
 \description{
 Combines a list of similar objects each of class "light" by row binding
@@ -43,14 +45,21 @@ except for additional classes.
 fit_lm <- lm(Sepal.Length ~ ., data = iris)
 fit_glm <- glm(Sepal.Length ~ ., family = Gamma(link = "log"), data = iris)
 mod_lm <- flashlight(model = fit_lm, label = "lm", data = iris, y = "Sepal.Length")
-mod_glm <- flashlight(model = fit_glm, label = "glm", data = iris, y = "Sepal.Length",
-                      predict_function = function(object, newdata)
-                      predict(object, newdata, type = "response"))
+mod_glm <- flashlight(
+  model = fit_glm,
+  label = "glm",
+  data = iris,
+  y = "Sepal.Length",
+  predict_function = function(object, newdata)
+    predict(object, newdata, type = "response")
+)
 mods <- multiflashlight(list(mod_lm, mod_glm))
 perf_lm <- light_performance(mod_lm)
 perf_glm <- light_performance(mod_glm)
-manual_comb <- light_combine(list(perf_lm, perf_glm),
-  new_class = "light_performance_multi")
+manual_comb <- light_combine(
+  list(perf_lm, perf_glm),
+  new_class = "light_performance_multi"
+)
 auto_comb <- light_performance(mods)
 all.equal(manual_comb, auto_comb)
 }

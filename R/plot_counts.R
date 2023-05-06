@@ -9,6 +9,7 @@
 #' It has to be placed inside or at the bottom.
 #'
 #' @importFrom rlang .data
+#'
 #' @param p The result of [plot.light_effects()].
 #' @param x An object of class "light_effects".
 #' @param text_size Size of count labels.

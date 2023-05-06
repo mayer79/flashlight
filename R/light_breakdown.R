@@ -4,7 +4,6 @@
 #' the prediction of a single observation, see Gosiewska and Biecek (see reference)
 #' and the details below.
 #'
-#' @details
 #' The breakdown algorithm works as follows: First, the visit order
 #' \eqn{(x_1, ..., x_m)} of the variables `v` is specified.
 #' Then, in the query `data`, the column \eqn{x_1} is set to the value of \eqn{x_1}
@@ -20,7 +19,7 @@
 #' This is basically what SHAP values do, see the reference below for an explanation.
 #' Unfortunately, there is no efficient way to do this in a model agnostic way.
 #'
-#' We offer two visit strategies to approximate SHAP.
+#' We offer two visit strategies to approximate SHAP:
 #' 1. "importance": Using the short-cut described in the reference below:
 #' The variables are sorted by the size of their contribution in the same way as the
 #' breakdown algorithm but without iteration, i.e., starting from the original query
@@ -52,14 +51,16 @@
 #' @param description Should descriptions be added? Default is `TRUE`.
 #' @param digits Passed to [prettyNum()] to format numbers in description text.
 #' @param ... Further arguments passed to [prettyNum()] to format numbers
-#' in description text.
+#'   in description text.
 #' @returns
 #'   An object of class "light_breakdown" with the following elements:
 #'   - `data` A tibble with results. Can be used to build fully customized
 #'     visualizations. Column names can be controlled by `options(flashlight.column_name)`.
 #'   - `by` Same as input `by`.
 #' @export
-#' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv.
+#' @references
+#'   A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations
+#'     for non-additive predictive models. ArXiv.
 #' @examples
 #' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
 #' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")

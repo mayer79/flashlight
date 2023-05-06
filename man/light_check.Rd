@@ -24,7 +24,8 @@ light_check(x, ...)
 The input \code{x} or an error message.
 }
 \description{
-Checks if an object of class "flashlight" or "multiflashlight" is consistently defined.
+Checks if an object of class "flashlight" or "multiflashlight"
+is consistently defined.
 }
 \section{Methods (by class)}{
 \itemize{

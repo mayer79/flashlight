@@ -15,8 +15,7 @@ If multiflashlight or one "by" variable, use colors instead of facets.}
 
 \item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees?
-Default is \code{FALSE}.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
 \item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}. Typical arguments
 would be \code{alpha = 0.2} or \code{position = "jitter"} to avoid overplotting.}

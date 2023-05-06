@@ -7,42 +7,13 @@
 #' The resulting level might be quite different from the one of the partial
 #' dependence profiles.
 #'
-#' @param x An object of class "flashlight" or "multiflashlight".
-#' @param v The variable name to be profiled.
-#' @param data An optional `data.frame`.
-#' @param by An optional vector of column names used to additionally group the results.
+#' @inheritParams light_profile
 #' @param stats Statistic to calculate for the response profile: "mean" or "quartiles".
-#' @param breaks Cut breaks for a numeric `v`. Used to overwrite automatic
-#'   binning via `n_bins` and `cut_type`. Ignored if `v` is not numeric.
-#' @param n_bins Approximate number of unique values to evaluate for numeric `v`.
-#'   Ignored if `v` is not numeric or if `breaks` is specified.
-#' @param cut_type Should a numeric `v` be cut into "equal" or "quantile" bins?
-#'   Ignored if `v` is not numeric or if `breaks` is specified.
-#' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
 #' @param counts_weighted Should counts be weighted by the case weights?
 #'   If `TRUE`, the sum of `w` is returned by group.
-#' @param v_labels If FALSE, return group centers of `v` instead of labels.
+#' @param v_labels If `FALSE`, return group centers of `v` instead of labels.
 #'   Only relevant if `v` is numeric with many distinct values.
 #'   In that case useful for instance when different flashlights use different data sets.
-#' @param pred Optional vector with predictions (after application of inverse link).
-#'   Can be used to avoid recalculation of predictions over and over if the functions
-#'   is to be repeatedly called for different `v` and predictions are
-#'   computationally expensive to make. Not implemented for multiflashlight.
-#' @param pd_indices A vector of row numbers to consider in calculating
-#'   partial dependence and ALE profiles. Useful to force all flashlights to use
-#'   the same basis for calculations of partial dependence and ALE.
-#' @param pd_n_max Maximum number of ICE profiles to consider for
-#'   partial depencence and ALE calculation (will be randomly picked from `data`).
-#' @param pd_seed An integer random seed used to sample ICE profiles for
-#'   partial dependence and ALE.
-#' @param ale_two_sided If `TRUE`, `v` is continuous and
-#'   `breaks` are passed or being calculated, then two-sided derivatives
-#'   are calculated for ALE instead of left derivatives.
-#'   This aligns the results better with the x labels. More specifically:
-#'   Usually, local effects at value x are calculated using points in \eqn{[x-e, x]}.
-#'   Set `ale_two_sided = TRUE` to use points in \eqn{[x-e/2, x+e/2]}.
-#' @param ... Further arguments passed to [cut3()] in forming the cut breaks of the `v`
-#'   variable.
 #' @returns
 #'   An object of class "light_effects" with the following elements:
 #'   - `response`: A tibble containing the response profiles.

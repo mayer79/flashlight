@@ -64,7 +64,7 @@ Will be randomly picked from \code{data} if necessary.}
 
 \item{seed}{An integer random seed.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
 
 \item{center}{How should curves be centered?
 \itemize{
@@ -125,7 +125,10 @@ fl <- flashlight(model = fit, label = "lm", data = iris)
 light_ice(fl, v = "Species")
 }
 \references{
-Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1 <doi.org/10.1080/10618600.2014.907095>.
+Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical
+learning with plots of individual conditional expectation.
+Journal of Computational and Graphical Statistics, 24:1
+<doi.org/10.1080/10618600.2014.907095>.
 }
 \seealso{
 \code{\link[=light_profile]{light_profile()}}, \code{\link[=plot.light_ice]{plot.light_ice()}}

@@ -12,10 +12,10 @@
 #' Positive and negative impacts are visualized with different colors.
 #'
 #' @importFrom rlang .data
+#'
+#' @inheritParams plot.light_performance
 #' @param x An object of class "light_breakdown".
-#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param facet_ncol `ncol` argument passed to [ggplot2::facet_wrap()].
-#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is `FALSE`.
 #' @param ... Further arguments passed to [ggplot2::geom_label()].
 #' @returns An object of class "ggplot".
 #' @export

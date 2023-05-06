@@ -23,13 +23,13 @@ auto_cut(
 this is the maximum number of bins allowed or to be created (approximately).}
 
 \item{cut_type}{For the default type "equal", bins of equal width are created
-by \code{pretty()}. Choose "quantile" to create quantile bins.}
+by \code{\link[=pretty]{pretty()}}. Choose "quantile" to create quantile bins.}
 
 \item{x_name}{Column name with the values of \code{x} in the output.}
 
 \item{level_name}{Column name with the bin labels of \code{x} in the output.}
 
-\item{...}{Further arguments passed to \code{cut3()}.}
+\item{...}{Further arguments passed to \code{\link[=cut3]{cut3()}}.}
 }
 \value{
 A list with the following elements:
@@ -49,7 +49,7 @@ in the output, otherwise the same as \code{bin_means}. Same order as \code{bin_m
 \description{
 This function takes a vector \code{x} and returns a list with information on
 disretized version of \code{x}. The construction of level names can be controlled
-by passing \code{...} arguments to \code{formatC()}.
+by passing \code{...} arguments to \code{\link[=formatC]{formatC()}}.
 }
 \examples{
 auto_cut(1:10, n_bins = 3)

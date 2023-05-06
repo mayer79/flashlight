@@ -81,7 +81,7 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by,
   }
   data[[label_name]] <- x$label
   data <- dplyr::group_by(data, dplyr::across(tidyselect::all_of(c(label_name, by))))
-  agg <- dplyr::summarize(data, dplyr::core_fun(cur_data()), .groups = "drop")
+  agg <- dplyr::summarize(data, core_fun(dplyr::cur_data()), .groups = "drop")
 
   # Organize output
   add_classes(list(data = agg, by = by), classes = c("light_performance", "light"))

@@ -60,6 +60,8 @@ with additional element "shap" of class "shap" (and "list").
 The function calls \code{\link[=light_breakdown]{light_breakdown()}} for \code{n_shap} observations and adds the
 resulting (approximate) SHAP decompositions as static element "shap" to the
 (multi)-flashlight for further analyses.
+}
+\details{
 We offer two approximations to SHAP: For \code{visit_strategy = "importance"},
 the breakdown algorithm (see reference) is used with importance based visit order.
 Use the default \code{visit_strategy = "permutation"} to run breakdown for
@@ -88,5 +90,6 @@ plot(light_scatter(x, type = "shap", v = "Petal.Length", by = "Species"))
 }
 }
 \references{
-A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
+A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations
+for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
 }

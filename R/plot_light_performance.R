@@ -21,8 +21,9 @@
 #'   of x aesthetic and dodge fill aesthetic be swapped? Default is `FALSE`.
 #' @param geom Geometry of plot (either "bar" or "point")
 #' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
-#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is `FALSE.`
-#' @param ... Further arguments passed to [ggplot2::geom_bar()] or [ggplot2::geom_point()].
+#' @param rotate_x Should x axis labels be rotated by 45 degrees?
+#' @param ... Further arguments passed to [ggplot2::geom_bar()] or
+#'   [ggplot2::geom_point()].
 #' @returns An object of class "ggplot".
 #' @export
 #' @examples

@@ -12,7 +12,7 @@
 #' fl_lm <- flashlight(model = fit_lm, label = "lm")
 #' fl_glm <- flashlight(model = fit_glm, label = "glm")
 #' multiflashlight(list(fl_lm, fl_glm), data = iris)
-#' @seealso \code{\link{multiflashlight}}.
+#' @seealso [multiflashlight()]
 print.multiflashlight <- function(x, ...) {
   lapply(x, print.flashlight, ...)
   invisible(x)

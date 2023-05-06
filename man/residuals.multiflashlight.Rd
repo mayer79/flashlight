@@ -17,7 +17,8 @@ A named list with residuals per flashlight.
 }
 \description{
 Residuals method for an object of class "multiflashlight".
-Pass additional elements to update the multiflashlight before calculation of residuals.
+Pass additional elements to update the multiflashlight before calculation of
+residuals.
 }
 \examples{
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)

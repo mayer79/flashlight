@@ -23,5 +23,5 @@ x <- flashlight(model = fit, label = "lm", y = "Sepal.Length", data = iris)
 x
 }
 \seealso{
-\code{\link{flashlight}}.
+\code{\link[=flashlight]{flashlight()}}
 }

@@ -3,6 +3,7 @@
 #' The function calls [light_breakdown()] for `n_shap` observations and adds the
 #' resulting (approximate) SHAP decompositions as static element "shap" to the
 #' (multi)-flashlight for further analyses.
+#'
 #' We offer two approximations to SHAP: For `visit_strategy = "importance"`,
 #' the breakdown algorithm (see reference) is used with importance based visit order.
 #' Use the default `visit_strategy = "permutation"` to run breakdown for
@@ -28,7 +29,9 @@
 #' @returns An object of class "flashlight" or "multiflashlight"
 #'   with additional element "shap" of class "shap" (and "list").
 #' @export
-#' @references A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
+#' @references
+#'   A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations
+#'     for non-additive predictive models. ArXiv <arxiv.org/abs/1903.11420>.
 #' @examples
 #' \dontrun{
 #' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)

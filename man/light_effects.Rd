@@ -44,19 +44,19 @@ light_effects(x, ...)
 \arguments{
 \item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{\link[=cut3]{cut3()}} in forming the cut breaks of the \code{v}
-variable.}
+\item{...}{Further arguments passed to \code{\link[=cut3]{cut3()}} in forming the
+cut breaks of the \code{v} variable.}
 
 \item{v}{The variable name to be profiled.}
 
-\item{data}{An optional \code{data.frame}.}
+\item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
 \item{stats}{Statistic to calculate for the response profile: "mean" or "quartiles".}
 
-\item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic
-binning via \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
+\item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via
+\code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
 
 \item{n_bins}{Approximate number of unique values to evaluate for numeric \code{v}.
 Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
@@ -64,35 +64,34 @@ Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 \item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins?
 Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
+Not used for type "shap".}
 
 \item{counts_weighted}{Should counts be weighted by the case weights?
 If \code{TRUE}, the sum of \code{w} is returned by group.}
 
-\item{v_labels}{If FALSE, return group centers of \code{v} instead of labels.
+\item{v_labels}{If \code{FALSE}, return group centers of \code{v} instead of labels.
 Only relevant if \code{v} is numeric with many distinct values.
 In that case useful for instance when different flashlights use different data sets.}
 
 \item{pred}{Optional vector with predictions (after application of inverse link).
 Can be used to avoid recalculation of predictions over and over if the functions
-is to be repeatedly called for different \code{v} and predictions are
-computationally expensive to make. Not implemented for multiflashlight.}
+is to be repeatedly called for different \code{v} and predictions are computationally
+expensive to make. Not implemented for multiflashlight.}
 
 \item{pd_indices}{A vector of row numbers to consider in calculating
-partial dependence and ALE profiles. Useful to force all flashlights to use
-the same basis for calculations of partial dependence and ALE.}
+partial dependence profiles and "ale".}
 
-\item{pd_n_max}{Maximum number of ICE profiles to consider for
-partial depencence and ALE calculation (will be randomly picked from \code{data}).}
+\item{pd_n_max}{Maximum number of ICE profiles to calculate (will be randomly
+picked from \code{data}) for partial dependence and ALE.}
 
-\item{pd_seed}{An integer random seed used to sample ICE profiles for
-partial dependence and ALE.}
+\item{pd_seed}{Integer random seed used to select ICE profiles for partial dependence
+and ALE.}
 
-\item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and
-\code{breaks} are passed or being calculated, then two-sided derivatives
-are calculated for ALE instead of left derivatives.
-This aligns the results better with the x labels. More specifically:
-Usually, local effects at value x are calculated using points in \eqn{[x-e, x]}.
+\item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks}
+are passed or being calculated, then two-sided derivatives are calculated
+for ALE instead of left derivatives. More specifically: Usually, local effects
+at value x are calculated using points in \eqn{[x-e, x]}.
 Set \code{ale_two_sided = TRUE} to use points in \eqn{[x-e/2, x+e/2]}.}
 }
 \value{

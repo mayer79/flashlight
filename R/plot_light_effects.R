@@ -6,16 +6,16 @@
 #' by a facet wrap.
 #'
 #' @importFrom rlang .data
+#'
+#' @inheritParams plot.light_performance
 #' @param x An object of class "light_effects".
 #' @param use A vector of elements to show. Any subset of ("response", "predicted",
 #'   "pd", "ale") or "all". Defaults to all except "ale"
 #' @param zero_counts Logical flag if 0 count levels should be shown on the x axis.
 #' @param size_factor Factor used to enlarge default `size/linewidth` in
 #'   [ggplot2::geom_point()] and [ggplot2::geom_line()].
-#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
 #' @param facet_nrow Number of rows in [ggplot2::facet_wrap()].
 #'   Must be 1 if [plot_counts()] should be used.
-#' @param rotate_x Should x axis labels be rotated by 45 degrees?
 #' @param show_points Should points be added to the line (default is `TRUE`).
 #' @param ... Further arguments passed to geoms.
 #' @returns An object of class "ggplot".

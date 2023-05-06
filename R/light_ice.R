@@ -41,7 +41,7 @@
 #' @param n_max If `indices` is not given, maximum number of rows to consider.
 #'   Will be randomly picked from `data` if necessary.
 #' @param seed An integer random seed.
-#' @param use_linkinv Should retransformation function be applied? Default is TRUE.
+#' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
 #' @param center How should curves be centered?
 #'   - Default is "no".
 #'   - Choose "first", "middle", or "last" to 0-center at specific evaluation points.
@@ -56,7 +56,11 @@
 #'   - `v` The variable(s) evaluated.
 #'   - `center` How centering was done.
 #' @export
-#' @references Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical learning with plots of individual conditional expectation. Journal of Computational and Graphical Statistics, 24:1 <doi.org/10.1080/10618600.2014.907095>.
+#' @references
+#'   Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical
+#'     learning with plots of individual conditional expectation.
+#'     Journal of Computational and Graphical Statistics, 24:1
+#'     <doi.org/10.1080/10618600.2014.907095>.
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "lm", data = iris)

@@ -1,6 +1,7 @@
 #' Plot Global Surrogate Trees
 #'
-#' Use [rpart.plot::rpart.plot()] to visualize trees fitted by [light_global_surrogate()].
+#' Use [rpart.plot::rpart.plot()] to visualize trees fitted by
+#' [light_global_surrogate()].
 #'
 #' @param x An object of class "light_global_surrogate".
 #' @param type Plot type, see help of [rpart.plot::rpart.plot()]. Default is 5.

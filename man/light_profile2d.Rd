@@ -136,7 +136,8 @@ fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 light_profile2d(fl, v = c("Petal.Length", "Species"))
 }
 \references{
-Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
+The Annals of Statistics, 29:1189–1232.
 }
 \seealso{
 \code{\link[=light_profile]{light_profile()}}, \code{\link[=plot.light_profile2d]{plot.light_profile2d()}}

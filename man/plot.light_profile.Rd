@@ -23,8 +23,7 @@ use facets instead of colors.}
 
 \item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees?
-\code{TRUE}, except for type "partial dependence".}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
 \item{show_points}{Should points be added to the line (default is \code{TRUE}).}
 

@@ -23,9 +23,9 @@
 two "by" variables, swap the role of dodge/fill variable and facet variable.
 If multiflashlight or one "by" variable, use facets instead of colors.}
 
-\item{facet_scales}{Scales argument passed to \link[ggplot2:facet_wrap]{ggplot2::facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is \code{FALSE}.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
 \item{error_bars}{Should error bars be added? Defaults to \code{TRUE}.
 Only available if \code{\link[=light_importance]{light_importance()}} was run with multiple permutations

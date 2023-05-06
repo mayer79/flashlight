@@ -24,9 +24,10 @@ of x aesthetic and dodge fill aesthetic be swapped? Default is \code{FALSE}.}
 
 \item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is \code{FALSE.}}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
-\item{...}{Further arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}} or \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}} or
+\code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
 }
 \value{
 An object of class "ggplot".

@@ -11,14 +11,13 @@
 #' or the multiflashlight is shown via facet (change with `swap_dim`).
 #'
 #' @importFrom rlang .data
+#'
+#' @inheritParams plot.light_performance
 #' @param x An object of class "light_profile".
 #' @param swap_dim If multiflashlight and one "by" variable or
 #'   single flashlight with two "by" variables, swap the role of dodge/fill variable
 #'   and facet variable. If multiflashlight or one "by" variable,
 #'   use facets instead of colors.
-#' @param facet_scales Scales argument passed to [ggplot2::facet_wrap()].
-#' @param rotate_x Should x axis labels be rotated by 45 degrees?
-#'   `TRUE`, except for type "partial dependence".
 #' @param show_points Should points be added to the line (default is `TRUE`).
 #' @param ... Further arguments passed to [ggplot2::geom_point()] or
 #'   [ggplot2::geom_line()].

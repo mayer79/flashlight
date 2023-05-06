@@ -5,7 +5,8 @@
 #' @param x An object of class "light_importance".
 #' @param top_m Maximum number of important variables to be returned.
 #'   Defaults to `Inf`, i.e., return all variables in descending order of importance.
-#' @returns A character vector of variable names sorted in descending order by importance.
+#' @returns
+#'   A character vector of variable names sorted in descending order by importance.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
