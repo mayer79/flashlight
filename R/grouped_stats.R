@@ -73,6 +73,6 @@ grouped_stats <- function(data, x, w = NULL, by = NULL,
     cbind(cnt, val)
   }
 
-  # Apply core_fun (currently, not tibble)
-  Reframe(data, FUN = core_fun, BY = by)
+  # Apply core_fun
+  Reframe(data, FUN = core_fun, .by = by, as_tib = FALSE)
 }

@@ -110,13 +110,15 @@ The minimum required elements in the (multi-) flashlight are a "predict_function
 
 }}
 \examples{
-fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
-fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
-fl_additive <- flashlight(model = fit_additive, label = "additive")
-fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
-fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris)
-plot(st <- light_interaction(fls), fill = "darkgreen")
-plot(light_interaction(fls, pairwise = TRUE), fill = "darkgreen")
+v <- c("Petal.Length", "Petal.Width")
+fit_add <- stats::lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
+fit_nonadd <- stats::lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
+fl_add <- flashlight(model = fit_add, label = "additive")
+fl_nonadd <- flashlight(model = fit_nonadd, label = "nonadditive")
+fls <- multiflashlight(list(fl_add, fl_nonadd), data = iris)
+plot(st <- light_interaction(fls, v = v), fill = "darkgreen")
+plot(light_interaction(fls, v = v, pairwise = TRUE), fill = "darkgreen")
+plot(st <- light_interaction(fls, v = v, by = "Species"), fill = "darkgreen")
 }
 \references{
 Friedman, J. H. and Popescu, B. E. (2008). "Predictive learning via rule

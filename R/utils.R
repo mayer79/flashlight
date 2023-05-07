@@ -92,13 +92,20 @@ check_unique <- function(var_names = NULL, opt_names = NULL, temp_names = NULL) 
 }
 
 # Applies df-valued FUN to X grouped by BY
-Reframe <- function(X, FUN, BY = NULL) {
-  if (is.null(BY)) {
-    return(FUN(X))    # As tibble??
+Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {
+  if (is.null(.by)) {
+    out <- FUN(X)
+  } else {
+    X_grouped <- dplyr::group_by(X, dplyr::across(tidyselect::all_of(.by)))
+    out <- dplyr::reframe(X_grouped, FUN(dplyr::pick(tidyselect::everything())))
   }
-  x <- setdiff(colnames(X), BY)
-  # As tibble??
-  dplyr::reframe(X, FUN(dplyr::pick(dplyr::all_of(x))), .by = dplyr::all_of(BY))
+  if (as_tib && !tibble::is_tibble(out)) {
+    out <- tibble::as_tibble(out)
+  }
+  if (!as_tib && tibble::is_tibble(out)) {
+    out <- as.data.frame(out)
+  }
+  out
 }
 
 # Reframe_old <- function(X, FUN, BY = NULL) {

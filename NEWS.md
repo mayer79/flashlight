@@ -3,6 +3,8 @@
 ## Maintenance
 
 - Github actions
+- Comply with {dplyr} and {ggplot2} depreciation cycles
+- Better help files
 
 # flashlight 0.8.1
 

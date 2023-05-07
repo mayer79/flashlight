@@ -184,7 +184,7 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   out <- tibble::tibble(
     0:(m + 1L),
     c("baseline", v, "prediction"),
-     c(baseline, mean_pred_vector, prediction)
+    c(baseline, mean_pred_vector, prediction)
   )
   colnames(out) <- c(step_name, variable_name, after_name)
   out[[before_name]] <- dplyr::lag(out[[after_name]], default = baseline)

@@ -29,12 +29,5 @@ grouped_counts <- function(data, by = NULL, w = NULL, value_name = "n", ...) {
   }
 
   # Apply core_fun
-  if (!length(by)) {
-    return(core_fun(data))
-  }
-  dplyr::summarize(
-    dplyr::group_by(data, dplyr::across(tidyselect::all_of(by))),
-    core_fun(dplyr::cur_data()),
-    .groups = "drop"
-  )
+  Reframe(data, FUN = core_fun, .by = by, as_tib = FALSE)
 }

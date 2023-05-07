@@ -138,11 +138,7 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
     )
     X
   }
-  ale <- if (is.null(x$by)) wcumsum(ale) else
-    dplyr::summarize(
-      dplyr::group_by(ale, dplyr::across(tidyselect::all_of(x$by))),
-      wcumsum(dplyr::cur_data()),
-      .groups = "drop")
+  ale <- Reframe(ale, FUN = wcumsum, .by = x$by)
 
   if (is.factor(data[[v]])) {
     ale[[v]] <- factor(ale[[v]], levels = levels(data[[v]]))

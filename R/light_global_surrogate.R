@@ -103,9 +103,7 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
     r2 <- MetricsWeighted::r_squared(X[["pred_"]], stats::predict(fit, X))
     stats::setNames(data.frame(r2, I(list(fit))), c("r_squared", tree_name))
   }
-  res <- if (is.null(by)) tibble::as_tibble(core_func(data)) else
-    dplyr::summarize(dplyr::group_by(data, dplyr::across(tidyselect::all_of(by))),
-              core_func(dplyr::cur_data()), .groups = "drop")
+  res <- Reframe(data, FUN = core_func, .by = by)
 
   # Organize output
   res[[label_name]] <- x$label

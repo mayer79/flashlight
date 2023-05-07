@@ -57,13 +57,15 @@
 #'   Friedman, J. H. and Popescu, B. E. (2008). "Predictive learning via rule
 #'     ensembles." The Annals of Applied Statistics. JSTOR, 916–54.
 #' @examples
-#' fit_additive <- lm(Sepal.Length ~ Petal.Length + Petal.Width + Species, data = iris)
-#' fit_nonadditive <- lm(Sepal.Length ~ Petal.Length * Petal.Width + Species, data = iris)
-#' fl_additive <- flashlight(model = fit_additive, label = "additive")
-#' fl_nonadditive <- flashlight(model = fit_nonadditive, label = "nonadditive")
-#' fls <- multiflashlight(list(fl_additive, fl_nonadditive), data = iris)
-#' plot(st <- light_interaction(fls), fill = "darkgreen")
-#' plot(light_interaction(fls, pairwise = TRUE), fill = "darkgreen")
+#' v <- c("Petal.Length", "Petal.Width")
+#' fit_add <- stats::lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
+#' fit_nonadd <- stats::lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
+#' fl_add <- flashlight(model = fit_add, label = "additive")
+#' fl_nonadd <- flashlight(model = fit_nonadd, label = "nonadditive")
+#' fls <- multiflashlight(list(fl_add, fl_nonadd), data = iris)
+#' plot(st <- light_interaction(fls, v = v), fill = "darkgreen")
+#' plot(light_interaction(fls, v = v, pairwise = TRUE), fill = "darkgreen")
+#' plot(st <- light_interaction(fls, v = v, by = "Species"), fill = "darkgreen")
 #' @seealso [light_ice()]
 light_interaction <- function(x, ...) {
   UseMethod("light_interaction")
@@ -93,6 +95,9 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   variable_name <- getOption("flashlight.variable_name")
   error_name <- getOption("flashlight.error_name")
 
+  if (length(by) >= 2L) {
+    stop("light_interaction() does not support more than one by variable.")
+  }
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
@@ -228,14 +233,17 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     dplyr::bind_rows(out, .id = variable_name)
   }
 
-  # Call core function for each "by" group
+  # Call core function for each "by" group (should rework code...)
   if (is.null(by)) {
-    agg <- tibble::as_tibble(core_func(data))
+    agg <- core_func(data)
   } else {
-    gdata <- dplyr::group_by(data, dplyr::across(tidyselect::all_of(by)))
-    agg <- dplyr::summarize(gdata, core_func(dplyr::bind_cols(dplyr::cur_group(), dplyr::cur_data())),
-                     .groups = "drop")
+    agg_l <- lapply(split(data, f = data[[by]]), core_func)
+    for (nm in names(agg_l)) {
+      agg_l[[nm]][, by] <- nm
+    }
+    agg <- dplyr::bind_rows(agg_l)
   }
+  agg <- tibble::as_tibble(agg)
 
   # Prepare output
   agg[[label_name]] <- x$label

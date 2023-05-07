@@ -25,15 +25,21 @@ test_that("light_importance works", {
 })
 
 test_that("light_importance reacts on metric", {
-  imp <- light_importance(fl2, seed = 1, metric = list(r_squared = r_squared))
+  imp <- light_importance(
+    fl2, seed = 1, metric = list(r_squared = MetricsWeighted::r_squared)
+  )
   expect_equal(imp$data$value[imp$data$variable != "Petal.Width"], rep(0, 3))
   expect_true(imp$data$value[imp$data$variable == "Petal.Width"] < 0)
   expect_true(inherits(plot(imp), "ggplot"))
 })
 
 test_that("'lower_is_better' works", {
-  imp <- light_importance(fl2, seed = 1, metric = list(r_squared = r_squared),
-                          lower_is_better = FALSE)
+  imp <- light_importance(
+    fl2,
+    seed = 1,
+    metric = list(r_squared = MetricsWeighted::r_squared),
+    lower_is_better = FALSE
+  )
   expect_true(imp$data$value[imp$data$variable == "Petal.Width"] > 0)
 })
 

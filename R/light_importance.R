@@ -184,8 +184,7 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
       )
       imp <- unlist(imp, recursive = FALSE)
       imp <- dplyr::bind_rows(imp, .id = variable_name)
-      imp <- dplyr::group_by(imp, dplyr::across(tidyselect::all_of(c(key_vars, variable_name))))
-      imp <- dplyr::summarize(imp, mean_error(dplyr::cur_data()), .groups = "drop")
+      imp <- Reframe(imp, FUN = mean_error, .by = c(key_vars, variable_name))
     } else {
       imp <- stats::setNames(lapply(v, core_func, S = data), v)
       imp <- dplyr::bind_rows(imp, .id = variable_name)
