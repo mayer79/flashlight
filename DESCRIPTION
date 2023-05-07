@@ -37,12 +37,6 @@ Imports:
     rlang (>= 0.3.0),
     tibble
 Suggests: 
-    mlr3,
-    caret,
-    mlr3learners,
-    moderndive,
-    ranger,
-    xgboost,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown

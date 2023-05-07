@@ -2,9 +2,11 @@
 
 ## Maintenance
 
-- Github actions
+- Introduced Github actions
 - Comply with {dplyr} and {ggplot2} depreciation cycles
 - Better help files
+- More compact vignette
+- Dropped suggested packages caret, mlr3, mlr3learners, moderndive, ranger, xgboost
 
 # flashlight 0.8.1
 

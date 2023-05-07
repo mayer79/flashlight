@@ -97,7 +97,7 @@ Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {
     out <- FUN(X)
   } else {
     X_grouped <- dplyr::group_by(X, dplyr::across(tidyselect::all_of(.by)))
-    out <- dplyr::reframe(X_grouped, FUN(dplyr::pick(tidyselect::everything())))
+    out <- dplyr::reframe(X_grouped, FUN(dplyr::pick(dplyr::everything())))
   }
   if (as_tib && !tibble::is_tibble(out)) {
     out <- tibble::as_tibble(out)
@@ -107,15 +107,3 @@ Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {
   }
   out
 }
-
-# Reframe_old <- function(X, FUN, BY = NULL) {
-#   if (is.null(BY)) {
-#     return(FUN(X))
-#   }
-#   dplyr::summarize(
-#     dplyr::group_by(X, dplyr::across(tidyselect::all_of(BY))),
-#     FUN(dplyr::cur_data()),
-#     .groups = "drop"
-#   )
-# }
-

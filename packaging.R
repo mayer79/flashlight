@@ -34,7 +34,7 @@ use_description(
 
 # Imports
 use_package("cowplot", "Imports")
-use_package("dplyr", "Imports", min_version = "1.0.0")
+use_package("dplyr", "Imports", min_version = "1.1.0")
 use_package("ggplot2", "Imports")
 use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
 use_package("rlang", "Imports", min_version = "0.3.0")
@@ -46,14 +46,6 @@ use_package("tidyr", "Imports", min_version = "1.0.0")
 use_package("tidyselect", "Imports")
 use_package("utils", "Imports")
 use_package("withr", "Imports")
-
-# Suggests
-use_package("caret", "Suggests")
-use_package("mlr3", "Suggests")
-use_package("mlr3learners", "Suggests")
-use_package("moderndive", "Suggests")
-use_package("ranger", "Suggests")
-use_package("xgboost", "Suggests")
 
 use_gpl_license(2)
 
@@ -73,9 +65,7 @@ use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^backlog$",
 use_readme_md()
 
 # Longer docu in RMarkdown (with running R code). Often quite similar to readme.
-use_vignette("p1_flashlight")
-use_vignette("p2_caret")
-use_vignette("p3_mlr3")
+use_vignette("flashlight")
 
 # If you want to add unit tests
 use_testthat()
@@ -106,7 +96,7 @@ library(devtools)
 
 document()
 test()
-check(manual = TRUE, cran = TRUE, vignettes = FALSE)
+check(manual = TRUE, cran = TRUE)
 build(vignettes = FALSE)
 # build(binary = TRUE)
 install()
