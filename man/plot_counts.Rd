@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_counts.R
 \name{plot_counts}
 \alias{plot_counts}
-\title{Add Counts to Effects Plot}
+\title{DEPRECATED - Add Counts to Effects Plot}
 \usage{
 plot_counts(
   p,

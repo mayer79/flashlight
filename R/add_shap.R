@@ -1,4 +1,4 @@
-#' Add SHAP values to (multi-)flashlight
+#' DEPRECATED - Add SHAP values to (multi-)flashlight
 #'
 #' The function calls [light_breakdown()] for `n_shap` observations and adds the
 #' resulting (approximate) SHAP decompositions as static element "shap" to the
@@ -43,6 +43,7 @@
 #' plot(light_scatter(x, type = "shap", v = "Petal.Length", by = "Species"))
 #' }
 add_shap <- function(x, ...) {
+  message("Deprecated in favor of {kernelshap} or {fastshap}. Will be removed in flashlight 0.10.0.")
   UseMethod("add_shap")
 }
 

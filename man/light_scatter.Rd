@@ -5,7 +5,7 @@
 \alias{light_scatter.default}
 \alias{light_scatter.flashlight}
 \alias{light_scatter.multiflashlight}
-\title{Scatter}
+\title{DEPRECATED - Scatter}
 \usage{
 light_scatter(x, ...)
 

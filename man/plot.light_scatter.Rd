@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_light_scatter.R
 \name{plot.light_scatter}
 \alias{plot.light_scatter}
-\title{Scatter Plot}
+\title{DEPRECATED - Scatter Plot}
 \usage{
 \method{plot}{light_scatter}(x, swap_dim = FALSE, facet_scales = "free_x", rotate_x = FALSE, ...)
 }

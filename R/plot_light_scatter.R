@@ -1,4 +1,4 @@
-#' Scatter Plot
+#' DEPRECATED - Scatter Plot
 #'
 #' Values are plotted against a variable. The object returned is of class "ggplot"
 #' and can be further customized. To avoid overplotting, try `alpha = 0.2` or
@@ -22,6 +22,8 @@
 #' @seealso [light_scatter()]
 plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                               rotate_x = FALSE, ...) {
+  message("Deprecated in favour of {shapviz}. Will be removed in flashlight 0.10.0.")
+
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
 

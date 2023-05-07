@@ -126,6 +126,13 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   cut_type <- match.arg(cut_type)
   pd_center <- match.arg(pd_center)
 
+  if (stats == "quartiles") {
+    message("Deprecated. Will be removed in flashlight 0.10.0.")
+  }
+  if (length(by) >= 2L) {
+    message("The use of more than one 'by' variable is deprecated and will be removed in flashlight 0.10.0.")
+  }
+
   warning_on_names(
     c("value_name", "label_name", "q1_name", "q3_name", "type_name", "counts_name"),
     ...

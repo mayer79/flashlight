@@ -1,3 +1,15 @@
+# flashlight 0.9.0
+
+## Depreciation announcement
+
+The following functionalities will be removed in {flashlight} 0.10.0:
+
+- `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.
+- `light_scatter()` and `plot.light_scatter()`: Deprecated in favor of {shapviz}.
+- `plot_counts()`: Deprecated. Might later be replaced by {ggside}.
+- Argument `stats = "quartiles` in `light_profile()` and `light_effects()`.
+- More than one "by" variable in flashlights and `light_*()` functions.
+
 # flashlight 0.8.2
 
 ## Maintenance

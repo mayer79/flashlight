@@ -1,4 +1,4 @@
-#' Scatter
+#' DEPRECATED - Scatter
 #'
 #' This function prepares values for drawing a scatter plot of predicted values,
 #' responses, residuals, or SHAP values against a selected variable.
@@ -53,6 +53,8 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
                                               "residual", "shap"),
                                      use_linkinv = TRUE, n_max = 400,
                                      seed = NULL, ...) {
+  message("Deprecated in favour of {shapviz}. Will be removed in flashlight 0.10.0.")
+
   type <- match.arg(type)
 
   warning_on_names(c("value_name", "label_name"), ...)

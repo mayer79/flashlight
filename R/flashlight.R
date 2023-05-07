@@ -45,6 +45,9 @@ flashlight.default <- function(x, model = NULL, data = NULL, y = NULL,
                                w = NULL, by = NULL,
                                metrics = list(rmse = MetricsWeighted::rmse),
                                label = NULL, shap = NULL, ...) {
+  if (length(by) >= 2L) {
+    message("The use of more than one 'by' variable is deprecated and will be removed in flashlight 0.10.0.")
+  }
   x <- c(
     list(
       model = model,

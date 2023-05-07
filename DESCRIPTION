@@ -1,20 +1,16 @@
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.8.2
+Version: 0.9.0
 Authors@R: 
-    person(given = "Michael",
-           family = "Mayer",
-           role = c("aut", "cre", "cph"),
-           email = "mayermichael79@gmail.com")
+    person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre", "cph"))
 Description: Shed light on black box machine learning models by the help
     of model performance, variable importance, global surrogate models,
     ICE profiles, partial dependence (Friedman J. H. (2001)
     <doi:10.1214/aos/1013203451>), accumulated local effects (Apley D. W.
-    (2016) <arXiv:1612.08468>), further effects plots, scatter plots,
-    interaction strength, and variable contribution breakdown (approximate
-    SHAP) for single observations (Gosiewska and Biecek (2019)
-    <arxiv:1903.11420>). All tools are implemented to work with case
-    weights and allow for stratified analysis. Furthermore, multiple
+    (2016) <arXiv:1612.08468>), further effects plots, interaction
+    strength, and variable contribution breakdown (Gosiewska and Biecek
+    (2019) <arxiv:1903.11420>).  All tools are implemented to work with
+    case weights and allow for stratified analysis.  Furthermore, multiple
     flashlights can be combined and analyzed together.
 License: GPL (>= 2)
 Depends: 
@@ -23,24 +19,24 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
-    dplyr (>= 1.0.0),
     cowplot,
+    dplyr (>= 1.1.0),
     ggplot2,
     MetricsWeighted (>= 0.3.0),
+    rlang (>= 0.3.0),
     rpart,
     rpart.plot,
     stats,
+    tibble,
     tidyr (>= 1.0.0),
     tidyselect,
     utils,
-    withr,
-    rlang (>= 0.3.0),
-    tibble
-Suggests: 
-    testthat (>= 3.0.0),
-    knitr,
-    rmarkdown
+    withr
 URL: https://github.com/mayer79/flashlight
 BugReports: https://github.com/mayer79/flashlight/issues
-Config/testthat/edition: 3
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

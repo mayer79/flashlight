@@ -1,4 +1,4 @@
-#' Add Counts to Effects Plot
+#' DEPRECATED - Add Counts to Effects Plot
 #'
 #' Add counts as labelled bar plot on top of light_effects plot.
 #'
@@ -31,6 +31,8 @@
 plot_counts <- function(p, x, text_size = 3, facet_scales = "free_x",
                         show_labels = TRUE, big.mark = "'",
                         scientific = FALSE, digits = 0, ...) {
+  message("Deprecated. Will be removed in flashlight 0.10.0.")
+
   # Checks
   stopifnot(
     ggplot2::is.ggplot(p),

@@ -15,14 +15,13 @@ library(usethis)
 use_description(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
-    Version = "0.8.2",
+    Version = "0.9.0",
     Description = "Shed light on black box machine learning models by the help of model
     performance, variable importance, global surrogate models, ICE profiles,
     partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>),
     accumulated local effects (Apley D. W. (2016) <arXiv:1612.08468>),
-    further effects plots, scatter plots, interaction strength,
-    and variable contribution breakdown (approximate SHAP) for
-    single observations (Gosiewska and Biecek (2019) <arxiv:1903.11420>).
+    further effects plots, interaction strength, and variable contribution breakdown
+    (Gosiewska and Biecek (2019) <arxiv:1903.11420>).
     All tools are implemented to work with case weights and allow for stratified analysis.
     Furthermore, multiple flashlights can be combined and analyzed together.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
@@ -52,8 +51,7 @@ use_gpl_license(2)
 use_github_links() # use this if this project is on github
 
 # Your files that do not belong to the package itself (others are added by "use_* function")
-use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^backlog$",
-                   "^cran-comments.md$", "^logo.png$"), escape = FALSE)
+use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^logo.png$"), escape = FALSE)
 
 # If your code uses the pipe operator %>%
 # use_pipe()
