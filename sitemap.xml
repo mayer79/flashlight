@@ -7,16 +7,10 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/articles/flashlight.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/p1_flashlight.html</loc>
-  </url>
-  <url>
-    <loc>/articles/p2_caret.html</loc>
-  </url>
-  <url>
-    <loc>/articles/p3_mlr3.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -31,16 +25,10 @@
     <loc>/reference/add_shap.html</loc>
   </url>
   <url>
-    <loc>/reference/ale_profile.html</loc>
-  </url>
-  <url>
     <loc>/reference/all_identical.html</loc>
   </url>
   <url>
     <loc>/reference/auto_cut.html</loc>
-  </url>
-  <url>
-    <loc>/reference/common_breaks.html</loc>
   </url>
   <url>
     <loc>/reference/cut3.html</loc>
