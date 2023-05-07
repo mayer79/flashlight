@@ -220,4 +220,6 @@ fls |>
   <img src="man/figures/pdp_grouped_multi.svg" alt="Grouped" width="40%" hspace="20"/>
 </p>
 
-Check out the vignette for more...
+## More
+
+Check out the vignette for more information and important references.
