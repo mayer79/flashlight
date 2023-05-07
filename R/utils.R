@@ -25,7 +25,7 @@ midpoints <- function(breaks) {
   stopifnot(is.numeric(breaks))
   breaks <- sort(unique(breaks))
   stopifnot((m <- length(breaks)) >= 2L)
-  (breaks[-m] + breaks[-1]) / 2
+  (breaks[-m] + breaks[-1L]) / 2
 }
 
 # Organize binning strategy per variable for 2d partial dependence
@@ -91,3 +91,19 @@ check_unique <- function(var_names = NULL, opt_names = NULL, temp_names = NULL) 
        "as flashlight option or as variable name. Please avoid this name.")
 }
 
+# Applies df-valued FUN to X grouped by BY
+Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {
+  if (is.null(.by)) {
+    out <- FUN(X)
+  } else {
+    X_grouped <- dplyr::group_by(X, dplyr::across(tidyselect::all_of(.by)))
+    out <- dplyr::reframe(X_grouped, FUN(dplyr::pick(dplyr::everything())))
+  }
+  if (as_tib && !tibble::is_tibble(out)) {
+    out <- tibble::as_tibble(out)
+  }
+  if (!as_tib && tibble::is_tibble(out)) {
+    out <- as.data.frame(out)
+  }
+  out
+}

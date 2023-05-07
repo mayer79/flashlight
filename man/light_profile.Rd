@@ -19,7 +19,7 @@ light_profile(x, ...)
   type = c("partial dependence", "ale", "predicted", "response", "residual", "shap"),
   stats = c("mean", "quartiles"),
   breaks = NULL,
-  n_bins = 11,
+  n_bins = 11L,
   cut_type = c("equal", "quantile"),
   use_linkinv = TRUE,
   counts = TRUE,
@@ -29,7 +29,7 @@ light_profile(x, ...)
   pd_evaluate_at = NULL,
   pd_grid = NULL,
   pd_indices = NULL,
-  pd_n_max = 1000,
+  pd_n_max = 1000L,
   pd_seed = NULL,
   pd_center = c("no", "first", "middle", "last", "mean", "0"),
   ale_two_sided = FALSE,
@@ -42,7 +42,7 @@ light_profile(x, ...)
   data = NULL,
   type = c("partial dependence", "ale", "predicted", "response", "residual", "shap"),
   breaks = NULL,
-  n_bins = 11,
+  n_bins = 11L,
   cut_type = c("equal", "quantile"),
   pd_evaluate_at = NULL,
   pd_grid = NULL,
@@ -50,9 +50,10 @@ light_profile(x, ...)
 )
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable. Not relevant for partial dependence and ALE profiles.}
+\item{...}{Further arguments passed to \code{\link[=cut3]{cut3()}} in forming the
+cut breaks of the \code{v} variable.}
 
 \item{v}{The variable name to be profiled.}
 
@@ -60,44 +61,73 @@ light_profile(x, ...)
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{type}{Type of the profile: Either "partial dependence", "ale", "predicted", "response", "residual", or "shap".}
+\item{type}{Type of the profile: Either "partial dependence", "ale", "predicted",
+"response", "residual", or "shap".}
 
-\item{stats}{Statistic to calculate: "mean" or "quartiles". For ALE profiles, only "mean" makes sense.}
+\item{stats}{Statistic to calculate: "mean" or "quartiles". For ALE profiles,
+only "mean" makes sense.}
 
-\item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
+\item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via
+\code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
 
-\item{n_bins}{Approximate number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
+\item{n_bins}{Approximate number of unique values to evaluate for numeric \code{v}.
+Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins? Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
+\item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins?
+Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is TRUE. Not used for type "shap".}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
+Not used for type "shap".}
 
 \item{counts}{Should observation counts be added?}
 
-\item{counts_weighted}{If \code{counts} is TRUE: Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
+\item{counts_weighted}{If \code{counts = TRUE}: Should counts be weighted by the
+case weights? If \code{TRUE}, the sum of \code{w} is returned by group.}
 
-\item{v_labels}{If FALSE, return group centers of \code{v} instead of labels. Only relevant for types "response", "predicted" or "residual" and if \code{v} is being binned. In that case useful if e.g. different flashlights use different data sets and bin labels would not match.}
+\item{v_labels}{If \code{FALSE}, return group centers of \code{v} instead of labels.
+Only relevant for types "response", "predicted" or "residual" and if \code{v}
+is being binned. In that case useful, for instance, if different flashlights
+use different data sets and bin labels would not match.}
 
-\item{pred}{Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Only relevant for \code{type = "predicted"} and \code{type = "ale"}. Not implemented for multiflashlight.}
+\item{pred}{Optional vector with predictions (after application of inverse link).
+Can be used to avoid recalculation of predictions over and over if the functions
+is to be repeatedly called for different \code{v} and predictions are computationally
+expensive to make. Not implemented for multiflashlight.}
 
-\item{pd_evaluate_at}{Vector with values of \code{v} used to evaluate the profile. Only relevant for type = "partial dependence" and "ale".}
+\item{pd_evaluate_at}{Vector with values of \code{v} used to evaluate the profile.
+Only relevant for type = "partial dependence" and "ale".}
 
-\item{pd_grid}{A \code{data.frame} with grid values, e.g. generated by \code{expand.grid}. Only used for type = "partial dependence".}
+\item{pd_grid}{A \code{data.frame} with grid values, e.g., generated by \code{\link[=expand.grid]{expand.grid()}}.
+Only used for type = "partial dependence".}
 
-\item{pd_indices}{A vector of row numbers to consider in calculating partial dependence profiles. Only used for type = "partial dependence" and "ale".}
+\item{pd_indices}{A vector of row numbers to consider in calculating
+partial dependence profiles and "ale".}
 
-\item{pd_n_max}{Maximum number of ICE profiles to calculate (will be randomly picked from \code{data}). Only used for type = "partial dependence" and "ale".}
+\item{pd_n_max}{Maximum number of ICE profiles to calculate (will be randomly
+picked from \code{data}) for partial dependence and ALE.}
 
-\item{pd_seed}{Integer random seed used to select ICE profiles. Only used for type = "partial dependence" and "ale".}
+\item{pd_seed}{Integer random seed used to select ICE profiles for partial dependence
+and ALE.}
 
-\item{pd_center}{How should ICE curves be centered? Default is "no". Choose "first", "middle", or "last" to 0-center at specific evaluation points. Choose "mean" to center all profiles at the within-group means. Choose "0" to mean-center curves at 0. Only relevant for partial dependence.}
+\item{pd_center}{How should ICE curves be centered?
+\itemize{
+\item Default is "no".
+\item Choose "first", "middle", or "last" to 0-center at specific evaluation points.
+\item Choose "mean" to center all profiles at the within-group means.
+\item Choose "0" to mean-center curves at 0. Only relevant for partial dependence.
+}}
 
-\item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.}
+\item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks}
+are passed or being calculated, then two-sided derivatives are calculated
+for ALE instead of left derivatives. More specifically: Usually, local effects
+at value x are calculated using points in \eqn{[x-e, x]}.
+Set \code{ale_two_sided = TRUE} to use points in \eqn{[x-e/2, x+e/2]}.}
 }
 \value{
-An object of class \code{light_profile} with the following elements.
+An object of class "light_profile" with the following elements:
 \itemize{
-\item \code{data} A tibble containing results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble containing results. Can be used to build fully customized
+visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Names of group by variable.
 \item \code{v} The variable(s) evaluated.
 \item \code{type} Same as input \code{type}. For information only.
@@ -105,20 +135,40 @@ An object of class \code{light_profile} with the following elements.
 }
 }
 \description{
-Calculates different types of profiles across covariable values. By default, partial dependence profiles are calculated (see Friedman). Other options are profiles of ALE (accumulated local effects, see Apley), response, predicted values ("M plots" or "marginal plots", see Apley), residuals, and shap. The results are aggregated either by (weighted) means or by (weighted) quartiles. Note that ALE profiles are calibrated by (weighted) average predictions. In contrast to the suggestions in Apley, we calculate ALE profiles of factors in the same order as the factor levels. They are not being reordered based on similiarity of other variables.
+Calculates different types of profiles across covariable values.
+By default, partial dependence profiles are calculated (see Friedman).
+Other options are profiles of ALE (accumulated local effects, see Apley),
+response, predicted values ("M plots" or "marginal plots", see Apley),
+residuals, and shap. The results are aggregated either by (weighted) means or by
+(weighted) quartiles.
+
+Note that ALE profiles are calibrated by (weighted) average predictions.
+In contrast to the suggestions in Apley, we calculate ALE profiles of factors
+in the same order as the factor levels.
+They are not being reordered based on similiarity of other variables.
 }
 \details{
-Numeric covariables \code{v} with more than \code{n_bins} disjoint values are binned into \code{n_bins} bins. Alternatively, \code{breaks} can be provided to specify the binning. For partial dependence profiles (and partly also ALE profiles), this behaviour can be overwritten either by providing a vector of evaluation points (\code{pd_evaluate_at}) or an evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s) with a (multi-)variate evaluation grid. For partial dependence, ALE, and prediction profiles, "model", "predict_function", linkinv" and "data" are required. For response profiles its "y", "linkinv" and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
+Numeric covariables \code{v} with more than \code{n_bins} disjoint values
+are binned into \code{n_bins} bins. Alternatively, \code{breaks} can be provided
+to specify the binning. For partial dependence profiles
+(and partly also ALE profiles), this behaviour can be overwritten either
+by providing a vector of evaluation points (\code{pd_evaluate_at}) or an
+evaluation \code{pd_grid}. By the latter we mean a data frame with column name(s)
+with a (multi-)variate evaluation grid.
+
+For partial dependence, ALE, and prediction profiles, "model", "predict_function",
+"linkinv" and "data" are required. For response profiles its "y", "linkinv" and
+"data", and for shap profiles it is just "shap". "data" can be passed on the fly.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_profile(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Profiles for flashlight.
+\item \code{light_profile(flashlight)}: Profiles for flashlight.
 
-\item \code{multiflashlight}: Profiles for multiflashlight.
+\item \code{light_profile(multiflashlight)}: Profiles for multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
@@ -126,10 +176,11 @@ light_profile(fl, v = "Species")
 light_profile(fl, v = "Petal.Width", type = "residual")
 }
 \references{
-Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
-
-Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
+\itemize{
+\item Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
+\item Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
+}
 }
 \seealso{
-\code{\link{light_effects}}, \code{\link{plot.light_profile}}.
+\code{\link[=light_effects]{light_effects()}}, \code{\link[=plot.light_profile]{plot.light_profile()}}
 }

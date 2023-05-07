@@ -7,15 +7,15 @@
 \method{print}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{multiflashlight}.}
+\item{x}{An object of class "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{print.flashlight}.}
+\item{...}{Further arguments passed to \code{\link[=print.flashlight]{print.flashlight()}}.}
 }
 \value{
 Invisibly, the input is returned.
 }
 \description{
-Print method for an object of class \code{multiflashlight}.
+Print method for an object of class "multiflashlight".
 }
 \examples{
 fit_lm <- lm(Sepal.Length ~ ., data = iris)
@@ -25,5 +25,5 @@ fl_glm <- flashlight(model = fit_glm, label = "glm")
 multiflashlight(list(fl_lm, fl_glm), data = iris)
 }
 \seealso{
-\code{\link{multiflashlight}}.
+\code{\link[=multiflashlight]{multiflashlight()}}
 }

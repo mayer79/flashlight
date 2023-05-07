@@ -7,32 +7,32 @@
 \method{plot}{light_scatter}(x, swap_dim = FALSE, facet_scales = "free_x", rotate_x = FALSE, ...)
 }
 \arguments{
-\item{x}{An object of class \code{light_scatter}.}
+\item{x}{An object of class "light_scatter".}
 
-\item{swap_dim}{If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of color variable and facet variable. If multiflashlight or one "by" variable, use colors instead of facets.}
+\item{swap_dim}{If multiflashlight and one "by" variable, or single flashlight
+with two "by" variables, swap the role of color variable and facet variable.
+If multiflashlight or one "by" variable, use colors instead of facets.}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is \code{FALSE}.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
-\item{...}{Further arguments passed to \code{geom_point}. Typical arguments would be \code{alpha = 0.2} or \code{position = "jitter"} to avoid overplotting.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}. Typical arguments
+would be \code{alpha = 0.2} or \code{position = "jitter"} to avoid overplotting.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Values are plotted against a variable. The object returned is of class \code{ggplot} and can be further customized. To avoid overplotting, pass e.g. \code{alpha = 0.2} or \code{position = "jitter"}.
+Values are plotted against a variable. The object returned is of class "ggplot"
+and can be further customized. To avoid overplotting, try \code{alpha = 0.2} or
+\code{position = "jitter"}.
 }
 \examples{
-fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
-fit_b <- lm(Sepal.Length ~ ., data = iris)
-fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
-fl_b <- flashlight(model = fit_b, label = "all")
-fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
-pr <- light_scatter(fls, v = "Petal.Length")
-plot(pr, alpha = 0.2)
-plot(light_scatter(fls, "Petal.Length", by = "Species"), alpha = 0.2)
+fit <- lm(Sepal.Length ~ ., data = iris)
+fl <- flashlight(model = fit, label = "ols", data = iris)
+plot(light_scatter(fl, v = "Petal.Length", by = "Species"), alpha = 0.2)
 }
 \seealso{
-\code{\link{light_scatter}}.
+\code{\link[=light_scatter]{light_scatter()}}
 }

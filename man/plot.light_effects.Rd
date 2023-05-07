@@ -17,17 +17,20 @@
 )
 }
 \arguments{
-\item{x}{An object of class \code{light_effects}.}
+\item{x}{An object of class "light_effects".}
 
-\item{use}{A vector of elements to show. Any subset of ("response", "predicted", "pd", "ale") or "all". Defaults to all except "ale"}
+\item{use}{A vector of elements to show. Any subset of ("response", "predicted",
+"pd", "ale") or "all". Defaults to all except "ale"}
 
 \item{zero_counts}{Logical flag if 0 count levels should be shown on the x axis.}
 
-\item{size_factor}{Factor used to enlarge default \code{size} in \code{geom_point} and \code{geom_line}.}
+\item{size_factor}{Factor used to enlarge default \code{size/linewidth} in
+\code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} and \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}.}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{facet_nrow}{Number of rows in \code{facet_wrap}. Must be 1 if \code{plot_counts} should be used.}
+\item{facet_nrow}{Number of rows in \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.
+Must be 1 if \code{\link[=plot_counts]{plot_counts()}} should be used.}
 
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
@@ -36,10 +39,13 @@
 \item{...}{Further arguments passed to geoms.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Visualizes response-, prediction-, partial dependence, and/or ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}. Different flashlights or a single flashlight with one "by" variable are separated by a facet wrap.
+Visualizes response-, prediction-, partial dependence, and/or ALE profiles
+of a (multi-)flashlight with respect to a covariable \code{v}.
+Different flashlights or a single flashlight with one "by" variable are separated
+by a facet wrap.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
@@ -47,5 +53,5 @@ fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 plot(light_effects(fl, v = "Species"))
 }
 \seealso{
-\code{\link{light_effects}}, \code{\link{plot_counts}}.
+\code{\link[=light_effects]{light_effects()}}, \code{\link[=plot_counts]{plot_counts()}}
 }

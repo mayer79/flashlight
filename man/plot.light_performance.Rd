@@ -14,37 +14,45 @@
 )
 }
 \arguments{
-\item{x}{An object of class \code{light_performance}.}
+\item{x}{An object of class "light_performance".}
 
-\item{swap_dim}{Should representation of dimensions (either two "by" variables or one "by" variable and multiflashlight) of x aesthetic and dodge fill aesthetic be swapped? Default is FALSE.}
+\item{swap_dim}{Should representation of dimensions
+(either two "by" variables or one "by" variable and multiflashlight)
+of x aesthetic and dodge fill aesthetic be swapped? Default is \code{FALSE}.}
 
 \item{geom}{Geometry of plot (either "bar" or "point")}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
-\item{...}{Further arguments passed to \code{geom_bar} or \code{geom_point}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}} or
+\code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_performance} as \code{geom_bar}. The object returned has class \code{ggplot} and can be further customized.
+Minimal visualization of an object of class "light_performance" as
+\code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}. The object returned has class "ggplot",
+and can be further customized.
 }
 \details{
-The plot is organized as a bar plot as follows: For flashlights without "by" variable specified, a single bar is drawn. Otherwise, the "by" variable (or the flashlight label if there is no "by" variable) is represented by the "x" aesthetic. The flashlight label (in case of one "by" variable) is represented by dodged bars. This strategy makes sure that performance of different flashlights can be compared easiest. Set "swap_dim = TRUE" to revert the role of dodging and x aesthetic. Different metrics are always represented by facets.
+The plot is organized as a bar plot as follows:
+For flashlights without "by" variable specified, a single bar is drawn.
+Otherwise, the "by" variable (or the flashlight label if there is no "by" variable)
+is represented by the "x" aesthetic.
+
+The flashlight label (in case of one "by" variable) is represented by dodged bars.
+This strategy makes sure that performance of different flashlights can
+be compared easiest. Set "swap_dim = TRUE" to revert the role of dodging and x
+aesthetic. Different metrics are always represented by facets.
 }
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
-mods <- multiflashlight(list(mod_full, mod_part))
-plot(light_performance(mods), fill = "darkred")
-plot(light_performance(mods, by = "Species"))
-plot(light_performance(mods, by = "Species"), swap_dim = TRUE)
+fit <- lm(Sepal.Length ~ ., data = iris)
+fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
+plot(light_performance(fl, by = "Species"), fill = "darkred")
 }
 \seealso{
-\code{\link{light_performance}}.
+\code{\link[=light_performance]{light_performance()}}
 }

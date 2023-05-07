@@ -13,9 +13,10 @@ most_important(x, top_m = Inf)
 \method{most_important}{light_importance}(x, top_m = Inf)
 }
 \arguments{
-\item{x}{An object of class \code{light_importance}.}
+\item{x}{An object of class "light_importance".}
 
-\item{top_m}{Maximum number of important variables to be returned. Defaults to \code{Inf}, i.e. return all variables in descending order of importance.}
+\item{top_m}{Maximum number of important variables to be returned.
+Defaults to \code{Inf}, i.e., return all variables in descending order of importance.}
 }
 \value{
 A character vector of variable names sorted in descending order by importance.
@@ -25,11 +26,12 @@ Returns the most important variable names sorted descendingly.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{most_important(default)}: Default method not implemented yet.
 
-\item \code{light_importance}: Extracts most important variables from an object of class \code{light_importance}.
+\item \code{most_important(light_importance)}: Extracts most important variables from an object of class
+"light_importance".
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
@@ -38,5 +40,5 @@ most_important(imp)
 most_important(imp, 2)
 }
 \seealso{
-\code{\link{light_importance}}.
+\code{\link[=light_importance]{light_importance()}}
 }

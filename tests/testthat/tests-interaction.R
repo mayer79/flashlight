@@ -92,8 +92,13 @@ test_that("light_interaction reacts on 'by'", {
 
 test_that("Options work", {
   fit <- lm(Sepal.Length ~ ., data = iris)
-  fl <- flashlight(model = fit, label = "lm", data = iris,
-                   y = "Sepal.Length", metrics = list(r2 = r_squared))
+  fl <- flashlight(
+    model = fit,
+    label = "lm",
+    data = iris,
+    y = "Sepal.Length",
+    metrics = list(r2 = MetricsWeighted::r_squared)
+  )
   new_options = list(
     flashlight.label_name = "ell",
     flashlight.variable_name = "var",

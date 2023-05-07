@@ -19,62 +19,68 @@ light_global_surrogate(x, ...)
   use_linkinv = TRUE,
   n_max = Inf,
   seed = NULL,
-  keep_max_levels = 4,
+  keep_max_levels = 4L,
   ...
 )
 
 \method{light_global_surrogate}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Arguments passed to \code{rpart}, such as \code{maxdepth}.}
+\item{...}{Arguments passed to \code{\link[rpart:rpart]{rpart::rpart()}}, such as \code{maxdepth}.}
 
 \item{data}{An optional \code{data.frame}.}
 
-\item{by}{An optional vector of column names used to additionally group the results. For each group, a separate tree is grown.}
+\item{by}{An optional vector of column names used to additionally group the results.
+For each group, a separate tree is grown.}
 
-\item{v}{Vector of variables used in the surrogate model. Defaults to all variables in \code{data} except "by", "w" and "y".}
+\item{v}{Vector of variables used in the surrogate model.
+Defaults to all variables in \code{data} except "by", "w" and "y".}
 
 \item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
 
 \item{n_max}{Maximum number of data rows to consider to build the tree.}
 
-\item{seed}{An integer random seed used to select data rows if \code{n_max} is lower than the number of data rows.}
+\item{seed}{An integer random seed used to select data rows if \code{n_max} is lower than
+the number of data rows.}
 
-\item{keep_max_levels}{Number of levels of categorical and factor variables to keep. Other levels are combined to a level "Other". This prevents \code{rpart} to take too long to split non-numeric variables with many levels.}
+\item{keep_max_levels}{Number of levels of categorical and factor variables to keep.
+Other levels are combined to a level "Other". This prevents \code{\link[rpart:rpart]{rpart::rpart()}} to
+take too long to split non-numeric variables with many levels.}
 }
 \value{
-An object of class \code{light_global_surrogate} with the following elements.
+An object of class "light_global_surrogate" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 }
 }
 \description{
-Model predictions are modelled by a single decision tree, serving as an easy to interprete surrogate to the original model. As suggested in Molnar (see reference below), the quality of the surrogate tree can be measured by its R-squared.
-}
-\details{
-The size of the tree can be modified by passing \code{...} arguments to \code{rpart}.
+Model predictions are modelled by a single decision tree, serving as an easy
+to interprete surrogate to the original model.
+As suggested in Molnar (see reference below), the quality of the surrogate
+tree can be measured by its R-squared. The size of the tree can be modified
+by passing \code{...} arguments to \code{\link[rpart:rpart]{rpart::rpart()}}.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_global_surrogate(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Surrogate model for a flashlight.
+\item \code{light_global_surrogate(flashlight)}: Surrogate model for a flashlight.
 
-\item \code{multiflashlight}: Surrogate model for a multiflashlight.
+\item \code{light_global_surrogate(multiflashlight)}: Surrogate model for a multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 x <- flashlight(model = fit, label = "lm", data = iris)
 light_global_surrogate(x)
-
 }
 \references{
 Molnar C. (2019). Interpretable Machine Learning.
 }
 \seealso{
-\code{\link{plot.light_global_surrogate}}.
+\code{\link[=plot.light_global_surrogate]{plot.light_global_surrogate()}}
 }

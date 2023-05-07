@@ -1,11 +1,10 @@
 #' Prints a multiflashlight
 #'
-#' Print method for an object of class \code{multiflashlight}.
+#' Print method for an object of class "multiflashlight".
 #'
-#' @param x An object of class \code{multiflashlight}.
-#' @param ... Further arguments passed to \code{print.flashlight}.
-#' @return Invisibly, the input is returned.
-#' @method print multiflashlight
+#' @param x An object of class "multiflashlight".
+#' @param ... Further arguments passed to [print.flashlight()].
+#' @returns Invisibly, the input is returned.
 #' @export
 #' @examples
 #' fit_lm <- lm(Sepal.Length ~ ., data = iris)
@@ -13,7 +12,7 @@
 #' fl_lm <- flashlight(model = fit_lm, label = "lm")
 #' fl_glm <- flashlight(model = fit_glm, label = "glm")
 #' multiflashlight(list(fl_lm, fl_glm), data = iris)
-#' @seealso \code{\link{multiflashlight}}.
+#' @seealso [multiflashlight()]
 print.multiflashlight <- function(x, ...) {
   lapply(x, print.flashlight, ...)
   invisible(x)

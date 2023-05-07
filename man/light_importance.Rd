@@ -19,8 +19,8 @@ light_importance(x, ...)
   v = NULL,
   n_max = Inf,
   seed = NULL,
-  m_repetitions = 1,
-  metric = x$metrics[1],
+  m_repetitions = 1L,
+  metric = x$metrics[1L],
   lower_is_better = TRUE,
   use_linkinv = FALSE,
   ...
@@ -29,62 +29,92 @@ light_importance(x, ...)
 \method{light_importance}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{light_performance}. Not used for \code{type = "shap"}.}
+\item{...}{Further arguments passed to \code{\link[=light_performance]{light_performance()}}.
+Not used for \code{type = "shap"}.}
 
 \item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{type}{Type of importance: "permutation" (default) or "shap". "shap" is only available if a "shap" object is contained in \code{x}.}
+\item{type}{Type of importance: "permutation" (default) or "shap".
+"shap" is only available if a "shap" object is contained in \code{x}.}
 
-\item{v}{Vector of variable names to assess importance for. Defaults to all variables in \code{data} except "by" and "y".}
+\item{v}{Vector of variable names to assess importance for.
+Defaults to all variables in \code{data} except "by" and "y".}
 
 \item{n_max}{Maximum number of rows to consider. Not used for \code{type = "shap"}.}
 
-\item{seed}{An integer random seed used to select and shuffle rows. Not used for \code{type = "shap"}.}
+\item{seed}{An integer random seed used to select and shuffle rows.
+Not used for \code{type = "shap"}.}
 
-\item{m_repetitions}{Number of permutations. Defaults to 1. A value above 1 provides more stable estimates of variable importance and allows the calculation of standard errors measuring the uncertainty from permuting. Not used for \code{type = "shap"}.}
+\item{m_repetitions}{Number of permutations. Defaults to 1.
+A value above 1 provides more stable estimates of variable importance and
+allows the calculation of standard errors measuring the uncertainty from permuting.
+Not used for \code{type = "shap"}.}
 
-\item{metric}{An optional named list of length one with a metric as element. Defaults to the first metric in the flashlight. The metric needs to be a function with at least four arguments: actual, predicted, case weights w and \code{...}. Irrelevant for \code{type = "shap"}.}
+\item{metric}{An optional named list of length one with a metric as element.
+Defaults to the first metric in the flashlight. The metric needs to be a function
+with at least four arguments: actual, predicted, case weights w and \code{...}.
+Irrelevant for \code{type = "shap"}.}
 
-\item{lower_is_better}{Logical flag indicating if lower values in the metric are better or not. If set to FALSE, the increase in metric is multiplied by -1. Not used for \code{type = "shap"}.}
+\item{lower_is_better}{Logical flag indicating if lower values in the metric
+are better or not. If set to \code{FALSE}, the increase in metric is multiplied by -1.
+Not used for \code{type = "shap"}.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is FALSE. Not uses for \code{type = "shap"}.}
+\item{use_linkinv}{Should retransformation function be applied?
+Default is \code{FALSE}. Not uses for \code{type = "shap"}.}
 }
 \value{
-An object of class \code{light_importance} with the following elements.
+An object of class "light_importance" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
+Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{by} Same as input \code{by}.
 \item \code{type} Same as input \code{type}. For information only.
 }
 }
 \description{
-Two algorithms to calculate variable importance are available: (a) Permutation importance and (b) SHAP importance. Algorithm (a) measures importance of variable v as the drop in performance by permuting the values of v, see Fisher et al. 2018 (reference below). Algorithm (b) measures variable importance by averaging absolute SHAP values.
+Two algorithms to calculate variable importance are available:
+\enumerate{
+\item Permutation importance, and
+\item SHAP importance
+}
+
+Algorithm 1 measures importance of variable v as the drop in performance
+by permuting the values of v, see Fisher et al. 2018 (reference below).
+Algorithm 2 measures variable importance by averaging absolute SHAP values.
 }
 \details{
-For algorithm (a), the minimum required elements in the (multi-) flashlight are "y", "predict_function", "model", "data" and "metrics". For algorithm (b), the only required element is "shap". Call \code{add_shap} once to add such object.
-Note: The values of the permutation algorithm (a) are on the scale of the selected metric. For shap algorithm (b), the values are on the scale of absolute values of the predictions.
+For Algorithm 1, the minimum required elements in the
+(multi-)flashlight are "y", "predict_function", "model", "data" and "metrics".
+For Algorithm 2, the only required element is "shap". Call \code{\link[=add_shap]{add_shap()}} once to
+add such object.
+
+Note: The values of the permutation Algorithm 1. are on the scale
+of the selected metric. For SHAP Algorithm 2, the values are on the scale
+of absolute values of the predictions.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_importance(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Variable importance for a flashlight.
+\item \code{light_importance(flashlight)}: Variable importance for a flashlight.
 
-\item \code{multiflashlight}: Variable importance for a multiflashlight.
+\item \code{light_importance(multiflashlight)}: Variable importance for a multiflashlight.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ Petal.Length, data = iris)
 fl <- flashlight(model = fit, label = "full", data = iris, y = "Sepal.Length")
 light_importance(fl)
 }
 \references{
-Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, using Model Class Reliance. Arxiv.
+Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful:
+Variable Importance for Black-Box, Proprietary, or Misspecified Prediction
+Models, using Model Class Reliance. Arxiv.
 }
 \seealso{
-\code{\link{most_important}}, \code{\link{plot.light_importance}}.
+\code{\link[=most_important]{most_important()}}, \code{\link[=plot.light_importance]{plot.light_importance()}}
 }

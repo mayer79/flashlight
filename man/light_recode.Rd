@@ -13,11 +13,12 @@ light_recode(x, ...)
 \method{light_recode}{light}(x, what, levels, labels, ...)
 }
 \arguments{
-\item{x}{An object of class \code{light}.}
+\item{x}{An object of class "light".}
 
 \item{...}{Further arguments passed to \code{factor}.}
 
-\item{what}{Column identifier to be recoded, e.g. "type". For backward compatibility, also the option identifier (e.g. "type_name") can be passed.}
+\item{what}{Column identifier to be recoded, e.g., "type". For backward
+compatibility, also the option identifier (e.g. "type_name") can be passed.}
 
 \item{levels}{Current levels/values of \code{type_name} column (in desired order).}
 
@@ -27,27 +28,34 @@ light_recode(x, ...)
 \code{x} with new factor levels of \code{type_name} column.
 }
 \description{
-Recodes factor levels of columns in data slots of an object of class \code{light}.
+Recodes factor levels of columns in data slots of an object of class "light".
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_recode(default)}: Default method not implemented yet.
 
-\item \code{light}: Recoding factors in data slots of \code{light} object.
+\item \code{light_recode(light)}: Recoding factors in data slots of "light" object.
+
 }}
-
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
+mod_full <- flashlight(
+  model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+)
+mod_part <- flashlight(
+  model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+)
 mods <- multiflashlight(list(mod_full, mod_part))
 eff <- light_effects(mods, v = "Species")
-eff <- light_recode(eff, what = "type_name",
-                    levels = c("response", "predicted", "partial dependence", "ale"),
-                    labels = c("Observed", "Fitted", "PD", "ALE"))
+eff <- light_recode(
+  eff,
+  what = "type_name",
+  levels = c("response", "predicted", "partial dependence", "ale"),
+  labels = c("Observed", "Fitted", "PD", "ALE")
+)
 plot(eff, use = "all")
 }
 \seealso{
-\code{\link{plot.light_effects}}.
+\code{\link[=plot.light_effects]{plot.light_effects()}}.
 }

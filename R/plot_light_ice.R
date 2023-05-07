@@ -1,17 +1,17 @@
 #' Visualize ICE profiles
 #'
-#' Minimal visualization of an object of class \code{light_ice} as \code{geom_line}. The object returned is of class \code{ggplot} and can be further customized.
+#' Minimal visualization of an object of class "light_ice" as [ggplot2::geom_line()].
+#' The object returned is of class "ggplot" and can be further customized.
 #'
-#' Each observation is visualized by a line. The first "by" variable is represented by the color, a second "by" variable or a multiflashlight by facets.
+#' Each observation is visualized by a line. The first "by" variable is represented
+#' by the color, a second "by" variable or a multiflashlight by facets.
 #'
-#' @import ggplot2
-#' @importFrom stats reformulate
-#' @method plot light_ice
-#' @param x An object of class \code{light_ice}.
-#' @param facet_scales Scales argument passed to \code{facet_wrap}.
-#' @param rotate_x Should x axis labels be rotated by 45 degrees? Default is FALSE.
-#' @param ... Further arguments passed to \code{geom_line}.
-#' @return An object of class \code{ggplot2}.
+#' @importFrom rlang .data
+#'
+#' @inheritParams plot.light_performance
+#' @param x An object of class "light_ice".
+#' @param ... Further arguments passed to [ggplot2::geom_line()].
+#' @returns An object of class "ggplot".
 #' @export
 #' @examples
 #' fit_full <- lm(Sepal.Length ~ ., data = iris)
@@ -24,7 +24,7 @@
 #' plot(light_ice(mods, v = "Species", indices = indices))
 #' plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
 #' plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
-#' @seealso \code{\link{light_ice}}.
+#' @seealso [light_ice()]
 plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
@@ -45,22 +45,29 @@ plot.light_ice <- function(x, facet_scales = "fixed", rotate_x = FALSE, ...) {
 
   # Distinguish cases
   if (nby == 0L) {
-    p <- ggplot(data, aes_string(y = value_name, x = x$v, group = id_name)) +
-      geom_line(...)
+    p <- ggplot2::ggplot(
+      data,
+      ggplot2::aes(y = .data[[value_name]], x = .data[[x$v]], group = .data[[id_name]])
+    ) +
+      ggplot2::geom_line(...)
   } else {
     stopifnot(!("temp_" %in% colnames(data)))
-    data[["temp_"]] <- interaction(data[[id_name]], data[[x$by[1]]])
-    p <- ggplot(data, aes_string(y = value_name, x = x$v, group = "temp_")) +
-      geom_line(aes_string(color = x$by[1]), ...) +
-      guides(color = guide_legend(override.aes = list(alpha = 1)))
+    data[["temp_"]] <- interaction(data[[id_name]], data[[x$by[1L]]])
+    p <- ggplot2::ggplot(
+      data, ggplot2::aes(y = .data[[value_name]], x = .data[[x$v]], group = temp_)
+    ) +
+      ggplot2::geom_line(ggplot2::aes(color = .data[[x$by[1L]]]), ...) +
+      ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(alpha = 1)))
   }
   if (nby > 1L || multi) {
-    p <- p + facet_wrap(reformulate(if (multi) label_name else x$by[2]),
-                        scales = facet_scales)
+    p <- p + ggplot2::facet_wrap(
+      if (multi) label_name else x$by[2L], scales = facet_scales
+    )
   }
   if (rotate_x) {
-    p <- p +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+    p <- p + ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
+    )
   }
   p
 }

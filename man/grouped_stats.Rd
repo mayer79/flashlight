@@ -32,23 +32,29 @@ grouped_stats(
 
 \item{counts}{Should group counts be added?}
 
-\item{counts_weighted}{Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
+\item{counts_weighted}{Should counts be weighted by the case weights?
+If \code{TRUE}, the sum of \code{w} is returned by group.}
 
 \item{counts_name}{Name of column in the resulting \code{data.frame} containing the counts.}
 
 \item{value_name}{Name of the resulting column with mean, median, or variance.}
 
-\item{q1_name}{Name of the resulting column with first quartile values. Only relevant for \code{stats} "quartiles".}
+\item{q1_name}{Name of the resulting column with first quartile values.
+Only relevant if \code{stats = "quartiles"}.}
 
-\item{q3_name}{Name of the resulting column with third quartile values. Only relevant for \code{stats} "quartiles".}
+\item{q3_name}{Name of the resulting column with third quartile values.
+Only relevant if \code{stats = "quartiles"}.}
 
-\item{...}{Additional arguments passed to \code{MetricsWeighted::weighted_mean}, \code{MetricsWeighted::weighted_quartiles}, or \code{MetricsWeighted::weighted_var}.}
+\item{...}{Additional arguments passed to corresponding \verb{weighted_*()} functions in
+{MetricsWeighted}.}
 }
 \value{
-A \code{data.frame} with columns \code{by}, \code{x} and optionally \code{counts_name}.
+A \code{data.frame} with columns \code{by}, \code{x}, and optionally \code{counts_name}.
 }
 \description{
-Calculates weighted means, quartiles, or variances (and counts) of a variable grouped by optional columns. By default, counts are not weighted, even if there is a weighting variable.
+Calculates weighted means, quartiles, or variances (and counts) of a
+variable grouped by optional columns. By default, counts are not weighted,
+even if there is a weighting variable.
 }
 \examples{
 grouped_stats(iris, "Sepal.Width")

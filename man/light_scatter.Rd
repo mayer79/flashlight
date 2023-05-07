@@ -26,7 +26,7 @@ light_scatter(x, ...)
 \method{light_scatter}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
 \item{...}{Further arguments passed from or to other methods.}
 
@@ -36,35 +36,41 @@ light_scatter(x, ...)
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{type}{Type of the profile: Either "predicted", "response", "residual", or "shap".}
+\item{type}{Type of the profile: Either "predicted", "response", "residual",
+or "shap".}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is TRUE. Not used for \code{type = "shap"}.}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
+Not used for \code{type = "shap"}.}
 
-\item{n_max}{Maximum number of data rows to select. Will be randomly picked from the relevant data.}
+\item{n_max}{Maximum number of data rows to select. Will be randomly picked from the
+relevant data.}
 
 \item{seed}{An integer random seed used for subsampling.}
 }
 \value{
-An object of class \code{light_scatter} with the following elements.
+An object of class "light_scatter" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
-\item \code{by} Same as input \code{by}.
-\item \code{v} The variable evaluated.
-\item \code{type} Same as input \code{type}. For information only.
+\item \code{data}: A tibble with results. Can be used to build fully customized
+visualizations. Column names can be controlled by
+\code{options(flashlight.column_name)}.
+\item \code{by}: Same as input \code{by}.
+\item \code{v}: The variable evaluated.
+\item \code{type}: Same as input \code{type}. For information only.
 }
 }
 \description{
-This function prepares values for drawing a scatter plot of predicted values, responses, residuals, or SHAP values against a selected variable.
+This function prepares values for drawing a scatter plot of predicted values,
+responses, residuals, or SHAP values against a selected variable.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method not implemented yet.
+\item \code{light_scatter(default)}: Default method not implemented yet.
 
-\item \code{flashlight}: Variable profile for a flashlight.
+\item \code{light_scatter(flashlight)}: Variable profile for a flashlight.
 
-\item \code{multiflashlight}: light_scatter for a multiflashlight.
+\item \code{light_scatter(multiflashlight)}: light_scatter for a multiflashlight.
+
 }}
-
 \examples{
 fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
 fit_b <- lm(Sepal.Length ~ ., data = iris)
@@ -72,8 +78,11 @@ fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
 fl_b <- flashlight(model = fit_b, label = "all")
 fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
 pr <- light_scatter(fls, v = "Petal.Length")
-plot(light_scatter(fls, "Petal.Length", by = "Species", type = "residual"), alpha = 0.2)
+plot(
+  light_scatter(fls, "Petal.Length", by = "Species", type = "residual"),
+  alpha = 0.2
+)
 }
 \seealso{
-\code{\link{plot.light_scatter}}.
+\code{\link[=plot.light_scatter]{plot.light_scatter()}}
 }

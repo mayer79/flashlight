@@ -76,10 +76,18 @@ test_that("ale is constant if covariable not in model", {
 test_that("light_profile works correctly for type 'response' with by variable", {
   fit <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
-  pr <- light_profile(fl, v = "Petal.Length", type = "response", by = "Species", breaks = c(1, 4, 7))
-  expect_equal(pr$data$value,
-               aggregate(Sepal.Length ~ Species + (Petal.Length > 4), data = iris, FUN = mean)$Sepal.Length)
-  expect_true(inherits(plot(pr), "ggplot"))
+  pr <- light_profile(
+    fl,
+    v = "Petal.Length",
+    type = "response",
+    by = "Species",
+    breaks = c(1, 4, 7)
+  )
+  agg <- aggregate(Sepal.Length ~ Species + (Petal.Length > 4), data = iris, FUN = mean)
+  pr_data <- pr$data  # reframe() has different sort order...
+  pr_data <- pr$data[order(pr$data$Species, pr$data$Petal.Length), ]
+  expect_equal(pr_data$value, agg$Sepal.Length)
+  expect_s3_class(plot(pr), "ggplot")
 
   setosa1 <- light_profile(fl, v = "Petal.Length", breaks = c(1, 4, 7), data = iris[1:50, ])
   setosa2 <- light_profile(fl, v = "Petal.Length", breaks = c(1, 4, 7), by = "Species")
@@ -220,4 +228,3 @@ test_that("Options work for light_profile", {
     expect_true(inherits(plot(pd), "ggplot"))
   })
 })
-

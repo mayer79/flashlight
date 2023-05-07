@@ -7,15 +7,18 @@
 \method{residuals}{multiflashlight}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{multiflashlight}.}
+\item{object}{An object of class "multiflashlight".}
 
-\item{...}{Arguments used to update the multiflashlight before calculating the residuals.}
+\item{...}{Arguments used to update the multiflashlight before
+calculating the residuals.}
 }
 \value{
 A named list with residuals per flashlight.
 }
 \description{
-Residuals method for an object of class \code{multiflashlight}. Pass additional elements to update the multiflashlight before calculation of residuals.
+Residuals method for an object of class "multiflashlight".
+Pass additional elements to update the multiflashlight before calculation of
+residuals.
 }
 \examples{
 fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)

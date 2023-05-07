@@ -7,6 +7,7 @@
 # 2) Increase package number in "use_description" below.
 # 3) Go through this script and carefully answer "no" if a "use_*" function
 #    asks to overwrite the existing files. Don't skip that function call.
+# devtools::load_all()
 
 library(usethis)
 
@@ -33,24 +34,18 @@ use_description(
 
 # Imports
 use_package("cowplot", "Imports")
-use_package("dplyr", "Imports", min_version = "1.0.0")
+use_package("dplyr", "Imports", min_version = "1.1.0")
 use_package("ggplot2", "Imports")
 use_package("MetricsWeighted", "Imports", min_version = "0.3.0")
+use_package("rlang", "Imports", min_version = "0.3.0")             # dplyr
 use_package("rpart", "Imports")
 use_package("rpart.plot", "Imports")
 use_package("stats", "Imports")
+use_package("tibble", "Imports")                                   # dplyr
 use_package("tidyr", "Imports", min_version = "1.0.0")
-use_package("tidyselect", "Imports")
+use_package("tidyselect", "Imports")                               # dplyr
 use_package("utils", "Imports")
 use_package("withr", "Imports")
-
-# Suggests
-use_package("caret", "Suggests")
-use_package("mlr3", "Suggests")
-use_package("mlr3learners", "Suggests")
-use_package("moderndive", "Suggests")
-use_package("ranger", "Suggests")
-use_package("xgboost", "Suggests")
 
 use_gpl_license(2)
 
@@ -70,9 +65,7 @@ use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^backlog$",
 use_readme_md()
 
 # Longer docu in RMarkdown (with running R code). Often quite similar to readme.
-use_vignette("p1_flashlight")
-use_vignette("p2_caret")
-use_vignette("p3_mlr3")
+use_vignette("flashlight")
 
 # If you want to add unit tests
 use_testthat()
@@ -92,6 +85,9 @@ use_github_action("check-standard")
 use_github_action("test-coverage")
 use_github_action("pkgdown")
 
+# Revdep
+use_revdep()
+
 #=============================================================================
 # Finish package building (can use fresh session)
 #=============================================================================
@@ -100,16 +96,18 @@ library(devtools)
 
 document()
 test()
-build_vignettes()
 check(manual = TRUE, cran = TRUE)
-build()
+build(vignettes = FALSE)
 # build(binary = TRUE)
 install()
 
 # Run only if package is public(!) and should go to CRAN
 if (FALSE) {
   check_win_devel()
-  check_rhub(env_vars = c(R_COMPILE_AND_INSTALL_PACKAGES = "always"))
+  check_rhub()
+
+  # Takes long
+  revdepcheck::revdep_check(num_workers = 4L)
 
   # Wait until above checks are passed without relevant notes/warnings
   # then submit to CRAN

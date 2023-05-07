@@ -7,7 +7,7 @@
 \method{print}{flashlight}(x, ...)
 }
 \arguments{
-\item{x}{A on object of class \code{flashlight}.}
+\item{x}{A on object of class "flashlight".}
 
 \item{...}{Further arguments passed from other methods.}
 }
@@ -15,12 +15,13 @@
 Invisibly, the input is returned.
 }
 \description{
-Print method for an object of class \code{flashlight}.
+Print method for an object of class "flashlight".
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
-flashlight(model = fit, label = "lm", y = "Sepal.Length", data = iris)
+x <- flashlight(model = fit, label = "lm", y = "Sepal.Length", data = iris)
+x
 }
 \seealso{
-\code{\link{flashlight}}.
+\code{\link[=flashlight]{flashlight()}}
 }

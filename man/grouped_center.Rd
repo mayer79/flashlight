@@ -21,7 +21,8 @@ grouped_center(data, x, w = NULL, by = NULL, ...)
 A numeric vector with centered values in column \code{x}.
 }
 \description{
-Centers a numeric variable within optional groups and optional weights. The order of values is unchanged.
+Centers a numeric variable within optional groups and optional weights.
+The order of values is unchanged.
 }
 \examples{
 ir <- data.frame(iris, w = 1)

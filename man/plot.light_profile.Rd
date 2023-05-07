@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_light_profile.R
 \name{plot.light_profile}
 \alias{plot.light_profile}
-\title{Visualize Profiles, e.g. of Partial Dependence}
+\title{Visualize Profiles, e.g. Partial Dependence}
 \usage{
 \method{plot}{light_profile}(
   x,
@@ -14,26 +14,36 @@
 )
 }
 \arguments{
-\item{x}{An object of class \code{light_profile}.}
+\item{x}{An object of class "light_profile".}
 
-\item{swap_dim}{If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of dodge/fill variable and facet variable. If multiflashlight or one "by" variable, use facets instead of colors.}
+\item{swap_dim}{If multiflashlight and one "by" variable or
+single flashlight with two "by" variables, swap the role of dodge/fill variable
+and facet variable. If multiflashlight or one "by" variable,
+use facets instead of colors.}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? TRUE, except for type "partial dependence".}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
 \item{show_points}{Should points be added to the line (default is \code{TRUE}).}
 
-\item{...}{Further arguments passed to \code{geom_point} and \code{geom_line}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}} or
+\code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_profile}. The object returned is of class \code{ggplot} and can be further customized.
+Minimal visualization of an object of class "light_profile".
+The object returned is of class "ggplot" and can be further customized.
 }
 \details{
-Either lines and points are plotted (if stats = "mean") or quartile boxes. If there is a "by" variable or a multiflashlight, this first dimension is taken care by color (or if \code{swap_dim = TRUE} by facets). If there are two "by" variables or a multiflashlight with one "by" variable, the first "by" variable is visualized as color, the second one or the multiflashlight via facet (change with \code{swap_dim}).
+Either lines and points are plotted (if stats = "mean") or quartile boxes.
+If there is a "by" variable or a multiflashlight, this first dimension
+is represented by color (or if \code{swap_dim = TRUE} by facets).
+If there are two "by" variables or a multiflashlight with one "by" variable,
+the first "by" variable is visualized as color, while the second one
+or the multiflashlight is shown via facet (change with \code{swap_dim}).
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
@@ -43,5 +53,5 @@ plot(light_profile(fl, v = "Petal.Width", by = "Species", evaluate_at = 2:4))
 plot(light_profile(fl, v = "Petal.Width", type = "predicted"))
 }
 \seealso{
-\code{\link{light_profile}}, \code{\link{plot.light_effects}}.
+\code{\link[=light_profile]{light_profile()}}, \code{\link[=plot.light_effects]{plot.light_effects()}}
 }

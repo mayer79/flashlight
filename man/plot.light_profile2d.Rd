@@ -2,41 +2,46 @@
 % Please edit documentation in R/plot_light_profile2d.R
 \name{plot.light_profile2d}
 \alias{plot.light_profile2d}
-\title{Visualize 2D-Profiles, e.g. of Partial Dependence}
+\title{Visualize 2D-Profiles, e.g., of Partial Dependence}
 \usage{
 \method{plot}{light_profile2d}(x, swap_dim = FALSE, rotate_x = TRUE, numeric_as_factor = FALSE, ...)
 }
 \arguments{
-\item{x}{An object of class \code{light_profile2d}.}
+\item{x}{An object of class "light_profile2d".}
 
-\item{swap_dim}{Swap the \code{facet_grid} dimensions.}
+\item{swap_dim}{Swap the \code{\link[ggplot2:facet_grid]{ggplot2::facet_grid()}} dimensions.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is \code{TRUE}.}
+\item{rotate_x}{Should the x axis labels be rotated by 45 degrees? Default is \code{TRUE}.}
 
-\item{numeric_as_factor}{Should numeric x and y values be converted to factors first? Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".}
+\item{numeric_as_factor}{Should numeric x and y values be converted to factors first?
+Default is \code{FALSE}. Useful if \code{cut_type} was not set to "equal".}
 
-\item{...}{Further arguments passed to \code{geom_tile}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_tile]{ggplot2::geom_tile()}}.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_profile2d}. The object returned is of class \code{ggplot} and can be further customized.
+Minimal visualization of an object of class "light_profile2d".
+The object returned is of class "ggplot" and can be further customized.
 }
 \details{
-The main geometry is \code{geom_tile}. Additional dimensions ("by" variable(s) and/or multiflashlight) are represented by \code{facet_wrap/grid}.
-For all types of profiles except "partial dependence", it is natural to see empty parts in the plot. These are combinations of the \code{v} variables that do not appear in the data.
-Even for type "partial dependence", gaps can occur, e.g. for \code{cut_type = "quantile"} or if \code{n_bins} are larger than the number of distinct values of a \code{v} variable.
-Such gaps can be suppressed by setting \code{numeric_as_factor = TRUE} or by using the arguments \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in \code{light_profile2d()}.
+The main geometry is \code{\link[ggplot2:geom_tile]{ggplot2::geom_tile()}}. Additional dimensions
+("by" variable(s) and/or multiflashlight) are represented by \code{facet_wrap/grid}.
+For all types of profiles except "partial dependence", it is natural to see
+empty parts in the plot. These are combinations of the \code{v} variables that
+do not appear in the data. Even for type "partial dependence", such gaps can occur,
+e.g. for \code{cut_type = "quantile"} or if \code{n_bins} are larger than the number
+of distinct values of a \code{v} variable.
+Such gaps can be suppressed by setting \code{numeric_as_factor = TRUE}
+or by using the arguments \code{breaks}, \code{pd_evaluate_at} or \code{pd_grid} in
+\code{\link[=light_profile2d]{light_profile2d()}}.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
-pr <- light_profile2d(fl, v = c("Petal.Length", "Sepal.Width"),
-  type = "predicted", by = "Species", n_bins=c(2, 3), sep = ";")
-plot(pr)
 }
 \seealso{
-\code{\link{light_profile2d}}.
+\code{\link[=light_profile2d]{light_profile2d()}}
 }

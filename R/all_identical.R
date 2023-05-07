@@ -1,11 +1,13 @@
 #' all_identical
 #'
-#' Checks if an aspect is identical for all elements in a nested list. The aspect is specified by \code{fun}, e.g. `[[`, followed by the element name to compare.
+#' Checks if an aspect is identical for all elements in a nested list.
+#' The aspect is specified by `fun`, e.g., `[[`, followed by the element
+#' name to compare.
 #'
 #' @param x A nested list of objects.
-#' @param fun Function used to extract information of each element of \code{x}.
-#' @param ... Further arguments passed to \code{fun}.
-#' @return A logical vector of length one.
+#' @param fun Function used to extract information of each element of `x`.
+#' @param ... Further arguments passed to `fun()`.
+#' @returns A logical vector of length one.
 #' @export
 #' @examples
 #' x <- list(a = 1, b = 2)
@@ -17,5 +19,5 @@ all_identical <- function(x, fun, ...) {
     return(TRUE)
   }
   subs <- lapply(x, fun, ...)
-  all(vapply(subs[2:m], FUN = identical, FUN.VALUE = TRUE, subs[[1]]))
+  all(vapply(subs[2:m], FUN = identical, FUN.VALUE = TRUE, subs[[1L]]))
 }

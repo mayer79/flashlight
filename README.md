@@ -19,7 +19,7 @@ The main props of {flashlight}:
 
 1. It is simple, yet flexible.
 2. It offers model agnostic tools like model performance, variable importance, global surrogate models, ICE profiles, partial dependence, ALE, and further effects plots, scatter plots, interaction strength, and variable contribution breakdown/SHAP for single observations.
-3. It allows to assess multiple models in parallel.
+3. It allows to assess multiple models side-by-side.
 4. It supports "group by" operations.
 5. It works with case weights.
 
@@ -37,106 +37,189 @@ devtools::install_github("mayer79/flashlight")
 
 ## Usage
 
-``` r
+Let's start with an iris example. For simplicity, we do not split the data into training and testing/validation sets.
+
+```r
 library(ggplot2)
 library(MetricsWeighted)
 library(flashlight)
 
-# Fit model
-fit <- lm(Sepal.Length ~ ., data = iris)
+fit_lm <- lm(Sepal.Length ~ ., data = iris)
 
-# Make flashlight
-fl <- flashlight(
-  model = fit, 
+# Make explainer object
+fl_lm <- flashlight(
+  model = fit_lm, 
   data = iris, 
   y = "Sepal.Length", 
-  label = "ols",               
-  metrics = list(rmse = rmse, `R-squared` = r_squared)
+  label = "lm",               
+  metrics = list(RMSE = rmse, `R-squared` = r_squared)
 )
 ```
 
-### Performance (overall and grouped by `Species`)
+### Performance
 
-``` r
-plot(light_performance(fl), fill = "darkred") +
-  ggtitle("Overall")
-plot(light_performance(fl, by = "Species"), fill = "darkred") +
-  ggtitle("Grouped by Species")
+```r
+fl_lm |> 
+  light_performance() |> 
+  plot(fill = "darkred") +
+  labs(x = element_blank(), title = "Performance on training data")
+
+fl_lm |> 
+  light_performance(by = "Species") |> 
+  plot(fill = "darkred") +
+  ggtitle("Performance split by Species")
 ```
+
 <p>
-  <img src="tools/figs/perf.png" alt="Performance" width="40%" hspace="20"/>
-  <img src="tools/figs/perf_grouped.png" alt="Grouped" width="40% hspace="20"/>
+  <img src="man/figures/perf.svg" alt="Performance" width="40%" hspace="20"/>
+  <img src="man/figures/perf_grouped.svg" alt="Grouped" width="40%" hspace="20"/>
 </p>
 
-### Permutation importance
 
-``` r
-imp <- light_importance(fl, m_repetitions = 4)
-plot(imp, fill = "darkred")
+### Permutation importance regarding first metric
+
+Error bars represent standard errors, i.e., the uncertainty of the estimated importance.
+
+```r
+fl_lm |>
+  light_importance(m_repetitions = 4) |> 
+  plot(fill = "darkred") +
+  labs(title = "Permutation importance", y = "Increase in RMSE")
 ```
-![](tools/figs/imp.png)
+
+![](man/figures/imp.svg)
 
 ### ICE curves for `Petal.Width`
 
-``` r
-plot(light_ice(fl, v = "Petal.Width"))
-```
-![](tools/figs/ice.png)
-
-### Partial dependence plot for Petal.Width
-
 ```r
-plot(light_profile(fl, v = "Petal.Width")) +
-  ggtitle("Overall")
-plot(light_profile(fl, v = "Petal.Width", by = "Species")) +
-  ggtitle("Grouped by Species")
+fl_lm |> 
+  light_ice("Sepal.Width", n_max = 200) |> 
+  plot(alpha = 0.3, color = "chartreuse4") +
+  labs(title = "ICE curves for 'Sepal.Width'", y = "Prediction")
+
+fl_lm |> 
+  light_ice("Sepal.Width", n_max = 200, center = "middle") |> 
+  plot(alpha = 0.3, color = "chartreuse4") +
+  labs(title = "c-ICE curves for 'Sepal.Width'", y = "Prediction (centered)")
 ```
+
 <p>
-  <img src="tools/figs/pd.png" alt="Partial Dependence" width="40%" hspace="20"/>
-  <img src="tools/figs/pd_grouped.png" alt="Partial Dependence (grouped)" width="40%" hspace="20"/>
+  <img src="man/figures/ice.svg" alt="Performance" width="40%" hspace="20"/>
+  <img src="man/figures/cice.svg" alt="Grouped" width="40%" hspace="20"/>
 </p>
 
-### 2D partial dependence
+### PDPs
 
 ```r
-plot(light_profile2d(fl, v = c("Petal.Width", "Petal.Length")))
+fl_lm |> 
+  light_profile("Sepal.Width", n_bins = 40) |> 
+  plot() +
+  ggtitle("PDP for 'Sepal.Width'")
+
+fl_lm |> 
+  light_profile("Sepal.Width", n_bins = 40, by = "Species") |> 
+  plot() +
+  ggtitle("Same grouped by 'Species'")
 ```
-![](tools/figs/pd2d.png)
 
-### Accumulated local effects (ALE) profiles for Petal.Width
+<p>
+  <img src="man/figures/pdp.svg" alt="Performance" width="40%" hspace="20"/>
+  <img src="man/figures/pdp_grouped.svg" alt="Grouped" width="40%" hspace="20"/>
+</p>
 
-``` r
-plot(light_profile(fl, v = "Petal.Width", type = "ale"))
+### 2D PDP
+
+```r
+fl_lm |> 
+  light_profile2d(c("Petal.Width", "Petal.Length")) |> 
+  plot()
 ```
-![](tools/figs/ale.png)
 
-### Prediction, response and residual profiles, e.g.
+![](man/figures/pdp2d.svg)
 
-``` r
-plot(light_profile(fl, v = "Petal.Width", type = "residual", 
-                   stats = "quartile"))
+### ALE
+
+```r
+fl_lm |> 
+  light_profile("Sepal.Width", type = "ale") |> 
+  plot() +
+  ggtitle("ALE plot for 'Sepal.Width'")
 ```
-![](tools/figs/residual.png)
 
-### Different profile plots in one...
+![](man/figures/ale.svg)
 
-``` r
-plot(light_effects(fl, v = "Petal.Width"), use = "all")
+### Different profile plots in one
+
+```r
+fl_lm |> 
+  light_effects("Sepal.Width") |> 
+  plot(use = "all") +
+  ggtitle("Different types of profiles for 'Sepal.Width'")
 ```
-![](tools/figs/effects.png)
+
+![](man/figures/effects.svg)
 
 ### Variable contribution breakdown for single observation
 
-``` r
-plot(light_breakdown(fl, new_obs = iris[2, ]))
+```r
+fl_lm |> 
+  light_breakdown(new_obs = iris[1, ]) |> 
+  plot()
 ```
-![](tools/figs/breakdown.png)
 
-### Global surrogate
+![](man/figures/breakdown.svg)
 
-``` r
-plot(light_global_surrogate(fl))
+### Global surrogate tree
+
+```r
+fl_lm |> 
+  light_global_surrogate() |> 
+  plot()
 ```
-![](tools/figs/surrogate.png)
 
-Check out the vignette to see the full capabilities of the package.
+![](man/figures/surrogate.svg)
+
+### Multiple models
+
+Multiple flashlights can be combined to a multiflashlight.
+
+```r
+library(rpart)
+
+fit_tree <- rpart(
+  Sepal.Length ~ ., 
+  data = iris, 
+  control = list(cp = 0, xval = 0, maxdepth = 5)
+)
+
+# Make explainer object
+fl_tree <- flashlight(
+  model = fit_tree, 
+  data = iris, 
+  y = "Sepal.Length", 
+  label = "tree",               
+  metrics = list(RMSE = rmse, `R-squared` = r_squared)
+)
+
+# Combine with other explainer
+fls <- multiflashlight(list(fl_tree, fl_lm))
+
+fls |> 
+  light_performance() |> 
+  plot(fill = "chartreuse4") +
+  labs(x = "Model", title = "Performance")
+
+fls |> 
+  light_profile("Petal.Length", n_bins = 40, by = "Species") |> 
+  plot() +
+  ggtitle("PDP by Species")
+```
+
+<p>
+  <img src="man/figures/perf_grouped_multi.svg" alt="Performance" width="40%" hspace="20"/>
+  <img src="man/figures/pdp_grouped_multi.svg" alt="Grouped" width="40%" hspace="20"/>
+</p>
+
+## More
+
+Check out the vignette for more information and important references.

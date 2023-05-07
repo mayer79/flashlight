@@ -30,10 +30,15 @@ grouped_weighted_mean(
 A \code{data.frame} with grouped weighted means.
 }
 \description{
-Fast version of grouped_stats(..., counts = FALSE). Works if there is at most one "by" variable.
+Fast version of \code{grouped_stats(..., counts = FALSE)}.
+Works if there is at most one "by" variable.
 }
 \examples{
 n <- 100
-data <- data.frame(x = rnorm(n), w = runif(n), group = factor(sample(1:3, n, TRUE)))
+data <- data.frame(
+  x = rnorm(n),
+  w = runif(n),
+  group = factor(sample(1:3, n, TRUE))
+)
 grouped_weighted_mean(data, x = "x", w = "w", by = "group")
 }

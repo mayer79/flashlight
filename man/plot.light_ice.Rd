@@ -7,22 +7,24 @@
 \method{plot}{light_ice}(x, facet_scales = "fixed", rotate_x = FALSE, ...)
 }
 \arguments{
-\item{x}{An object of class \code{light_ice}.}
+\item{x}{An object of class "light_ice".}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
-\item{...}{Further arguments passed to \code{geom_line}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_ice} as \code{geom_line}. The object returned is of class \code{ggplot} and can be further customized.
+Minimal visualization of an object of class "light_ice" as \code{\link[ggplot2:geom_path]{ggplot2::geom_line()}}.
+The object returned is of class "ggplot" and can be further customized.
 }
 \details{
-Each observation is visualized by a line. The first "by" variable is represented by the color, a second "by" variable or a multiflashlight by facets.
+Each observation is visualized by a line. The first "by" variable is represented
+by the color, a second "by" variable or a multiflashlight by facets.
 }
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
@@ -37,5 +39,5 @@ plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
 plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 }
 \seealso{
-\code{\link{light_ice}}.
+\code{\link[=light_ice]{light_ice()}}
 }

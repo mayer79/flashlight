@@ -19,27 +19,32 @@ cut3(
 \arguments{
 \item{x}{Numeric vector.}
 
-\item{breaks}{Numeric vector of cut points or a single number specifying the number of intervals desired.}
+\item{breaks}{Numeric vector of cut points or a single number
+specifying the number of intervals desired.}
 
 \item{labels}{Labels for the levels of the final categories.}
 
-\item{include.lowest}{Flag if minimum value should be added to intervals of type (,] (or maximum for [, )).}
+\item{include.lowest}{Flag if minimum value should be added to intervals
+of type "(,]" (or maximum for "[,)").}
 
 \item{right}{Flag if intervals should be closed to the right or left.}
 
-\item{dig.lab}{Number of significant digits passed to formatC.}
+\item{dig.lab}{Number of significant digits passed to \code{\link[=formatC]{formatC()}}.}
 
 \item{ordered_result}{Flag if resulting output vector should be ordered.}
 
 \item{sep}{Separater between from-to labels.}
 
-\item{...}{Arguments passed to \code{formatC}.}
+\item{...}{Arguments passed to \code{\link[=formatC]{formatC()}}.}
 }
 \value{
 Vector of the same length as x.
 }
 \description{
-Slightly modified version of base::cut.default. Both modifications refer to the construction of break labels. Firstly, ... arguments are passed to \code{formatC} in formatting the numbers in the labels. Secondly, a separator between the two numbers can be specified with default ", ".
+Slightly modified version of \code{\link[=cut.default]{cut.default()}}. Both modifications refer
+to the construction of break labels. Firstly, \code{...} arguments are passed to
+\code{\link[=formatC]{formatC()}} in formatting the numbers in the labels.
+Secondly, a separator between the two numbers can be specified with default ", ".
 }
 \examples{
 x <- 998:1001

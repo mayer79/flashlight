@@ -11,13 +11,15 @@ all_identical(x, fun, ...)
 
 \item{fun}{Function used to extract information of each element of \code{x}.}
 
-\item{...}{Further arguments passed to \code{fun}.}
+\item{...}{Further arguments passed to \code{fun()}.}
 }
 \value{
 A logical vector of length one.
 }
 \description{
-Checks if an aspect is identical for all elements in a nested list. The aspect is specified by \code{fun}, e.g. \code{[[}, followed by the element name to compare.
+Checks if an aspect is identical for all elements in a nested list.
+The aspect is specified by \code{fun}, e.g., \code{[[}, followed by the element
+name to compare.
 }
 \examples{
 x <- list(a = 1, b = 2)

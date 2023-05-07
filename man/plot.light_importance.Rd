@@ -15,28 +15,40 @@
 )
 }
 \arguments{
-\item{x}{An object of class \code{light_importance}.}
+\item{x}{An object of class "light_importance".}
 
 \item{top_m}{Maximum number of important variables to be returned.}
 
-\item{swap_dim}{If multiflashlight and one "by" variable or single flashlight with two "by" variables, swap the role of dodge/fill variable and facet variable. If multiflashlight or one "by" variable, use facets instead of colors.}
+\item{swap_dim}{If multiflashlight and one "by" variable or single flashlight with
+two "by" variables, swap the role of dodge/fill variable and facet variable.
+If multiflashlight or one "by" variable, use facets instead of colors.}
 
-\item{facet_scales}{Scales argument passed to \code{facet_wrap}.}
+\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
 
-\item{rotate_x}{Should x axis labels be rotated by 45 degrees? Default is FALSE.}
+\item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
-\item{error_bars}{Should error bars be added? Defaults to TRUE. Only available if \code{light_importance} was run with multiple permutations, i.e. by setting \code{m_repetitions} > 1.}
+\item{error_bars}{Should error bars be added? Defaults to \code{TRUE}.
+Only available if \code{\link[=light_importance]{light_importance()}} was run with multiple permutations
+by setting \code{m_repetitions} > 1.}
 
-\item{...}{Further arguments passed to \code{geom_bar}.}
+\item{...}{Further arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.}
 }
 \value{
-An object of class \code{ggplot2}.
+An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class \code{light_importance} as \code{geom_bar}. If available, standard errors are added as \code{geom_errorbar}. The object returned is of class \code{ggplot} and can be further customized.
+Minimal visualization of an object of class "light_importance" via
+\code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.
+If available, standard errors are added by \code{\link[ggplot2:geom_linerange]{ggplot2::geom_errorbar()}}.
+The object returned is of class "ggplot" and can be further customized.
 }
 \details{
-The plot is organized as a bar plot with variable names as x-aesthetic. Up to two additional dimensions (multiflashlight and one "by" variable or single flashlight with two "by" variables) can be visualized by facetting and dodge/fill. Set \code{swap_dim = FALSE} to revert the role of these two dimensions. One single additional dimension is visualized by a facet wrap, or - if \code{swap_dim = FALSE} - by dodge/fill.
+The plot is organized as a bar plot with variable names as x-aesthetic.
+Up to two additional dimensions (multiflashlight and one "by" variable or single
+flashlight with two "by" variables) can be visualized by facetting and dodge/fill.
+Set \code{swap_dim = FALSE} to revert the role of these two dimensions.
+One single additional dimension is visualized by a facet wrap,
+or - if \code{swap_dim = FALSE} - by dodge/fill.
 }
 \examples{
 fit_full <- lm(Sepal.Length ~ ., data = iris)
@@ -48,5 +60,5 @@ plot(light_importance(mod_part, m_repetitions = 4), fill = "darkred")
 plot(light_importance(mods), swap_dim = TRUE)
 }
 \seealso{
-\code{\link{light_importance}}.
+\code{\link[=light_importance]{light_importance()}}
 }

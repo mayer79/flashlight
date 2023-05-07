@@ -16,7 +16,7 @@ light_check(x, ...)
 \method{light_check}{multiflashlight}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
 \item{...}{Further arguments passed from or to other methods.}
 }
@@ -24,17 +24,18 @@ light_check(x, ...)
 The input \code{x} or an error message.
 }
 \description{
-Checks if an object of class \code{flashlight} or \code{multiflashlight} is consistently defined.
+Checks if an object of class "flashlight" or "multiflashlight"
+is consistently defined.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default check method not implemented yet.
+\item \code{light_check(default)}: Default check method not implemented yet.
 
-\item \code{flashlight}: Checks if a flashlight object is consistently defined.
+\item \code{light_check(flashlight)}: Checks if a flashlight object is consistently defined.
 
-\item \code{multiflashlight}: Checks if a multiflashlight object is consistently defined.
+\item \code{light_check(multiflashlight)}: Checks if a multiflashlight object is consistently defined.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fit_log <- lm(log(Sepal.Length) ~ ., data = iris)

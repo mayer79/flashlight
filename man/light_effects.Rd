@@ -18,14 +18,14 @@ light_effects(x, ...)
   by = x$by,
   stats = c("mean", "quartiles"),
   breaks = NULL,
-  n_bins = 11,
+  n_bins = 11L,
   cut_type = c("equal", "quantile"),
   use_linkinv = TRUE,
   counts_weighted = FALSE,
   v_labels = TRUE,
   pred = NULL,
   pd_indices = NULL,
-  pd_n_max = 1000,
+  pd_n_max = 1000L,
   pd_seed = NULL,
   ale_two_sided = TRUE,
   ...
@@ -36,78 +36,100 @@ light_effects(x, ...)
   v,
   data = NULL,
   breaks = NULL,
-  n_bins = 11,
+  n_bins = 11L,
   cut_type = c("equal", "quantile"),
   ...
 )
 }
 \arguments{
-\item{x}{An object of class \code{flashlight} or \code{multiflashlight}.}
+\item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{cut3} resp. \code{formatC} in forming the cut breaks of the \code{v} variable.}
+\item{...}{Further arguments passed to \code{\link[=cut3]{cut3()}} in forming the
+cut breaks of the \code{v} variable.}
 
 \item{v}{The variable name to be profiled.}
 
-\item{data}{An optional \code{data.frame}.}
+\item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
 \item{stats}{Statistic to calculate for the response profile: "mean" or "quartiles".}
 
-\item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
+\item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via
+\code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
 
-\item{n_bins}{Approximate number of unique values to evaluate for numeric \code{v}. Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
+\item{n_bins}{Approximate number of unique values to evaluate for numeric \code{v}.
+Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins? Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
+\item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins?
+Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is TRUE.}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
+Not used for type "shap".}
 
-\item{counts_weighted}{Should counts be weighted by the case weights? If TRUE, the sum of \code{w} is returned by group.}
+\item{counts_weighted}{Should counts be weighted by the case weights?
+If \code{TRUE}, the sum of \code{w} is returned by group.}
 
-\item{v_labels}{If FALSE, return group centers of \code{v} instead of labels. Only relevant if \code{v} is numeric with many distinct values. In that case useful if e.g. different flashlights use different data sets.}
+\item{v_labels}{If \code{FALSE}, return group centers of \code{v} instead of labels.
+Only relevant if \code{v} is numeric with many distinct values.
+In that case useful for instance when different flashlights use different data sets.}
 
-\item{pred}{Optional vector with predictions (after application of inverse link). Can be used to avoid recalculation of predictions over and over if the functions is to be repeatedly called for different \code{v} and predictions are computationally expensive to make. Not implemented for multiflashlight.}
+\item{pred}{Optional vector with predictions (after application of inverse link).
+Can be used to avoid recalculation of predictions over and over if the functions
+is to be repeatedly called for different \code{v} and predictions are computationally
+expensive to make. Not implemented for multiflashlight.}
 
-\item{pd_indices}{A vector of row numbers to consider in calculating partial dependence and ALE profiles. Useful to force all flashlights to use the same basis for calculations of partial dependence and ALE.}
+\item{pd_indices}{A vector of row numbers to consider in calculating
+partial dependence profiles and "ale".}
 
-\item{pd_n_max}{Maximum number of ICE profiles to consider for partial depencence and ALE calculation (will be randomly picked from \code{data}).}
+\item{pd_n_max}{Maximum number of ICE profiles to calculate (will be randomly
+picked from \code{data}) for partial dependence and ALE.}
 
-\item{pd_seed}{An integer random seed used to sample ICE profiles for partial dependence and ALE.}
+\item{pd_seed}{Integer random seed used to select ICE profiles for partial dependence
+and ALE.}
 
-\item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks} are passed or being calculated, then two-sided derivatives are calculated for ALE instead of left derivatives. This aligns the results better with the x labels. More specifically: Usually, local effects at value x are calculated using points between x-e and x. Set \code{ale_two_sided = TRUE} to use points between x-e/2 and x+e/2.}
+\item{ale_two_sided}{If \code{TRUE}, \code{v} is continuous and \code{breaks}
+are passed or being calculated, then two-sided derivatives are calculated
+for ALE instead of left derivatives. More specifically: Usually, local effects
+at value x are calculated using points in \eqn{[x-e, x]}.
+Set \code{ale_two_sided = TRUE} to use points in \eqn{[x-e/2, x+e/2]}.}
 }
 \value{
-An object of class \code{light_effects} with the following elements.
+An object of class "light_effects" with the following elements:
 \itemize{
-\item \code{response} A tibble containing the response profiles. Column names can be controlled by \code{options(flashlight.column_name)}.
-\item \code{predicted} A tibble containing the prediction profiles.
-\item \code{pd} A tibble containing the partial dependence profiles.
-\item \code{ale} A tibble containing the ALE profiles.
-\item \code{by} Same as input \code{by}.
-\item \code{v} The variable(s) evaluated.
-\item \code{stats} Same as input \code{stats}.
+\item \code{response}: A tibble containing the response profiles.
+Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{predicted}: A tibble containing the prediction profiles.
+\item \code{pd}: A tibble containing the partial dependence profiles.
+\item \code{ale}: A tibble containing the ALE profiles.
+\item \code{by}: Same as input \code{by}.
+\item \code{v}: The variable(s) evaluated.
+\item \code{stats}: Same as input \code{stats}.
 }
 }
 \description{
-Calculates response- prediction-, partial dependence, and ALE profiles of a (multi-)flashlight with respect to a covariable \code{v}.
+Calculates response- prediction-, partial dependence, and ALE profiles of a
+(multi-)flashlight with respect to a covariable \code{v}.
 }
 \details{
-Note that ALE profiles are being calibrated by (weighted) average predictions. The resulting level might be quite different from the one of the partial dependence profiles.
+Note that ALE profiles are being calibrated by (weighted) average predictions.
+The resulting level might be quite different from the one of the partial
+dependence profiles.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Default method.
+\item \code{light_effects(default)}: Default method.
 
-\item \code{flashlight}: Profiles for a flashlight object.
+\item \code{light_effects(flashlight)}: Profiles for a flashlight object.
 
-\item \code{multiflashlight}: Effect profiles for a multiflashlight object.
+\item \code{light_effects(multiflashlight)}: Effect profiles for a multiflashlight object.
+
 }}
-
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
 light_effects(fl, v = "Species")
 }
 \seealso{
-\code{\link{light_profile}}, \code{\link{plot.light_effects}}.
+\code{\link[=light_profile]{light_profile()}}, \code{\link[=plot.light_effects]{plot.light_effects()}}
 }

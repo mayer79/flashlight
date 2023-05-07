@@ -2,12 +2,11 @@
 #'
 #' Returns the most important variable names sorted descendingly.
 #'
-#' @importFrom utils head
-#' @importFrom dplyr group_by summarize arrange desc across
-#' @importFrom tidyselect all_of
-#' @param x An object of class \code{light_importance}.
-#' @param top_m Maximum number of important variables to be returned. Defaults to \code{Inf}, i.e. return all variables in descending order of importance.
-#' @return A character vector of variable names sorted in descending order by importance.
+#' @param x An object of class "light_importance".
+#' @param top_m Maximum number of important variables to be returned.
+#'   Defaults to `Inf`, i.e., return all variables in descending order of importance.
+#' @returns
+#'   A character vector of variable names sorted in descending order by importance.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
@@ -15,7 +14,7 @@
 #' (imp <- light_importance(fl, seed = 4))
 #' most_important(imp)
 #' most_important(imp, 2)
-#' @seealso \code{\link{light_importance}}.
+#' @seealso [light_importance()]
 most_important <- function(x, top_m = Inf) {
   UseMethod("most_important")
 }
@@ -26,18 +25,23 @@ most_important.default <- function(x, top_m = Inf) {
   stop("No default method available yet.")
 }
 
-#' @describeIn most_important Extracts most important variables from an object of class \code{light_importance}.
+#' @describeIn most_important Extracts most important variables from an object of class
+#' "light_importance".
 #' @export
 most_important.light_importance <- function(x, top_m = Inf) {
   value_name <- getOption("flashlight.value_name")
   variable_name <- getOption("flashlight.variable_name")
 
-  data <- group_by(x$data, across(all_of(variable_name)))
-  total_importance <- summarize(
-    data, across(all_of(value_name), sum, na.rm = TRUE),
+  data <- dplyr::group_by(x$data, dplyr::across(tidyselect::all_of(variable_name)))
+  total_importance <- dplyr::summarize(
+    data,
+    dplyr::across(
+      tidyselect::all_of(value_name), .fns = function(x) sum(x, na.rm = TRUE)
+    ),
     .groups = "drop"
   )
-  total_importance <- arrange(total_importance,
-                              across(all_of(value_name), desc))
-  head(total_importance[[variable_name]], top_m)
+  total_importance <- dplyr::arrange(
+    total_importance, dplyr::across(tidyselect::all_of(value_name), dplyr::desc)
+  )
+  utils::head(total_importance[[variable_name]], top_m)
 }
