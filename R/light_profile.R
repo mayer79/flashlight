@@ -127,7 +127,10 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   pd_center <- match.arg(pd_center)
 
   if (stats == "quartiles") {
-    message("Deprecated. Will be removed in flashlight 1.0.0.")
+    message("stats = 'quartiles' is deprecated and will be removed in flashlight 1.0.0.")
+  }
+  if (type == "shap") {
+    message("type = 'shap' is deprecated and will be removed in flashlight 1.0.0.")
   }
 
   warning_on_names(

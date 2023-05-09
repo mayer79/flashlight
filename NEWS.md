@@ -7,7 +7,7 @@ The following breaking changes are intended for version 1.0.0.
 ### Deprecated functionality
 
 - `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.
-- `light_scatter()` and `plot.light_scatter()`: Deprecated in favor of {shapviz}.
+- Consequently, `type = "shap"` in `light_profile()`, `light_importance()`, `light_scatter()`, and `light_profile2d()` is deprecated as well.
 - `plot_counts()`: Deprecated. Might later be replaced by {ggside}.
 - Argument `stats = "quartiles` in `light_profile()` and `light_effects()`.
 

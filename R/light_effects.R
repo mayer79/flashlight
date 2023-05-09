@@ -56,7 +56,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   cut_type <- match.arg(cut_type)
 
   if (stats == "quartiles") {
-    message("Deprecated. Will be removed in flashlight 1.0.0.")
+    message("stats = 'quartiles' is deprecated and will be removed in flashlight 1.0.0.")
   }
 
   warning_on_names(
