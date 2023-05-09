@@ -52,15 +52,11 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                                      pd_indices = NULL, pd_n_max = 1000L,
                                      pd_seed = NULL,
                                      ale_two_sided = TRUE, ...) {
-  if (length(by) >= 2L) {
-    message("The use of more than one 'by' variable is deprecated and will be removed in flashlight 0.10.0.")
-  }
-
   stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
 
   if (stats == "quartiles") {
-    message("Deprecated. Will be removed in flashlight 0.9.0.")
+    message("Deprecated. Will be removed in flashlight 1.0.0.")
   }
 
   warning_on_names(

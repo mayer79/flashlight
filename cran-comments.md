@@ -24,11 +24,10 @@ Status: OK
 
 ## Rhub NOTES
 
-* checking for future file timestamps ... NOTE
-unable to verify current time
 * checking HTML version of manual ... NOTE
 Skipping checking HTML validation: no command 'tidy' found
 Skipping checking math rendering: package 'V8' unavailable
+
 
 ## Reverse dependencies
 

@@ -89,10 +89,6 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
   cut_type <- match.arg(cut_type)
   center <- match.arg(center)
 
-  if (length(by) >= 2L) {
-    message("The use of more than one 'by' variable is deprecated and will be removed in flashlight 0.10.0.")
-  }
-
   warning_on_names(c("value_name", "label_name", "id_name"), ...)
 
   value_name <- getOption("flashlight.value_name")

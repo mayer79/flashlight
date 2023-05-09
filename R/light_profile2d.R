@@ -94,10 +94,6 @@ light_profile2d.flashlight <- function(x, v = NULL,
   type_name <- getOption("flashlight.type_name")
   counts_name <- getOption("flashlight.counts_name")
 
-  if (length(by) >= 2L) {
-    message("The use of more than one 'by' variable is deprecated and will be removed in flashlight 0.10.0.")
-  }
-
   # Check if exactly two variables are specified
   if (type == "partial dependence" && !is.null(pd_grid)) {
     stopifnot(

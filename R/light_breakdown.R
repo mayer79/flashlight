@@ -86,10 +86,6 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
                                        n_max = Inf, n_perm = 20,
                                        seed = NULL, use_linkinv = FALSE,
                                        description = TRUE, digits = 2, ...) {
-  if (length(by) >= 2L) {
-    message("The use of more than one 'by' variable is deprecated and will be removed in flashlight 0.10.0.")
-  }
-
   visit_strategy <- match.arg(visit_strategy)
 
   warning_on_names(

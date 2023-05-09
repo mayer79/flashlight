@@ -1,32 +1,44 @@
 # flashlight 0.9.0
 
-## Depreciation announcement
+## Announcements for upcoming version 1.0.0
 
-The following functionalities will be removed in {flashlight} 0.10.0:
+The following breaking changes are intended for version 1.0.0.
+
+### Deprecated functionality
 
 - `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.
 - `light_scatter()` and `plot.light_scatter()`: Deprecated in favor of {shapviz}.
 - `plot_counts()`: Deprecated. Might later be replaced by {ggside}.
 - Argument `stats = "quartiles` in `light_profile()` and `light_effects()`.
-- More than one "by" variable in flashlights and `light_*()` functions.
 
-# flashlight 0.8.2
+### External -> internal
+
+These functions will become internal in {flashlight} 1.0.0. Most likely you have never used any of them.
+
+- `grouped_center()`
+- `grouped_counts()`
+- `grouped_stats()`
+- `grouped_weighted_mean()`
+- `light_check()`
+- `light_combine()`
+- `light_recode()` -> similar functionality will be added as option in `light_effects()`
+- `all_identical()`
+- `auto_cut()`
+- `cut3()`
+
+### Options and column names
+
+Currently, predefined column names in data objects returned by `light_*()` functions can be changed via `options()`. For instance, the model name is stored in column "label", which can be changed via option `flashlight.label_name = "label"`. 
+
+In {flashlight} 1.0.0, these options will vanish. To avoid clashs with existing feature names, we will use exotic column names such as "label_" instead. As a consequence, data returned by `light_*()` functions will have different column names.
 
 ## Maintenance
 
 - Introduced Github actions
 - Comply with {dplyr} and {ggplot2} depreciation cycles
 - Better help files
-- More compact vignette
+- More compact vignette(s)
 - Dropped suggested packages caret, mlr3, mlr3learners, moderndive, ranger, xgboost
-
-# flashlight 0.8.1
-
-Maintenance update,
-
-- switching to testthat 3,
-- rearranging vignettes, and
-- improving package generation/update
 
 # flashlight 0.8.0
 

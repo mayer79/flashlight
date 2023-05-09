@@ -43,7 +43,7 @@
 #' plot(light_scatter(x, type = "shap", v = "Petal.Length", by = "Species"))
 #' }
 add_shap <- function(x, ...) {
-  message("Deprecated in favor of {kernelshap} or {fastshap}. Will be removed in flashlight 0.10.0.")
+  message("Deprecated in favor of {kernelshap} or {fastshap}. Will be removed in flashlight 1.0.0.")
   UseMethod("add_shap")
 }
 
