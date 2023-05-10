@@ -89,6 +89,10 @@ light_profile2d.flashlight <- function(x, v = NULL,
                                        pd_seed = NULL, ...) {
   type <- match.arg(type)
 
+  if (type == "shap") {
+    message("type = 'shap' is deprecated and will be removed in flashlight 1.0.0.")
+  }
+
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
   type_name <- getOption("flashlight.type_name")

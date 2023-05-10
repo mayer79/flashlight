@@ -5,7 +5,7 @@
 \alias{add_shap.default}
 \alias{add_shap.flashlight}
 \alias{add_shap.multiflashlight}
-\title{Add SHAP values to (multi-)flashlight}
+\title{DEPRECATED - Add SHAP values to (multi-)flashlight}
 \usage{
 add_shap(x, ...)
 

@@ -81,6 +81,10 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
                                         use_linkinv = FALSE, ...) {
   type <- match.arg(type)
 
+  if (type == "shap") {
+    message("type = 'shap' is deprecated and will be removed in flashlight 1.0.0.")
+  }
+
   warning_on_names(
     c("metric_name", "value_name", "label_name", "variable_name", "error_name"), ...
   )
