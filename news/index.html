@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">flashlight</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.0</span>
       </span>
     </div>
 
@@ -51,23 +51,50 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.8.2" id="flashlight-082">flashlight 0.8.2<a class="anchor" aria-label="anchor" href="#flashlight-082"></a></h2>
+<h2 class="page-header" data-toc-text="0.9.0" id="flashlight-090">flashlight 0.9.0<small>2023-05-10</small><a class="anchor" aria-label="anchor" href="#flashlight-090"></a></h2>
 <div class="section level3">
-<h3 id="maintenance-0-8-2">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance-0-8-2"></a></h3>
+<h3 id="announcements-for-upcoming-version-0-9-0">Announcements for upcoming version 1.0.0<a class="anchor" aria-label="anchor" href="#announcements-for-upcoming-version-0-9-0"></a></h3>
+<p>The following breaking changes are intended for version 1.0.0.</p>
+<div class="section level4">
+<h4 id="deprecated-functionality-0-9-0">Deprecated functionality<a class="anchor" aria-label="anchor" href="#deprecated-functionality-0-9-0"></a></h4>
+<ul><li>
+<code><a href="../reference/add_shap.html">add_shap()</a></code>: Deprecated in favor of {kernelshap} or {fastshap}.</li>
+<li>Consequently, <code>type = "shap"</code> in <code><a href="../reference/light_profile.html">light_profile()</a></code>, <code><a href="../reference/light_importance.html">light_importance()</a></code>, <code><a href="../reference/light_scatter.html">light_scatter()</a></code>, and <code><a href="../reference/light_profile2d.html">light_profile2d()</a></code> is deprecated as well.</li>
+<li>
+<code><a href="../reference/plot_counts.html">plot_counts()</a></code>: Deprecated. Might later be replaced by {ggside}.</li>
+<li>Argument <code>stats = "quartiles</code> in <code><a href="../reference/light_profile.html">light_profile()</a></code> and <code><a href="../reference/light_effects.html">light_effects()</a></code>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="external---internal-0-9-0">External -&gt; internal<a class="anchor" aria-label="anchor" href="#external---internal-0-9-0"></a></h4>
+<p>These functions will become internal in {flashlight} 1.0.0. Most likely you have never used any of them.</p>
+<ul><li><code><a href="../reference/grouped_center.html">grouped_center()</a></code></li>
+<li><code><a href="../reference/grouped_counts.html">grouped_counts()</a></code></li>
+<li><code><a href="../reference/grouped_stats.html">grouped_stats()</a></code></li>
+<li><code><a href="../reference/grouped_weighted_mean.html">grouped_weighted_mean()</a></code></li>
+<li><code><a href="../reference/light_check.html">light_check()</a></code></li>
+<li><code><a href="../reference/light_combine.html">light_combine()</a></code></li>
+<li>
+<code><a href="../reference/light_recode.html">light_recode()</a></code> -&gt; similar functionality will be added as option in <code><a href="../reference/light_effects.html">light_effects()</a></code>
+</li>
+<li><code><a href="../reference/all_identical.html">all_identical()</a></code></li>
+<li><code><a href="../reference/auto_cut.html">auto_cut()</a></code></li>
+<li><code><a href="../reference/cut3.html">cut3()</a></code></li>
+</ul></div>
+<div class="section level4">
+<h4 id="options-and-column-names-0-9-0">Options and column names<a class="anchor" aria-label="anchor" href="#options-and-column-names-0-9-0"></a></h4>
+<p>Currently, predefined column names in data objects returned by <code>light_*()</code> functions can be changed via <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code>. For instance, the model name is stored in column “label”, which can be changed via option <code>flashlight.label_name = "label"</code>.</p>
+<p>In {flashlight} 1.0.0, these options will vanish. To avoid clashs with existing feature names, we will use exotic column names such as “label_” instead. As a consequence, data returned by <code>light_*()</code> functions will have different column names.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="maintenance-0-9-0">Maintenance<a class="anchor" aria-label="anchor" href="#maintenance-0-9-0"></a></h3>
 <ul><li>Introduced Github actions</li>
 <li>Comply with {dplyr} and {ggplot2} depreciation cycles</li>
 <li>Better help files</li>
-<li>More compact vignette</li>
+<li>More compact vignette(s)</li>
 <li>Dropped suggested packages caret, mlr3, mlr3learners, moderndive, ranger, xgboost</li>
 </ul></div>
 </div>
-    <div class="section level2">
-<h2 class="page-header" data-toc-text="0.8.1" id="flashlight-081">flashlight 0.8.1<a class="anchor" aria-label="anchor" href="#flashlight-081"></a></h2>
-<p>Maintenance update,</p>
-<ul><li>switching to testthat 3,</li>
-<li>rearranging vignettes, and</li>
-<li>improving package generation/update</li>
-</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.0" id="flashlight-080">flashlight 0.8.0<small>2021-04-21</small><a class="anchor" aria-label="anchor" href="#flashlight-080"></a></h2>
 <div class="section level3">
