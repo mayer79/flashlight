@@ -32,15 +32,13 @@ light_scatter(x, ...)
 
 \item{v}{The variable name to be shown on the x-axis.}
 
-\item{data}{An optional \code{data.frame}. Not relevant for \code{type = "shap"}.}
+\item{data}{An optional \code{data.frame}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{type}{Type of the profile: Either "predicted", "response", "residual",
-or "shap".}
+\item{type}{Type of the profile: Either "predicted", "response", or "residual".}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
-Not used for \code{type = "shap"}.}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
 
 \item{n_max}{Maximum number of data rows to select. Will be randomly picked from the
 relevant data.}
@@ -60,7 +58,7 @@ visualizations. Column names can be controlled by
 }
 \description{
 This function prepares values for drawing a scatter plot of predicted values,
-responses, residuals, or SHAP values against a selected variable.
+responses, or residuals against a selected variable.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -72,8 +70,8 @@ responses, residuals, or SHAP values against a selected variable.
 
 }}
 \examples{
-fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
-fit_b <- lm(Sepal.Length ~ ., data = iris)
+fit_a <- stats::lm(Sepal.Length ~ . -Petal.Length, data = iris)
+fit_b <- stats::lm(Sepal.Length ~ ., data = iris)
 fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
 fl_b <- flashlight(model = fit_b, label = "all")
 fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")

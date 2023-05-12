@@ -37,8 +37,7 @@ by setting \code{m_repetitions} > 1.}
 An object of class "ggplot".
 }
 \description{
-Minimal visualization of an object of class "light_importance" via
-\code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.
+Visualization of an object of class "light_importance" via \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.
 If available, standard errors are added by \code{\link[ggplot2:geom_linerange]{ggplot2::geom_errorbar()}}.
 The object returned is of class "ggplot" and can be further customized.
 }
@@ -51,10 +50,14 @@ One single additional dimension is visualized by a facet wrap,
 or - if \code{swap_dim = FALSE} - by dodge/fill.
 }
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
+fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+fit_part <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
+mod_full <- flashlight(
+  model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+)
+mod_part <- flashlight(
+  model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+)
 mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 plot(light_importance(mod_part, m_repetitions = 4), fill = "darkred")
 plot(light_importance(mods), swap_dim = TRUE)

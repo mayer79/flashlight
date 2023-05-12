@@ -1,16 +1,14 @@
 #' Scatter
 #'
 #' This function prepares values for drawing a scatter plot of predicted values,
-#' responses, residuals, or SHAP values against a selected variable.
+#' responses, or residuals against a selected variable.
 #'
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param v The variable name to be shown on the x-axis.
-#' @param data An optional `data.frame`. Not relevant for `type = "shap"`.
+#' @param data An optional `data.frame`.
 #' @param by An optional vector of column names used to additionally group the results.
-#' @param type Type of the profile: Either "predicted", "response", "residual",
-#'   or "shap".
+#' @param type Type of the profile: Either "predicted", "response", or "residual".
 #' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
-#'   Not used for `type = "shap"`.
 #' @param n_max Maximum number of data rows to select. Will be randomly picked from the
 #'   relevant data.
 #' @param seed An integer random seed used for subsampling.
@@ -25,8 +23,8 @@
 #'   - `type`: Same as input `type`. For information only.
 #' @export
 #' @examples
-#' fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
-#' fit_b <- lm(Sepal.Length ~ ., data = iris)
+#' fit_a <- stats::lm(Sepal.Length ~ . -Petal.Length, data = iris)
+#' fit_b <- stats::lm(Sepal.Length ~ ., data = iris)
 #' fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
 #' fl_b <- flashlight(model = fit_b, label = "all")
 #' fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
@@ -56,23 +54,13 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
   type <- match.arg(type)
 
   if (type == "shap") {
-    message("type = 'shap' is deprecated and will be removed in flashlight 1.0.0.")
+    stop("type = 'shap' is deprecated.")
   }
 
   warning_on_names(c("value_name", "label_name"), ...)
 
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
-
-  # If SHAP, extract data
-  if (type == "shap") {
-    if (!is.shap(x$shap)) {
-      stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
-    }
-    stopifnot(v %in% colnames(x$shap$data))
-    variable_name <- getOption("flashlight.variable_name")
-    data <- x$shap$data[x$shap$data[[variable_name]] == v, ]
-  }
 
   # Checks
   stopifnot(
@@ -95,19 +83,16 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
   }
 
   # Update flashlight
-  if (type != "shap") {
-    x <- flashlight(
-      x, data = data, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z
-    )
-  }
+  x <- flashlight(
+    x, data = data, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z
+  )
 
   # Calculate values
   data[[value_name]] <- switch(
     type,
     response = response(x),
     predicted = stats::predict(x),
-    residual = stats::residuals(x),
-    shap = data[["shap_"]]
+    residual = stats::residuals(x)
   )
 
   # Organize output

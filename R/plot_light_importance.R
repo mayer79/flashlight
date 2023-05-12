@@ -1,7 +1,6 @@
 #' Visualize Variable Importance
 #'
-#' Minimal visualization of an object of class "light_importance" via
-#' [ggplot2::geom_bar()].
+#' Visualization of an object of class "light_importance" via [ggplot2::geom_bar()].
 #' If available, standard errors are added by [ggplot2::geom_errorbar()].
 #' The object returned is of class "ggplot" and can be further customized.
 #'
@@ -27,10 +26,14 @@
 #' @returns An object of class "ggplot".
 #' @export
 #' @examples
-#' fit_full <- lm(Sepal.Length ~ ., data = iris)
-#' fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
-#' mod_full <- flashlight(model = fit_full, label = "full", data = iris, y = "Sepal.Length")
-#' mod_part <- flashlight(model = fit_part, label = "part", data = iris, y = "Sepal.Length")
+#' fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_part <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
+#' mod_full <- flashlight(
+#'   model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+#' )
+#' mod_part <- flashlight(
+#'   model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+#' )
 #' mods <- multiflashlight(list(mod_full, mod_part), by = "Species")
 #' plot(light_importance(mod_part, m_repetitions = 4), fill = "darkred")
 #' plot(light_importance(mods), swap_dim = TRUE)
@@ -130,7 +133,6 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
   type <- switch(
     x$type,
     permutation = "Drop in performance",
-    shap = "mean(|SHAP|)",
     H = "Friedman's H",
     ice = "ICE based interaction strength"
   )

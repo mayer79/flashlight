@@ -2,7 +2,7 @@
 #'
 #' Calculates different types of 2D-profiles across two variables.
 #' By default, partial dependence profiles are calculated (see Friedman).
-#' Other options are response, predicted values, residuals, and shap.
+#' Other options are response, predicted values, and residuals.
 #' The results are aggregated by (weighted) means.
 #'
 #' Different binning options are available, see arguments below.
@@ -13,14 +13,14 @@
 #'
 #' For partial dependence and prediction profiles, "model", "predict_function",
 #' "linkinv" and "data" are required. For response profiles it is "y", "linkinv"
-#' and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
+#' and "data". "data" can also be passed on the fly.
 #'
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param v A vector of exactly two variable names to be profiled.
-#' @param data An optional `data.frame`. Not used for `type = "shap"`.
+#' @param data An optional `data.frame`.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "partial dependence", "predicted",
-#'   "response", "residual", or "shap".
+#'   "response", or "residual".
 #' @param breaks Named list of cut breaks specifying how to bin one or more numeric
 #'   variables. Used to overwrite automatic binning via `n_bins` and `cut_type`.
 #'   Ignored for non-numeric `v`.
@@ -28,8 +28,7 @@
 #'   Can be an unnamed vector of length 2 to distinguish between v.
 #' @param cut_type Should numeric `v` be cut into "equal" or "quantile" bins?
 #'   Can be an unnamed vector of length 2 to distinguish between v.
-#' @param use_linkinv Should retransformation function be applied?
-#'   Default is `TRUE`. Not used for type "shap".
+#' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
 #' @param counts Should observation counts be added?
 #' @param counts_weighted If `counts` is TRUE: Should counts be weighted by the
 #'   case weights? If `TRUE`, the sum of `w` is returned by group.
@@ -59,9 +58,9 @@
 #'   Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
 #'     The Annals of Statistics, 29:1189–1232.
 #' @examples
-#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fit <- stats::lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-#' light_profile2d(fl, v = c("Petal.Length", "Species"))
+#' plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
 #' @seealso [light_profile()], [plot.light_profile2d()]
 light_profile2d <- function(x, ...) {
   UseMethod("light_profile2d")
@@ -90,7 +89,7 @@ light_profile2d.flashlight <- function(x, v = NULL,
   type <- match.arg(type)
 
   if (type == "shap") {
-    message("type = 'shap' is deprecated and will be removed in flashlight 1.0.0.")
+    stop("type = 'shap' is deprecated.")
   }
 
   value_name <- getOption("flashlight.value_name")
@@ -118,15 +117,7 @@ light_profile2d.flashlight <- function(x, v = NULL,
     pd_evaluate_at = pd_evaluate_at
   )
 
-  # If SHAP, extract data
-  if (type == "shap") {
-    if (!is.shap(x$shap)) {
-      stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
-    }
-    stopifnot(v %in% colnames(x$shap$data))
-    variable_name <- getOption("flashlight.variable_name")
-    data <- x$shap$data[x$shap$data[[variable_name]] %in% v, ]
-  } else if (is.null(data)) {
+  if (is.null(data)) {
     data <- x$data
   }
 
@@ -139,10 +130,9 @@ light_profile2d.flashlight <- function(x, v = NULL,
   check_unique(c(by, v), c(value_name, label_name, type_name))
 
   # Update flashlight
-  if (type != "shap") {
-    x <- flashlight(
-      x, data = data, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z)
-  }
+  x <- flashlight(
+    x, data = data, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z
+  )
 
   # Calculate profiles
   if (type == "partial dependence") {
@@ -183,8 +173,7 @@ light_profile2d.flashlight <- function(x, v = NULL,
       type,
       response = response(x),
       predicted = stats::predict(x),
-      residual = stats::residuals(x),
-      shap = data[["shap_"]]
+      residual = stats::residuals(x)
     )
 
     # Replace v values by binned values

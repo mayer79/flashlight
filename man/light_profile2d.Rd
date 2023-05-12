@@ -52,12 +52,12 @@ the cut breaks of the \code{v} variables. Not relevant for partial dependence pr
 
 \item{v}{A vector of exactly two variable names to be profiled.}
 
-\item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
+\item{data}{An optional \code{data.frame}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
 \item{type}{Type of the profile: Either "partial dependence", "predicted",
-"response", "residual", or "shap".}
+"response", or "residual".}
 
 \item{breaks}{Named list of cut breaks specifying how to bin one or more numeric
 variables. Used to overwrite automatic binning via \code{n_bins} and \code{cut_type}.
@@ -69,8 +69,7 @@ Can be an unnamed vector of length 2 to distinguish between v.}
 \item{cut_type}{Should numeric \code{v} be cut into "equal" or "quantile" bins?
 Can be an unnamed vector of length 2 to distinguish between v.}
 
-\item{use_linkinv}{Should retransformation function be applied?
-Default is \code{TRUE}. Not used for type "shap".}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
 
 \item{counts}{Should observation counts be added?}
 
@@ -107,7 +106,7 @@ visualizations. Column names can be controlled by
 \description{
 Calculates different types of 2D-profiles across two variables.
 By default, partial dependence profiles are calculated (see Friedman).
-Other options are response, predicted values, residuals, and shap.
+Other options are response, predicted values, and residuals.
 The results are aggregated by (weighted) means.
 }
 \details{
@@ -119,7 +118,7 @@ internally capped at the number of distinct values of a variable.
 
 For partial dependence and prediction profiles, "model", "predict_function",
 "linkinv" and "data" are required. For response profiles it is "y", "linkinv"
-and "data" and for shap profiles it is just "shap". "data" can be passed on the fly.
+and "data". "data" can also be passed on the fly.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -131,9 +130,9 @@ and "data" and for shap profiles it is just "shap". "data" can be passed on the 
 
 }}
 \examples{
-fit <- lm(Sepal.Length ~ ., data = iris)
+fit <- stats::lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-light_profile2d(fl, v = c("Petal.Length", "Species"))
+plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
 }
 \references{
 Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
