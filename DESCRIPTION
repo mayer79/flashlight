@@ -1,6 +1,6 @@
 Package: flashlight
 Title: Shed Light on Black Box Machine Learning Models
-Version: 0.9.0
+Version: 0.9.0.9000
 Authors@R: 
     person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre", "cph"))
 Description: Shed light on black box machine learning models by the help

@@ -15,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "Shed Light on Black Box Machine Learning Models",
-    Version = "0.9.0",
+    Version = "0.9.0.9000",
     Description = "Shed light on black box machine learning models by the help of model
     performance, variable importance, global surrogate models, ICE profiles,
     partial dependence (Friedman J. H. (2001) <doi:10.1214/aos/1013203451>),

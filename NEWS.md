@@ -1,3 +1,10 @@
+# flashlight 0.9.0.9000
+
+## Deprecated functionality
+
+- `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.
+- Consequently, `type = "shap"` in `light_profile()`, `light_importance()`, `light_scatter()`, and `light_profile2d()` is deprecated as well.
+
 # flashlight 0.9.0
 
 ## Announcements for upcoming version 1.0.0

@@ -4,9 +4,8 @@
 #' Calculates different types of profiles across covariable values.
 #' By default, partial dependence profiles are calculated (see Friedman).
 #' Other options are profiles of ALE (accumulated local effects, see Apley),
-#' response, predicted values ("M plots" or "marginal plots", see Apley),
-#' residuals, and shap. The results are aggregated either by (weighted) means or by
-#' (weighted) quartiles.
+#' response, predicted values ("M plots" or "marginal plots", see Apley), and residuals.
+#' The results are aggregated either by (weighted) means or by (weighted) quartiles.
 #'
 #' Note that ALE profiles are calibrated by (weighted) average predictions.
 #' In contrast to the suggestions in Apley, we calculate ALE profiles of factors
@@ -24,14 +23,14 @@
 #'
 #' For partial dependence, ALE, and prediction profiles, "model", "predict_function",
 #' "linkinv" and "data" are required. For response profiles its "y", "linkinv" and
-#' "data", and for shap profiles it is just "shap". "data" can be passed on the fly.
+#' "data". "data" can also be passed on the fly.
 #'
 #' @param x An object of class "flashlight" or "multiflashlight".
 #' @param v The variable name to be profiled.
-#' @param data An optional `data.frame`. Not used for `type = "shap"`.
+#' @param data An optional `data.frame`.
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "partial dependence", "ale", "predicted",
-#'   "response", "residual", or "shap".
+#'   "response", or "residual".
 #' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles,
 #'   only "mean" makes sense.
 #' @param breaks Cut breaks for a numeric `v`. Used to overwrite automatic binning via
@@ -41,7 +40,6 @@
 #' @param cut_type Should a numeric `v` be cut into "equal" or "quantile" bins?
 #'   Ignored if `v` is not numeric or if `breaks` is specified.
 #' @param use_linkinv Should retransformation function be applied? Default is `TRUE`.
-#'   Not used for type "shap".
 #' @param counts Should observation counts be added?
 #' @param counts_weighted If `counts = TRUE`: Should counts be weighted by the
 #'   case weights? If `TRUE`, the sum of `w` is returned by group.
@@ -85,13 +83,15 @@
 #'   - `stats` Same as input `stats`.
 #' @export
 #' @references
-#' - Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
-#' - Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
+#' - Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
+#'   The Annals of Statistics, 29:1189–1232.
+#' - Apley D. W. (2016). Visualizing the effects of predictor variables in black box
+#'   supervised learning models.
 #' @examples
-#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fit <- stats::lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-#' light_profile(fl, v = "Species")
-#' light_profile(fl, v = "Petal.Width", type = "residual")
+#' plot(light_profile(fl, v = "Species"))
+#' plot(light_profile(fl, v = "Petal.Width", type = "residual"))
 #' @seealso [light_effects()], [plot.light_profile()]
 light_profile <- function(x, ...) {
   UseMethod("light_profile")
@@ -130,7 +130,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     message("stats = 'quartiles' is deprecated and will be removed in flashlight 1.0.0.")
   }
   if (type == "shap") {
-    message("type = 'shap' is deprecated and will be removed in flashlight 1.0.0.")
+    stop("type = 'shap' is deprecated.")
   }
 
   warning_on_names(
@@ -145,15 +145,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   type_name <- getOption("flashlight.type_name")
   counts_name <- getOption("flashlight.counts_name")
 
-  # If SHAP, extract data
-  if (type == "shap") {
-    if (!is.shap(x$shap)) {
-      stop("No shap values calculated. Run 'add_shap' for the flashlight first.")
-    }
-    stopifnot(v %in% colnames(x$shap$data))
-    variable_name <- getOption("flashlight.variable_name")
-    data <- x$shap$data[x$shap$data[[variable_name]] == v, ]
-  } else if (is.null(data)) {
+  if (is.null(data)) {
     data <- x$data
   }
 
@@ -178,11 +170,9 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   }
 
   # Update flashlight
-  if (type != "shap") {
-    x <- flashlight(
-      x, data = data, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z
-    )
-  }
+  x <- flashlight(
+    x, data = data, by = by, linkinv = if (use_linkinv) x$linkinv else function(z) z
+  )
 
   # Calculate profiles
   arg_list <- list(
@@ -228,8 +218,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     data[[value_name]] <- switch(type,
       response = response(x),
       predicted = if (is.null(pred)) stats::predict(x) else pred,
-      residual = stats::residuals(x),
-      shap = data[["shap_"]]
+      residual = stats::residuals(x)
     )
 
     # Replace v values by binned ones
@@ -261,7 +250,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
 
   # Code type as factor (relevant for light_effects)
   agg[[type_name]] <- factor(
-    type, c("response", "predicted", "partial dependence", "ale", "residual", "shap")
+    type, c("response", "predicted", "partial dependence", "ale", "residual")
   )
 
   # Collect results

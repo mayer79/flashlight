@@ -49,7 +49,7 @@ cut breaks of the \code{v} variable.}
 
 \item{v}{The variable name to be profiled.}
 
-\item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
+\item{data}{An optional \code{data.frame}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
@@ -64,8 +64,7 @@ Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 \item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins?
 Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
-Not used for type "shap".}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
 
 \item{counts_weighted}{Should counts be weighted by the case weights?
 If \code{TRUE}, the sum of \code{w} is returned by group.}

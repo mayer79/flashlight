@@ -57,12 +57,12 @@ cut breaks of the \code{v} variable.}
 
 \item{v}{The variable name to be profiled.}
 
-\item{data}{An optional \code{data.frame}. Not used for \code{type = "shap"}.}
+\item{data}{An optional \code{data.frame}.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
 \item{type}{Type of the profile: Either "partial dependence", "ale", "predicted",
-"response", "residual", or "shap".}
+"response", or "residual".}
 
 \item{stats}{Statistic to calculate: "mean" or "quartiles". For ALE profiles,
 only "mean" makes sense.}
@@ -76,8 +76,7 @@ Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 \item{cut_type}{Should a numeric \code{v} be cut into "equal" or "quantile" bins?
 Ignored if \code{v} is not numeric or if \code{breaks} is specified.}
 
-\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.
-Not used for type "shap".}
+\item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
 
 \item{counts}{Should observation counts be added?}
 
@@ -138,9 +137,8 @@ visualizations. Column names can be controlled by \code{options(flashlight.colum
 Calculates different types of profiles across covariable values.
 By default, partial dependence profiles are calculated (see Friedman).
 Other options are profiles of ALE (accumulated local effects, see Apley),
-response, predicted values ("M plots" or "marginal plots", see Apley),
-residuals, and shap. The results are aggregated either by (weighted) means or by
-(weighted) quartiles.
+response, predicted values ("M plots" or "marginal plots", see Apley), and residuals.
+The results are aggregated either by (weighted) means or by (weighted) quartiles.
 
 Note that ALE profiles are calibrated by (weighted) average predictions.
 In contrast to the suggestions in Apley, we calculate ALE profiles of factors
@@ -158,7 +156,7 @@ with a (multi-)variate evaluation grid.
 
 For partial dependence, ALE, and prediction profiles, "model", "predict_function",
 "linkinv" and "data" are required. For response profiles its "y", "linkinv" and
-"data", and for shap profiles it is just "shap". "data" can be passed on the fly.
+"data". "data" can also be passed on the fly.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -170,15 +168,17 @@ For partial dependence, ALE, and prediction profiles, "model", "predict_function
 
 }}
 \examples{
-fit <- lm(Sepal.Length ~ ., data = iris)
+fit <- stats::lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-light_profile(fl, v = "Species")
-light_profile(fl, v = "Petal.Width", type = "residual")
+plot(light_profile(fl, v = "Species"))
+plot(light_profile(fl, v = "Petal.Width", type = "residual"))
 }
 \references{
 \itemize{
-\item Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29:1189–1232.
-\item Apley D. W. (2016). Visualizing the effects of predictor variables in black box supervised learning models.
+\item Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
+The Annals of Statistics, 29:1189–1232.
+\item Apley D. W. (2016). Visualizing the effects of predictor variables in black box
+supervised learning models.
 }
 }
 \seealso{
