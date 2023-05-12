@@ -65,10 +65,6 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     stop("type = 'shap' is deprecated.")
   }
 
-  warning_on_names(
-    c("metric_name", "value_name", "label_name", "variable_name", "error_name"), ...
-  )
-
   metric_name <- getOption("flashlight.metric_name")
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")

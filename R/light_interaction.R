@@ -88,8 +88,6 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          use_linkinv = FALSE, ...) {
   type <- match.arg(type)
 
-  warning_on_names(c("value_name", "label_name", "variable_name", "error_name"), ...)
-
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
   variable_name <- getOption("flashlight.variable_name")

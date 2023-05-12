@@ -59,11 +59,6 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
     message("stats = 'quartiles' is deprecated and will be removed in flashlight 1.0.0.")
   }
 
-  warning_on_names(
-    c("value_name", "label_name", "q1_name", "q3_name", "type_name", "counts_name"),
-    ...
-  )
-
   if (is.null(data)) {
     data <- x$data
   }

@@ -48,8 +48,6 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
                                               v = NULL, use_linkinv = TRUE,
                                               n_max = Inf, seed = NULL,
                                               keep_max_levels = 4L, ...) {
-  warning_on_names(c("label_name", "tree_name"), ...)
-
   label_name <- getOption("flashlight.label_name")
   tree_name <- getOption("flashlight.tree_name")
 

@@ -12,13 +12,6 @@ rename_one <- function(x, old, new) {
   x
 }
 
-# Deprecation warning
-warning_on_names <- function(to_check, ...) {
-  if (any(to_check %in% names(list(...)))) {
-    warning("Using 'xyz_name' arguments is deprecated. Use 'options(flashlight.xyz_name = ...)' instead.")
-  }
-}
-
 # Calculates midpoints of subsequent unique breaks
 midpoints <- function(breaks) {
   # to do: deal with missings

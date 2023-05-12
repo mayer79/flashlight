@@ -36,8 +36,6 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
                         two_sided = FALSE, calibrate = TRUE, ...) {
   cut_type <- match.arg(cut_type)
 
-  warning_on_names(c("value_name", "counts_name"), ...)
-
   value_name <- getOption("flashlight.value_name")
   counts_name <- getOption("flashlight.counts_name")
   id_name <- "id_xxx"  # safer than default

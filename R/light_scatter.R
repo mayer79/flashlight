@@ -57,8 +57,6 @@ light_scatter.flashlight <- function(x, v, data = x$data, by = x$by,
     stop("type = 'shap' is deprecated.")
   }
 
-  warning_on_names(c("value_name", "label_name"), ...)
-
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
 

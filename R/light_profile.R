@@ -133,11 +133,6 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     stop("type = 'shap' is deprecated.")
   }
 
-  warning_on_names(
-    c("value_name", "label_name", "q1_name", "q3_name", "type_name", "counts_name"),
-    ...
-  )
-
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
   q1_name <- getOption("flashlight.q1_name")

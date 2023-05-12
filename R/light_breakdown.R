@@ -88,16 +88,6 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
                                        description = TRUE, digits = 2, ...) {
   visit_strategy <- match.arg(visit_strategy)
 
-  warning_on_names(
-    c(
-      "after_name",
-      "before_name",
-      "description_name",
-      "variable_name"
-    ),
-    ...
-  )
-
   after_name <- getOption("flashlight.after_name")
   before_name <- getOption("flashlight.before_name")
   description_name <- getOption("flashlight.description_name")

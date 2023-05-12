@@ -43,9 +43,6 @@ light_performance.default <- function(x, ...) {
 light_performance.flashlight <- function(x, data = x$data, by = x$by,
                                          metrics = x$metrics,
                                          use_linkinv = FALSE, ...) {
-
-  warning_on_names(c("metric_name", "value_name", "label_name"), ...)
-
   metric_name <- getOption("flashlight.metric_name")
   value_name <- getOption("flashlight.value_name")
   label_name <- getOption("flashlight.label_name")
