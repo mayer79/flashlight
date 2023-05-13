@@ -30,25 +30,24 @@ plot.light_breakdown <- function(x, facet_scales = "free",
   data <- transform(
     x$data,
     fill_ = (after_ - before_) > 0,
-    xmin_ = step_ - 0.5,
-    xmax_ = step_ + 0.5,
-    y_ = pmin(before_, after_)
+    ymin_ = step_ - 0.5,
+    ymax_ = step_ + 0.5,
+    x_ = pmin(before_, after_)
   )
 
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
-      x = step_, y = y_, ymin = before_, ymax = after_, xmin = xmin_, xmax = xmax_
+      x = x_, y = step_, xmin = before_, xmax = after_, ymin = ymin_, ymax = ymax_
     )
   ) +
     ggplot2::geom_rect(
       ggplot2::aes(fill = fill_), color = "black", show.legend = FALSE
     ) +
-    ggplot2::labs(x = ggplot2::element_blank(), y = "Prediction") +
+    ggplot2::labs(x = "Prediction", y = ggplot2::element_blank()) +
     ggplot2::geom_label(ggplot2::aes(label = description_), hjust = -0.05, ...) +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.67))) +
-    ggplot2::scale_x_reverse() +
-    ggplot2::coord_flip() +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.67))) +
+    ggplot2::scale_y_reverse() +
     ggplot2::theme(
       panel.grid.major.y = ggplot2::element_blank(),
       panel.grid.minor.y = ggplot2::element_blank(),
