@@ -13,14 +13,14 @@ get_rmse_r2 <- function(fit) c(RMSE(stats::resid(fit)), summary(fit)$r.squared)
 
 test_that("basic functionality works for two metrics", {
   expect_equal(dim(perf$data), c(2L, 3L))
-  expect_equal(perf$data$value, get_rmse_r2(fit))
+  expect_equal(perf$data$value_, get_rmse_r2(fit))
   expect_s3_class(plot(perf), "ggplot")
 })
 
 test_that("light_performance works with by variable", {
   expect_equal(dim(perf_by$data), c(3 * nrow(perf$data), ncol(perf$data) + 1L))
   expect_equal(
-    perf_by$data$value[c(1L, 3L, 5L)],
+    perf_by$data$value_[c(1L, 3L, 5L)],
     as.numeric(tapply(stats::resid(fit), iris$Species, FUN = RMSE))
   )
   expect_s3_class(plot(perf_by), "ggplot")
@@ -52,20 +52,6 @@ test_that("R-squared for weighted flashlight is the same as the one from summary
     metrics = list(r2 = MetricsWeighted::r_squared)
   )
   perf_w <- light_performance(fl_w)
-  expect_equal(perf_w$data$value, summary(fit_w)$r.squared, tolerance = 0.01)
+  expect_equal(perf_w$data$value_, summary(fit_w)$r.squared, tolerance = 0.01)
   expect_s3_class(plot(perf_w), "ggplot")
 })
-
-test_that("Options work", {
-  new_options = list(
-    flashlight.label_name = "ell",
-    flashlight.metric_name = "mm",
-    flashlight.value_name = "vv"
-  )
-  withr::with_options(new_options, {
-    perf <- light_performance(fl)
-    expect_true(all(c("ell", "mm", "vv") %in% colnames(perf$data)))
-  })
-  expect_s3_class(plot(perf), "ggplot")
-})
-

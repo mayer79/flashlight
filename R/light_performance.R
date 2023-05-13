@@ -23,10 +23,18 @@
 #'   - `by` Same as input `by`.
 #' @export
 #' @examples
-#' fit <- lm(Sepal.Length ~ ., data = iris)
-#' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
-#' light_performance(fl)
-#' light_performance(fl, by = "Species")
+#' fit_part <- stats::lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+#' fl_part <- flashlight(
+#'   model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+#' )
+#' fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fl_full <- flashlight(
+#'   model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+#' )
+#' fls <- multiflashlight(list(fl_part, fl_full))
+#' plot(light_performance(fls), fill = "chartreuse4")
+#' plot(light_performance(fls, by = "Species"))
+#' plot(light_performance(fls, by = "Species"), swap_dim = TRUE)
 #' @seealso [plot.light_performance()]
 light_performance <- function(x, ...) {
   UseMethod("light_performance")
@@ -43,17 +51,13 @@ light_performance.default <- function(x, ...) {
 light_performance.flashlight <- function(x, data = x$data, by = x$by,
                                          metrics = x$metrics,
                                          use_linkinv = FALSE, ...) {
-  metric_name <- getOption("flashlight.metric_name")
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "No metric!" = !is.null(metrics),
-    "No 'y' defined in flashlight!" = !is.null(x$y)
+    "No 'y' defined in flashlight!" = !is.null(x$y),
+    !any(c("metric_", "value_", "label_", "pred_") %in% by)
   )
-  check_unique(by, c(metric_name, value_name, label_name), temp_names = "pred_")
 
   # Update flashlight
   x <- flashlight(
@@ -61,8 +65,8 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by,
   )
 
   # Calculate predictions
-  data[["pred_"]] <- stats::predict(x)
-  data[[x$y]] <- response(x)
+  data$pred_ <- stats::predict(x)
+  data[[x$y]] <- response(x)  # Applies linkinv
 
   # Aggregate the result within by groups
   core_fun <- function(X) {
@@ -72,13 +76,13 @@ light_performance.flashlight <- function(x, data = x$data, by = x$by,
       predicted = "pred_",
       w = x$w,
       metrics = metrics,
-      key = metric_name,
-      value = value_name,
+      key = "metric_",
+      value = "value_",
       ...
     )
   }
-  data[[label_name]] <- x$label
-  agg <- Reframe(data, FUN = core_fun, .by = c(label_name, by))
+  agg <- Reframe(data, FUN = core_fun, .by = by)
+  agg$label_ <- x$label
 
   # Organize output
   add_classes(list(data = agg, by = by), classes = c("light_performance", "light"))
