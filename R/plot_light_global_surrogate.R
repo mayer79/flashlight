@@ -18,15 +18,13 @@
 #' @seealso [light_global_surrogate()]
 plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE,
                                         mfrow = NULL, ...) {
-  label_name <- getOption("flashlight.label_name")
-  tree_name <- getOption("flashlight.tree_name")
   data <- x$data
   multi <- is.light_global_surrogate_multi(x)
   ndim <- length(x$by) + multi
   if (ndim == 0L) {
-    rpart.plot::rpart.plot(data[[tree_name]][[1L]], roundint = FALSE, type = type, ...)
-  } else if (ndim == 1) {
-    dim_col <- data[[if (multi) label_name else x$by[1L]]]
+    rpart.plot::rpart.plot(data$tree_[[1L]], roundint = FALSE, type = type, ...)
+  } else if (ndim == 1L) {
+    dim_col <- data[[if (multi) "label_" else x$by[1L]]]
     m <- length(dim_col)
     if (is.null(mfrow)) {
       nr <- floor(sqrt(m))
@@ -37,7 +35,7 @@ plot.light_global_surrogate <- function(x, type = 5, auto_main = TRUE,
 
     for (i in seq_len(m)) {
       rpart.plot::rpart.plot(
-        data$tree[[i]],
+        data$tree_[[i]],
         roundint = FALSE,
         type = type,
         main = if (auto_main) dim_col[i],
