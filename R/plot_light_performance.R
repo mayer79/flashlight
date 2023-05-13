@@ -75,10 +75,7 @@ plot.light_performance <- function(x, swap_dim = FALSE, geom = c("bar", "point")
     p <- p + ggplot2::facet_wrap(~ metric_, scales = facet_scales)
   }
   if (rotate_x) {
-    p <- p + ggplot2::theme(
-      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
-    )
+    p <- p + rotate_x()
   }
-  p +
-    ggplot2::ylab("Value")
+  p + ggplot2::ylab("Value")
 }

@@ -87,26 +87,22 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
                                          seed = NULL,
                                          use_linkinv = FALSE, ...) {
   type <- match.arg(type)
-
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-  variable_name <- getOption("flashlight.variable_name")
-  error_name <- getOption("flashlight.error_name")
-
   if (length(by) >= 2L) {
     stop("light_interaction() does not support more than one by variable.")
   }
+  temp_vars <- c(
+    "value_", "label_", "variable_", "error_", "w_", "id_", "id_curve_",
+     "value_2_", "value_i", "value_j", "denom_"
+  )
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "Not all 'v' in 'data'" = v %in% colnames(data),
-    !(c("id_", "id_curve", "w_") %in% colnames(data))
+    !(c("id_", "id_curve_", "w_") %in% colnames(data)),
+    !any(temp_vars %in% by),
+    !any(temp_vars %in% v)
   )
-  check_unique(
-    c(by, v),
-    opt_names = c(value_name, label_name, error_name, variable_name),
-    temp_names = c("w_", "id_", "id_curve", "value_", "value_i", "value_j", "denom_")
-  )
+
   if (type == "ice" && pairwise) {
     stop("Pairwise interactions are implemented only for type = 'H'.")
   }
@@ -116,7 +112,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     set.seed(seed)
   }
 
-  # Determine v if not yet available
+  # Determine v
   if (is.null(v)) {
     v <- setdiff(cols, c(x$y, by, x$w))
   }
@@ -139,43 +135,43 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
 
   # HELPER FUNCTIONS
   # Version of light_profile and light_ice
-  call_pd <- function(X, z, vn = "value_", gid, only_values = FALSE, agg = TRUE) {
+  call_pd <- function(X, z, vn = "value_2_", gid, only_values = FALSE, agg = TRUE) {
     # Weights of the grid ids
     if (has_w) {
       ww <- X[gid, w, drop = FALSE]
-      ww[["id_"]] <- gid
+      ww$id_ <- gid
     }
     grid <- X[gid, z, drop = FALSE]
-    grid[["id_"]] <- gid
+    grid$id_ <- gid
     X[, z] <- NULL
-    X[["id_curve"]] <- seq_len(nrow(X))
+    X$id_curve_ <- seq_len(nrow(X))
     X <- tidyr::expand_grid(X, grid)
     X[[vn]] <- stats::predict(x, data = X[, cols, drop = FALSE])
     if (!agg) {
-      X[[vn]] <- grouped_center(X, x = vn, by = "id_curve", na.rm = TRUE)
+      X[[vn]] <- grouped_center(X, x = vn, by = "id_curve_", na.rm = TRUE)
       return(X)
     }
     out <- grouped_weighted_mean(X, x = vn, w = w, by = "id_")
-    out <- out[order(out[["id_"]]), ]
+    out <- out[order(out$id_), ]
     if (has_w) {
-      out[[w]] <- ww[[w]][match(out[["id_"]], ww[["id_"]])]
+      out[[w]] <- ww[[w]][match(out$id_, ww$id_)]
     }
     out[[vn]] <- grouped_center(out, x = vn, w = w)
     if (only_values) out[, vn, drop = FALSE] else out
   }
 
   # Get predictions on grid in the same order as through call_pd
-  call_f <- function(X, vn = "value_", gid) {
+  call_f <- function(X, vn = "value_2_", gid) {
     out <- X[gid, ]
     out[[vn]] <- stats::predict(x, data = out[, cols, drop = FALSE])
     out[[vn]] <- grouped_center(out, x = vn, w = w)
-    out[["id_"]] <- gid
-    out[order(out[["id_"]]), c("id_", vn, w)]
+    out$id_ <- gid
+    out[order(out$id_), c("id_", vn, w)]
   }
   # Functions that calculates the test statistic
   statistic <- function(z, dat, grid_id) {
     if (nrow(dat) <= 2) {
-      return(stats::setNames(data.frame(0), value_name))
+      return(stats::setNames(data.frame(0), "value_"))
     }
     if (type == "H") {
       z_i <- z[1L]
@@ -188,26 +184,26 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
       pd_i <- call_pd(dat, z = z_i, vn = "value_i", gid = grid_id, only_values = TRUE)
       pd_j <- call_pd(dat, z = z_j, vn = "value_j", gid = grid_id, only_values = TRUE)
       dat <- dplyr::bind_cols(pd_f, pd_i, pd_j)
-      dat[[value_name]] <- (dat[["value_"]] - dat[["value_i"]] - dat[["value_j"]])^2
+      dat <- transform(dat, value_ = (value_2_ - value_i - value_j)^2)
     }
     else if (type == "ice") {
       dat <- call_pd(dat, z = z, gid = grid_id, agg = FALSE)
-      dat[[value_name]] <- grouped_center(dat, x = "value_", w = w, by = "id_")^2
+      dat$value_ <- grouped_center(dat, x = "value_2_", w = w, by = "id_")^2
     } else {
       stop("Only type H or ice implemented.")
     }
     # Aggregate & normalize
     num <- MetricsWeighted::weighted_mean(
-      dat[[value_name]], w = if (has_w) dat[[w]], na.rm = TRUE
+      dat$value_, w = if (has_w) dat[[w]], na.rm = TRUE
     )
     if (normalize) {
       num <- .zap_small(num) /
         MetricsWeighted::weighted_mean(
-          dat[["value_"]]^2, w = if (has_w) dat[[w]], na.rm = TRUE
+          dat$value_2_^2, w = if (has_w) dat[[w]], na.rm = TRUE
         )
     }
     stats::setNames(
-      data.frame(.zap_small(if (take_sqrt) sqrt(num) else num)), value_name
+      data.frame(.zap_small(if (take_sqrt) sqrt(num) else num)), "value_"
     )
   }
   # Calculate statistic for each variable (pair) and combine results
@@ -228,7 +224,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     # Calculate Friedman's H statistic for each variable (pair)
     out <- lapply(v, statistic, dat = X, grid_id = grid_id)
     names(out) <- if (pairwise) lapply(v, paste, collapse = ":") else v
-    dplyr::bind_rows(out, .id = variable_name)
+    dplyr::bind_rows(out, .id = "variable_")
   }
 
   # Call core function for each "by" group (should rework code...)
@@ -241,14 +237,16 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     }
     agg <- dplyr::bind_rows(agg_l)
   }
-  agg <- tibble::as_tibble(agg)
 
   # Prepare output
-  agg[[label_name]] <- x$label
-  agg[[error_name]] <- NA
-  var_order <- c(label_name, by, variable_name, value_name, error_name)
+  agg <- transform(tibble::as_tibble(agg), label_ = x$label, error_ = NA)
   add_classes(
-    list(data = agg[, var_order], by = by, type = type), c("light_importance", "light")
+    list(
+      data = agg[, c("label_", by, "variable_", "value_", "error_")],
+      by = by,
+      type = type
+    ),
+    c("light_importance", "light")
   )
 }
 
