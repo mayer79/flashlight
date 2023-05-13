@@ -62,9 +62,16 @@
 #'     Journal of Computational and Graphical Statistics, 24:1
 #'     <doi.org/10.1080/10618600.2014.907095>.
 #' @examples
-#' fit <- lm(Sepal.Length ~ ., data = iris)
-#' fl <- flashlight(model = fit, label = "lm", data = iris)
-#' light_ice(fl, v = "Species")
+#' fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_part <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
+#' mod_full <- flashlight(model = fit_full, label = "full", data = iris)
+#' mod_part <- flashlight(model = fit_part, label = "part", data = iris)
+#' mods <- multiflashlight(list(mod_full, mod_part))
+#' plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
+#' indices <- (1:15) * 10
+#' plot(light_ice(mods, v = "Species", indices = indices))
+#' plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
+#' plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 #' @seealso [light_profile()], [plot.light_ice()]
 light_ice <- function(x, ...) {
   UseMethod("light_ice")
@@ -88,18 +95,16 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
                                             "last", "mean", "0"), ...) {
   cut_type <- match.arg(cut_type)
   center <- match.arg(center)
-
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-  id_name <- getOption("flashlight.id_name")
+  temp_vars <- c("value_", "label_", "id_")
 
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "'v' not in 'data'." = v %in% colnames(data),
-    "'v' or 'grid' misses." = !is.null(grid) || !is.null(v)
+    "'v' or 'grid' misses." = !is.null(grid) || !is.null(v),
+    !any(temp_vars %in% by),
+    !any(temp_vars %in% union(v, names(grid)))
   )
-  check_unique(c(by, union(v, names(grid))), c(value_name, label_name, id_name))
 
   n <- nrow(data)
 
@@ -136,7 +141,7 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
   # Full outer join of data and grid
   cols <- colnames(data)
   data[, v] <- NULL
-  data[[id_name]] <- indices
+  data$id_ <- indices
   data <- tidyr::expand_grid(data, grid)
 
   # Update flashlight
@@ -148,50 +153,47 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
   )
 
   # Add predictions and organize output
-  data <- data[, c(id_name, by, v, x$w), drop = FALSE]
-  data[[value_name]] <- stats::predict(x)
+  data <- data[, c("id_", by, v, x$w), drop = FALSE]
+  data$value_ <- stats::predict(x)
 
   # c-ICE curves
   if (center == "0") {
-      data[[value_name]] <- grouped_center(
-        data, x = value_name, by = id_name, na.rm = TRUE
-      )
+      data$value_ <- grouped_center(data, x = "value_", by = "id_", na.rm = TRUE)
   } else if (center == "mean") {
-    centered_values <- grouped_center(
-      data, x = value_name, by = id_name, na.rm = TRUE
-    )
+    centered_values <- grouped_center(data, x = "value_", by = "id_", na.rm = TRUE)
     if (is.null(by)) {
-      data[[value_name]] <- centered_values +
+      data$value_ <- centered_values +
         MetricsWeighted::weighted_mean(
-          data[[value_name]], w = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE
+          data$value_, w = if (!is.null(x$w)) data[[x$w]], na.rm = TRUE
         )
     } else {
       group_means <- grouped_stats(
         data,
-        x = value_name,
+        x = "value_",
         w = x$w,
         by = by,
         counts = FALSE,
-        value_name = "global_mean",
+        value_name = "global_mean_",
         na.rm = TRUE
       )
-      stopifnot(!("global_mean" %in% colnames(data)))
-      data[[value_name]] <- centered_values +
-        dplyr::left_join(data, group_means, by = by)[["global_mean"]]
+      stopifnot(!("global_mean_" %in% colnames(data)))
+      data$value_ <- centered_values +
+        dplyr::left_join(data, group_means, by = by)$global_mean_
     }
   } else if (center != "no") {
     pos <- switch(
       center,
       first = 1,
       middle = floor((nrow(grid) + 1L) / 2),
-      last = nrow(grid))
-    data[[value_name]] <- stats::ave(
-      data[[value_name]], data[[id_name]], FUN = function(z) z - z[pos]
+      last = nrow(grid)
+    )
+    data <- transform(
+      data, value_ = stats::ave(value_, id_, FUN = function(z) z - z[pos])
     )
   }
 
   # Finalize output
-  data[[label_name]] <- x$label
+  data$label_ <- x$label
   out <- list(data = data, by = by, v = names(grid), center = center)
   add_classes(out, c("light_ice", "light"))
 }

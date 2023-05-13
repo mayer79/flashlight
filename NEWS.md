@@ -9,6 +9,7 @@
 ## Minor changes
 
 - `most_important()` is not S3 anymore.
+- `plot.light_breakdown()` does not use flipped coordinates anymore.
 
 # flashlight 0.9.0
 
