@@ -41,18 +41,12 @@
 plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
                                   facet_scales = "fixed",
                                   rotate_x = FALSE, error_bars = TRUE, ...) {
-  # Initialization
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-  variable_name <- getOption("flashlight.variable_name")
-  error_name <- getOption("flashlight.error_name")
-
   data <- x$data
   nby <- length(x$by)
   multi <- is.light_importance_multi(x)
   ndim <- nby + multi
   if (error_bars) {
-    if (all(is.na(data[[error_name]]))) {
+    if (all(is.na(data$error_))) {
       error_bars <- FALSE
     }
   }
@@ -63,15 +57,15 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
 
   # Subset and revert for plotting
   most_imp <- most_important(x, top_m = top_m)
-  data <- data[data[[variable_name]] %in% most_imp, , drop = FALSE]
-  data[[variable_name]] <- factor(data[[variable_name]], levels = rev(most_imp))
-  data[["low_"]] <- data[[value_name]] - data[[error_name]]
-  data[["high_"]] <- data[[value_name]] + data[[error_name]]
-
-  # Differentiate some plot cases
-  p <- ggplot2::ggplot(
-    data, ggplot2::aes(y = .data[[value_name]], x = .data[[variable_name]])
+  data <- transform(
+    subset(data, variable_ %in% most_imp),
+    variable_ = factor(variable_, levels = rev(most_imp)),
+    low_ = value_ - error_,
+    high_ = value_ + error_
   )
+
+  # Distinguish some plot cases
+  p <- ggplot2::ggplot(data, ggplot2::aes(y = value_, x = variable_))
   if (ndim == 0L) {
     p <- p + ggplot2::geom_bar(stat = "identity", ...)
     if (error_bars) {
@@ -80,10 +74,12 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
       )
     }
   } else if (ndim == 1L) {
-    first_dim <- if (multi) label_name else x$by[1L]
+    first_dim <- if (multi) "label_" else x$by[1L]
     if (swap_dim) {
       p <- p + ggplot2::geom_bar(
-        ggplot2::aes(fill = .data[[first_dim]]), stat = "identity", position = "dodge",
+        ggplot2::aes(fill = .data[[first_dim]]),
+        stat = "identity",
+        position = "dodge",
         ...
       )
       if (error_bars) {
@@ -105,7 +101,7 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
       }
     }
   } else {
-    second_dim <- if (multi) label_name else x$by[2L]
+    second_dim <- if (multi) "label_" else x$by[2L]
     wrap_var <- if (!swap_dim) x$by[1L] else second_dim
     dodge_var <- if (!swap_dim) second_dim else x$by[1L]
     p <- p + ggplot2::geom_bar(
@@ -125,9 +121,7 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
     }
   }
   if (rotate_x) {
-    p <- p + ggplot2::theme(
-      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
-    )
+    p <- p + rotate_x()
   }
   # label
   type <- switch(

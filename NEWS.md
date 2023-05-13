@@ -4,6 +4,11 @@
 
 - `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.
 - Consequently, `type = "shap"` in `light_profile()`, `light_importance()`, `light_scatter()`, and `light_profile2d()` is deprecated as well.
+- Column names of resulting data objects cannot be set via `options()` anymore.
+
+## Minor changes
+
+- `most_important()` is not S3 anymore.
 
 # flashlight 0.9.0
 

@@ -65,24 +65,21 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     stop("type = 'shap' is deprecated.")
   }
 
-  metric_name <- getOption("flashlight.metric_name")
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-  variable_name <- getOption("flashlight.variable_name")
-  error_name <- getOption("flashlight.error_name")
-
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by))
   }
 
   # Checks
-  key_vars <- c(label_name, metric_name, by)
+  key_vars <- c("label_", "metric_", by)
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
-    "Not all 'v' in 'data'" = v %in% colnames(data)
+    "Not all 'v' in 'data'" = v %in% colnames(data),
+    !any(c("metric_", "value_", "label_", "variable_", "error_") %in% by),
+    "Need a metric." = !is.null(metric),
+    "Need exactly one metric." = length(metric) == 1L,
+    "No 'y' defined in flashlight!" = !is.null(x$y)
   )
-  check_unique(by, c(label_name, metric_name, value_name, variable_name, error_name))
   n <- nrow(data)
 
   if (!is.null(seed)) {
@@ -94,13 +91,6 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
     data <- data[sample(n, n_max), , drop = FALSE]
   }
 
-  # Calculations
-  stopifnot(
-    "Need a metric." = !is.null(metric),
-    "Need exactly one metric." = length(metric) == 1L,
-    "No 'y' defined in flashlight!" = !is.null(x$y)
-  )
-
   # Update flashlight with everything except data
   x <- flashlight(
     x,
@@ -110,9 +100,9 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
   )
 
   # Helper function
-  perfm <- function(X, vn = "value_original") {
+  perfm <- function(X, vn = "value_orig_") {
     rename_one(
-      light_performance(x, data = X, use_linkinv = TRUE, ...)$data, value_name, vn
+      light_performance(x, data = X, use_linkinv = TRUE, ...)$data, "value_", vn
     )
   }
 
@@ -123,17 +113,13 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
   core_func <- function(z, S) {
     S[[z]] <- if (length(by))
       stats::ave(S[[z]], S[, by, drop = FALSE], FUN = sample) else sample(S[[z]])
-    perfm(S, vn = "value_shuffled")
+    perfm(S, vn = "value_shuffled_")
   }
   if (m_repetitions > 1L) {
     # Helper function that returns standard error and mean
     mean_error <- function(X) {
-      x <- X[["value_shuffled"]]
-      x <- x[!is.na(x)]
-      stats::setNames(
-        data.frame(stats::sd(x) / sqrt(length(x)), mean(x)),
-        c(error_name, "value_shuffled")
-      )
+      x <- stats::na.omit(X$value_shuffled_)
+      data.frame(value_shuffled_ = mean(x), error_ = stats::sd(x) / sqrt(length(x)))
     }
     imp <- replicate(
       m_repetitions,
@@ -141,19 +127,21 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
       simplify = FALSE
     )
     imp <- unlist(imp, recursive = FALSE)
-    imp <- dplyr::bind_rows(imp, .id = variable_name)
-    imp <- Reframe(imp, FUN = mean_error, .by = c(key_vars, variable_name))
+    imp <- dplyr::bind_rows(imp, .id = "variable_")
+    imp <- Reframe(imp, FUN = mean_error, .by = c(key_vars, "variable_"))
   } else {
     imp <- stats::setNames(lapply(v, core_func, S = data), v)
-    imp <- dplyr::bind_rows(imp, .id = variable_name)
-    imp[[error_name]] <- NA
+    imp <- dplyr::bind_rows(imp, .id = "variable_")
+    imp$error_ <- NA
   }
   imp <- dplyr::left_join(imp, metric_full, by = key_vars)
-  imp[[value_name]] <- (imp[["value_shuffled"]] - imp[["value_original"]]) *
-    if (lower_is_better) 1 else -1
+  imp$value_ <- (imp$value_shuffled_ - imp$value_orig_)
+  if (!lower_is_better) {
+    imp$value_ <- -imp$value_
+  }
 
   # Organize output
-  var_order <- c(key_vars, variable_name, value_name, error_name)
+  var_order <- c(key_vars, "variable_", "value_", "error_")
   add_classes(
     list(data = imp[, var_order], by = by, type = type),
     c("light_importance", "light")
@@ -164,4 +152,25 @@ light_importance.flashlight <- function(x, data = x$data, by = x$by,
 #' @export
 light_importance.multiflashlight <- function(x, ...) {
   light_combine(lapply(x, light_importance, ...), new_class = "light_importance_multi")
+}
+
+#' Most Important Variables.
+#'
+#' Returns the most important variable names sorted descendingly.
+#'
+#' @param x An object of class "light_importance".
+#' @param top_m Maximum number of important variables to be returned.
+#' @returns A character vector of variable names sorted in descending importance.
+#' @export
+#' @examples
+#' fit <- lm(Sepal.Length ~ ., data = iris)
+#' fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
+#' (imp <- light_importance(fl, seed = 4))
+#' most_important(imp)
+#' most_important(imp, top_m = 2)
+#' @seealso [light_importance()]
+most_important <- function(x, top_m = Inf) {
+  stopifnot(inherits(x, "light_importance"))
+  out <- rowsum(x$data$value_, x$data$variable_, na.rm = TRUE)
+  rownames(out)[utils::head(order(-out), top_m)]
 }
