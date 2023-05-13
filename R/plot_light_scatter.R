@@ -22,9 +22,6 @@
 #' @seealso [light_scatter()]
 plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
                               rotate_x = FALSE, ...) {
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-
   data <- x$data
   nby <- length(x$by)
   multi <- is.light_scatter_multi(x)
@@ -35,12 +32,12 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
   }
   # Distinguish some cases
   p <- ggplot2::ggplot(
-    x$data, ggplot2::aes(x = .data[[x$v]], y = .data[[value_name]])
+    x$data, ggplot2::aes(x = .data[[x$v]], y = value_)
   )
   if (ndim == 0L) {
     p <- p + ggplot2::geom_point(...)
   } else if (ndim == 1L) {
-    first_dim <- if (multi) label_name else x$by[1L]
+    first_dim <- if (multi) "label_" else x$by[1L]
     if (swap_dim) {
       p <- p +
         ggplot2::geom_point(ggplot2::aes(color = .data[[first_dim]]), ...) +
@@ -51,7 +48,7 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
         ggplot2::facet_wrap(first_dim, scales = facet_scales)
      }
   } else {
-    second_dim <- if (multi) label_name else x$by[2L]
+    second_dim <- if (multi) "label_" else x$by[2L]
     wrap_var <- if (swap_dim) x$by[1L] else second_dim
     col_var <- if (swap_dim) second_dim else x$by[1L]
     p <- p +
@@ -60,10 +57,7 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
       ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(alpha = 1)))
   }
   if (rotate_x) {
-    p <- p +
-      ggplot2::theme(
-        axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
-      )
+    p <- p + rotate_x()
   }
   p + ggplot2::ylab(x$type)
 }

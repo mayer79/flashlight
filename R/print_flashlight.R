@@ -21,7 +21,6 @@ print.flashlight <- function(x, ...) {
   cat("\npredict_fct default:\t", isTRUE(all.equal(stats::predict, x$predict_function)))
   cat("\nlinkinv default:\t", isTRUE(all.equal(function(z) z, x$linkinv)))
   cat("\nmetrics:\t\t", .yn(x[["metrics"]], names(x$metrics)))
-  cat("\nSHAP:\t\t\t", .yn(x$shap, "Yes"))
   cat("\n")
   invisible(x)
 }
