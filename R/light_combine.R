@@ -59,7 +59,6 @@ light_combine.list <- function(x, new_class = NULL, ...) {
   )
 
   out <- x[[1L]]
-  lab <- getOption("flashlight.label_name")
   data_slots <- names(out)[vapply(out, FUN = is.data.frame, FUN.VALUE = TRUE)]
   other_slots <- setdiff(names(out), data_slots)
 
@@ -74,7 +73,7 @@ light_combine.list <- function(x, new_class = NULL, ...) {
   if (length(data_slots)) {
     for (d in data_slots) {
       out[[d]] <- dplyr::bind_rows(lapply(x, `[[`, d))
-      out[[d]][[lab]] <- factor(out[[d]][[lab]], levels = unique(out[[d]][[lab]]))
+      out[[d]]$label_ <- factor(out[[d]]$label_, levels = unique(out[[d]]$label_))
     }
   }
   class(out) <- union(new_class, class(x[[1L]]))

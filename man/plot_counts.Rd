@@ -2,58 +2,16 @@
 % Please edit documentation in R/plot_counts.R
 \name{plot_counts}
 \alias{plot_counts}
-\title{DEPRECATED - Add Counts to Effects Plot}
+\title{DEPRECATED}
 \usage{
-plot_counts(
-  p,
-  x,
-  text_size = 3,
-  facet_scales = "free_x",
-  show_labels = TRUE,
-  big.mark = "'",
-  scientific = FALSE,
-  digits = 0,
-  ...
-)
+plot_counts(...)
 }
 \arguments{
-\item{p}{The result of \code{\link[=plot.light_effects]{plot.light_effects()}}.}
-
-\item{x}{An object of class "light_effects".}
-
-\item{text_size}{Size of count labels.}
-
-\item{facet_scales}{Scales argument passed to \code{\link[ggplot2:facet_wrap]{ggplot2::facet_wrap()}}.}
-
-\item{show_labels}{Should count labels be added as text?}
-
-\item{big.mark}{Parameter passed to \code{\link[=format]{format()}} the labels. Default is "'".}
-
-\item{scientific}{Parameter passed to \code{\link[=format]{format()}} the labels. Default is \code{FALSE}.}
-
-\item{digits}{Used to round the labels. Default is 0.}
-
-\item{...}{Further arguments passed to \code{\link[ggplot2:geom_bar]{ggplot2::geom_bar()}}.}
+\item{...}{Any input.}
 }
 \value{
-An object of class "ggplot".
+Error message.
 }
 \description{
-Add counts as labelled bar plot on top of light_effects plot.
-}
-\details{
-Experimental. Uses package {ggpubr} to rearrange the figure.
-Thus, the resulting plot cannot be easily modified.
-Furthermore, adding counts only works if the legend in \code{\link[=plot.light_effects]{plot.light_effects()}}
-is not placed on the left or right side of the plot.
-It has to be placed inside or at the bottom.
-}
-\examples{
-fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-x <- light_effects(fl, v = "Species")
-plot_counts(plot(x), x, width = 0.3, alpha = 0.2)
-}
-\seealso{
-\code{\link[=plot.light_effects]{plot.light_effects()}}
+DEPRECATED
 }

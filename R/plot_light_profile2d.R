@@ -30,10 +30,6 @@
 #' @seealso [light_profile2d()]
 plot.light_profile2d <- function(x, swap_dim = FALSE, rotate_x = TRUE,
                                  numeric_as_factor = FALSE, ...) {
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-  type_name <- getOption("flashlight.type_name")
-
   multi <- is.light_profile2d_multi(x)
   ndim <- length(x$by) + multi
   if (ndim > 2L) {
@@ -47,22 +43,19 @@ plot.light_profile2d <- function(x, swap_dim = FALSE, rotate_x = TRUE,
 
   # Build plot
   p <- ggplot2::ggplot(
-    data,
-    ggplot2::aes(x = .data[[x$v[1L]]], y = .data[[x$v[2L]]], fill = .data[[value_name]])
+    data, ggplot2::aes(x = .data[[x$v[1L]]], y = .data[[x$v[2L]]], fill = value_)
   ) +
     ggplot2::geom_tile(...)
   if (ndim == 1L) {
-    p <- p + ggplot2::facet_wrap(if (multi) label_name else x$by[1L])
+    p <- p + ggplot2::facet_wrap(if (multi) "label_" else x$by[1L])
   } else if (ndim == 2L) {
-    d1 <- if (multi) label_name else x$by[1L]
+    d1 <- if (multi) "label_" else x$by[1L]
     d2 <- if (multi) x$by[1L] else x$by[2L]
     form <- if (!swap_dim) stats::reformulate(d1, d2) else stats::reformulate(d2, d1)
     p <- p + ggplot2::facet_grid(form)
   }
   if (rotate_x) {
-    p <- p + ggplot2::theme(
-      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
-    )
+    p <- p + rotate_x()
   }
   p
 }

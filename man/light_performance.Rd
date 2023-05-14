@@ -65,10 +65,18 @@ The minimal required elements in the (multi-) flashlight are "y", "predict_funct
 
 }}
 \examples{
-fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
-light_performance(fl)
-light_performance(fl, by = "Species")
+fit_part <- stats::lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+fl_part <- flashlight(
+  model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+)
+fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+fl_full <- flashlight(
+  model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+)
+fls <- multiflashlight(list(fl_part, fl_full))
+plot(light_performance(fls), fill = "chartreuse4")
+plot(light_performance(fls, by = "Species"))
+plot(light_performance(fls, by = "Species"), swap_dim = TRUE)
 }
 \seealso{
 \code{\link[=plot.light_performance]{plot.light_performance()}}

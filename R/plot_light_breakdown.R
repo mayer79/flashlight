@@ -20,47 +20,34 @@
 #' @returns An object of class "ggplot".
 #' @export
 #' @examples
-#' fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
+#' fit <- stats::lm(Sepal.Length ~ ., data = iris)
 #' fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 #' plot(light_breakdown(fl, new_obs = iris[1, ]))
 #' @seealso [light_breakdown()]
 plot.light_breakdown <- function(x, facet_scales = "free",
                                  facet_ncol = 1, rotate_x = FALSE, ...) {
-
-  after_name <- getOption("flashlight.after_name")
-  before_name <- getOption("flashlight.before_name")
-  description_name <- getOption("flashlight.description_name")
-  label_name <- getOption("flashlight.label_name")
-  step_name <- getOption("flashlight.step_name")
-
-  data <- x$data
-  stopifnot(!(c("fill_", "xmin_", "xmax_", "y_") %in% colnames(data)))
-  data[["fill_"]] <- (data[[after_name]] - data[[before_name]]) > 0
-  data[["xmin_"]] <- data[[step_name]] - 0.5
-  data[["xmax_"]] <- data[[step_name]] + 0.5
-  data[["y_"]] <- pmin(data[[before_name]], data[[after_name]])
+  stopifnot(!(c("fill_", "xmin_", "xmax_", "y_") %in% colnames(x$data)))
+  data <- transform(
+    x$data,
+    fill_ = (after_ - before_) > 0,
+    ymin_ = step_ - 0.5,
+    ymax_ = step_ + 0.5,
+    x_ = pmin(before_, after_)
+  )
 
   p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
-      x = .data[[step_name]],
-      y = y_,
-      ymin = .data[[before_name]],
-      ymax = .data[[after_name]],
-      xmin = xmin_,
-      xmax = xmax_
+      x = x_, y = step_, xmin = before_, xmax = after_, ymin = ymin_, ymax = ymax_
     )
   ) +
     ggplot2::geom_rect(
       ggplot2::aes(fill = fill_), color = "black", show.legend = FALSE
     ) +
-    ggplot2::labs(x = ggplot2::element_blank(), y = "prediction") +
-    ggplot2::geom_label(
-      ggplot2::aes(label = .data[[description_name]]), hjust = -0.05, ...
-    ) +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.67))) +
-    ggplot2::scale_x_reverse() +
-    ggplot2::coord_flip() +
+    ggplot2::labs(x = "Prediction", y = ggplot2::element_blank()) +
+    ggplot2::geom_label(ggplot2::aes(label = description_), hjust = -0.05, ...) +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.67))) +
+    ggplot2::scale_y_reverse() +
     ggplot2::theme(
       panel.grid.major.y = ggplot2::element_blank(),
       panel.grid.minor.y = ggplot2::element_blank(),
@@ -69,12 +56,10 @@ plot.light_breakdown <- function(x, facet_scales = "free",
     )
 
   if (is.light_breakdown_multi(x)) {
-    p <- p + ggplot2::facet_wrap(label_name, scales = facet_scales, ncol = facet_ncol)
+    p <- p + ggplot2::facet_wrap(~label_, scales = facet_scales, ncol = facet_ncol)
   }
   if (rotate_x) {
-    p <- p + ggplot2::theme(
-      axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1)
-    )
+    p <- p + rotate_x()
   }
   p
 }

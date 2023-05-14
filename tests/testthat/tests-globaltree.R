@@ -1,4 +1,4 @@
-fit <- lm(Sepal.Length ~ ., data = iris)
+fit <- stats::lm(Sepal.Length ~ ., data = iris)
 x <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 
 test_that("basic functionality works", {
@@ -18,28 +18,14 @@ test_that("argument 'v' works", {
 })
 
 test_that("multiflashlights work", {
-  fit1 <- lm(Sepal.Length ~ Species, data = iris)
+  fit1 <- stats::lm(Sepal.Length ~ Species, data = iris)
   fl1 <- flashlight(model = fit1, label = "Species", data = iris, y = "Sepal.Length")
-  fit2 <- lm(Sepal.Length ~ Petal.Length, data = iris)
-  fl2 <- flashlight(model = fit2, label = "Petal.Length", data = iris, y = "Sepal.Length")
+  fit2 <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
+  fl2 <- flashlight(
+    model = fit2, label = "Petal.Length", data = iris, y = "Sepal.Length"
+  )
   fls <- multiflashlight(list(fl1, fl2))
   surr <- light_global_surrogate(fls)
   expect_equal(dim(surr$data), c(2L, 3L))
   expect_equal(surr$data$r_squared, c(1, 0.978), tolerance = 0.001)
 })
-
-
-test_that("Options work", {
-  fit <- lm(Sepal.Length ~ ., data = iris)
-  fl <- flashlight(model = fit, label = "lm", data = iris)
-  new_options = list(
-    flashlight.label_name = "ell",
-    flashlight.tree_name = "tt"
-  )
-  withr::with_options(new_options, {
-    surr <- light_global_surrogate(fl)
-    expect_true(all(c("ell", "tt") %in% colnames(surr$data)))
-    expect_true(inherits(plot(surr), "list"))
-  })
-})
-

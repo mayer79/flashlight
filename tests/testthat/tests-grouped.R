@@ -40,9 +40,9 @@ test_that("grouped_center works", {
 test_that("grouped_stats works", {
   data <- data.frame(x = 1:10, w = 1:10, g = rep(1:2, each = 5))
 
-  expect_equal(grouped_stats(data, "x"), data.frame(counts = 10, x = 5.5))
+  expect_equal(grouped_stats(data, "x"), data.frame(counts_ = 10, x = 5.5))
   expect_equal(grouped_stats(data, "x", stats = "variance"),
-               data.frame(counts = 10, x = var(1:10)))
+               data.frame(counts_ = 10, x = var(1:10)))
   expect_equal(grouped_stats(data, "x", stats = "quartiles")[c("q1", "q3")],
                data.frame(q1 = 3.25, q3 = 7.75))
 

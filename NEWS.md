@@ -4,6 +4,20 @@
 
 - `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.
 - Consequently, `type = "shap"` in `light_profile()`, `light_importance()`, `light_scatter()`, and `light_profile2d()` is deprecated as well.
+- Column names of resulting data objects cannot be set via `options()` anymore.
+
+## Minor changes
+
+- `most_important()` is not S3 anymore.
+- `plot.light_breakdown()` and `plot.light_importance()` do not use flipped coordinates anymore.
+
+## Less dependencies
+
+- {cowplot} and {withr} packages have been removed from "imports".
+
+## Announcements for upcoming version 1.1.0
+
+- The argument "stats" in `light_effects()` and `light_profile()` will be removed. It has no effect anymore.
 
 # flashlight 0.9.0
 

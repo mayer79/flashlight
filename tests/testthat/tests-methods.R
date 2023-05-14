@@ -6,7 +6,7 @@ test_that("all_identical works", {
 })
 
 test_that("light_check, flashlight and multiflashlight work", {
-  fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+  fit <- stats::lm(Sepal.Length ~ Species + 0, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
   expect_true(is.flashlight(light_check(fl)))
   expect_error(light_check(1))
@@ -20,7 +20,7 @@ test_that("light_check, flashlight and multiflashlight work", {
 })
 
 test_that("light_combine works", {
-  fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+  fit <- stats::lm(Sepal.Length ~ Species + 0, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
   ell1 <- light_performance(fl)
   ell2 <- light_performance(fl)
@@ -29,18 +29,18 @@ test_that("light_combine works", {
 })
 
 test_that("light_recode works", {
-  fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+  fit <- stats::lm(Sepal.Length ~ Species + 0, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
   eff <- light_effects(fl, v = "Species")
-  eff <- light_recode(eff, what = "type",
+  eff <- light_recode(eff, what = "type_",
                       levels = c("response", "predicted",
                                  "partial dependence", "ale"),
                       labels = c("Observed", "Fitted", "PD", "ALE"))
-  expect_equal(as.character(eff$pd$type[1]), "PD")
+  expect_equal(as.character(eff$pd$type_[1L]), "PD")
 })
 
 test_that("selected 'is' functions work", {
-  fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+  fit <- stats::lm(Sepal.Length ~ Species + 0, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
   fls <- multiflashlight(list(fl, flashlight(fl, label = "lm2")))
 
@@ -97,24 +97,24 @@ test_that("selected 'is' functions work", {
   )
 })
 
-fit <- lm(Sepal.Length ~ Species + 0, data = iris)
+fit <- stats::lm(Sepal.Length ~ Species + 0, data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 fls <- multiflashlight(list(fl, flashlight(fl, label = "lm2")))
 
 test_that("response method works for (multi-)flashlights", {
   expect_equal(response(fl), iris$Sepal.Length)
-  expect_equal(response(fls)[[2]], iris$Sepal.Length)
+  expect_equal(response(fls)[[2L]], iris$Sepal.Length)
   expect_equal(response(flashlight(fl, linkinv = log)), log(iris$Sepal.Length))
 })
 
 test_that("predict method works for (multi-)flashlights", {
   expect_equal(predict(fl, data = head(iris)), predict(fit, head(iris)))
-  expect_equal(predict(fls)[[1]], predict(fls)[[2]])
+  expect_equal(predict(fls)[[1L]], predict(fls)[[2L]])
   expect_equal(predict(flashlight(fl, linkinv = log)), log(predict(fl)))
 })
 
 test_that("residuals method works for (multi-)flashlights", {
   expect_equal(resid(fl, data = head(iris)), head(resid(fit)))
-  expect_equal(resid(fls)[[1]], resid(fls)[[2]])
+  expect_equal(resid(fls)[[1L]], resid(fls)[[2L]])
 })
 

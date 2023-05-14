@@ -48,18 +48,12 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
                                               v = NULL, use_linkinv = TRUE,
                                               n_max = Inf, seed = NULL,
                                               keep_max_levels = 4L, ...) {
-  warning_on_names(c("label_name", "tree_name"), ...)
-
-  label_name <- getOption("flashlight.label_name")
-  tree_name <- getOption("flashlight.tree_name")
-
-  # Checks
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
-    "Not all 'v' in 'data'" = v %in% colnames(data)
+    "Not all 'v' in 'data'" = v %in% colnames(data),
+    !any(c("label_", "r_squared", "tree_") %in% by)
   )
-  check_unique(by, c(label_name, tree_name))
 
   # Set v and remove 'by' from it
   if (is.null(v)) {
@@ -83,7 +77,7 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
 
   # Add response of tree model
   stopifnot(!("pred_" %in% colnames(data)))
-  data[["pred_"]] <- stats::predict(x)
+  data$pred_ <- stats::predict(x)
 
   # Lump factors with many levels for tree fit
   for (vv in v) {
@@ -100,14 +94,14 @@ light_global_surrogate.flashlight <- function(x, data = x$data, by = x$by,
       xval = 0,
       ...
     )
-    r2 <- MetricsWeighted::r_squared(X[["pred_"]], stats::predict(fit, X))
-    stats::setNames(data.frame(r2, I(list(fit))), c("r_squared", tree_name))
+    r2 <- MetricsWeighted::r_squared(X$pred_, stats::predict(fit, X))
+    stats::setNames(data.frame(r2, I(list(fit))), c("r_squared", "tree_"))
   }
   res <- Reframe(data, FUN = core_func, .by = by)
 
   # Organize output
-  res[[label_name]] <- x$label
-  out <- list(data = res[, c(label_name, by, "r_squared", tree_name)], by = by)
+  res$label_ <- x$label
+  out <- list(data = res[, c("label_", by, "r_squared", "tree_")], by = by)
   add_classes(out, c("light_global_surrogate", "light"))
 }
 

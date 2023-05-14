@@ -12,7 +12,7 @@ grouped_stats(
   stats = c("mean", "quartiles", "variance"),
   counts = TRUE,
   counts_weighted = FALSE,
-  counts_name = "counts",
+  counts_name = "counts_",
   value_name = x,
   q1_name = "q1",
   q3_name = "q3",

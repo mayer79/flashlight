@@ -31,7 +31,7 @@
 grouped_stats <- function(data, x, w = NULL, by = NULL,
                           stats = c("mean", "quartiles", "variance"),
                           counts = TRUE, counts_weighted = FALSE,
-                          counts_name = "counts", value_name = x,
+                          counts_name = "counts_", value_name = x,
                           q1_name = "q1", q3_name = "q3", ...) {
   # Initial checks
   stats <- match.arg(stats)

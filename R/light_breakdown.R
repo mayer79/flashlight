@@ -88,37 +88,16 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
                                        description = TRUE, digits = 2, ...) {
   visit_strategy <- match.arg(visit_strategy)
 
-  warning_on_names(
-    c(
-      "after_name",
-      "before_name",
-      "description_name",
-      "variable_name"
-    ),
-    ...
-  )
-
-  after_name <- getOption("flashlight.after_name")
-  before_name <- getOption("flashlight.before_name")
-  description_name <- getOption("flashlight.description_name")
-  label_name <- getOption("flashlight.label_name")
-  step_name <- getOption("flashlight.step_name")
-  variable_name <- getOption("flashlight.variable_name")
-
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "Not all 'v' in 'data'" = v %in% colnames(data),
     "'new_obs' has to consist of one row" = nrow(new_obs) == 1L,
     "'new_obs' not consistent with 'data'" =
-      sort(colnames(new_obs)) == sort(colnames(data))
-  )
-  check_unique(
-    opt_names = c(
-      after_name, before_name, label_name, variable_name, description_name
-    )
-  )
+      sort(colnames(new_obs)) == sort(colnames(data)),
+    !any(c("after_", "before_", "description_", "label_", "step_", "variable_") %in% by)
 
+  )
   if (!is.null(seed)) {
     set.seed(seed)
   }
@@ -127,7 +106,8 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   if (length(by)) {
     data <- dplyr::semi_join(data, new_obs, by = by)
   }
-  stopifnot((n <- nrow(data)) >= 1L)
+  n <- nrow(data)
+  stopifnot(n >= 1L)
 
   # Subsample to n_max
   if (n > n_max) {
@@ -145,8 +125,10 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
   if (is.null(v)) {
     v <- setdiff(colnames(data), c(x$y, by, x$w))
   }
+
+  m <- length(v)
   stopifnot(
-    (m <- length(v)) >= 1L,
+    m >= 1L,
     !(c("baseline", "prediction") %in% v)
   )
 
@@ -182,13 +164,12 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
 
   # Combine results
   out <- tibble::tibble(
-    0:(m + 1L),
-    c("baseline", v, "prediction"),
-    c(baseline, mean_pred_vector, prediction)
+    step_ = 0:(m + 1L),
+    variable_ = c("baseline", v, "prediction"),
+    after_ = c(baseline, mean_pred_vector, prediction),
+    before_ = dplyr::lag(after_, default = baseline),
+    label_ = x$label
   )
-  colnames(out) <- c(step_name, variable_name, after_name)
-  out[[before_name]] <- dplyr::lag(out[[after_name]], default = baseline)
-  out[[label_name]] <- x$label
 
   if (description) {
     # Helper function
@@ -205,20 +186,19 @@ light_breakdown.flashlight <- function(x, new_obs, data = x$data, by = x$by,
     formatted_input <- c(
       "average in data", paste(v, formatted_input, sep = " = "), "prediction"
     )
-    formatted_impact <-
-      out[[after_name]] - ifelse(out[[step_name]] > 0, out[[before_name]], 0)
-    plus_sign <- formatted_impact >= 0 & out[[step_name]] > 0
+    formatted_impact <- out$after_ - ifelse(out$step_ > 0, out$before_, 0)
+    plus_sign <- formatted_impact >= 0 & out$step_ > 0
     formatted_impact <- paste0(
       ifelse(plus_sign, "+", ""), .pretty_num(formatted_impact)
     )
-    out[[description_name]] <- paste(formatted_input, formatted_impact, sep = ": ")
+    out$description_ <- paste(formatted_input, formatted_impact, sep = ": ")
   } else {
-    out[[description_name]] <- ""
+    out$description_ <- ""
   }
 
   # Organize output
   if (length(by)) {
-    out[, by] <- new_obs[rep(1, nrow(out)), by, drop = FALSE]
+    out[, by] <- new_obs[rep(1L, nrow(out)), by, drop = FALSE]
   }
   add_classes(list(data = out, by = by), c("light_breakdown", "light"))
 }

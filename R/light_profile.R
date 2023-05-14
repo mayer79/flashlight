@@ -31,8 +31,7 @@
 #' @param by An optional vector of column names used to additionally group the results.
 #' @param type Type of the profile: Either "partial dependence", "ale", "predicted",
 #'   "response", or "residual".
-#' @param stats Statistic to calculate: "mean" or "quartiles". For ALE profiles,
-#'   only "mean" makes sense.
+#' @param stats Deprecated. Will be removed in version 1.1.0.
 #' @param breaks Cut breaks for a numeric `v`. Used to overwrite automatic binning via
 #'   `n_bins` and `cut_type`. Ignored if `v` is not numeric.
 #' @param n_bins Approximate number of unique values to evaluate for numeric `v`.
@@ -80,7 +79,6 @@
 #'   - `by` Names of group by variable.
 #'   - `v` The variable(s) evaluated.
 #'   - `type` Same as input `type`. For information only.
-#'   - `stats` Same as input `stats`.
 #' @export
 #' @references
 #' - Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
@@ -109,7 +107,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                                      type = c("partial dependence", "ale",
                                               "predicted", "response",
                                               "residual", "shap"),
-                                     stats = c("mean", "quartiles"),
+                                     stats = "mean",
                                      breaks = NULL, n_bins = 11L,
                                      cut_type = c("equal", "quantile"),
                                      use_linkinv = TRUE, counts = TRUE,
@@ -122,51 +120,32 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
                                                    "last", "mean", "0"),
                                      ale_two_sided = FALSE, ...) {
   type <- match.arg(type)
-  stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
   pd_center <- match.arg(pd_center)
 
   if (stats == "quartiles") {
-    message("stats = 'quartiles' is deprecated and will be removed in flashlight 1.0.0.")
+    stop("stats = 'quartiles' is deprecated. The argument 'stats' will be removed in version 1.1.0.")
   }
   if (type == "shap") {
     stop("type = 'shap' is deprecated.")
   }
-
-  warning_on_names(
-    c("value_name", "label_name", "q1_name", "q3_name", "type_name", "counts_name"),
-    ...
-  )
-
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-  q1_name <- getOption("flashlight.q1_name")
-  q3_name <- getOption("flashlight.q3_name")
-  type_name <- getOption("flashlight.type_name")
-  counts_name <- getOption("flashlight.counts_name")
 
   if (is.null(data)) {
     data <- x$data
   }
 
   # Checks (more will be done below or in the called functions)
+  temp_vars <- c("value_", "label_", "type_", "counts_")
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "'v' not in 'data'." = v %in% colnames(data),
-    "'v' or 'pd_grid' misses." = !is.null(pd_grid) || !is.null(v)
+    "'v' or 'pd_grid' misses." = !is.null(pd_grid) || !is.null(v),
+    !any(temp_vars %in% c(by, v, names(pd_grid)))
   )
-  check_unique(
-    c(by, union(v, names(pd_grid))),
-    opt_names = c(if (counts) counts_name,
-                  if (stats == "quartiles") c(q1_name, q3_name),
-                  value_name, label_name, type_name)
-  )
+
   if (!is.null(pred) && type == "predicted" && length(pred) != nrow(data)) {
     stop("Wrong number of predicted values passed.")
-  }
-  if (type == "ale" && stats == "quartiles") {
-    stop("The cumsum step of ALE does not make sense for quartiles, so this option is not available.")
   }
 
   # Update flashlight
@@ -188,10 +167,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   )
   if (type == "partial dependence") {
     arg_list <- c(arg_list, list(grid = pd_grid, center = pd_center))
-    withr::with_options(
-      list(flashlight.id_name = "id_xxx"),  # safer than default
-      cp_profiles <- do.call(light_ice, arg_list)
-    )
+    cp_profiles <- do.call(light_ice, arg_list)
     v <- cp_profiles$v
     data <- cp_profiles$data
   } else if (type == "ale") {
@@ -215,7 +191,8 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     }
 
     # Add predictions/response to data
-    data[[value_name]] <- switch(type,
+    data$value_ <- switch(
+      type,
       response = response(x),
       predicted = if (is.null(pred)) stats::predict(x) else pred,
       residual = stats::residuals(x)
@@ -232,29 +209,20 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   if (type != "ale") { # ale is already aggregated
     agg <- grouped_stats(
       data = data,
-      x = value_name,
+      x = "value_",
       w = x$w,
       by = c(by, v),
-      stats = stats,
       counts = counts,
       counts_weighted = counts_weighted,
-      counts_name = counts_name,
-      q1_name = q1_name,
-      q3_name = q3_name,
+      counts_name = "counts_",
       na.rm = TRUE
     )
   }
 
   # Finalize results
-  agg[[label_name]] <- x$label
-
-  # Code type as factor (relevant for light_effects)
-  agg[[type_name]] <- factor(
-    type, c("response", "predicted", "partial dependence", "ale", "residual")
-  )
-
-  # Collect results
-  out <- list(data = agg, by = by, v = v, type = type, stats = stats)
+  type_lev <- c("response", "predicted", "partial dependence", "ale", "residual")
+  agg <- transform(agg, label_ = x$label, type_ = factor(type, type_lev))
+  out <- list(data = agg, by = by, v = v, type = type)
   add_classes(out, c("light_profile", "light"))
 }
 
