@@ -92,7 +92,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
   }
   temp_vars <- c(
     "value_", "label_", "variable_", "error_", "w_", "id_", "id_curve_",
-     "value_2_", "value_i", "value_j", "denom_"
+     "value_2_", "value_i_", "value_j_", "denom_"
   )
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
@@ -180,10 +180,10 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
       } else {
         pd_f <- call_f(dat, gid = grid_id)
       }
-      pd_i <- call_pd(dat, z = z_i, vn = "value_i", gid = grid_id, only_values = TRUE)
-      pd_j <- call_pd(dat, z = z_j, vn = "value_j", gid = grid_id, only_values = TRUE)
+      pd_i <- call_pd(dat, z = z_i, vn = "value_i_", gid = grid_id, only_values = TRUE)
+      pd_j <- call_pd(dat, z = z_j, vn = "value_j_", gid = grid_id, only_values = TRUE)
       dat <- dplyr::bind_cols(pd_f, pd_i, pd_j)
-      dat <- transform(dat, value_ = (value_2_ - value_i - value_j)^2)
+      dat <- transform(dat, value_ = (value_2_ - value_i_ - value_j_)^2)
     }
     else if (type == "ice") {
       dat <- call_pd(dat, z = z, gid = grid_id, agg = FALSE)

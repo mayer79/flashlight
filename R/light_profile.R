@@ -141,7 +141,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
     "'by' not in 'data'!" = by %in% colnames(data),
     "'v' not in 'data'." = v %in% colnames(data),
     "'v' or 'pd_grid' misses." = !is.null(pd_grid) || !is.null(v),
-    !any(temp_vars %in% c(by, v, names(grid)))
+    !any(temp_vars %in% c(by, v, names(pd_grid)))
   )
 
   if (!is.null(pred) && type == "predicted" && length(pred) != nrow(data)) {

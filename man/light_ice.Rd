@@ -120,9 +120,16 @@ In both cases, \code{data} should be the same for all flashlights considered.
 
 }}
 \examples{
-fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "lm", data = iris)
-light_ice(fl, v = "Species")
+fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+fit_part <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
+mod_full <- flashlight(model = fit_full, label = "full", data = iris)
+mod_part <- flashlight(model = fit_part, label = "part", data = iris)
+mods <- multiflashlight(list(mod_full, mod_part))
+plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
+indices <- (1:15) * 10
+plot(light_ice(mods, v = "Species", indices = indices))
+plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
+plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
 }
 \references{
 Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical

@@ -46,43 +46,43 @@ fix_strategy <- function(v, n_bins, cut_type, breaks, pd_evaluate_at) {
   return(strategy)
 }
 
-# Test for non-unique column names (passed as variables and/or options)
-check_unique <- function(var_names = NULL, opt_names = NULL, temp_names = NULL) {
-  if (!anyDuplicated(c(var_names, opt_names, temp_names))) {
-    return(TRUE)
-  }
-
-  # Consistency of variable names
-  if (anyDuplicated(z <- var_names)) {
-    what <- z[duplicated(z)][1L]
-    stop("The variable '", what, "' seems to be used multiple times. Please fix.")
-  }
-
-  # Consistency of options names
-  if (anyDuplicated(z <- opt_names)) {
-    what <- z[duplicated(z)][1L]
-    stop("flashlight uses 'options(flashlight.*)' to set column names ",
-         "in 'data' objects returned by light_*() functions. ",
-         "The name '", what, "' seems to be used in multiple options. ",
-         "Please change these.")
-  }
-
-  # temp names can't overlap
-
-  # Consistency of variable and option names
-  if (anyDuplicated(z <- c(var_names, opt_names))) {
-    what <- z[duplicated(z)][1L]
-    stop("Variable name '", what, "' coincides with a column name specified ",
-         "in options(flashlight.*). ",
-         "To solve the problem, please change the value of that option.")
-  }
-
-  # Otherwise, there must be a problem with a temp name
-  z <- c(var_names, opt_names, temp_names)
-  what <- z[duplicated(z)][1L]
-  stop("Variable name '", what, "' is internally used and cannot be used ",
-       "as flashlight option or as variable name. Please avoid this name.")
-}
+# # Test for non-unique column names (passed as variables and/or options)
+# check_unique <- function(var_names = NULL, opt_names = NULL, temp_names = NULL) {
+#   if (!anyDuplicated(c(var_names, opt_names, temp_names))) {
+#     return(TRUE)
+#   }
+#
+#   # Consistency of variable names
+#   if (anyDuplicated(z <- var_names)) {
+#     what <- z[duplicated(z)][1L]
+#     stop("The variable '", what, "' seems to be used multiple times. Please fix.")
+#   }
+#
+#   # Consistency of options names
+#   if (anyDuplicated(z <- opt_names)) {
+#     what <- z[duplicated(z)][1L]
+#     stop("flashlight uses 'options(flashlight.*)' to set column names ",
+#          "in 'data' objects returned by light_*() functions. ",
+#          "The name '", what, "' seems to be used in multiple options. ",
+#          "Please change these.")
+#   }
+#
+#   # temp names can't overlap
+#
+#   # Consistency of variable and option names
+#   if (anyDuplicated(z <- c(var_names, opt_names))) {
+#     what <- z[duplicated(z)][1L]
+#     stop("Variable name '", what, "' coincides with a column name specified ",
+#          "in options(flashlight.*). ",
+#          "To solve the problem, please change the value of that option.")
+#   }
+#
+#   # Otherwise, there must be a problem with a temp name
+#   z <- c(var_names, opt_names, temp_names)
+#   what <- z[duplicated(z)][1L]
+#   stop("Variable name '", what, "' is internally used and cannot be used ",
+#        "as flashlight option or as variable name. Please avoid this name.")
+# }
 
 # Applies df-valued FUN to X grouped by BY
 Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {

@@ -17,7 +17,7 @@ light_profile(x, ...)
   data = NULL,
   by = x$by,
   type = c("partial dependence", "ale", "predicted", "response", "residual", "shap"),
-  stats = c("mean", "quartiles"),
+  stats = "mean",
   breaks = NULL,
   n_bins = 11L,
   cut_type = c("equal", "quantile"),
@@ -64,8 +64,7 @@ cut breaks of the \code{v} variable.}
 \item{type}{Type of the profile: Either "partial dependence", "ale", "predicted",
 "response", or "residual".}
 
-\item{stats}{Statistic to calculate: "mean" or "quartiles". For ALE profiles,
-only "mean" makes sense.}
+\item{stats}{Deprecated. Will be removed in version 1.1.0.}
 
 \item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via
 \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
@@ -130,7 +129,6 @@ visualizations. Column names can be controlled by \code{options(flashlight.colum
 \item \code{by} Names of group by variable.
 \item \code{v} The variable(s) evaluated.
 \item \code{type} Same as input \code{type}. For information only.
-\item \code{stats} Same as input \code{stats}.
 }
 }
 \description{

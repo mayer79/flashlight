@@ -39,9 +39,9 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'v' not specified." = !is.null(v),
-    "'v' not in 'data'." = v %in% colnames(data)
+    "'v' not in 'data'." = v %in% colnames(data),
+    !any(c("value_", "counts_", "id_") %in% c(x$by, v))
   )
-  check_unique(c(x$by, v), c("value_", "counts_", "id_"))
   if (!is.null(seed)) {
     set.seed(seed)
   }

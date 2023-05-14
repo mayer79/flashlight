@@ -92,5 +92,5 @@ test_that("light_interaction reacts on 'by'", {
     rep(c(0.00404, 0.007588311, 0.0077), each = 2L),
     tolerance = 0.001
   )
-  expect_s3_class(plot(imp), "ggplot")
+  expect_s3_class(plot(inter), "ggplot")
 })

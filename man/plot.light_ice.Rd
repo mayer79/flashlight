@@ -27,8 +27,8 @@ Each observation is visualized by a line. The first "by" variable is represented
 by the color, a second "by" variable or a multiflashlight by facets.
 }
 \examples{
-fit_full <- lm(Sepal.Length ~ ., data = iris)
-fit_part <- lm(Sepal.Length ~ Petal.Length, data = iris)
+fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+fit_part <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
 mod_full <- flashlight(model = fit_full, label = "full", data = iris)
 mod_part <- flashlight(model = fit_part, label = "part", data = iris)
 mods <- multiflashlight(list(mod_full, mod_part))

@@ -9,7 +9,11 @@
 ## Minor changes
 
 - `most_important()` is not S3 anymore.
-- `plot.light_breakdown()` does not use flipped coordinates anymore.
+- `plot.light_breakdown()` and `plot.light_importance()` do not use flipped coordinates anymore.
+
+## Less dependencies
+
+- {cowplot} and {withr} packages have been removed from "imports".
 
 ## Announcements for upcoming version 1.1.0
 

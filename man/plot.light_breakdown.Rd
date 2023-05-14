@@ -34,7 +34,7 @@ Multiple flashlights are shown in different facets.
 Positive and negative impacts are visualized with different colors.
 }
 \examples{
-fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
+fit <- stats::lm(Sepal.Length ~ ., data = iris)
 fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
 plot(light_breakdown(fl, new_obs = iris[1, ]))
 }

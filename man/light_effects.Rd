@@ -16,7 +16,7 @@ light_effects(x, ...)
   v,
   data = NULL,
   by = x$by,
-  stats = c("mean", "quartiles"),
+  stats = "mean",
   breaks = NULL,
   n_bins = 11L,
   cut_type = c("equal", "quantile"),
@@ -53,7 +53,7 @@ cut breaks of the \code{v} variable.}
 
 \item{by}{An optional vector of column names used to additionally group the results.}
 
-\item{stats}{Statistic to calculate for the response profile: "mean" or "quartiles".}
+\item{stats}{Deprecated. Will be removed in version 1.1.0.}
 
 \item{breaks}{Cut breaks for a numeric \code{v}. Used to overwrite automatic binning via
 \code{n_bins} and \code{cut_type}. Ignored if \code{v} is not numeric.}
@@ -103,7 +103,6 @@ Column names can be controlled by \code{options(flashlight.column_name)}.
 \item \code{ale}: A tibble containing the ALE profiles.
 \item \code{by}: Same as input \code{by}.
 \item \code{v}: The variable(s) evaluated.
-\item \code{stats}: Same as input \code{stats}.
 }
 }
 \description{

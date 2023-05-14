@@ -75,5 +75,5 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   if (rotate_x) {
     p <- p + rotate_x()
   }
-  p + ylab("Value")
+  p + ggplot2::ylab("Value")
 }
