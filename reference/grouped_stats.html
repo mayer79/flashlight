@@ -68,7 +68,7 @@ even if there is a weighting variable.</p>
 <span>  stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"quartiles"</span>, <span class="st">"variance"</span><span class="op">)</span>,</span>
 <span>  counts <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  counts_weighted <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  counts_name <span class="op">=</span> <span class="st">"counts"</span>,</span>
+<span>  counts_name <span class="op">=</span> <span class="st">"counts_"</span>,</span>
 <span>  value_name <span class="op">=</span> <span class="va">x</span>,</span>
 <span>  q1_name <span class="op">=</span> <span class="st">"q1"</span>,</span>
 <span>  q3_name <span class="op">=</span> <span class="st">"q3"</span>,</span>
@@ -140,22 +140,22 @@ MetricsWeighted.</p></dd>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">grouped_stats</span><span class="op">(</span><span class="va">iris</span>, <span class="st">"Sepal.Width"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   counts Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    150    3.057333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   counts_ Sepal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     150    3.057333</span>
 <span class="r-in"><span><span class="fu">grouped_stats</span><span class="op">(</span><span class="va">iris</span>, <span class="st">"Sepal.Width"</span>, stats <span class="op">=</span> <span class="st">"quartiles"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   counts  q1 Sepal.Width  q3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    150 2.8           3 3.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   counts_  q1 Sepal.Width  q3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     150 2.8           3 3.3</span>
 <span class="r-in"><span><span class="fu">grouped_stats</span><span class="op">(</span><span class="va">iris</span>, <span class="st">"Sepal.Width"</span>, stats <span class="op">=</span> <span class="st">"variance"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   counts Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    150   0.1899794</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   counts_ Sepal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     150   0.1899794</span>
 <span class="r-in"><span><span class="fu">grouped_stats</span><span class="op">(</span><span class="va">iris</span>, <span class="st">"Sepal.Width"</span>, w <span class="op">=</span> <span class="st">"Petal.Width"</span>, counts_weighted <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   counts Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  179.9    2.956587</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   counts_ Sepal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   179.9    2.956587</span>
 <span class="r-in"><span><span class="fu">grouped_stats</span><span class="op">(</span><span class="va">iris</span>, <span class="st">"Sepal.Width"</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species counts Sepal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa     50       3.428</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor     50       2.770</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica     50       2.974</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Species counts_ Sepal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa      50       3.428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor      50       2.770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica      50       2.974</span>
 </code></pre></div>
     </div>
   </div>

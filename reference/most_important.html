@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Most Important Variables.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/mayer79/flashlight/blob/HEAD/R/most_important.R" class="external-link"><code>R/most_important.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/mayer79/flashlight/blob/HEAD/R/light_importance.R" class="external-link"><code>R/light_importance.R</code></a></small>
     <div class="hidden name"><code>most_important.Rd</code></div>
     </div>
 
@@ -56,13 +56,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">most_important</span><span class="op">(</span><span class="va">x</span>, top_m <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for default</span></span>
-<span><span class="fu">most_important</span><span class="op">(</span><span class="va">x</span>, top_m <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for light_importance</span></span>
-<span><span class="fu">most_important</span><span class="op">(</span><span class="va">x</span>, top_m <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">most_important</span><span class="op">(</span><span class="va">x</span>, top_m <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -72,23 +66,15 @@
 
 
 <dt>top_m</dt>
-<dd><p>Maximum number of important variables to be returned.
-Defaults to <code>Inf</code>, i.e., return all variables in descending order of importance.</p></dd>
+<dd><p>Maximum number of important variables to be returned.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A character vector of variable names sorted in descending order by importance.</p>
+<p>A character vector of variable names sorted in descending importance.</p>
     </div>
-    <div id="methods-by-class-">
-    <h2>Methods (by class)</h2>
-    
-<ul><li><p><code>most_important(default)</code>: Default method not implemented yet.</p></li>
-<li><p><code>most_important(light_importance)</code>: Extracts most important variables from an object of class
-"light_importance".</p></li>
-</ul></div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="light_importance.html">light_importance()</a></code></p></div>
@@ -106,15 +92,15 @@ Defaults to <code>Inf</code>, i.e., return all variables in descending order of 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  data </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   label metric variable     value error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ols   rmse   Sepal.Width  0.102 <span style="color: #BB0000;">NA</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ols   rmse   Petal.Length 1.66  <span style="color: #BB0000;">NA</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ols   rmse   Petal.Width  0.143 <span style="color: #BB0000;">NA</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ols   rmse   Species      0.344 <span style="color: #BB0000;">NA</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   label_ metric_ variable_    value_ error_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ols    rmse    Sepal.Width   0.102 <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> ols    rmse    Petal.Length  1.66  <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> ols    rmse    Petal.Width   0.143 <span style="color: #BB0000;">NA</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ols    rmse    Species       0.344 <span style="color: #BB0000;">NA</span>    </span>
 <span class="r-in"><span><span class="fu">most_important</span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Petal.Length" "Species"      "Petal.Width"  "Sepal.Width" </span>
-<span class="r-in"><span><span class="fu">most_important</span><span class="op">(</span><span class="va">imp</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">most_important</span><span class="op">(</span><span class="va">imp</span>, top_m <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Petal.Length" "Species"     </span>
 </code></pre></div>
     </div>

@@ -57,6 +57,22 @@
 <ul><li>
 <code><a href="../reference/add_shap.html">add_shap()</a></code>: Deprecated in favor of {kernelshap} or {fastshap}.</li>
 <li>Consequently, <code>type = "shap"</code> in <code><a href="../reference/light_profile.html">light_profile()</a></code>, <code><a href="../reference/light_importance.html">light_importance()</a></code>, <code><a href="../reference/light_scatter.html">light_scatter()</a></code>, and <code><a href="../reference/light_profile2d.html">light_profile2d()</a></code> is deprecated as well.</li>
+<li>Column names of resulting data objects cannot be set via <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code> anymore.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-changes-0-9-0-9000">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-9-0-9000"></a></h3>
+<ul><li>
+<code><a href="../reference/most_important.html">most_important()</a></code> is not S3 anymore.</li>
+<li>
+<code><a href="../reference/plot.light_breakdown.html">plot.light_breakdown()</a></code> and <code><a href="../reference/plot.light_importance.html">plot.light_importance()</a></code> do not use flipped coordinates anymore.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="less-dependencies-0-9-0-9000">Less dependencies<a class="anchor" aria-label="anchor" href="#less-dependencies-0-9-0-9000"></a></h3>
+<ul><li>{cowplot} and {withr} packages have been removed from “imports”.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="announcements-for-upcoming-version-0-9-0-9000">Announcements for upcoming version 1.1.0<a class="anchor" aria-label="anchor" href="#announcements-for-upcoming-version-0-9-0-9000"></a></h3>
+<ul><li>The argument “stats” in <code><a href="../reference/light_effects.html">light_effects()</a></code> and <code><a href="../reference/light_profile.html">light_profile()</a></code> will be removed. It has no effect anymore.</li>
 </ul></div>
 </div>
     <div class="section level2">

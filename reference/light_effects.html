@@ -69,7 +69,7 @@
 <span>  <span class="va">v</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  by <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">by</span>,</span>
-<span>  stats <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"quartiles"</span><span class="op">)</span>,</span>
+<span>  stats <span class="op">=</span> <span class="st">"mean"</span>,</span>
 <span>  breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n_bins <span class="op">=</span> <span class="fl">11L</span>,</span>
 <span>  cut_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"equal"</span>, <span class="st">"quantile"</span><span class="op">)</span>,</span>
@@ -120,7 +120,7 @@ cut breaks of the <code>v</code> variable.</p></dd>
 
 
 <dt>stats</dt>
-<dd><p>Statistic to calculate for the response profile: "mean" or "quartiles".</p></dd>
+<dd><p>Deprecated. Will be removed in version 1.1.0.</p></dd>
 
 
 <dt>breaks</dt>
@@ -194,7 +194,6 @@ Column names can be controlled by <code>options(flashlight.column_name)</code>.<
 <li><p><code>ale</code>: A tibble containing the ALE profiles.</p></li>
 <li><p><code>by</code>: Same as input <code>by</code>.</p></li>
 <li><p><code>v</code>: The variable(s) evaluated.</p></li>
-<li><p><code>stats</code>: Same as input <code>stats</code>.</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
@@ -225,30 +224,28 @@ dependence profiles.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> data.frames:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  response </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species counts value label     type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa     50 5.006  iris response</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor     50 5.936  iris response</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica     50 6.588  iris response</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Species counts_ value_ label_    type_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa      50  5.006   iris response</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor      50  5.936   iris response</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica      50  6.588   iris response</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  predicted </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species value label      type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 5.006  iris predicted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 5.936  iris predicted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 6.588  iris predicted</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Species value_ label_     type_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa  5.006   iris predicted</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor  5.936   iris predicted</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica  6.588   iris predicted</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  pd </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species    value label               type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 6.425687  iris partial dependence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 5.702125  iris partial dependence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 5.402189  iris partial dependence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Species   value_ label_              type_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 6.425687   iris partial dependence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 5.702125   iris partial dependence</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 5.402189   iris partial dependence</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  ale </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Species    value label type </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> setosa      6.43 iris  ale  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> versicolor  5.70 iris  ale  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> virginica   5.40 iris  ale  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Species   value_ label_ type_</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 6.425687   iris   ale</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 5.702125   iris   ale</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 5.402189   iris   ale</span>
 </code></pre></div>
     </div>
   </div>

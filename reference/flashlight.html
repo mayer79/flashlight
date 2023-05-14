@@ -72,7 +72,7 @@ all arguments are optional up to <code>x</code> (the flashlight to be updated).<
 <span>  linkinv <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="va">z</span>,</span>
 <span>  w <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  by <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>rmse <span class="op">=</span> <span class="fu">MetricsWeighted</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/MetricsWeighted/man/rmse.html" class="external-link">rmse</a></span><span class="op">)</span>,</span>
+<span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>rmse <span class="op">=</span> <span class="fu">MetricsWeighted</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/MetricsWeighted/man/regression.html" class="external-link">rmse</a></span><span class="op">)</span>,</span>
 <span>  label <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shap <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -177,7 +177,6 @@ No <code>x</code> has to be passed in this case.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> predict_fct default:	 TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> linkinv default:	 FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> metrics:		 rmse</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SHAP:			 No</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">fl_updated</span> <span class="op">&lt;-</span> <span class="fu">flashlight</span><span class="op">(</span><span class="va">fl</span>, linkinv <span class="op">=</span> <span class="va">exp</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Flashlight ols </span>
@@ -190,7 +189,6 @@ No <code>x</code> has to be passed in this case.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> predict_fct default:	 TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> linkinv default:	 FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> metrics:		 rmse</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SHAP:			 No</span>
 </code></pre></div>
     </div>
   </div>
