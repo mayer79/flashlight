@@ -11,6 +11,10 @@
 - `most_important()` is not S3 anymore.
 - `plot.light_breakdown()` does not use flipped coordinates anymore.
 
+## Announcements for upcoming version 1.1.0
+
+- The argument "stats" in `light_effects()` and `light_profile()` will be removed. It has no effect anymore.
+
 # flashlight 0.9.0
 
 ## Announcements for upcoming version 1.0.0

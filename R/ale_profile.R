@@ -35,18 +35,13 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
                         indices = NULL, n_max = 1000L, seed = NULL,
                         two_sided = FALSE, calibrate = TRUE, ...) {
   cut_type <- match.arg(cut_type)
-
-  value_name <- getOption("flashlight.value_name")
-  counts_name <- getOption("flashlight.counts_name")
-  id_name <- "id_xxx"  # safer than default
-
   data <- x$data
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'v' not specified." = !is.null(v),
     "'v' not in 'data'." = v %in% colnames(data)
   )
-  check_unique(c(x$by, v), c(value_name, counts_name, id_name))
+  check_unique(c(x$by, v), c("value_", "counts_", "id_"))
   if (!is.null(seed)) {
     set.seed(seed)
   }
@@ -92,20 +87,19 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
     }
     ice <- light_ice(x, v = v, data = dat_i, evaluate_at = from_to, n_max = n_max)$data
     if (is_num) {
-      ice[[value_name]] <-
-        if (identical(to, from)) 0 else ice[[value_name]] / (to - from)
+      ice <- transform(ice, value_ = if (identical(to, from)) 0 else value_/(to - from))
     }
-
     # Safe reshaping
     dat_to <- ice[ice[[v]] %in% to, ]
     dat_from <- ice[ice[[v]] %in% from, ]
-    dat_to[[value_name]] <- dat_to[[value_name]] -
-      dat_from[[value_name]][match(dat_to[[id_name]], dat_from[[id_name]])]
+    dat_to <- transform(
+      dat_to, value_ = value_ - dat_from$value_[match(id_, dat_from$id_)]
+    )
 
     # Aggregation and output
     out <- grouped_stats(
       dat_to,
-      x = value_name,
+      x = "value_",
       w = x$w,
       by = x$by,
       counts_weighted = counts_weighted,
@@ -119,22 +113,20 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
   eval_pair <- data.frame(
     from = evaluate_at[c(1L, 1:(length(evaluate_at) - 1L))], to = evaluate_at
   )
-  withr::with_options(
-    list(flashlight.id_name = id_name),
-    ale <- dplyr::bind_rows(apply(eval_pair, 1L, ale_core))
-  )
+  ale <- dplyr::bind_rows(apply(eval_pair, 1L, ale_core))
 
   # Remove missing values before accumulation
-  if (any(bad <- is.na(ale[[value_name]]))) {
+  bad <- is.na(ale$value_)
+  if (any(bad)) {
     ale <- ale[!bad, , drop = FALSE]
   }
 
   # Accumulate effects. Integrate out gaps
   wcumsum <- function(X) {
-    X[[value_name]] <- as.numeric(
-      cumsum(X[[value_name]] * (if (is_num) c(0, diff(X[[v]])) else 1))
+    transform(
+      X,
+      value_ = as.numeric(cumsum(value_ * (if (is_num) c(0, diff(X[[v]])) else 1)))
     )
-    X
   }
   ale <- Reframe(ale, FUN = wcumsum, .by = x$by)
 
@@ -150,10 +142,9 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
         preds, if (!is.null(x$w)) data[[x$w]], na.rm = TRUE
       )
       ale_mean <- MetricsWeighted::weighted_mean(
-        ale[[value_name]], w = ale[[counts_name]], na.rm = TRUE
+        ale$value_, w = ale$counts_, na.rm = TRUE
       )
-      ale[[value_name]] <- ale[[value_name]] - ale_mean + pred_mean
-      ale <- tibble::as_tibble(ale)
+      ale <- tibble::as_tibble(transform(ale, value_ = value_ - ale_mean + pred_mean))
     } else {
       stopifnot(!(c("cal_xx", "shift_xx") %in% colnames(data)))
       dat_pred <- grouped_stats(
@@ -165,29 +156,20 @@ ale_profile <- function(x, v, breaks = NULL, n_bins = 11L,
         na.rm = TRUE
       )
       dat_ale <- grouped_stats(
-        ale, x = value_name, w = counts_name, by = x$by, counts = FALSE, na.rm = TRUE
+        ale, x = "value_", w = "counts_", by = x$by, counts = FALSE, na.rm = TRUE
       )
       dat_shift <- dplyr::left_join(dat_ale, dat_pred, by = x$by)
-      dat_shift[["shift_xx"]] <- dat_shift[["cal_xx"]] - dat_shift[[value_name]]
+      dat_shift <- transform(dat_shift, shift_xx = cal_xx - value_)
       ale <- dplyr::left_join(
-        ale,
-        dat_shift[, c(x$by, "shift_xx"), drop = FALSE],
-        by = x$by
+        ale, dat_shift[, c(x$by, "shift_xx"), drop = FALSE], by = x$by
       )
-      ale[[value_name]] <- ale[[value_name]] + ale[["shift_xx"]]
-      ale[["shift_xx"]] <- NULL
+      ale <- transform(ale, value_ = value_ + shift_xx, shift_xx = NULL)
     }
   }
   # Revert shift for two-sided derivatives
   if (two_sided) {
-    ale[[v]] <- evaluate_at_orig[match(ale[[v]], breaks[-1])]
+    ale[[v]] <- evaluate_at_orig[match(ale[[v]], breaks[-1L])]
   }
 
-  # Organize output
-  cols <- c(
-    x$by, v,
-    if (counts && counts_name %in% colnames(ale)) counts_name,
-    value_name
-  )
-  ale[, cols]
+  ale[, c(x$by, v, if (counts && "counts_" %in% colnames(ale)) "counts_", "value_")]
 }

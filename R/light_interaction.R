@@ -99,8 +99,7 @@ light_interaction.flashlight <- function(x, data = x$data, by = x$by,
     "'by' not in 'data'!" = by %in% colnames(data),
     "Not all 'v' in 'data'" = v %in% colnames(data),
     !(c("id_", "id_curve_", "w_") %in% colnames(data)),
-    !any(temp_vars %in% by),
-    !any(temp_vars %in% v)
+    !any(temp_vars %in% c(by, v))
   )
 
   if (type == "ice" && pairwise) {

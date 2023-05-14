@@ -92,11 +92,6 @@ light_profile2d.flashlight <- function(x, v = NULL,
     stop("type = 'shap' is deprecated.")
   }
 
-  value_name <- getOption("flashlight.value_name")
-  label_name <- getOption("flashlight.label_name")
-  type_name <- getOption("flashlight.type_name")
-  counts_name <- getOption("flashlight.counts_name")
-
   # Check if exactly two variables are specified
   if (type == "partial dependence" && !is.null(pd_grid)) {
     stopifnot(
@@ -125,9 +120,9 @@ light_profile2d.flashlight <- function(x, v = NULL,
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
-    "'v' not in 'data'." = v %in% colnames(data)
+    "'v' not in 'data'." = v %in% colnames(data),
+    !any(c("value_", "label_", "type_") %in% c(by, v))
   )
-  check_unique(c(by, v), c(value_name, label_name, type_name))
 
   # Update flashlight
   x <- flashlight(
@@ -154,22 +149,20 @@ light_profile2d.flashlight <- function(x, v = NULL,
     }
 
     # Calculate 2D ICE profiles
-    withr::with_options(list(flashlight.id_name = "id_xxx"),
-      data <- light_ice(
-        x = x,
-        grid = pd_grid,
-        indices = pd_indices,
-        n_max = pd_n_max,
-        seed = pd_seed
-      )$data
-    )
+    data <- light_ice(
+      x = x,
+      grid = pd_grid,
+      indices = pd_indices,
+      n_max = pd_n_max,
+      seed = pd_seed
+    )$data
   } else {
     if (type %in% c("response", "residual") && is.null(x$y)) {
       stop("You need to specify 'y' in flashlight.")
     }
 
     # Add predictions/response to data
-    data[[value_name]] <- switch(
+    data$value_ <- switch(
       type,
       response = response(x),
       predicted = stats::predict(x),
@@ -192,20 +185,17 @@ light_profile2d.flashlight <- function(x, v = NULL,
   # Aggregate predicted values
   agg <- grouped_stats(
     data = data,
-    x = value_name,
+    x = "value_",
     w = x$w,
     by = c(by, v),
     na.rm = TRUE,
     counts = counts,
     counts_weighted = counts_weighted,
-    counts_name = counts_name
+    counts_name = "counts_"
   )
 
   # Finalize results
-  agg[[label_name]] <- x$label
-  agg[[type_name]] <- type
-
-  # Collect results
+  agg <- transform(agg, label_ = x$label, type_ = type)
   out <- list(data = agg, by = by, v = v, type = type)
   add_classes(out, c("light_profile2d", "light"))
 }

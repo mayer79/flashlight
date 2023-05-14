@@ -8,7 +8,6 @@
 #' dependence profiles.
 #'
 #' @inheritParams light_profile
-#' @param stats Statistic to calculate for the response profile: "mean" or "quartiles".
 #' @param counts_weighted Should counts be weighted by the case weights?
 #'   If `TRUE`, the sum of `w` is returned by group.
 #' @param v_labels If `FALSE`, return group centers of `v` instead of labels.
@@ -23,7 +22,6 @@
 #'   - `ale`: A tibble containing the ALE profiles.
 #'   - `by`: Same as input `by`.
 #'   - `v`: The variable(s) evaluated.
-#'   - `stats`: Same as input `stats`.
 #' @export
 #' @examples
 #' fit <- lm(Sepal.Length ~ ., data = iris)
@@ -43,7 +41,7 @@ light_effects.default <- function(x, ...) {
 #' @describeIn light_effects Profiles for a flashlight object.
 #' @export
 light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
-                                     stats = c("mean", "quartiles"),
+                                     stats = "mean",
                                      breaks = NULL, n_bins = 11L,
                                      cut_type = c("equal", "quantile"),
                                      use_linkinv = TRUE,
@@ -52,11 +50,10 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
                                      pd_indices = NULL, pd_n_max = 1000L,
                                      pd_seed = NULL,
                                      ale_two_sided = TRUE, ...) {
-  stats <- match.arg(stats)
   cut_type <- match.arg(cut_type)
 
   if (stats == "quartiles") {
-    message("stats = 'quartiles' is deprecated and will be removed in flashlight 1.0.0.")
+    stop("stats = 'quartiles' is deprecated. The argument 'stats' will be removed in version 1.1.0.")
   }
 
   if (is.null(data)) {
@@ -70,7 +67,6 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
     "'v' not in 'data'." = v %in% colnames(data),
     "'v' not specified." = !is.null(v)
   )
-  check_unique(c(by, v))
 
   # Update flashlight and calculate predictions
   x <- flashlight(
@@ -105,7 +101,6 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
     x = x,
     v = v,
     type = "response",
-    stats = stats,
     breaks = cuts$breaks,
     v_labels = FALSE,
     counts = TRUE,
@@ -139,7 +134,7 @@ light_effects.flashlight <- function(x, v, data = NULL, by = x$by,
   }
 
   # Collect results
-  out <- c(data_sets, list(by = by, v = v, stats = stats))
+  out <- c(data_sets, list(by = by, v = v))
   add_classes(out, c("light_effects", "light"))
 }
 

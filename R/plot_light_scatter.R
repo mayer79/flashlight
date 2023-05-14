@@ -54,7 +54,7 @@ plot.light_scatter <- function(x, swap_dim = FALSE, facet_scales = "free_x",
     p <- p +
       ggplot2::geom_point(ggplot2::aes(color = .data[[col_var]]), ...) +
       ggplot2::facet_wrap(wrap_var, scales = facet_scales) +
-      ggplot2::guides(color = ggplot2::guide_legend(override.aes = list(alpha = 1)))
+      override_alpha()
   }
   if (rotate_x) {
     p <- p + rotate_x()

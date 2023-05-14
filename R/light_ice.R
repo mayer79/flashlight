@@ -95,15 +95,13 @@ light_ice.flashlight <- function(x, v = NULL, data = x$data, by = x$by,
                                             "last", "mean", "0"), ...) {
   cut_type <- match.arg(cut_type)
   center <- match.arg(center)
-  temp_vars <- c("value_", "label_", "id_")
 
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
     "'v' not in 'data'." = v %in% colnames(data),
     "'v' or 'grid' misses." = !is.null(grid) || !is.null(v),
-    !any(temp_vars %in% by),
-    !any(temp_vars %in% union(v, names(grid)))
+    !any(c("value_", "label_", "id_") %in% c(by, v, names(grid)))
   )
 
   n <- nrow(data)
