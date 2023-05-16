@@ -4,6 +4,7 @@
 #' variable grouped by optional columns. By default, counts are not weighted,
 #' even if there is a weighting variable.
 #'
+#' @noRd
 #' @param data A `data.frame`.
 #' @param x Variable name in `data` to summarize.
 #' @param w Optional name of the column in `data` with case weights.
@@ -21,7 +22,6 @@
 #' @param ... Additional arguments passed to corresponding `weighted_*()` functions in
 #'   {MetricsWeighted}.
 #' @returns A `data.frame` with columns `by`, `x`, and optionally `counts_name`.
-#' @export
 #' @examples
 #' grouped_stats(iris, "Sepal.Width")
 #' grouped_stats(iris, "Sepal.Width", stats = "quartiles")

@@ -6,7 +6,7 @@
 #' @param data A `data.frame`.
 #' @param x Variable name in `data` to summarize.
 #' @param w Optional name of the column in `data` with case weights.
-#' @param by An optional vector of column names in `data` used to group the results.
+#' @param by One column name in `data` used to group the results.
 #' @param na.rm Should missing values in `x` be removed?
 #' @param value_name Name of the resulting column with means.
 #' @returns A `data.frame` with grouped weighted means.
@@ -60,3 +60,17 @@ grouped_weighted_mean <- function(data, x, w = NULL, by = NULL,
   }
   stats::setNames(data.frame(rn, out, row.names = NULL), c(by, value_name))
 }
+
+# library(collapse)
+#
+# gwmean <- function(data, x, w = NULL, by = NULL, na.rm = TRUE, value_name = x, ...) {
+#   out <- fmean(
+#     data[[x]],
+#     g = if (!is.null(by)) data[[by]],
+#     w = if (!is.null(w)) data[[w]],
+#     na.rm = na.rm,
+#     ...
+#   )
+#   out
+# }
+

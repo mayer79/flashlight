@@ -57,15 +57,34 @@
 #'   Friedman, J. H. and Popescu, B. E. (2008). "Predictive learning via rule
 #'     ensembles." The Annals of Applied Statistics. JSTOR, 916–54.
 #' @examples
-#' v <- c("Petal.Length", "Petal.Width")
-#' fit_add <- stats::lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
-#' fit_nonadd <- stats::lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
-#' fl_add <- flashlight(model = fit_add, label = "additive")
-#' fl_nonadd <- flashlight(model = fit_nonadd, label = "nonadditive")
-#' fls <- multiflashlight(list(fl_add, fl_nonadd), data = iris)
-#' plot(st <- light_interaction(fls, v = v), fill = "darkgreen")
-#' plot(light_interaction(fls, v = v, pairwise = TRUE), fill = "darkgreen")
-#' plot(st <- light_interaction(fls, v = v, by = "Species"), fill = "darkgreen")
+#' # First model with interactions
+#' fit_nonadd <- stats::lm(
+#'   Sepal.Length ~ . + Sepal.Width:Species + Petal.Width:Species, data = iris
+#' )
+#' fl_nonadd <- flashlight(
+#'   model = fit_nonadd, label = "nonadditive", data = iris, y = "Sepal.Length"
+#' )
+#'
+#' # Friedman's H per feature
+#' plot(light_interaction(fl_nonadd), fill = "chartreuse4")
+#'
+#' # Unnormalized H^2 measures proportion of bivariate effect explained by interaction
+#' plot(
+#'   light_interaction(fl_nonadd, normalize = TRUE, take_sqrt = TRUE),
+#'   fill = "chartreuse4"
+#' )
+#'
+#' # Pairwise H
+#' plot(light_interaction(fl_nonadd, pairwise = TRUE), fill = "chartreuse4")
+#'
+#' # Second model without interactions
+#' fit_add <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fl_add <- flashlight(
+#'   model = fit_add, label = "additive", data = iris, y = "Sepal.Length"
+#' )
+#' fls <- multiflashlight(list(fl_add, fl_nonadd))
+#'
+#' plot(light_interaction(fls), fill = "chartreuse4")
 #' @seealso [light_ice()]
 light_interaction <- function(x, ...) {
   UseMethod("light_interaction")

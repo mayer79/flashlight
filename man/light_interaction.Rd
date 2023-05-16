@@ -110,9 +110,9 @@ The minimum required elements in the (multi-) flashlight are a "predict_function
 
 }}
 \examples{
-v <- c("Petal.Length", "Petal.Width")
-fit_add <- stats::lm(Sepal.Length ~ Petal.Length + Petal.Width, data = iris)
-fit_nonadd <- stats::lm(Sepal.Length ~ Petal.Length * Petal.Width, data = iris)
+v <- c("Petal.Length", "Petal.Width", "Sepal.Width")
+fit_add <- stats::lm(Sepal.Length ~ Petal.Length + Petal.Width + Sepal.Width, data = iris)
+fit_nonadd <- stats::lm(Sepal.Length ~ Petal.Length * Petal.Width + Sepal.Width, data = iris)
 fl_add <- flashlight(model = fit_add, label = "additive")
 fl_nonadd <- flashlight(model = fit_nonadd, label = "nonadditive")
 fls <- multiflashlight(list(fl_add, fl_nonadd), data = iris)

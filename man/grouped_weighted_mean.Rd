@@ -20,7 +20,7 @@ grouped_weighted_mean(
 
 \item{w}{Optional name of the column in \code{data} with case weights.}
 
-\item{by}{An optional vector of column names in \code{data} used to group the results.}
+\item{by}{One column name in \code{data} used to group the results.}
 
 \item{na.rm}{Should missing values in \code{x} be removed?}
 

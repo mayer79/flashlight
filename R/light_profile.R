@@ -74,8 +74,7 @@
 #'   cut breaks of the `v` variable.
 #' @returns
 #'   An object of class "light_profile" with the following elements:
-#'   - `data` A tibble containing results. Can be used to build fully customized
-#'     visualizations. Column names can be controlled by `options(flashlight.column_name)`.
+#'   - `data` A tibble containing results.
 #'   - `by` Names of group by variable.
 #'   - `v` The variable(s) evaluated.
 #'   - `type` Same as input `type`. For information only.
@@ -86,10 +85,28 @@
 #' - Apley D. W. (2016). Visualizing the effects of predictor variables in black box
 #'   supervised learning models.
 #' @examples
-#' fit <- stats::lm(Sepal.Length ~ ., data = iris)
-#' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-#' plot(light_profile(fl, v = "Species"))
-#' plot(light_profile(fl, v = "Petal.Width", type = "residual"))
+#' fit_lin <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fl_lin <- flashlight(model = fit_lin, label = "lin", data = iris, y = "Sepal.Length")
+#'
+#' # PDP by Species
+#' plot(light_profile(fl_lin, v = "Petal.Length", by = "Species"))
+#'
+#' # Average predicted
+#' plot(light_profile(fl_lin, v = "Petal.Length", type = "pred"))
+#'
+#' # Second model with non-linear Petal.Length effect
+#' fit_nonlin <- stats::lm(Sepal.Length ~ . + I(Petal.Length^2), data = iris)
+#' fl_nonlin <- flashlight(
+#'   model = fit_nonlin, label = "nonlin", data = iris, y = "Sepal.Length"
+#' )
+#' fls <- multiflashlight(list(fl_lin, fl_nonlin))
+#'
+#' # PDP by Species
+#' plot(light_profile(fls, v = "Petal.Length", by = "Species"))
+#' plot(light_profile(fls, v = "Petal.Length", by = "Species"), swap_dim = TRUE)
+#'
+#' # Average residuals (calibration)
+#' plot(light_profile(fls, v = "Petal.Length", type = "residual"))
 #' @seealso [light_effects()], [plot.light_profile()]
 light_profile <- function(x, ...) {
   UseMethod("light_profile")
@@ -269,4 +286,86 @@ light_profile.multiflashlight <- function(x, v = NULL, data = NULL,
     ...
   )
   light_combine(all_profiles, new_class = "light_profile_multi")
+}
+
+#' Visualize Profiles, e.g. Partial Dependence
+#'
+#' Minimal visualization of an object of class "light_profile".
+#' The object returned is of class "ggplot" and can be further customized.
+#'
+#' Either lines and points are plotted (if stats = "mean") or quartile boxes.
+#' If there is a "by" variable or a multiflashlight, this first dimension
+#' is represented by color (or if `swap_dim = TRUE` by facets).
+#' If there are two "by" variables or a multiflashlight with one "by" variable,
+#' the first "by" variable is visualized as color, while the second one
+#' or the multiflashlight is shown via facet (change with `swap_dim`).
+#'
+#' @importFrom rlang .data
+#'
+#' @inheritParams plot.light_performance
+#' @param x An object of class "light_profile".
+#' @param swap_dim If multiflashlight and one "by" variable or
+#'   single flashlight with two "by" variables, swap the role of dodge/fill variable
+#'   and facet variable. If multiflashlight or one "by" variable,
+#'   use facets instead of colors.
+#' @param show_points Should points be added to the line (default is `TRUE`).
+#' @param ... Further arguments passed to [ggplot2::geom_point()] or
+#'   [ggplot2::geom_line()].
+#' @returns An object of class "ggplot".
+#' @export
+#' @seealso [light_profile()], [plot.light_effects()]
+plot.light_profile <- function(x, swap_dim = FALSE, facet_scales = "free_x",
+                               rotate_x = x$type != "partial dependence",
+                               show_points = TRUE, ...) {
+  data <- x$data
+  nby <- length(x$by)
+  multi <- is.light_profile_multi(x)
+  ndim <- nby + multi
+  if (ndim > 2L) {
+    stop("Plot method not defined for more than two by variables or
+         multiflashlight with more than one by variable.")
+  }
+  if (length(x$v) >= 2L) {
+    stop("No plot method defined for two or higher dimensional grids.")
+  }
+  # Distinguish some cases
+  p <- ggplot2::ggplot(x$data, ggplot2::aes(y = value_, x = .data[[x$v]]))
+  if (ndim == 0L) {
+    p <- p + ggplot2::geom_line(ggplot2::aes(group = 1), ...)
+    if (show_points) {
+      p <- p + ggplot2::geom_point(...)
+    }
+  } else if (ndim == 1L) {
+    first_dim <- if (multi) "label_" else x$by[1L]
+    if (!swap_dim) {
+      p <- p + ggplot2::geom_line(
+        ggplot2::aes(color = .data[[first_dim]], group = .data[[first_dim]]), ...
+      )
+      if (show_points) {
+        p <- p + ggplot2::geom_point(ggplot2::aes(color = .data[[first_dim]]), ...)
+      }
+    } else {
+      p <- p +
+        ggplot2::facet_wrap(first_dim, scales = facet_scales) +
+        ggplot2::geom_line(ggplot2::aes(group = 1), ...)
+      if (show_points) {
+        p <- p + ggplot2::geom_point(...)
+      }
+    }
+  } else if (ndim == 2L) {
+    second_dim <- if (multi) "label_" else x$by[2L]
+    wrap_var <- if (swap_dim) x$by[1L] else second_dim
+    col_var <- if (swap_dim) second_dim else x$by[1L]
+    p <- p + ggplot2::geom_line(
+      ggplot2::aes(color = .data[[col_var]], group = .data[[col_var]]), ...
+    )
+    if (show_points) {
+      p <- p + ggplot2::geom_point(ggplot2::aes(color = .data[[col_var]]), ...)
+    }
+    p <- p + ggplot2::facet_wrap(wrap_var, scales = facet_scales)
+  }
+  if (rotate_x) {
+    p <- p + rotate_x()
+  }
+  p + ggplot2::ylab(x$type)
 }
