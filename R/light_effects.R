@@ -24,7 +24,7 @@
 #'   - `v`: The variable(s) evaluated.
 #' @export
 #' @examples
-#' fit_lin <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_lin <- lm(Sepal.Length ~ ., data = iris)
 #' fl_lin <- flashlight(model = fit_lin, label = "lin", data = iris, y = "Sepal.Length")
 #'
 #' # PDP, average response, average predicted by Species
@@ -35,7 +35,7 @@
 #' plot(eff, use = c("pd", "ale"))
 #'
 #' # Second model with non-linear Petal.Length effect
-#' fit_nonlin <- stats::lm(Sepal.Length ~ . + I(Petal.Length^2), data = iris)
+#' fit_nonlin <- lm(Sepal.Length ~ . + I(Petal.Length^2), data = iris)
 #' fl_nonlin <- flashlight(
 #'   model = fit_nonlin, label = "nonlin", data = iris, y = "Sepal.Length"
 #' )

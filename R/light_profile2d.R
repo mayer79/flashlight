@@ -56,7 +56,7 @@
 #'   Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
 #'     The Annals of Statistics, 29:1189–1232.
 #' @examples
-#' fit_part <- stats::lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+#' fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
 #' fl_part <- flashlight(
 #'   model = fit_part, label = "part", data = iris, y = "Sepal.Length"
 #' )
@@ -65,7 +65,7 @@
 #' plot(light_profile2d(fl_part, v = c("Petal.Length", "Petal.Width")))
 #'
 #' # Second model includes Petal.Width
-#' fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fl_full <- flashlight(
 #'   model = fit_full, label = "full", data = iris, y = "Sepal.Length"
 #' )

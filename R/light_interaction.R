@@ -58,7 +58,7 @@
 #'     ensembles." The Annals of Applied Statistics. JSTOR, 916–54.
 #' @examples
 #' # First model with interactions
-#' fit_nonadd <- stats::lm(
+#' fit_nonadd <- lm(
 #'   Sepal.Length ~ . + Sepal.Width:Species + Petal.Width:Species, data = iris
 #' )
 #' fl_nonadd <- flashlight(
@@ -78,7 +78,7 @@
 #' plot(light_interaction(fl_nonadd, pairwise = TRUE), fill = "chartreuse4")
 #'
 #' # Second model without interactions
-#' fit_add <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_add <- lm(Sepal.Length ~ ., data = iris)
 #' fl_add <- flashlight(
 #'   model = fit_add, label = "additive", data = iris, y = "Sepal.Length"
 #' )

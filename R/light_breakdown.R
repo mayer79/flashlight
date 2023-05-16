@@ -61,14 +61,14 @@
 #'   A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations
 #'     for non-additive predictive models. ArXiv.
 #' @examples
-#' fit_part <- stats::lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+#' fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
 #' fl_part <- flashlight(
 #'   model = fit_part, label = "part", data = iris, y = "Sepal.Length"
 #' )
 #' plot(light_breakdown(fl_part, new_obs = iris[1, ]))
 #'
 #' # Second model
-#' fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fl_full <- flashlight(
 #'   model = fit_full, label = "full", data = iris, y = "Sepal.Length"
 #' )

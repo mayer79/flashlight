@@ -35,8 +35,7 @@
 #'     Variable Importance for Black-Box, Proprietary, or Misspecified Prediction
 #'     Models, using Model Class Reliance. Arxiv.
 #' @examples
-#' @examples
-#' fit_part <- stats::lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+#' fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
 #' fl_part <- flashlight(
 #'   model = fit_part, label = "part", data = iris, y = "Sepal.Length"
 #' )
@@ -45,7 +44,7 @@
 #' plot(light_importance(fl_part, m_repetitions = 4), fill = "chartreuse4")
 #'
 #' # Second model includes all variables
-#' fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_full <- lm(Sepal.Length ~ ., data = iris)
 #' fl_full <- flashlight(
 #'   model = fit_full, label = "full", data = iris, y = "Sepal.Length"
 #' )

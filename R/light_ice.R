@@ -61,14 +61,14 @@
 #'     Journal of Computational and Graphical Statistics, 24:1
 #'     <doi.org/10.1080/10618600.2014.907095>.
 #' @examples
-#' fit_add <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_add <- lm(Sepal.Length ~ ., data = iris)
 #' fl_add <- flashlight(model = fit_add, label = "additive", data = iris)
 #'
 #' plot(light_ice(fl_add, v = "Sepal.Width", n_max = 200), alpha = 0.2)
 #' plot(light_ice(fl_add, v = "Sepal.Width", n_max = 200, center = "first"))
 #'
 #' # Second model with interactions
-#' fit_nonadd <- stats::lm(Sepal.Length ~ . + Sepal.Width:Species, data = iris)
+#' fit_nonadd <- lm(Sepal.Length ~ . + Sepal.Width:Species, data = iris)
 #' fl_nonadd <- flashlight(model = fit_nonadd, label = "nonadditive", data = iris)
 #' fls <- multiflashlight(list(fl_add, fl_nonadd))
 #'

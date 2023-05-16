@@ -124,8 +124,7 @@ Set \code{ale_two_sided = TRUE} to use points in \eqn{[x-e/2, x+e/2]}.}
 \value{
 An object of class "light_profile" with the following elements:
 \itemize{
-\item \code{data} A tibble containing results. Can be used to build fully customized
-visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble containing results.
 \item \code{by} Names of group by variable.
 \item \code{v} The variable(s) evaluated.
 \item \code{type} Same as input \code{type}. For information only.
@@ -166,10 +165,28 @@ For partial dependence, ALE, and prediction profiles, "model", "predict_function
 
 }}
 \examples{
-fit <- stats::lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-plot(light_profile(fl, v = "Species"))
-plot(light_profile(fl, v = "Petal.Width", type = "residual"))
+fit_lin <- lm(Sepal.Length ~ ., data = iris)
+fl_lin <- flashlight(model = fit_lin, label = "lin", data = iris, y = "Sepal.Length")
+
+# PDP by Species
+plot(light_profile(fl_lin, v = "Petal.Length", by = "Species"))
+
+# Average predicted
+plot(light_profile(fl_lin, v = "Petal.Length", type = "pred"))
+
+# Second model with non-linear Petal.Length effect
+fit_nonlin <- lm(Sepal.Length ~ . + I(Petal.Length^2), data = iris)
+fl_nonlin <- flashlight(
+  model = fit_nonlin, label = "nonlin", data = iris, y = "Sepal.Length"
+)
+fls <- multiflashlight(list(fl_lin, fl_nonlin))
+
+# PDP by Species
+plot(light_profile(fls, v = "Petal.Length", by = "Species"))
+plot(light_profile(fls, v = "Petal.Length", by = "Species"), swap_dim = TRUE)
+
+# Average residuals (calibration)
+plot(light_profile(fls, v = "Petal.Length", type = "residual"))
 }
 \references{
 \itemize{

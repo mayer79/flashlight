@@ -47,8 +47,7 @@ light_scatter(x, ...)
 \value{
 An object of class "light_scatter" with the following elements:
 \itemize{
-\item \code{data}: A tibble with results used to build customized visualizations.
-Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data}: A tibble with results.
 \item \code{by}: Same as input \code{by}.
 \item \code{v}: The variable name evaluated.
 \item \code{type}: Same as input \code{type}. For information only.
@@ -68,8 +67,8 @@ responses, or residuals against a selected variable.
 
 }}
 \examples{
-fit_a <- stats::lm(Sepal.Length ~ . -Petal.Length, data = iris)
-fit_b <- stats::lm(Sepal.Length ~ ., data = iris)
+fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
+fit_b <- lm(Sepal.Length ~ ., data = iris)
 
 fl_a <- flashlight(model = fit_a, label = "no Petal.Length")
 fl_b <- flashlight(model = fit_b, label = "all")

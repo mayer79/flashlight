@@ -6,6 +6,19 @@
 - Consequently, `type = "shap"` in `light_profile()`, `light_importance()`, `light_scatter()`, and `light_profile2d()` is deprecated as well.
 - Column names of resulting data objects cannot be set via `options()` anymore.
 
+## Exported -> internal
+
+The following functions are now internal:
+
+- `grouped_center()`
+- `grouped_counts()`
+- `grouped_stats()`
+- `grouped_weighted_mean()`
+- `all_identical()`
+- `auto_cut()`
+- `common_breaks()`
+- `cut3()`
+
 ## Minor changes
 
 - `most_important()` is not S3 anymore.

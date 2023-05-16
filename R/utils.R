@@ -12,15 +12,6 @@ rename_one <- function(x, old, new) {
   x
 }
 
-# Calculates midpoints of subsequent unique breaks
-midpoints <- function(breaks) {
-  # to do: deal with missings
-  stopifnot(is.numeric(breaks))
-  breaks <- sort(unique(breaks))
-  stopifnot((m <- length(breaks)) >= 2L)
-  (breaks[-m] + breaks[-1L]) / 2
-}
-
 # Organize binning strategy per variable for 2d partial dependence
 fix_strategy <- function(v, n_bins, cut_type, breaks, pd_evaluate_at) {
   stopifnot(
@@ -61,4 +52,28 @@ Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {
     out <- as.data.frame(out)
   }
   out
+}
+
+#' all_identical
+#'
+#' Checks if an aspect is identical for all elements in a nested list.
+#' The aspect is specified by `fun`, e.g., `[[`, followed by the element
+#' name to compare.
+#'
+#' @noRd
+#' @param x A nested list of objects.
+#' @param fun Function used to extract information of each element of `x`.
+#' @param ... Further arguments passed to `fun()`.
+#' @returns A logical vector of length one.
+#' @examples
+#' x <- list(a = 1, b = 2)
+#' y <- list(a = 1, b = 3)
+#' all_identical(list(x, y), `[[`, "a")
+#' all_identical(list(x, y), `[[`, "b")
+all_identical <- function(x, fun, ...) {
+  if ((m <- length(x)) <= 1L) {
+    return(TRUE)
+  }
+  subs <- lapply(x, fun, ...)
+  all(vapply(subs[2:m], FUN = identical, FUN.VALUE = TRUE, subs[[1L]]))
 }

@@ -20,8 +20,8 @@
 #'   - `type`: Same as input `type`. For information only.
 #' @export
 #' @examples
-#' fit_a <- stats::lm(Sepal.Length ~ . -Petal.Length, data = iris)
-#' fit_b <- stats::lm(Sepal.Length ~ ., data = iris)
+#' fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
+#' fit_b <- lm(Sepal.Length ~ ., data = iris)
 #'
 #' fl_a <- flashlight(model = fit_a, label = "no Petal.Length")
 #' fl_b <- flashlight(model = fit_b, label = "all")

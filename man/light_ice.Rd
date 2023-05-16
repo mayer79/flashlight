@@ -77,8 +77,7 @@ Will be randomly picked from \code{data} if necessary.}
 \value{
 An object of class "light_ice" with the following elements:
 \itemize{
-\item \code{data} A tibble containing the results. Can be used to build fully customized
-visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble containing the results.
 \item \code{by} Same as input \code{by}.
 \item \code{v} The variable(s) evaluated.
 \item \code{center} How centering was done.
@@ -120,16 +119,19 @@ In both cases, \code{data} should be the same for all flashlights considered.
 
 }}
 \examples{
-fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
-fit_part <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
-mod_full <- flashlight(model = fit_full, label = "full", data = iris)
-mod_part <- flashlight(model = fit_part, label = "part", data = iris)
-mods <- multiflashlight(list(mod_full, mod_part))
-plot(light_ice(mod_full, v = "Species"), alpha = 0.2)
-indices <- (1:15) * 10
-plot(light_ice(mods, v = "Species", indices = indices))
-plot(light_ice(mods, v = "Species", indices = indices, center = "first"))
-plot(light_ice(mods, v = "Petal.Width", by = "Species", n_bins = 5, indices = indices))
+fit_add <- lm(Sepal.Length ~ ., data = iris)
+fl_add <- flashlight(model = fit_add, label = "additive", data = iris)
+
+plot(light_ice(fl_add, v = "Sepal.Width", n_max = 200), alpha = 0.2)
+plot(light_ice(fl_add, v = "Sepal.Width", n_max = 200, center = "first"))
+
+# Second model with interactions
+fit_nonadd <- lm(Sepal.Length ~ . + Sepal.Width:Species, data = iris)
+fl_nonadd <- flashlight(model = fit_nonadd, label = "nonadditive", data = iris)
+fls <- multiflashlight(list(fl_add, fl_nonadd))
+
+plot(light_ice(fls, v = "Sepal.Width", by = "Species", n_max = 200), alpha = 0.2)
+plot(light_ice(fls, v = "Sepal.Width", by = "Species", n_max = 200, center = "mid"))
 }
 \references{
 Goldstein, A. et al. (2015). Peeking inside the black box: Visualizing statistical
