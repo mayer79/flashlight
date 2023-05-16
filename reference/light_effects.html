@@ -103,7 +103,7 @@
 
 
 <dt>...</dt>
-<dd><p>Further arguments passed to <code><a href="cut3.html">cut3()</a></code> in forming the
+<dd><p>Further arguments passed to <code>cut3()</code> in forming the
 cut breaks of the <code>v</code> variable.</p></dd>
 
 
@@ -215,37 +215,28 @@ dependence profiles.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fl</span> <span class="op">&lt;-</span> <span class="fu"><a href="flashlight.html">flashlight</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit</span>, label <span class="op">=</span> <span class="st">"iris"</span>, data <span class="op">=</span> <span class="va">iris</span>, y <span class="op">=</span> <span class="st">"Sepal.Length"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">light_effects</span><span class="op">(</span><span class="va">fl</span>, v <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> I am an object of class light_effects </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data.frames:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  response </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species counts_ value_ label_    type_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa      50  5.006   iris response</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor      50  5.936   iris response</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica      50  6.588   iris response</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  predicted </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species value_ label_     type_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa  5.006   iris predicted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor  5.936   iris predicted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica  6.588   iris predicted</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  pd </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species   value_ label_              type_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 6.425687   iris partial dependence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 5.702125   iris partial dependence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 5.402189   iris partial dependence</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ale </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Species   value_ label_ type_</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 6.425687   iris   ale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 5.702125   iris   ale</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 5.402189   iris   ale</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fit_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fl_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="flashlight.html">flashlight</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit_lin</span>, label <span class="op">=</span> <span class="st">"lin"</span>, data <span class="op">=</span> <span class="va">iris</span>, y <span class="op">=</span> <span class="st">"Sepal.Length"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># PDP, average response, average predicted by Species</span></span></span>
+<span class="r-in"><span><span class="va">eff</span> <span class="op">&lt;-</span> <span class="fu">light_effects</span><span class="op">(</span><span class="va">fl_lin</span>, v <span class="op">=</span> <span class="st">"Petal.Length"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eff</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="light_effects-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># PDP and ALE</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">eff</span>, use <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pd"</span>, <span class="st">"ale"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="light_effects-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Second model with non-linear Petal.Length effect</span></span></span>
+<span class="r-in"><span><span class="va">fit_nonlin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">Petal.Length</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fl_nonlin</span> <span class="op">&lt;-</span> <span class="fu"><a href="flashlight.html">flashlight</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  model <span class="op">=</span> <span class="va">fit_nonlin</span>, label <span class="op">=</span> <span class="st">"nonlin"</span>, data <span class="op">=</span> <span class="va">iris</span>, y <span class="op">=</span> <span class="st">"Sepal.Length"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fls</span> <span class="op">&lt;-</span> <span class="fu"><a href="multiflashlight.html">multiflashlight</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">fl_lin</span>, <span class="va">fl_nonlin</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># PDP and ALE</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">light_effects</span><span class="op">(</span><span class="va">fls</span>, v <span class="op">=</span> <span class="st">"Petal.Length"</span><span class="op">)</span>, use <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pd"</span>, <span class="st">"ale"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="light_effects-3.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>
