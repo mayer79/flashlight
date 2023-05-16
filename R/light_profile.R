@@ -70,7 +70,7 @@
 #'   for ALE instead of left derivatives. More specifically: Usually, local effects
 #'   at value x are calculated using points in \eqn{[x-e, x]}.
 #'   Set `ale_two_sided = TRUE` to use points in \eqn{[x-e/2, x+e/2]}.
-#' @param ... Further arguments passed to [cut3()] in forming the
+#' @param ... Further arguments passed to [formatC()] in forming the
 #'   cut breaks of the `v` variable.
 #' @returns
 #'   An object of class "light_profile" with the following elements:

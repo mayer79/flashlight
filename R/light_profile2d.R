@@ -43,7 +43,7 @@
 #'   (will be randomly picked from `data`). Only used for type = "partial dependence".
 #' @param pd_seed Integer random seed used to select ICE profiles.
 #'   Only used for type = "partial dependence".
-#' @param ... Further arguments passed to [cut3()] in forming
+#' @param ... Further arguments passed to [formatC()] in forming
 #'   the cut breaks of the `v` variables. Not relevant for partial dependence profiles.
 #' @returns
 #'   An object of class "light_profile2d" with the following elements:
