@@ -47,7 +47,7 @@ light_profile2d(x, ...)
 \arguments{
 \item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{\link[=cut3]{cut3()}} in forming
+\item{...}{Further arguments passed to \code{\link[=formatC]{formatC()}} in forming
 the cut breaks of the \code{v} variables. Not relevant for partial dependence profiles.}
 
 \item{v}{A vector of exactly two variable names to be profiled.}

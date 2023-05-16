@@ -44,7 +44,7 @@ light_effects(x, ...)
 \arguments{
 \item{x}{An object of class "flashlight" or "multiflashlight".}
 
-\item{...}{Further arguments passed to \code{\link[=cut3]{cut3()}} in forming the
+\item{...}{Further arguments passed to \code{\link[=formatC]{formatC()}} in forming the
 cut breaks of the \code{v} variable.}
 
 \item{v}{The variable name to be profiled.}
