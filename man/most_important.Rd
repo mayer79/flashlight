@@ -19,8 +19,8 @@ Returns the most important variable names sorted descendingly.
 }
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "ols", data = iris, y = "Sepal.Length")
-(imp <- light_importance(fl, seed = 4))
+fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
+imp <- light_importance(fl)
 most_important(imp)
 most_important(imp, top_m = 2)
 }

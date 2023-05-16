@@ -52,8 +52,7 @@ take too long to split non-numeric variables with many levels.}
 \value{
 An object of class "light_global_surrogate" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
-Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble with results.
 \item \code{by} Same as input \code{by}.
 }
 }
@@ -76,7 +75,9 @@ by passing \code{...} arguments to \code{\link[rpart:rpart]{rpart::rpart()}}.
 \examples{
 fit <- lm(Sepal.Length ~ ., data = iris)
 x <- flashlight(model = fit, label = "lm", data = iris)
-light_global_surrogate(x)
+sur <- light_global_surrogate(x)
+sur$data$r_squared
+plot(sur)
 }
 \references{
 Molnar C. (2019). Interpretable Machine Learning.

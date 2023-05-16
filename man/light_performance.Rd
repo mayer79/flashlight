@@ -40,9 +40,7 @@ four arguments: actual, predicted, case weights w and \code{...}.}
 \value{
 An object of class "light_performance" with the following elements:
 \itemize{
-\item \code{data}: A tibble containing the results. Can be used to build fully customized
-visualizations. Column names can be controlled by
-\code{options(flashlight.column_name)}.
+\item \code{data}: A tibble containing the results.
 \item \code{by} Same as input \code{by}.
 }
 }
@@ -65,16 +63,19 @@ The minimal required elements in the (multi-) flashlight are "y", "predict_funct
 
 }}
 \examples{
-fit_part <- stats::lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
 fl_part <- flashlight(
   model = fit_part, label = "part", data = iris, y = "Sepal.Length"
 )
-fit_full <- stats::lm(Sepal.Length ~ ., data = iris)
+plot(light_performance(fl_part, by = "Species"), fill = "chartreuse4")
+
+# Second model
+fit_full <- lm(Sepal.Length ~ ., data = iris)
 fl_full <- flashlight(
   model = fit_full, label = "full", data = iris, y = "Sepal.Length"
 )
 fls <- multiflashlight(list(fl_part, fl_full))
-plot(light_performance(fls), fill = "chartreuse4")
+
 plot(light_performance(fls, by = "Species"))
 plot(light_performance(fls, by = "Species"), swap_dim = TRUE)
 }

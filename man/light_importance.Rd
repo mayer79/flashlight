@@ -62,8 +62,7 @@ are better or not. If set to \code{FALSE}, the increase in metric is multiplied 
 \value{
 An object of class "light_importance" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized visualizations.
-Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble with results.
 \item \code{by} Same as input \code{by}.
 \item \code{type} Same as input \code{type}. For information only.
 }
@@ -86,9 +85,23 @@ The minimum required elements in the (multi-)flashlight are "y", "predict_functi
 
 }}
 \examples{
-fit <- stats::lm(Sepal.Length ~ Petal.Length, data = iris)
-fl <- flashlight(model = fit, label = "full", data = iris, y = "Sepal.Length")
-plot(light_importance(fl), fill = "chartreuse4")
+fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+fl_part <- flashlight(
+  model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+)
+
+# No effect of some variables (incl. standard errors)
+plot(light_importance(fl_part, m_repetitions = 4), fill = "chartreuse4")
+
+# Second model includes all variables
+fit_full <- lm(Sepal.Length ~ ., data = iris)
+fl_full <- flashlight(
+  model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+)
+fls <- multiflashlight(list(fl_part, fl_full))
+
+plot(light_importance(fls), fill = "chartreuse4")
+plot(light_importance(fls, by = "Species"))
 }
 \references{
 Fisher A., Rudin C., Dominici F. (2018). All Models are Wrong but many are Useful:

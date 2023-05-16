@@ -124,9 +124,25 @@ dependence profiles.
 
 }}
 \examples{
-fit <- lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-light_effects(fl, v = "Species")
+fit_lin <- lm(Sepal.Length ~ ., data = iris)
+fl_lin <- flashlight(model = fit_lin, label = "lin", data = iris, y = "Sepal.Length")
+
+# PDP, average response, average predicted by Species
+eff <- light_effects(fl_lin, v = "Petal.Length")
+plot(eff)
+
+# PDP and ALE
+plot(eff, use = c("pd", "ale"))
+
+# Second model with non-linear Petal.Length effect
+fit_nonlin <- lm(Sepal.Length ~ . + I(Petal.Length^2), data = iris)
+fl_nonlin <- flashlight(
+  model = fit_nonlin, label = "nonlin", data = iris, y = "Sepal.Length"
+)
+fls <- multiflashlight(list(fl_lin, fl_nonlin))
+
+# PDP and ALE
+plot(light_effects(fls, v = "Petal.Length"), use = c("pd", "ale"))
 }
 \seealso{
 \code{\link[=light_profile]{light_profile()}}, \code{\link[=plot.light_effects]{plot.light_effects()}}

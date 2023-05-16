@@ -5,7 +5,7 @@
 \alias{light_scatter.default}
 \alias{light_scatter.flashlight}
 \alias{light_scatter.multiflashlight}
-\title{Scatter}
+\title{Scatter Plot Data}
 \usage{
 light_scatter(x, ...)
 
@@ -40,19 +40,16 @@ light_scatter(x, ...)
 
 \item{use_linkinv}{Should retransformation function be applied? Default is \code{TRUE}.}
 
-\item{n_max}{Maximum number of data rows to select. Will be randomly picked from the
-relevant data.}
+\item{n_max}{Maximum number of data rows to select. Will be randomly picked.}
 
 \item{seed}{An integer random seed used for subsampling.}
 }
 \value{
 An object of class "light_scatter" with the following elements:
 \itemize{
-\item \code{data}: A tibble with results. Can be used to build fully customized
-visualizations. Column names can be controlled by
-\code{options(flashlight.column_name)}.
+\item \code{data}: A tibble with results.
 \item \code{by}: Same as input \code{by}.
-\item \code{v}: The variable evaluated.
+\item \code{v}: The variable name evaluated.
 \item \code{type}: Same as input \code{type}. For information only.
 }
 }
@@ -70,16 +67,17 @@ responses, or residuals against a selected variable.
 
 }}
 \examples{
-fit_a <- stats::lm(Sepal.Length ~ . -Petal.Length, data = iris)
-fit_b <- stats::lm(Sepal.Length ~ ., data = iris)
-fl_a <- flashlight(model = fit_a, label = "without Petal.Length")
+fit_a <- lm(Sepal.Length ~ . -Petal.Length, data = iris)
+fit_b <- lm(Sepal.Length ~ ., data = iris)
+
+fl_a <- flashlight(model = fit_a, label = "no Petal.Length")
 fl_b <- flashlight(model = fit_b, label = "all")
 fls <- multiflashlight(list(fl_a, fl_b), data = iris, y = "Sepal.Length")
-pr <- light_scatter(fls, v = "Petal.Length")
-plot(
-  light_scatter(fls, "Petal.Length", by = "Species", type = "residual"),
-  alpha = 0.2
-)
+
+plot(light_scatter(fls, v = "Petal.Width"), color = "darkred")
+
+sc <- light_scatter(fls, "Petal.Length", by = "Species", type = "residual")
+plot(sc)
 }
 \seealso{
 \code{\link[=plot.light_scatter]{plot.light_scatter()}}

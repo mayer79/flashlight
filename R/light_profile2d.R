@@ -47,9 +47,7 @@
 #'   the cut breaks of the `v` variables. Not relevant for partial dependence profiles.
 #' @returns
 #'   An object of class "light_profile2d" with the following elements:
-#'   - `data` A tibble containing results. Can be used to build fully customized
-#'     visualizations. Column names can be controlled by
-#'     `options(flashlight.column_name)`.
+#'   - `data` A tibble containing results.
 #'   - `by` Names of group by variables.
 #'   - `v` The two variable names evaluated.
 #'   - `type` Same as input `type`. For information only.
@@ -58,9 +56,22 @@
 #'   Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
 #'     The Annals of Statistics, 29:1189–1232.
 #' @examples
-#' fit <- stats::lm(Sepal.Length ~ ., data = iris)
-#' fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-#' plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
+#' fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+#' fl_part <- flashlight(
+#'   model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+#' )
+#'
+#' # No effect of Petal.Width
+#' plot(light_profile2d(fl_part, v = c("Petal.Length", "Petal.Width")))
+#'
+#' # Second model includes Petal.Width
+#' fit_full <- lm(Sepal.Length ~ ., data = iris)
+#' fl_full <- flashlight(
+#'   model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+#' )
+#' fls <- multiflashlight(list(fl_part, fl_full))
+#'
+#' plot(light_profile2d(fls, v = c("Petal.Length", "Petal.Width")))
 #' @seealso [light_profile()], [plot.light_profile2d()]
 light_profile2d <- function(x, ...) {
   UseMethod("light_profile2d")
@@ -252,4 +263,62 @@ light_profile2d.multiflashlight <- function(x, v = NULL, data = NULL,
     ...
   )
   light_combine(all_profiles, new_class = "light_profile2d_multi")
+}
+
+#' Visualize 2D-Profiles, e.g., of Partial Dependence
+#'
+#' Minimal visualization of an object of class "light_profile2d".
+#' The object returned is of class "ggplot" and can be further customized.
+#'
+#' The main geometry is [ggplot2::geom_tile()]. Additional dimensions
+#' ("by" variable(s) and/or multiflashlight) are represented by `facet_wrap/grid`.
+#' For all types of profiles except "partial dependence", it is natural to see
+#' empty parts in the plot. These are combinations of the `v` variables that
+#' do not appear in the data. Even for type "partial dependence", such gaps can occur,
+#' e.g. for `cut_type = "quantile"` or if `n_bins` are larger than the number
+#' of distinct values of a `v` variable.
+#' Such gaps can be suppressed by setting `numeric_as_factor = TRUE`
+#' or by using the arguments `breaks`, `pd_evaluate_at` or `pd_grid` in
+#' [light_profile2d()].
+#'
+#' @importFrom rlang .data
+#' @param x An object of class "light_profile2d".
+#' @param swap_dim Swap the [ggplot2::facet_grid()] dimensions.
+#' @param rotate_x Should the x axis labels be rotated by 45 degrees? Default is `TRUE`.
+#' @param numeric_as_factor Should numeric x and y values be converted to factors first?
+#'   Default is `FALSE`. Useful if `cut_type` was not set to "equal".
+#' @param ... Further arguments passed to [ggplot2::geom_tile()].
+#' @returns An object of class "ggplot".
+#' @export
+#' @seealso [light_profile2d()]
+plot.light_profile2d <- function(x, swap_dim = FALSE, rotate_x = TRUE,
+                                 numeric_as_factor = FALSE, ...) {
+  multi <- is.light_profile2d_multi(x)
+  ndim <- length(x$by) + multi
+  if (ndim > 2L) {
+    stop("Plot method not defined for more than two by variables or
+         multiflashlight with more than one by variable.")
+  }
+  data <- x$data
+  if (isTRUE(numeric_as_factor)) {
+    data[x$v] <- lapply(data[x$v], as.factor)
+  }
+
+  # Build plot
+  p <- ggplot2::ggplot(
+    data, ggplot2::aes(x = .data[[x$v[1L]]], y = .data[[x$v[2L]]], fill = value_)
+  ) +
+    ggplot2::geom_tile(...)
+  if (ndim == 1L) {
+    p <- p + ggplot2::facet_wrap(if (multi) "label_" else x$by[1L])
+  } else if (ndim == 2L) {
+    d1 <- if (multi) "label_" else x$by[1L]
+    d2 <- if (multi) x$by[1L] else x$by[2L]
+    form <- if (!swap_dim) stats::reformulate(d1, d2) else stats::reformulate(d2, d1)
+    p <- p + ggplot2::facet_grid(form)
+  }
+  if (rotate_x) {
+    p <- p + rotate_x()
+  }
+  p
 }

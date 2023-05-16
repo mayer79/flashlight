@@ -12,15 +12,6 @@ rename_one <- function(x, old, new) {
   x
 }
 
-# Calculates midpoints of subsequent unique breaks
-midpoints <- function(breaks) {
-  # to do: deal with missings
-  stopifnot(is.numeric(breaks))
-  breaks <- sort(unique(breaks))
-  stopifnot((m <- length(breaks)) >= 2L)
-  (breaks[-m] + breaks[-1L]) / 2
-}
-
 # Organize binning strategy per variable for 2d partial dependence
 fix_strategy <- function(v, n_bins, cut_type, breaks, pd_evaluate_at) {
   stopifnot(
@@ -46,44 +37,6 @@ fix_strategy <- function(v, n_bins, cut_type, breaks, pd_evaluate_at) {
   return(strategy)
 }
 
-# # Test for non-unique column names (passed as variables and/or options)
-# check_unique <- function(var_names = NULL, opt_names = NULL, temp_names = NULL) {
-#   if (!anyDuplicated(c(var_names, opt_names, temp_names))) {
-#     return(TRUE)
-#   }
-#
-#   # Consistency of variable names
-#   if (anyDuplicated(z <- var_names)) {
-#     what <- z[duplicated(z)][1L]
-#     stop("The variable '", what, "' seems to be used multiple times. Please fix.")
-#   }
-#
-#   # Consistency of options names
-#   if (anyDuplicated(z <- opt_names)) {
-#     what <- z[duplicated(z)][1L]
-#     stop("flashlight uses 'options(flashlight.*)' to set column names ",
-#          "in 'data' objects returned by light_*() functions. ",
-#          "The name '", what, "' seems to be used in multiple options. ",
-#          "Please change these.")
-#   }
-#
-#   # temp names can't overlap
-#
-#   # Consistency of variable and option names
-#   if (anyDuplicated(z <- c(var_names, opt_names))) {
-#     what <- z[duplicated(z)][1L]
-#     stop("Variable name '", what, "' coincides with a column name specified ",
-#          "in options(flashlight.*). ",
-#          "To solve the problem, please change the value of that option.")
-#   }
-#
-#   # Otherwise, there must be a problem with a temp name
-#   z <- c(var_names, opt_names, temp_names)
-#   what <- z[duplicated(z)][1L]
-#   stop("Variable name '", what, "' is internally used and cannot be used ",
-#        "as flashlight option or as variable name. Please avoid this name.")
-# }
-
 # Applies df-valued FUN to X grouped by BY
 Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {
   if (is.null(.by)) {
@@ -99,4 +52,28 @@ Reframe <- function(X, FUN, .by = NULL, as_tib = TRUE) {
     out <- as.data.frame(out)
   }
   out
+}
+
+#' all_identical
+#'
+#' Checks if an aspect is identical for all elements in a nested list.
+#' The aspect is specified by `fun`, e.g., `[[`, followed by the element
+#' name to compare.
+#'
+#' @noRd
+#' @param x A nested list of objects.
+#' @param fun Function used to extract information of each element of `x`.
+#' @param ... Further arguments passed to `fun()`.
+#' @returns A logical vector of length one.
+#' @examples
+#' x <- list(a = 1, b = 2)
+#' y <- list(a = 1, b = 3)
+#' all_identical(list(x, y), `[[`, "a")
+#' all_identical(list(x, y), `[[`, "b")
+all_identical <- function(x, fun, ...) {
+  if ((m <- length(x)) <= 1L) {
+    return(TRUE)
+  }
+  subs <- lapply(x, fun, ...)
+  all(vapply(subs[2:m], FUN = identical, FUN.VALUE = TRUE, subs[[1L]]))
 }

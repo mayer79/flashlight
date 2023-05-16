@@ -67,8 +67,7 @@ is smaller than the number of rows in \code{data}.}
 \value{
 An object of class "light_breakdown" with the following elements:
 \itemize{
-\item \code{data} A tibble with results. Can be used to build fully customized
-visualizations. Column names can be controlled by \code{options(flashlight.column_name)}.
+\item \code{data} A tibble with results.
 \item \code{by} Same as input \code{by}.
 }
 }
@@ -119,9 +118,19 @@ for a multiflashlight.
 
 }}
 \examples{
-fit <- lm(Sepal.Length ~ . + Petal.Length:Species, data = iris)
-fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
-light_breakdown(fl, new_obs = iris[1, ])
+fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+fl_part <- flashlight(
+  model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+)
+plot(light_breakdown(fl_part, new_obs = iris[1, ]))
+
+# Second model
+fit_full <- lm(Sepal.Length ~ ., data = iris)
+fl_full <- flashlight(
+  model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+)
+fls <- multiflashlight(list(fl_part, fl_full))
+plot(light_breakdown(fls, new_obs = iris[1, ]))
 }
 \references{
 A. Gosiewska and P. Biecek (2019). IBREAKDOWN: Uncertainty of model explanations

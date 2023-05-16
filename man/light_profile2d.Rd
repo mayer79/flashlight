@@ -95,9 +95,7 @@ Only used for type = "partial dependence".}
 \value{
 An object of class "light_profile2d" with the following elements:
 \itemize{
-\item \code{data} A tibble containing results. Can be used to build fully customized
-visualizations. Column names can be controlled by
-\code{options(flashlight.column_name)}.
+\item \code{data} A tibble containing results.
 \item \code{by} Names of group by variables.
 \item \code{v} The two variable names evaluated.
 \item \code{type} Same as input \code{type}. For information only.
@@ -130,9 +128,22 @@ and "data". "data" can also be passed on the fly.
 
 }}
 \examples{
-fit <- stats::lm(Sepal.Length ~ ., data = iris)
-fl <- flashlight(model = fit, label = "iris", data = iris, y = "Sepal.Length")
-plot(light_profile2d(fl, v = c("Petal.Length", "Species")))
+fit_part <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
+fl_part <- flashlight(
+  model = fit_part, label = "part", data = iris, y = "Sepal.Length"
+)
+
+# No effect of Petal.Width
+plot(light_profile2d(fl_part, v = c("Petal.Length", "Petal.Width")))
+
+# Second model includes Petal.Width
+fit_full <- lm(Sepal.Length ~ ., data = iris)
+fl_full <- flashlight(
+  model = fit_full, label = "full", data = iris, y = "Sepal.Length"
+)
+fls <- multiflashlight(list(fl_part, fl_full))
+
+plot(light_profile2d(fls, v = c("Petal.Length", "Petal.Width")))
 }
 \references{
 Friedman J. H. (2001). Greedy function approximation: A gradient boosting machine.
