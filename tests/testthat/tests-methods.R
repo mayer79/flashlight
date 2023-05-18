@@ -28,17 +28,6 @@ test_that("light_combine works", {
   expect_equal(light_combine(ell1), ell1)
 })
 
-test_that("light_recode works", {
-  fit <- stats::lm(Sepal.Length ~ Species + 0, data = iris)
-  fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
-  eff <- light_effects(fl, v = "Species")
-  eff <- light_recode(eff, what = "type_",
-                      levels = c("response", "predicted",
-                                 "partial dependence", "ale"),
-                      labels = c("Observed", "Fitted", "PD", "ALE"))
-  expect_equal(as.character(eff$pd$type_[1L]), "PD")
-})
-
 test_that("selected 'is' functions work", {
   fit <- stats::lm(Sepal.Length ~ Species + 0, data = iris)
   fl <- flashlight(model = fit, label = "lm", data = iris, y = "Sepal.Length")
