@@ -13,6 +13,7 @@
   facet_nrow = 1L,
   rotate_x = TRUE,
   show_points = TRUE,
+  recode_labels = NULL,
   ...
 )
 }
@@ -34,6 +35,10 @@
 \item{rotate_x}{Should x axis labels be rotated by 45 degrees?}
 
 \item{show_points}{Should points be added to the line (default is \code{TRUE}).}
+
+\item{recode_labels}{Named vector of curve labels. The names refer to the usual
+labels, while the values are the desired labels, e.g.,
+`c("partial dependence" = PDP", "ale" = "ALE").}
 
 \item{...}{Further arguments passed to geoms.}
 }

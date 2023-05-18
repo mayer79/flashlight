@@ -17,3 +17,12 @@ add_shap <- function(...) {
 plot_counts <- function(...) {
   stop("'plot_counts()' has been deprecated.")
 }
+
+#' DEPRECATED
+#'
+#' @param ... Any input.
+#' @returns Error message.
+#' @export
+light_recode <- function(...) {
+  stop("'light_recode()' is deprecated.")
+}

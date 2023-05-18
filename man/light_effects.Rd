@@ -132,7 +132,7 @@ eff <- light_effects(fl_lin, v = "Petal.Length")
 plot(eff)
 
 # PDP and ALE
-plot(eff, use = c("pd", "ale"))
+plot(eff, use = c("pd", "ale"), recode_labels = c(ale = "ALE"))
 
 # Second model with non-linear Petal.Length effect
 fit_nonlin <- lm(Sepal.Length ~ . + I(Petal.Length^2), data = iris)

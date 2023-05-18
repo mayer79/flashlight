@@ -32,7 +32,7 @@
 #' plot(eff)
 #'
 #' # PDP and ALE
-#' plot(eff, use = c("pd", "ale"))
+#' plot(eff, use = c("pd", "ale"), recode_labels = c(ale = "ALE"))
 #'
 #' # Second model with non-linear Petal.Length effect
 #' fit_nonlin <- lm(Sepal.Length ~ . + I(Petal.Length^2), data = iris)
@@ -201,6 +201,9 @@ light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL,
 #'   [ggplot2::geom_point()] and [ggplot2::geom_line()].
 #' @param facet_nrow Number of rows in [ggplot2::facet_wrap()].
 #' @param show_points Should points be added to the line (default is `TRUE`).
+#' @param recode_labels Named vector of curve labels. The names refer to the usual
+#'   labels, while the values are the desired labels, e.g.,
+#'   `c("partial dependence" = PDP", "ale" = "ALE").
 #' @param ... Further arguments passed to geoms.
 #' @returns An object of class "ggplot".
 #' @export
@@ -208,7 +211,8 @@ light_effects.multiflashlight <- function(x, v, data = NULL, breaks = NULL,
 plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
                                zero_counts = TRUE, size_factor = 1,
                                facet_scales = "free_x", facet_nrow = 1L,
-                               rotate_x = TRUE, show_points = TRUE, ...) {
+                               rotate_x = TRUE, show_points = TRUE,
+                               recode_labels = NULL, ...) {
   # Checks
   stopifnot(length(use) >= 1L)
   if ("all" %in% use) {
@@ -228,6 +232,16 @@ plot.light_effects <- function(x, use = c("response", "predicted", "pd"),
   n <- nrow(data)
   if (!zero_counts && n) {
     data <- dplyr::semi_join(data, x$response, by = c("label_", x$by, x$v))
+  }
+
+  # Optionally change labels of type_
+  if (!is.null(recode_labels)) {
+    lab <- levels(data$type_)
+    if (!all(names(recode_labels) %in% lab)) {
+      stop("'recode_labels' must be a named vector, see ?plot.light_effects()'")
+    }
+    lab[match(names(recode_labels), lab)] <- recode_labels
+    levels(data$type_) <- lab
   }
 
   # Put together the plot

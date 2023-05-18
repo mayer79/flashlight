@@ -1,9 +1,16 @@
 # flashlight 0.9.0.9000
 
+## New functionality
+
+- `plot.light_effects()` has gained an argument `recode_labels` to modify the curve labels.
+
 ## Deprecated functionality
 
 - `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.
 - Consequently, `type = "shap"` in `light_profile()`, `light_importance()`, `light_scatter()`, and `light_profile2d()` is deprecated as well.
+- `plot_counts()` is deprecated.
+- `light_recode()` is deprecated.
+- The option `stats = "quartile"`of `light_effects()` and `light_profile()` is deprecated.
 - Column names of resulting data objects cannot be set via `options()` anymore.
 
 ## Exported -> internal
