@@ -72,6 +72,7 @@ by a facet wrap.</p>
 <span>  facet_nrow <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  rotate_x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show_points <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  recode_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -110,6 +111,12 @@ by a facet wrap.</p>
 
 <dt>show_points</dt>
 <dd><p>Should points be added to the line (default is <code>TRUE</code>).</p></dd>
+
+
+<dt>recode_labels</dt>
+<dd><p>Named vector of curve labels. The names refer to the usual
+labels, while the values are the desired labels, e.g.,
+`c("partial dependence" = PDP", "ale" = "ALE").</p></dd>
 
 
 <dt>...</dt>
