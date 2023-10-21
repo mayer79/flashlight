@@ -18,8 +18,6 @@ print.flashlight <- function(x, ...) {
   cat("\nw:\t\t\t", .yn(x$w))
   cat("\nby:\t\t\t", .yn(x$by))
   cat("\ndata dim:\t\t", .yn(dim(x$data)))
-  cat("\npredict_fct default:\t", isTRUE(all.equal(stats::predict, x$predict_function)))
-  cat("\nlinkinv default:\t", isTRUE(all.equal(function(z) z, x$linkinv)))
   cat("\nmetrics:\t\t", .yn(x[["metrics"]], names(x$metrics)))
   cat("\n")
   invisible(x)
