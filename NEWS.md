@@ -4,6 +4,10 @@
 
 - `plot.light_effects()` has gained an argument `recode_labels` to modify the curve labels.
 
+## Bug fixes
+
+- More than one "by" variable would raise an error when creating the "flashlight" object, see #62.
+
 ## Deprecated functionality
 
 - `add_shap()`: Deprecated in favor of {kernelshap} or {fastshap}.

@@ -43,7 +43,7 @@ light_check.flashlight <- function(x, ...) {
     }
   }
   in_colnames <- function(nm) {
-    if (nm %in% nms && !is.null(x[[nm]]) && !(x[[nm]] %in% colnames(x$data))) {
+    if (nm %in% nms && !is.null(x[[nm]]) && !all(x[[nm]] %in% colnames(x$data))) {
       stop(paste(nm, "needs to be a column in 'data'."))
     }
   }
