@@ -2,9 +2,9 @@
 
 <!-- badges: start -->
 
-[![CRAN status](http://www.r-pkg.org/badges/version/flashlight)](https://cran.r-project.org/package=flashlight)
-[![R-CMD-check](https://github.com/mayer79/flashlight/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mayer79/flashlight/actions)
+[![R-CMD-check](https://github.com/mayer79/flashlight/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mayer79/flashlight/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/mayer79/flashlight/graph/badge.svg)](https://app.codecov.io/gh/mayer79/flashlight?branch=main)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/flashlight)](https://cran.r-project.org/package=flashlight)
 
 [![](https://cranlogs.r-pkg.org/badges/flashlight)](https://cran.r-project.org/package=flashlight) 
 [![](https://cranlogs.r-pkg.org/badges/grand-total/flashlight?color=orange)](https://cran.r-project.org/package=flashlight)
