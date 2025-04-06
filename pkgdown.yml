@@ -1,6 +1,6 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   flashlight: flashlight.html
-last_built: 2024-07-24T16:48Z
+last_built: 2025-04-06T10:33Z
