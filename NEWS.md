@@ -43,6 +43,10 @@ The following functions are now internal:
 
 - The argument "stats" in `light_effects()` and `light_profile()` will be removed. It has no effect anymore.
 
+## Maintenance
+
+- Update code coverage version.
+
 # flashlight 0.9.0
 
 ## Announcements for upcoming version 1.0.0
