@@ -96,7 +96,7 @@ grouped_weighted_mean <- function(data, x, w = NULL, by = NULL,
 #' @param q3_name Name of the resulting column with third quartile values.
 #'   Only relevant if `stats = "quartiles"`.
 #' @param ... Additional arguments passed to corresponding `weighted_*()` functions in
-#'   {MetricsWeighted}.
+#'   "MetricsWeighted".
 #' @returns A `data.frame` with columns `by`, `x`, and optionally `counts_name`.
 #' @examples
 #' grouped_stats(iris, "Sepal.Width")
