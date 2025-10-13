@@ -262,7 +262,7 @@ plot.light_breakdown <- function(x, facet_scales = "free",
     ggplot2::geom_rect(
       ggplot2::aes(fill = fill_), color = "black", show.legend = FALSE
     ) +
-    ggplot2::labs(x = "Prediction", y = ggplot2::element_blank()) +
+    ggplot2::labs(x = "Prediction", y = NULL) +
     ggplot2::geom_label(ggplot2::aes(label = description_), hjust = -0.05, ...) +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.67))) +
     ggplot2::scale_y_reverse() +

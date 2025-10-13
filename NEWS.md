@@ -1,4 +1,4 @@
-# flashlight 0.9.0.9000
+# flashlight 1.0.0
 
 ## New functionality
 
@@ -7,6 +7,7 @@
 ## Bug fixes
 
 - More than one "by" variable would raise an error when creating the "flashlight" object, see #62.
+- Fix compatibility issue with ggplot v 4.0.
 
 ## Deprecated functionality
 
