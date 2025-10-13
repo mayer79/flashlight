@@ -1,12 +1,12 @@
 #' DEPRECATED
 #'
-#' Deprecated in favor of {kernelshap}/{fastshap}.
+#' Deprecated in favor of kernelshap/fastshap/shapr.
 #'
 #' @export
 #' @param ... Deprecated
 #' @returns Error message.
 add_shap <- function(...) {
-  stop("Deprecated in favor of {kernelshap} or {fastshap}.")
+  stop("Deprecated in favor of kernelshap, fastshap, or shapr.")
 }
 
 #' DEPRECATED

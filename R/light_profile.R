@@ -152,7 +152,10 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   }
 
   # Checks (more will be done below or in the called functions)
-  temp_vars <- c("value_", "label_", "type_", "counts_")
+  temp_vars <- c(
+    "value_", "label_", "type_", "counts_",
+    "value", "label"  # backcomp
+  )
   stopifnot(
     "No data!" = is.data.frame(data) && nrow(data) >= 1L,
     "'by' not in 'data'!" = by %in% colnames(data),
@@ -239,6 +242,7 @@ light_profile.flashlight <- function(x, v = NULL, data = NULL, by = x$by,
   # Finalize results
   type_lev <- c("response", "predicted", "partial dependence", "ale", "residual")
   agg <- transform(agg, label_ = x$label, type_ = factor(type, type_lev))
+  agg <- transform(agg, value = value_, label = label_)  # backcomp
   out <- list(data = agg, by = by, v = v, type = type)
   add_classes(out, c("light_profile", "light"))
 }

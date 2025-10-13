@@ -50,7 +50,7 @@ Only the order of the two arguments matter, not their names.}
 
 \item{metrics}{A named list of metrics. Here, a metric is a function with exactly
 four arguments: actual, predicted, w (case weights) and \code{...}
-like those in package {MetricsWeighted}.}
+like those in package "MetricsWeighted".}
 
 \item{label}{Name of the flashlight. Required.}
 

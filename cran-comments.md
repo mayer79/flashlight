@@ -1,36 +1,23 @@
-# flashlight 0.9.0
+# flashlight 1.0.0
 
 Hello CRAN
 
-This is a relatively large maintenance update:
-
-- dealing with dplyr/ggplot2 depreciation cycles
-- more modern help files
-- smaller vignettes
-- smaller dependency footprint
-- announcing upcoming depreciation changes
+This is a relatively large update, cleaning up internals, and deprecating some functionality
+as announced in 0.9.0.
 
 Thanks for keeping CRAN clean.
 
 ## R CMD check
 
-Warning: 'qpdf' is needed for checks on size reduction of PDFs
-
-Note: Skipping checking HTML validation: no command 'tidy' found
+OK
 
 ## Windevel
 
 Status: OK
 
-## Rhub NOTES
-
-* checking HTML version of manual ... NOTE
-Skipping checking HTML validation: no command 'tidy' found
-Skipping checking math rendering: package 'V8' unavailable
-
-
 ## Reverse dependencies
 
-OK: 1                                                                                          
-BROKEN: 0
+✔ vivid 0.3.0                            ── E: 0     | W: 0     | N: 0                    
+✔ mrIML 2.1.0                            ── E: 0     | W: 0     | N: 0                    
+OK: 2      
 
