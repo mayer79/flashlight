@@ -5,6 +5,8 @@ Hello CRAN
 This is a relatively large update, cleaning up internals, and deprecating some functionality
 as announced in 0.9.0.
 
+Furthermore, the update fixes the NOTES on CRAN results.
+
 Thanks for keeping CRAN clean.
 
 ## R CMD check

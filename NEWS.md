@@ -47,6 +47,7 @@ The following functions are now internal:
 ## Maintenance
 
 - Update code coverage version.
+- Fix NOTES on CRAN results page.
 
 # flashlight 0.9.0
 
