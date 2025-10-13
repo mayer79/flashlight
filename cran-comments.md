@@ -1,4 +1,9 @@
-# flashlight 1.0.0
+# Resubmission
+
+Fixed two doi in the DESCRIPTION, which I have wrongly changed. Actually, I am 
+not 100% sure if my current solution is better.
+
+# Original message
 
 Hello CRAN
 
