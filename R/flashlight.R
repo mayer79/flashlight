@@ -18,7 +18,7 @@
 #' @param by A character vector with names of grouping variables.
 #' @param metrics A named list of metrics. Here, a metric is a function with exactly
 #'   four arguments: actual, predicted, w (case weights) and `...`
-#'   like those in package {MetricsWeighted}.
+#'   like those in package "MetricsWeighted".
 #' @param label Name of the flashlight. Required.
 #' @param shap An optional shap object. Typically added by calling [add_shap()].
 #' @param check When updating the flashlight: Should internal checks be performed?

@@ -22,7 +22,7 @@ test_that("breaks work", {
 
 test_that("n_bins work", {
   pr <- light_profile(fl, v = "Petal.Length", type = "response", n_bins = 2)
-  expect_equal(dim(pr$data), c(2L, 5L))
+  expect_equal(dim(pr$data), c(2L, 5L + 2L))  # backcomp
 })
 
 test_that("v_labels work", {
@@ -123,19 +123,19 @@ test_that("basic functionality works for multiflashlight", {
   fls <- multiflashlight(list(fl1, fl2))
 
   pr <- light_profile(fls, v = "Species")
-  expect_true(all(dim(pr$data) == c(6L, 5L)))
+  expect_true(all(dim(pr$data) == c(6L, 5L + 2L)))  # backcomp
   expect_true(all(pr$data$value_[4:6] != pr$data$value_[1:3]))
   expect_equal(pr$data$value_[4:6], rep(mean(iris$Sepal.Length), 3))
   expect_s3_class(plot(pr), "ggplot")
 
   pr <- light_profile(fls, v = "Species", type = "predicted")
-  expect_true(all(dim(pr$data) == c(6L, 5L)))
+  expect_true(all(dim(pr$data) == c(6L, 5L + 2L)))  # backcomp
   expect_true(all(pr$data$value_[4:6] != pr$data$value_[1:3]))
   expect_equal(pr$data$value_[4:6], rep(mean(iris$Sepal.Length), 3))
   expect_s3_class(plot(pr), "ggplot")
 
   pr <- light_profile(fls, v = "Species", type = "ale")
-  expect_true(all(dim(pr$data) == c(6L, 5L)))
+  expect_true(all(dim(pr$data) == c(6L, 5L + 2L)))  # backcomp
   expect_true(all(pr$data$value_[4:6] != pr$data$value_[1:3]))
   expect_equal(pr$data$value_[4:6], rep(mean(iris$Sepal.Length), 3))
   expect_s3_class(plot(pr), "ggplot")

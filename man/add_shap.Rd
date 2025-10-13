@@ -13,5 +13,5 @@ add_shap(...)
 Error message.
 }
 \description{
-Deprecated in favor of {kernelshap}/{fastshap}.
+Deprecated in favor of kernelshap/fastshap/shapr.
 }

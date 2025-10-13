@@ -100,7 +100,6 @@ install()
 # Run only if package is public(!) and should go to CRAN
 if (FALSE) {
   check_win_devel()
-  check_rhub()
 
   # Takes long
   revdepcheck::revdep_check(num_workers = 4L)

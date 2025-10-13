@@ -74,6 +74,9 @@ light_combine.list <- function(x, new_class = NULL, ...) {
     for (d in data_slots) {
       out[[d]] <- dplyr::bind_rows(lapply(x, `[[`, d))
       out[[d]]$label_ <- factor(out[[d]]$label_, levels = unique(out[[d]]$label_))
+      if ("label" %in% colnames(out[[d]])) {  # backcomp
+        out[[d]]$label <- out[[d]]$label_
+      }
     }
   }
   class(out) <- union(new_class, class(x[[1L]]))
