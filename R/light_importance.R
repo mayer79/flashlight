@@ -306,5 +306,5 @@ plot.light_importance <- function(x, top_m = Inf, swap_dim = FALSE,
     H = "Friedman's H",
     ice = "ICE based interaction strength"
   )
-  p + ggplot2::labs(x = type, y = ggplot2::element_blank())
+  p + ggplot2::labs(x = type, y = NULL)
 }

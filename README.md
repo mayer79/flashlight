@@ -62,7 +62,7 @@ fl_lm <- flashlight(
 fl_lm |> 
   light_performance() |> 
   plot(fill = "darkred") +
-  labs(x = element_blank(), title = "Performance on training data")
+  labs(x = NULL, title = "Performance on training data")
 
 fl_lm |> 
   light_performance(by = "Species") |> 
